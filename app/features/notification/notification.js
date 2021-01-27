@@ -1,0 +1,36 @@
+define(['shared/data'], (GLOBAL) => {
+    const pushNotificationForMessage = message => {
+        const notification = new Notification(message.sender.name, {
+            body: message.message.replace(/<[^>]+>/g, ''),
+            icon: '/assets/images/icon.png'
+        });
+
+        const clickNotification = event => {
+            // prevent the browser from focusing the Notification's tab
+            event.preventDefault();
+            // window.open('https://' + XM_URL + '/main.html#' + chatId, '_blank');
+            notification.close();
+        };
+
+        notification.onclick = clickNotification;
+    };
+
+    return {
+        onInit: () => Notification.requestPermission().then(() => {}),
+
+        pushNotificationForMessage: message => {
+            const info = GLOBAL.getInfomation();
+            const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
+
+            if (
+                window.Notification
+                && Notification.permission === 'granted'
+                && !document.hasFocus()
+                && info.id !== message.sender.id
+                && obRoomEdited[message.id.chatId]?.notification_mess !== false
+            ) {
+                pushNotificationForMessage(message);
+            }
+        }
+    };
+});

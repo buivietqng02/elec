@@ -1,0 +1,142 @@
+stages:
+  - build
+  - deploy
+
+build:dev:
+  stage: build
+  tags:
+    - dev-server
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - npm install
+    - yarn run build
+    - mkdir .dist
+    - cp -r * .dist
+    - mv .dist dist
+  only:
+    - dev
+  artifacts:
+    paths:
+      - dist
+
+deploy:dev:5000:
+  stage: deploy
+  tags:
+    - dev-server
+  script:
+    - sudo rm -rf /var/www/rest/*
+    - sudo cp -r dist/* /var/www/rest
+    - sudo chown -R www-data:www-data /var/www/rest
+  only:
+    - dev
+  dependencies:
+    - build:dev
+
+build:la:
+  stage: build
+  tags:
+    - la-prod
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js7
+    - npm install
+    - yarn run build:prod
+    - mkdir .dist
+    - cp -r * .dist
+    - mv .dist dist
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:la:
+  stage: deploy
+  tags:
+    - la-prod
+  script:
+    - sudo rm -rf $SITE_PATH_PROD/*
+    - sudo cp -r dist/* $SITE_PATH_PROD
+    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+  only:
+    - master
+  dependencies:
+    - build:la
+
+build:ams:
+  stage: build
+  tags:
+    - ams-prod
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - npm install
+    - yarn run build:prod
+    - mkdir .dist
+    - cp -r * .dist
+    - mv .dist dist
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:ams:
+  stage: deploy
+  tags:
+    - ams-prod
+  script:
+    - sudo rm -rf $SITE_PATH_PROD/*
+    - sudo cp -r dist/* $SITE_PATH_PROD
+    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+  only:
+    - master
+  dependencies:
+    - build:ams
+
+build:sg:
+  stage: build
+  tags:
+    - sg-prod
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - npm install
+    - yarn run build:prod
+    - mkdir .dist
+    - cp -r * .dist
+    - mv .dist dist
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:sg:
+  stage: deploy
+  tags:
+    - sg-prod
+  script:
+    - sudo rm -rf $SITE_PATH_PROD/*
+    - sudo cp -r dist/* $SITE_PATH_PROD
+    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+  only:
+    - master
+  dependencies:
+    - build:sg

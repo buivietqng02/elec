@@ -1,0 +1,12 @@
+<svg id="Loading" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <circle id="Ellipse_39" data-name="Ellipse 39" cx="12" cy="12" r="12" fill="#0093ff" />
+    <g id="Ellipse_37" data-name="Ellipse 37" transform="translate(2 2)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke-dasharray="0 200">
+        <circle cx="10" cy="10" r="10" stroke="none" />
+        <circle cx="10" cy="10" r="9" fill="none" />
+        
+        
+        <animate attributeType="CSS" attributeName="stroke-dasharray" 
+           from="0" to="63" dur="5s" repeatCount="indefinite" />
+        
+    </g>
+</svg>

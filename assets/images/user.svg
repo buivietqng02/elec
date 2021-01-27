@@ -1,0 +1,9 @@
+<svg version="1.1" baseProfile="basic" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="33px" height="32.5px" viewBox="0 0 33 32.5" enable-background="new 0 0 33 32.5" xml:space="preserve">
+<defs>
+</defs>
+<ellipse opacity="0.3" cx="16.5" cy="16.2" rx="16" ry="15.7"/>
+<path fill="none" stroke="#FFFFFF" stroke-miterlimit="10" d="M4.2,22.3c3-3,7.2-4.9,11.9-4.9c4.5,0,8.6,1.7,11.5,4.5"/>
+<circle fill="none" stroke="#FFFFFF" stroke-miterlimit="10" cx="16.2" cy="9.4" r="4.4"/>
+<ellipse fill="none" stroke="#FFFFFF" stroke-miterlimit="10" cx="16.5" cy="16.2" rx="16" ry="15.7"/>
+</svg>

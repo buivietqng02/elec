@@ -1,0 +1,10 @@
+<svg version="1.1" baseProfile="basic" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="30px" height="30px" viewBox="0 0 30 30" enable-background="new 0 0 30 30" xml:space="preserve">
+<defs>
+</defs>
+<g>
+	<circle opacity="0.5" fill="#FFFFFF" cx="15" cy="15" r="15"/>
+	<polygon opacity="0.5" points="22.8,9.1 21.6,7.9 15.1,14.5 8.5,7.9 7.3,9.1 13.9,15.6 7.3,22.2 8.5,23.4 15.1,16.8 21.6,23.4 
+		22.8,22.2 16.2,15.6 	"/>
+</g>
+</svg>

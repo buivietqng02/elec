@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="./" />
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="application-name" content="XM">
+    <meta name="apple-mobile-web-app-title" content="XM">
+    <title>Messenger</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/images/icon/icon-App-57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/images/icon/icon-App-60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/images/icon/icon-App-72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/images/icon/icon-App-76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/images/icon/icon-App-114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/images/icon/icon-App-120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/images/icon/icon-App-144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/icon/icon-App-152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icon/icon-App-180.png">
+    <link rel="manifest" href="manifest.json">
+    <link id="favicon" rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+    <link rel="stylesheet" href="assets/css/login.css">  
+
+
+</head>
+
+<body style="background:linear-gradient(to bottom, #06c 0%, rgba(0, 102, 204, 0.6) 50%, rgba(0, 102, 204, 0.6) 65%, rgba(0, 102, 204, 0.4) 100%), url(assets/images/cosmos4-1.jpg) no-repeat center/cover;">
+    <div class="wrap-login">
+    <!-- login -->
+    <!-- have class active it is show / hidden is hide-->
+    <div class="login js-global js-login active">
+        <div class="login__header">
+            <img class="login__logo" src="assets/images/icon.png" alt="Cross messenger logo">
+            <h1 class="login__title">Cross Messenger</h1>
+        </div>
+    
+        <form name="loginForm" class="login__form js_login__form">
+            <input required="Please enter a email" type="email" name="email"
+                class="form-control" placeholder="E-mail" />
+    
+            <input required="Please enter the password" type="password" name="password" class="form-control" placeholder="Password" />
+            
+            <div class="mess"></div>
+
+            <button type="submit" class="login__btn-submit js-btn-spin">
+                <span class="--spin" style="display:none">◉</span>
+                LOGIN
+            </button>
+        </form>
+    
+        <button class="xmbtn login__btn-signup js-btn-signup">Sign Up</button>
+        <button class="xmbtn login__btn-forgot js-btn-forget">Forgot Password</button>    
+       
+    </div>
+    <!-- sign up-->
+    <!-- have class active it is show / hidden is hide-->
+    <div class="sign-up form-style js-global js-signup">
+        <h2 class="popup__heading">Register New Account</h2>
+        <form name="resetForm" class="js_register__form">
+            <div class="form__line">
+                <label class="form__label">Name</label>
+                <input class="form-control form-control2" required type="text" placeholder="Name" name="name" />
+            </div>
+            <div class="form__line">
+                <label class="form__label">E-Mail</label>
+                <input class="form-control form-control2" required type="text" placeholder="E-Mail" name="email" />
+            </div>
+            <div class="form__line">
+                <label class="form__label">Password</label>
+                <input class="form-control form-control2" required type="password" placeholder="Password" name="password" />
+            </div>
+            <div class="form__line">
+                <label class="form__label">Confirm Password</label>
+                <input class="form-control form-control2" required type="password" placeholder="Confirm Password" name="password2" />
+            </div>
+
+            <div class="form__line form__line_code" style="display:none;">
+                <label class="form__label">Code</label>
+                <input class="form-control form-control2" type="text" placeholder="Code" name="code" />
+            </div>
+
+            <div class="mess"></div>
+
+
+           <!--  <div class="msg--status">Register success!</div> -->
+            <div class="popup__bottom">
+                <button class="btn btn--second js-btn-cancel" type="button">
+                    Cancel
+                </button>
+                <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                    <span class="--spin" style="display:none">◉</span>
+                    Create
+                </button>
+            </div>          
+        </form>
+    </div>
+     
+
+    <!-- reset password -->
+    <!-- have class active it is show / hidden is hide-->
+    <div class="reset-password reset-password1 form-style js-global js-requestcode">
+        <h2 class="popup__heading">Reset password</h2>
+        <form name="resetForm" class="js_forgot__form">
+            <div class="form__line">
+                <!-- <label class="form__label">E-Mail</label> -->
+                <input class="form-control form-control2" required type="email" placeholder="E-Mail" name="email" />
+            </div>  
+
+            <div class="mess"></div> 
+
+
+            <div class="popup__bottom">
+                <button class="btn btn--second js-btn-cancel" type="button">Cancel</button>
+                <!-- <button class="btn btn--second ml-2" type="submit">Request Code</button>                 -->
+                <button class="btn btn--second ml-2 js-btn-requestcode js-btn-spin" type="submit">
+                     <span class="--spin" style="display:none">◉</span>
+                    Request Code
+                </button>                
+            </div>          
+        </form>
+    </div>
+
+
+
+    <!-- have class active it is show / hidden is hide-->
+    <div class="reset-password reset-password2 form-style js-global js-forget">
+        <h2 class="popup__heading">Reset password</h2>
+        <form name="resetForm" class="js_forgot__form_code">
+            <div class="form__line">
+                <!-- <label class="form__label">E-Mail</label> -->
+                <input class="form-control form-control2" required type="text" placeholder="E-Mail" name="email" />
+            </div>
+            <div class="form__line">
+                <!-- <label class="form__label">Code</label> -->
+                <input class="form-control form-control2" required type="text" placeholder="Code" name="code" />
+            </div>
+            <div class="form__line">
+                <!-- <label class="form__label">New Password</label> -->
+                <input class="form-control form-control2" required type="password" placeholder="New Password" name="password" />
+            </div>
+            <div class="form__line">
+                <!-- <label class="form__label">Confirm New Password</label> -->
+                <input class="form-control form-control2" required type="password" placeholder="Confirm New Password" name="confirmpassword" />
+            </div>
+
+            <div class="mess"></div> 
+
+            <div class="popup__bottom">
+                <button class="btn btn--second js-btn-cancel" type="button">Cancel</button>
+                <button class="btn btn--second ml-2 js-btn-send-code" type="button">Request Code</button>                
+                <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                    <span class="--spin" style="display:none">◉</span>
+                    Reset
+                </button>
+            </div>          
+        </form>
+    </div>
+    <!-- download app -->
+    <div class="download-app">
+        <a class="download-app__link"
+            href="https://play.google.com/store/apps/details?id=net.iptp.chat&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+            target="_blank" rel="nofollow">
+            <img class="download-app__img" src="assets/images/google-play-badge.png"
+                alt="Download Cross messenger for Androi">
+        </a>
+        <a class="download-app__link" href="https://apps.apple.com/us/app/cross-messenger/id1498791933?ls=1"
+            target="_blank" rel="nofollow">
+            <img class="download-app__img" src="assets/images/appstore-badge2.png"
+                alt="Download Cross messenger IOS">
+        </a>
+
+
+        <a class="download-app__link apk" href="https://fstor.iptp.net/files/xm_0.3.2.apk" target="_blank" rel="nofollow">
+            Download Android APK
+        </a>
+
+
+    </div>  
+</div>
+
+    <!-- <script src="./assets/lib/jquery.min.js"></script>
+    <script src="./assets/js/login.min.js"></script>    -->
+</body>
+</html>
