@@ -39,7 +39,7 @@ deploy:dev:
 build:la:
   stage: build
   tags:
-    - la-prod
+    - prod-la
   script:
     - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
@@ -61,7 +61,7 @@ build:la:
 deploy:la:
   stage: deploy
   tags:
-    - la-prod
+    - prod-la
   script:
     - sudo rm -rf $SITE_PATH_PROD/*
     - sudo cp -r dist/* $SITE_PATH_PROD
@@ -74,7 +74,7 @@ deploy:la:
 build:ams:
   stage: build
   tags:
-    - ams-prod
+    - prod-ams
   script:
     - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
@@ -96,7 +96,7 @@ build:ams:
 deploy:ams:
   stage: deploy
   tags:
-    - ams-prod
+    - prod-ams
   script:
     - sudo rm -rf $SITE_PATH_PROD/*
     - sudo cp -r dist/* $SITE_PATH_PROD
@@ -109,7 +109,7 @@ deploy:ams:
 build:sg:
   stage: build
   tags:
-    - sg-prod
+    - prod-sg
   script:
     - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
@@ -131,7 +131,7 @@ build:sg:
 deploy:sg:
   stage: deploy
   tags:
-    - sg-prod
+    - prod-sg
   script:
     - sudo rm -rf $SITE_PATH_PROD/*
     - sudo cp -r dist/* $SITE_PATH_PROD
