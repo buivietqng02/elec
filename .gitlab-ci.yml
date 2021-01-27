@@ -23,14 +23,14 @@ build:dev:
     paths:
       - dist
 
-deploy:dev:5000:
+deploy:dev:
   stage: deploy
   tags:
     - dev-server
   script:
-    - sudo rm -rf /var/www/rest/*
-    - sudo cp -r dist/* /var/www/rest
-    - sudo chown -R www-data:www-data /var/www/rest
+    - sudo rm -rf $SITE_PATH_DEV*
+    - sudo cp -r dist/* $SITE_PATH_DEV
+    - sudo chown -R www-data:www-data $SITE_PATH_DEV
   only:
     - dev
   dependencies:
