@@ -45,7 +45,7 @@ build:la:
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
     - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
     - version=$(<VERSION)
-    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js7
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
     - npm install
     - yarn run build:prod
     - mkdir .dist
