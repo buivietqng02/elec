@@ -182,7 +182,7 @@ define([
             if (isGroup) {
                 $callBtn.hide();
             } else {
-                $callBtn.show();
+                process.env.NODE_ENV === 'production' ? $callBtn.hide() : $callBtn.show();
             }
         }
     };
