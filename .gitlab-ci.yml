@@ -106,6 +106,7 @@ deploy:ams:
     - master
   dependencies:
     - build:ams
+  when: manual
 
 build:sg:
   stage: build
@@ -128,7 +129,6 @@ build:sg:
     paths:
       - dist
     expire_in: 3 days
-  when: manual
 
 deploy:sg:
   stage: deploy
