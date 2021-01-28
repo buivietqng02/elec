@@ -63,9 +63,9 @@ deploy:la:
   tags:
     - prod-la
   script:
-    - sudo rm -rf $SITE_PATH_PROD/*
-    - sudo cp -r dist/* $SITE_PATH_PROD
-    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+    - sudo rm -rf /var/www/xm.iptp.net/html/*
+    - sudo cp -r dist/* /var/www/xm.iptp.net/html
+    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
   only:
     - master
   dependencies:
@@ -98,9 +98,9 @@ deploy:ams:
   tags:
     - prod-ams
   script:
-    - sudo rm -rf $SITE_PATH_PROD/*
-    - sudo cp -r dist/* $SITE_PATH_PROD
-    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+    - sudo rm -rf /var/www/xm.iptp.net/html/*
+    - sudo cp -r dist/* /var/www/xm.iptp.net/html
+    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
   only:
     - master
   dependencies:
@@ -133,9 +133,9 @@ deploy:sg:
   tags:
     - prod-sg
   script:
-    - sudo rm -rf $SITE_PATH_PROD/*
-    - sudo cp -r dist/* $SITE_PATH_PROD
-    - sudo chown -R nginx:nginx $SITE_PATH_PROD
+    - sudo rm -rf /var/www/xm.iptp.net/html/*
+    - sudo cp -r dist/* /var/www/xm.iptp.net/html
+    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
   only:
     - master
   dependencies:
