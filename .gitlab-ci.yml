@@ -92,6 +92,7 @@ build:ams:
     paths:
       - dist
     expire_in: 3 days
+  when: manual
 
 deploy:ams:
   stage: deploy
@@ -127,6 +128,7 @@ build:sg:
     paths:
       - dist
     expire_in: 3 days
+  when: manual
 
 deploy:sg:
   stage: deploy
