@@ -350,7 +350,7 @@ define([
             if (!isModalRendered) {
                 isModalRendered = true;
                 $('body').append(renderTemplate);
-                easyrtc.setSocketUrl('https://webrtc.iptp.net/');
+                easyrtc.setSocketUrl('https://webrtc.iptp.net');
                 onDeclareDom();
             }
 
