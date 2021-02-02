@@ -3,7 +3,7 @@ Warning: Make sure you're using the latest version of Node.js and NPM
 
 ### Quick start
 # clone our repo
-$ git clone https://{{username}}@git.iptp.dev/sa/xm-web-client.git
+$ git clone https://{{username}}@git.iptp.dev/andre/xm-web.git
 
 # change directory to your app
 $ cd xm-web-client
