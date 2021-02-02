@@ -1,5 +1,5 @@
 define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBAL) => {
-    const { htmlDecode, htmlEncode, stripTags } = functions;
+    const { htmlDecode, htmlEncode, stripTags, transformLinkTextToHTML } = functions;
     const $input = $('.js_endter_mess');
     const $wrapperMessages = $('.js_con_list_mess');
     const $btnSend = $('.btn__send');
@@ -109,8 +109,6 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
             $btnCloseCommentBox.click(onHideCommentBox);
         },
 
-        onClear,
-
         onUpdate: (id, value) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
 
@@ -135,14 +133,17 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
                 name: object.officiallyName,
                 userId: object.userId
             };
+
             $input.focus();
             $commentWrapper.show();
-            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.mess}</span>`);
+            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(object.mess)}</span>`);
         },
 
         onAddEmoji: (emoji) => {
             $input.val($input.val() + emoji);
             $input.focus();
-        }
+        },
+
+        onClear
     };
 });

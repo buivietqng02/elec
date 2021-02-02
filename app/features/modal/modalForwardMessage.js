@@ -5,10 +5,9 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
     let $input;
     let chatId;
     let isListRoomRendered = false;
-    let htmlRoomList = '';
     const template = `
         <div data-fmm-room-id="{id}" data-fmm-room-name="{name}" class="fmm-room">
-            <img class="--img avatar" src="{src}">
+            <img class="--img avatar {group}" src="{src}" {handleImageErr}>
             <span>{name}</span>
         </div>
     `;
@@ -48,7 +47,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
 
         // group chat
         if (room.group) {
-            src = '/assets/images/group.svg';
+            src = getAvatar(room.id, true);
         }
 
         // direct chat
@@ -58,6 +57,8 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
 
         data = {
             id: room.id,
+            group: room.group ? 'hagr' : '',
+            handleImageErr: `onerror="this.src='${room.group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
             src,
             name
         };
@@ -65,10 +66,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
         return render(template, data);
     };
 
-    const renderRoomList = () => {
-        isListRoomRendered = true;
-        htmlRoomList = GLOBAL.getRooms().map(renderRoom).join('');
-    };
+    const renderRoomList = () => GLOBAL.getRooms().map(renderRoom).join('');
 
     const onRoomClick = (e) => {
         $closeBtn.click();
@@ -98,16 +96,22 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
 
     return {
         onInit: (id) => {
+            const roomList = GLOBAL.getRooms().filter(room => room.id);
             if (!isListRoomRendered) {
-                renderRoomList();
+                isListRoomRendered = true;
                 $(document).on('click', '[data-fmm-room-id]', onRoomClick);
                 $(document).on('input', '#fmm-input', onSearch);
-                $('body').append(renderTemplate(htmlRoomList));
+                $('body').append(renderTemplate(renderRoomList()));
                 $modal = $('#forwardMessageModal');
                 $closeBtn = $modal.find('.close');
                 $rooms = $('[data-fmm-room-id]');
                 $input = $('#fmm-input');
                 $input.attr('autocomplete', 'off');
+            }
+
+            if (roomList.length !== $rooms.length) {
+                $modal.find('.fmm-room-wrapper').html(renderRoomList());
+                $rooms = $('[data-fmm-room-id]');
             }
 
             chatId = id;

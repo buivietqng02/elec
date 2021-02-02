@@ -146,56 +146,63 @@ define([
         const info = GLOBAL.getInfomation();
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const data = {
-            id: mess.id.messageId
-        }; 
+            id: mess.id.messageId,
+            chatType: mess.type
+        };
 
-        // render with case of left the room
-        if (mess.type === 7) {
-            data.who = mess.message;
-            return render(template.leftGroup, data);
-        }
+        try {
+            // render with case of left the room
+            if (mess.type === 7) {
+                data.who = mess.message;
+                return render(template.leftGroup, data);
+            }
 
-        // render with case of join the room
-        if (mess.type === 5) {
-            data.who = mess.message;
-            return render(template.joinGroup, data);
-        }
+            // render with case of join the room
+            if (mess.type === 5) {
+                data.who = mess.message;
+                return render(template.joinGroup, data);
+            }
 
-        // render with calling
-        if (mess.type === 21 || mess.type === 24) {
-            data.mess = mess.message;
-            return render(template.call, data);
-        }
+            // render with calling
+            if (mess.type === 21 || mess.type === 24) {
+                data.mess = mess.message;
+                return render(template.call, data);
+            }
 
-        data.src = getAvatar(mess.sender.id);
-        data.name = roomEdited[mess.sender.id]?.user_name || mess.sender.name;
-        data.officially_name = mess.sender.name;
-        data.userId = mess.sender.id;
-        data.show_internal = mess.internal ? '' : 'hidden';
-        data.who = info.id === mess.sender.id ? 'you' : '';
-        data.date = convertMessagetime(mess.msgDate);
+            data.src = getAvatar(mess.sender.id);
+            data.name = roomEdited[mess.sender.id]?.user_name || mess.sender.name;
+            data.officially_name = mess.sender.name;
+            data.userId = mess.sender.id;
+            data.show_internal = mess.internal ? '' : 'hidden';
+            data.who = info.id === mess.sender.id ? 'you' : '';
+            data.date = convertMessagetime(mess.msgDate);
 
-        // rendr with case of comment
-        if (mess.message.indexOf('"></c>') > -1 && mess.message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
-            try {
-                splitMess = mess.message.split('<c style="display:none" ob="');
-                const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
-                data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name}: ${commentInfo.mess}</div>`;
-                data.mess = transformLinkTextToHTML(splitMess[0]);
-            } catch(e) {
-                console.log(e);
+            // rendr with case of comment
+            if (mess.message.indexOf('"></c>') > -1 && mess.message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
+                try {
+                    splitMess = mess.message.split('<c style="display:none" ob="');
+                    const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
+                    data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name}: ${commentInfo.mess}</div>`;
+                    data.mess = transformLinkTextToHTML(splitMess[0]);
+                } catch(e) {
+                    console.log(e);
+                    data.mess = transformLinkTextToHTML(mess.message);
+                }
+            } else {
                 data.mess = transformLinkTextToHTML(mess.message);
             }
-        } else {
-            data.mess = transformLinkTextToHTML(mess.message);
-        }
 
-        if (mess.file) {
-            data.isFile = 'have-file';
-            data.mess = handleMessCointainFile(mess.file);
-        }
+            if (mess.file) {
+                data.isFile = 'have-file';
+                data.mess = handleMessCointainFile(mess.file);
+            }
 
-        return render(template.mess, data);
+            return render(template.mess, data);
+        } catch (e) {
+            console.log('Bug render message');
+            console.log(e);
+            return '';
+        }
     };
 
     const onGetMoreMessageByScrolling = () => {

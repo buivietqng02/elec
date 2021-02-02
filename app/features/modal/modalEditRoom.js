@@ -13,13 +13,18 @@ define([
 ) => {
     const { render, getAvatar, getDataToLocalApplication } = functions;
     const {
- API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE_GROUP 
-} = constant;
+        API_URL, 
+        TOKEN, 
+        ATTRIBUTE_CHANGE_NAME, 
+        ATTRIBUTE_CHANGE_IMAGE_GROUP 
+    } = constant;
     const token = getDataToLocalApplication(TOKEN) || '';
     let roomInfo;
     let isProcessing;
     let isModalRendered = false;
     let $modal;
+    let $modalBody;
+    let $contentLA;
     let $img;
     let $userId;
     let $chatId;
@@ -40,7 +45,7 @@ define([
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body not-live-assistance">
                         <label class="erm-image-wrapper input-freeze">
                             <input class="ermiw-file" type="file" accept="image/*" style="display: none" />
                             <img />
@@ -67,6 +72,7 @@ define([
                             <textarea style="margin-bottom: 0" placeholder="Enter description"></textarea>
                         </div>
                     </div>
+                    <div class="modal-body modal-live-assistance hidden"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
@@ -146,12 +152,85 @@ define([
         });
     };
 
+    const requestChatInfo = () => {
+        const id = GLOBAL.getCurrentRoomId();
+        API.get(`chats/${id}/description`).then(res => {
+            const {
+                id,
+                name,
+                email,
+                ipAddress,
+                deviceType,
+                creationDate,
+                browser,
+                platform,
+                platformVersion,
+                userAgent,
+            } = res.guest;
+
+            $contentLA.html(`
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Chat Id</label>
+                    <input class="input-freeze" tabindex="-1" value="${res.id}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Guest Id</label>
+                    <input class="input-freeze" tabindex="-1" value="${id || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Guest Name</label>
+                    <input class="input-freeze" tabindex="-1" value="${name || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Guest Email</label>
+                    <input class="input-freeze" tabindex="-1" value="${email || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>IP Address</label>
+                    <input class="input-freeze" tabindex="-1" value="${ipAddress || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Device Type</label>
+                    <input class="input-freeze" tabindex="-1" value="${deviceType || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Browser</label>
+                    <input class="input-freeze" tabindex="-1" value="${browser || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Platform</label>
+                    <input class="input-freeze" tabindex="-1" value="${platform || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>Platform Version</label>
+                    <input class="input-freeze" tabindex="-1" value="${platformVersion || 'none'}" />
+                    <div class="input-only-view"></div>
+                </div>
+                <div class="xmmcm-form-group erm-userid">
+                    <label>User Agent</label>
+                    <textarea class="input-freeze" tabindex="-1">${userAgent || 'none'}</textarea>
+                    <div class="input-only-view" style="top: 30px"></div>
+                </div>
+            `);
+        });
+    };
+
     return {
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
                 $('body').append(template);
                 $modal = $('#editRoomModal');
+                $modalBody = $modal.find('.not-live-assistance');
+                $contentLA = $modal.find('.modal-live-assistance');
                 $img = $modal.find('.erm-image-wrapper img');
                 $userId = $modal.find('.erm-userid input');
                 $chatId = $modal.find('.erm-chatid input');
@@ -173,6 +252,17 @@ define([
             $chatId.val(roomInfo.id);
             $save.removeClass('loading-btn');
             $modal.modal('show');
+            $modalBody.removeClass('hidden');
+            $contentLA.addClass('hidden');
+
+            // Handle for live assistance. Split another part to handle simply
+            if (roomInfo.group && roomInfo.isLiveAssistance) {
+                $modalBody.addClass('hidden');
+                $contentLA.removeClass('hidden');
+                $contentLA.html(`<div class="--load-mess" style="display: block;"><div class="pulse"></div></div>`);
+                requestChatInfo();
+                return;
+            }
 
             if (roomInfo.group) {
                 $img.closest('.erm-image-wrapper').removeClass('input-freeze');
