@@ -89,6 +89,25 @@ define([
         }
     };
 
+    const getNewGroup = (message) => API.get('chats').then(res => {
+        try {
+            const { chats } = res.data;
+            const { length } = chats;
+
+            for (let i = 0; i < length; i += 1) {
+                if (chats[i].id === message.id.chatId) {
+                    const html = sidebarRoomListComp.onRenderRoom(chats[i]);
+                    GLOBAL.setRooms([chats[i], ...GLOBAL.getRooms()]);
+                    sidebarRoomListComp.onPrepend(html);
+                    notificationComp.pushNotificationForMessage(message);
+                    break;
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
     const handleRealTimeMessage = (messages) => {
         let rooms = GLOBAL.getRooms();
         let roomsMove = [];
@@ -141,6 +160,10 @@ define([
 
             return true;
         });
+
+        if (!isPushNotification) {
+            getNewGroup(messages[0]);
+        }
 
         GLOBAL.setRooms(roomsMove.concat(rooms));
     };
