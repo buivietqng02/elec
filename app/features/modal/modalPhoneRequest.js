@@ -350,7 +350,7 @@ define([
             if (!isModalRendered) {
                 isModalRendered = true;
                 $('body').append(renderTemplate);
-                easyrtc.setSocketUrl(BASE_URL.slice(0, BASE_URL.length - 3));
+                easyrtc.setSocketUrl('https://xm.iptp.dev');
                 onDeclareDom();
             }
 
