@@ -877,6 +877,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .btn__send {
+  padding: 0;
   position: absolute;
   right: 50px;
   bottom: 0;
@@ -889,7 +890,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: none;
   color: #fff;
   width: 60px;
-  height: 51px;
+  height: 50px;
   background: #00CEFF;
   border-radius: 12px 0;
   text-transform: uppercase;
@@ -1600,6 +1601,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   padding-right: 50px;
 }
 
+.--mess {
+  white-space: pre-wrap;
+}
+
 .comment-box-inline {
   padding: 10px;
   border-radius: 3px;
@@ -1818,8 +1823,8 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   vertical-align: baseline;
   border-radius: 0.25rem;
   position: absolute;
-  left: 22px;
-  top: 3px;
+  left: 40px;
+  top: 5px;
 }
 
 .badge:empty {
@@ -2446,6 +2451,7 @@ body.body_fz_18 {
   padding-left: 20px;
   max-height: 200px;
   overflow: auto;
+  white-space: pre-wrap;
 }
 
 .mess-comment-box .mess-fw-box img {

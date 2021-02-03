@@ -89,18 +89,46 @@ define([
         }
     };
 
+    const getNewGroup = (message) => API.get('chats').then(res => {
+        try {
+            const { chats } = res.data;
+            const { length } = chats;
+
+            for (let i = 0; i < length; i += 1) {
+                if (chats[i].id === message.id.chatId) {
+                    const html = sidebarRoomListComp.onRenderRoom(chats[i]);
+                    GLOBAL.setRooms([chats[i], ...GLOBAL.getRooms()]);
+                    sidebarRoomListComp.onPrepend(html);
+                    notificationComp.pushNotificationForMessage(message);
+                    break;
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    });
+
     const handleRealTimeMessage = (messages) => {
         let rooms = GLOBAL.getRooms();
         let roomsMove = [];
+        let isPushNotification = false;
         const objRooms = {};
 
-        notificationComp.pushNotificationForMessage(messages[0]);
         messages.forEach(mess => {
             (objRooms[mess.id.chatId] = (objRooms[mess.id.chatId] || []).concat(mess));
         });
         rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
+                
+                // Handle push notification
+                if (!isPushNotification) {
+                    isPushNotification = true;
+                    if (!(room.isLiveAssistance && messagesResponse[0].type === 7)) {
+                        notificationComp.pushNotificationForMessage(messagesResponse[0]);
+                    }
+                }
+
                 // Handle with message was deleted
                 if (messagesResponse[0].deleted) {
                     handleWithRemovingMessage(messagesResponse[0].id.messageId, room.id);
@@ -132,6 +160,10 @@ define([
 
             return true;
         });
+
+        if (!isPushNotification) {
+            getNewGroup(messages[0]);
+        }
 
         GLOBAL.setRooms(roomsMove.concat(rooms));
     };

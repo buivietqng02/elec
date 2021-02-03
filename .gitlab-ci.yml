@@ -14,6 +14,8 @@ build:dev:
     - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
     - npm install
     - yarn run build
+    - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
+    - rm -r node_modules
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
@@ -28,7 +30,7 @@ deploy:dev:
   tags:
     - dev-server
   script:
-    #- sudo rm -rf $SITE_PATH_DEV*
+    - sudo rm -rf /var/www/xm.iptp.dev/html/*
     - sudo cp -r dist/* $SITE_PATH_DEV
     - sudo chown -R www-data:www-data $SITE_PATH_DEV
   only:
@@ -36,11 +38,8 @@ deploy:dev:
   dependencies:
     - build:dev
 
-build:la:
-  stage: build
-  tags:
-    - prod-la
-  script:
+.buildprod:
+  script: &buildprod
     - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
     - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
@@ -48,9 +47,24 @@ build:la:
     - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
     - npm install
     - yarn run build:prod
+    - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
+    - rm -r node_modules
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
+
+.deployprod:
+  script: &deployprod
+    - sudo rm -rf /var/www/xm.iptp.net/html/*
+    - sudo cp -r dist/* /var/www/xm.iptp.net/html
+    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+
+build:la:
+  stage: build
+  tags:
+    - prod-la
+  script:
+   *buildprod
   only:
     - master
   artifacts:
@@ -63,9 +77,7 @@ deploy:la:
   tags:
     - prod-la
   script:
-    - sudo rm -rf /var/www/xm.iptp.net/html/*
-    - sudo cp -r dist/* /var/www/xm.iptp.net/html
-    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+    *deployprod
   only:
     - master
   dependencies:
@@ -76,16 +88,7 @@ build:ams:
   tags:
     - prod-ams
   script:
-    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
-    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
-    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
-    - version=$(<VERSION)
-    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
-    - npm install
-    - yarn run build:prod
-    - mkdir .dist
-    - cp -r * .dist
-    - mv .dist dist
+    *buildprod
   only:
     - master
   artifacts:
@@ -98,9 +101,7 @@ deploy:ams:
   tags:
     - prod-ams
   script:
-    - sudo rm -rf /var/www/xm.iptp.net/html/*
-    - sudo cp -r dist/* /var/www/xm.iptp.net/html
-    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+    *deployprod
   only:
     - master
   dependencies:
@@ -111,16 +112,7 @@ build:sg:
   tags:
     - prod-sg
   script:
-    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
-    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
-    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
-    - version=$(<VERSION)
-    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
-    - npm install
-    - yarn run build:prod
-    - mkdir .dist
-    - cp -r * .dist
-    - mv .dist dist
+    *buildprod
   only:
     - master
   artifacts:
@@ -133,9 +125,7 @@ deploy:sg:
   tags:
     - prod-sg
   script:
-    - sudo rm -rf /var/www/xm.iptp.net/html/*
-    - sudo cp -r dist/* /var/www/xm.iptp.net/html
-    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+    *deployprod
   only:
     - master
   dependencies:
