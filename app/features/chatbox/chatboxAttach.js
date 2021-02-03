@@ -195,6 +195,8 @@ define([
         markPhone: (isGroup) => {
             if (isGroup) {
                 $callBtn.hide();
+            } else {
+                $callBtn.show();
             }
         }
     };
