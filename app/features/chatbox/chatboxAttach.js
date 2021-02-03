@@ -196,7 +196,7 @@ define([
             if (isGroup) {
                 $callBtn.hide();
             } else {
-                process.env.NODE_ENV === 'production' ? $callBtn.hide() : $callBtn.show();
+                $callBtn.show();
             }
         }
     };
