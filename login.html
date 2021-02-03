@@ -35,7 +35,7 @@
             <h1 class="login__title">Cross Messenger</h1>
         </div>
     
-        <form name="loginForm" class="login__form js_login__form">
+        <form name="loginForm" class="login__form js_login__form" method="post">
             <input required="Please enter a email" type="email" name="email"
                 class="form-control" placeholder="E-mail" />
     
@@ -57,7 +57,7 @@
     <!-- have class active it is show / hidden is hide-->
     <div class="sign-up form-style js-global js-signup">
         <h2 class="popup__heading">Register New Account</h2>
-        <form name="resetForm" class="js_register__form">
+        <form name="resetForm" class="js_register__form" method="post">
             <div class="form__line">
                 <label class="form__label">Name</label>
                 <input class="form-control form-control2" required type="text" placeholder="Name" name="name" />
@@ -101,7 +101,7 @@
     <!-- have class active it is show / hidden is hide-->
     <div class="reset-password reset-password1 form-style js-global js-requestcode">
         <h2 class="popup__heading">Reset password</h2>
-        <form name="resetForm" class="js_forgot__form">
+        <form name="resetForm" class="js_forgot__form" method="post">
             <div class="form__line">
                 <!-- <label class="form__label">E-Mail</label> -->
                 <input class="form-control form-control2" required type="email" placeholder="E-Mail" name="email" />
@@ -126,7 +126,7 @@
     <!-- have class active it is show / hidden is hide-->
     <div class="reset-password reset-password2 form-style js-global js-forget">
         <h2 class="popup__heading">Reset password</h2>
-        <form name="resetForm" class="js_forgot__form_code">
+        <form name="resetForm" class="js_forgot__form_code" method="post">
             <div class="form__line">
                 <!-- <label class="form__label">E-Mail</label> -->
                 <input class="form-control form-control2" required type="text" placeholder="E-Mail" name="email" />
@@ -178,7 +178,13 @@
 
     </div>  
 </div>
-
+    <script>
+        for (let i = 0; i < forms.length; i++) {
+            forms[i].addEventListener("onsubmit", function(event){
+                event.preventDefault()
+            });
+        }
+    </script>
     <!-- <script src="./assets/lib/jquery.min.js"></script>
     <script src="./assets/js/login.min.js"></script>    -->
 <script src="/source/login.bundle.js"></script></body>

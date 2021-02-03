@@ -177,7 +177,7 @@ define([
             data.who = info.id === mess.sender.id ? 'you' : '';
             data.date = convertMessagetime(mess.msgDate);
 
-            // rendr with case of comment
+            // render with case of comment
             if (mess.message.indexOf('"></c>') > -1 && mess.message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
                 try {
                     splitMess = mess.message.split('<c style="display:none" ob="');
