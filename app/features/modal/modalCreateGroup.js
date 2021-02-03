@@ -42,7 +42,7 @@ define([
         </div>
     `;
     const seletctedTemplate = `
-        <div data-mcgs-id="{id}" class="crms-room {admin}">
+        <div data-mcgs-id="{id}" class="crms-room {admin}" alt={name} title="{name}">
             <img class="--img avatar" src={src}>
             <span>{name}</span>
         </div>

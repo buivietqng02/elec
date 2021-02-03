@@ -28,7 +28,7 @@ deploy:dev:
   tags:
     - dev-server
   script:
-    - sudo rm -rf $SITE_PATH_DEV*
+    #- sudo rm -rf $SITE_PATH_DEV*
     - sudo cp -r dist/* $SITE_PATH_DEV
     - sudo chown -R www-data:www-data $SITE_PATH_DEV
   only:

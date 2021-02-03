@@ -176,13 +176,27 @@ define([
                 counter = 0;
                 $dropzone.hide();
             });
+            document.onpaste = (e) => {
+                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (index in items) {
+                    const item = items[index];
+                    if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
+                        const file = item.getAsFile();
+                        if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(file.type)) {
+                            callAPI('imageupload', file);
+                        } else {
+                            callAPI('fileupload', file);
+                        }
+                    }
+                }
+            };
         },
 
         markPhone: (isGroup) => {
             if (isGroup) {
                 $callBtn.hide();
             } else {
-                process.env.NODE_ENV === 'production' ? $callBtn.hide() : $callBtn.show();
+                $callBtn.show();
             }
         }
     };

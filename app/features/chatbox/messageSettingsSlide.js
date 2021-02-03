@@ -1,4 +1,12 @@
-define(['features/chatbox/chatboxInput', 'features/modal/modalForwardMessage'], (chatboxInputComp, modalForwardMessageComp) => {
+define([
+    'shared/functions',
+    'features/chatbox/chatboxInput', 
+    'features/modal/modalForwardMessage'
+], (
+    functions,
+    chatboxInputComp, 
+    modalForwardMessageComp
+) => {
     const message = {};
     let $message;
     let isShow = false;
@@ -12,9 +20,16 @@ define(['features/chatbox/chatboxInput', 'features/modal/modalForwardMessage'], 
     const onComment = () => {
         const { chatId } = $message.data();
         const $name = $message.find('.--name');
-        const mess = $message.find('.--mess').html();
         const name = $name.html();
+        const messHtml = $message.find('.--mess').html();
         const { useridName, userOfficiallyName } = $name.data();
+        let mess = functions.stripTags(messHtml);
+        let hasFile = 0;
+
+        if ($message.hasClass('have-file')) {
+            hasFile = 1;
+            mess = messHtml;
+        }
 
         offEventClickOutside();
         chatboxInputComp.onComment({
@@ -22,6 +37,7 @@ define(['features/chatbox/chatboxInput', 'features/modal/modalForwardMessage'], 
             userId: useridName,
             mess,
             name,
+            hasFile,
             officiallyName: userOfficiallyName
         });
     };
@@ -46,6 +62,7 @@ define(['features/chatbox/chatboxInput', 'features/modal/modalForwardMessage'], 
         const value = $message.find('.--mess').html();
 
         offEventClickOutside();
+        $message.remove();
         chatboxInputComp.onRemove(chatId, value);
     };
 

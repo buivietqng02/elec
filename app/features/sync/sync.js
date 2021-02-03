@@ -98,7 +98,7 @@ define([
         messages.forEach(mess => {
             (objRooms[mess.id.chatId] = (objRooms[mess.id.chatId] || []).concat(mess));
         });
-        rooms = rooms.filter(room => {
+        rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
                 // Handle with message was deleted

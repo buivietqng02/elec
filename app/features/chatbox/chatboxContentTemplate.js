@@ -54,7 +54,7 @@ define(['app/constant'], (constant) => {
             </div>
         `,
         mess: `
-            <li class="js_li_list_mess {who} messages__item {isFile}" data-chat-id="{id}">
+            <li class="js_li_list_mess {who} messages__item {isFile}" data-chat-id="{id}" data-chat-type="{chatType}">
                 <div class="--content">
                     <div class="--heading">
                         <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
