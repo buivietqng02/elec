@@ -195,8 +195,6 @@ define([
         markPhone: (isGroup) => {
             if (isGroup) {
                 $callBtn.hide();
-            } else {
-                process.env.NODE_ENV === 'production' ? $callBtn.hide() : $callBtn.show();
             }
         }
     };
