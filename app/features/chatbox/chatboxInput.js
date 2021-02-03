@@ -68,9 +68,7 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
             return;
         }
 
-        console.log(htmlEncode(text));
         text = htmlEncode(text);
-        console.log(text);
         if (commentState) {
             text = `${text}<c style="display:none" ob="${JSON.stringify(commentState)}"></c>`;
         }
