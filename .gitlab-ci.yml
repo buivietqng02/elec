@@ -32,7 +32,7 @@ deploy:dev:
   tags:
     - dev-server
   script:
-    - sudo mv $SITE_PATH_DEV /var/www/xm.iptp.dev/rollback
+    - sudo mv -r $SITE_PATH_DEV /var/www/xm.iptp.dev/rollback
     - sudo mkdir $SITE_PATH_DEV
     - sudo cp -r dist/* $SITE_PATH_DEV
     - sudo chown -R www-data:www-data $SITE_PATH_DEV
