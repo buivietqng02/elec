@@ -17,6 +17,7 @@ build:dev:
     - ls -l
     - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
     - rm -r node_modules
+    - ls -l
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
@@ -31,7 +32,7 @@ deploy:dev:
   tags:
     - dev-server
   script:
-    #- sudo rm -rf $SITE_PATH_DEV*
+    - sudo mv $SITE_PATH_DEV /var/www/xm.iptp.dev/rollback
     - sudo cp -r dist/* $SITE_PATH_DEV
     - sudo chown -R www-data:www-data $SITE_PATH_DEV
   only:
