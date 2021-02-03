@@ -14,7 +14,9 @@ build:dev:
     - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
     - npm install
     - yarn run build
-    - rm -r README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock node_modules
+    - ls -l
+    - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
+    - rm -r node_modules
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
