@@ -1,7 +1,7 @@
 define([
-    'app/constant', 
-    'shared/api', 
-    'shared/data', 
+    'app/constant',
+    'shared/api',
+    'shared/data',
     'shared/functions',
     'features/sidebar/sidebarRoomList',
     'features/chatbox/chatboxContent',
@@ -9,9 +9,9 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest'
 ], (
-    constant, 
-    API, 
-    GLOBAL, 
+    constant,
+    API,
+    GLOBAL,
     functions,
     sidebarRoomListComp,
     chatboxContentComp,
@@ -66,7 +66,7 @@ define([
     const handleWithRemovingMessage = (messId, roomId) => {
         if (GLOBAL.getCurrentRoomId() === roomId) {
             chatboxContentComp.onSyncRemove(messId);
-        } 
+        }
     };
 
     const handleWithUpdatingMessage = (message, roomId) => {
@@ -120,12 +120,12 @@ define([
         rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
-                
+
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
-                    if (!(room.isLiveAssistance && messagesResponse[0].type === 7)) {
-                        notificationComp.pushNotificationForMessage(messagesResponse[0]);
+                    if (messagesResponse[0].type === 7 && room.id !== GLOBAL.getCurrentRoomId()) {
+                        return true;
                     }
                 }
 
@@ -150,7 +150,7 @@ define([
                 if (messagesResponse[0].type === 24) {
                     handleWithEndCall(messagesResponse[0], room.id);
                 }
-                
+
                 const newRoom = updateRoom(room, messagesResponse);
                 handleMoveRoomUp(newRoom);
                 renderMessageForActiveRoom(objRooms[room.id], room);
