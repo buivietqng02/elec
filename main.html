@@ -29,6 +29,7 @@
       </div>
     </div>
     <script>
+        alert('You are using old version. Please reload page');
         try {
             navigator.serviceWorker.getRegistrations().then(function(registrations) {
                 for (let registration of registrations) {
