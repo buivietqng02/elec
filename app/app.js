@@ -1,4 +1,5 @@
 define([
+    '@stomp/stompjs',
     'shared/api',
     'shared/data',
     'shared/functions',
@@ -17,6 +18,7 @@ define([
     'features/modal/modalShowImageFull',
     'features/notification/notification'
 ], (
+    Stomp,
     API,
     GLOBAL,
     functions,
@@ -36,6 +38,7 @@ define([
     notificationComp
 ) => {
     require('bootstrap/js/dist/modal');
+    require('bootstrap/js/dist/tooltip');
     require('bootstrap/dist/css/bootstrap.min.css');
     require('assets/css/p_style.css');
     require('assets/css/style.css');
@@ -54,6 +57,60 @@ define([
         FONTSIZES,
         TOKEN 
     } = constant;
+
+    // const onSetUpWebSocket = (userId) => {
+    //     const client = new Stomp.Client({
+    //         brokerURL: 'ws://xm.iptp.dev/xm/api/ws',
+    //         connectHeaders: {
+    //             userId
+    //         },
+    //         debug: (str) => {
+    //             console.log(str);
+    //         },
+    //         reconnectDelay: 5000,
+    //         heartbeatIncoming: 4000,
+    //         heartbeatOutgoing: 4000
+    //     });
+
+    //     client.onConnect = function (frame) {
+    //         console.log(frame);
+    //         client.subscribe('/topic/2e4df4cd22dd', (mess) => {
+    //             console.log(mess);
+    //         }, {
+    //             userId,
+    //             chatId: '2e4df4cd22dd'
+    //         });
+    //     };
+
+    //     client.onStompError = function (frame) {
+    //         console.log(frame);
+    //     };
+
+    //     client.activate();
+    // };
+
+    const onInitGeneralEvents = () => {
+        // copy input value
+        $(document).on('click', '.input-only-view', (event) => {
+            const $input = $(event.currentTarget).prev();
+
+            $input.get(0).select();
+            $input.get(0).setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            if (window.getSelection) {
+                if (window.getSelection().empty) { 
+                    // Chrome
+                    window.getSelection().empty();
+                } else if (window.getSelection().removeAllRanges) { 
+                    // Firefox
+                    window.getSelection().removeAllRanges();
+                }
+            } else if (document.selection) { 
+                // IE?
+                document.selection.empty();
+            }
+        });
+    };
 
     const onAssignAdvanceThemeBody = () => {
         const body = $('body');
@@ -124,6 +181,7 @@ define([
     };
 
     const onInit = () => {
+        onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
         // Get server version
@@ -135,6 +193,7 @@ define([
             $('.xm-page-loading').remove();
             onGetPrefrences(data[1]);
             onGetValidate(data[0]);
+            // onSetUpWebSocket(data[0].data.user.id);
         });
     };
     

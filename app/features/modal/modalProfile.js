@@ -51,12 +51,12 @@ define([
                         <div class="pmm-form-group pmm-userid">
                             <label>User Id</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                         </div>
                         <div class="pmm-form-group pmm-email">
                             <label>Email</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                         </div>
                         <div class="pmm-form-group pmm-name">
                             <label>Name</label>
@@ -155,6 +155,7 @@ define([
                 $save = $modal.find('.btn-outline-primary');
                 $closeBtn = $modal.find('.close');
                 $inputFile = $modal.find('.pmm-image-wrapper .pmmiw-file');
+                $modal.find('[data-toggle="tooltip"]').tooltip();
 
                 $save.click(onUpdateInfomation);
                 $inputFile.change(uploadFile);
