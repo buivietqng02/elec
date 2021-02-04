@@ -29,14 +29,20 @@
       </div>
     </div>
     <script>
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for (let registration of registrations) {
-                registration.unregister()
-            }
+        try {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for (let registration of registrations) {
+                    registration.unregister()
+                }
 
+                localStorage.removeItem('token');
+                localStorage.removeItem('sessionId');
+                window.location = '/';
+            });
+        } catch (e) {
             localStorage.removeItem('token');
             localStorage.removeItem('sessionId');
             window.location = '/';
-        });
+        }
     </script>    
 </html>
