@@ -34,15 +34,13 @@
                 for (let registration of registrations) {
                     registration.unregister()
                 }
-
-                localStorage.removeItem('token');
-                localStorage.removeItem('sessionId');
-                window.location = '/login.html';
             });
-        } catch (e) {
+        } catch (e) {}
+
+        setTimeout(() => {
             localStorage.removeItem('token');
             localStorage.removeItem('sessionId');
             window.location = '/login.html';
-        }
+        }, 2000)
     </script>    
 </html>
