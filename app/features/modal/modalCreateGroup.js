@@ -41,9 +41,9 @@ define([
             <span>{name}</span>
         </div>
     `;
-    const seletctedTemplate = `
-        <div data-mcgs-id="{id}" class="crms-room {admin}" alt={name} title="{name}">
-            <img class="--img avatar" src={src}>
+    const selectedTemplate = `
+        <div data-mcgs-id="{id}" class="crms-room {admin}">
+            <img class="--img avatar" src={src} data-toggle="tooltip" data-placement="right" title="{fullName}" />
             <span>{name}</span>
         </div>
     `;
@@ -159,6 +159,7 @@ define([
         const { mcgId, mcgName } = $this.data();
         const params = {
             id: mcgId,
+            fullName: mcgName,
             name: truncate(mcgName.split(' ')[0], 8),
             src: getAvatar(mcgId)
         };
@@ -170,9 +171,10 @@ define([
             selected: true
         });
 
-        $selectedWrapper.append(render(seletctedTemplate, params));
+        $selectedWrapper.append(render(selectedTemplate, params));
         $modal.addClass('room-selected');
         $this.attr('data-mcgi-selected', mcgId);
+        $modal.find('[data-toggle="tooltip"]').tooltip();
     };
 
     const onSlideCancelClick = () => $menu.hide();
@@ -372,6 +374,7 @@ define([
             };
             const params = {
                 id: member.user.id,
+                fullName: member.user.name,
                 name: truncate(member.user.name.split(' ')[0], 8),
                 src: getAvatar(member.user.id)
             };
@@ -383,8 +386,9 @@ define([
 
             arrUserId = arrUserId.concat(arrItem);
 
-            $selectedWrapper.append(render(seletctedTemplate, params));
+            $selectedWrapper.append(render(selectedTemplate, params));
             $(`[data-mcg-id="${member.user.id}"]`).attr('data-mcgi-selected', member.user.id);
+            $modal.find('[data-toggle="tooltip"]').tooltip();
         });
     };
 

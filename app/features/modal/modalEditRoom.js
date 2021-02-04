@@ -56,12 +56,12 @@ define([
                         <div class="xmmcm-form-group erm-userid">
                             <label>User Id</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                         </div>
                         <div class="xmmcm-form-group erm-chatid">
                             <label>Chat Id</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                         </div>
                         <div class="xmmcm-form-group erm-name">
                             <label>Name</label>
@@ -172,54 +172,56 @@ define([
                 <div class="xmmcm-form-group erm-userid">
                     <label>Chat Id</label>
                     <input class="input-freeze" tabindex="-1" value="${res.id}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Guest Id</label>
                     <input class="input-freeze" tabindex="-1" value="${id || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Guest Name</label>
                     <input class="input-freeze" tabindex="-1" value="${name || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Guest Email</label>
                     <input class="input-freeze" tabindex="-1" value="${email || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>IP Address</label>
                     <input class="input-freeze" tabindex="-1" value="${ipAddress || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Device Type</label>
                     <input class="input-freeze" tabindex="-1" value="${deviceType || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Browser</label>
                     <input class="input-freeze" tabindex="-1" value="${browser || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Platform</label>
                     <input class="input-freeze" tabindex="-1" value="${platform || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>Platform Version</label>
                     <input class="input-freeze" tabindex="-1" value="${platformVersion || 'none'}" />
-                    <div class="input-only-view"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
                 <div class="xmmcm-form-group erm-userid">
                     <label>User Agent</label>
                     <textarea class="input-freeze" tabindex="-1">${userAgent || 'none'}</textarea>
-                    <div class="input-only-view" style="top: 30px"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" style="top: 30px"></div>
                 </div>
             `);
+
+            $modal.find('[data-toggle="tooltip"]').tooltip();
         });
     };
 
@@ -242,6 +244,7 @@ define([
 
                 $save.click(onUpdateInfomation);
                 $inputFile.change(uploadFile);
+                $modal.find('[data-toggle="tooltip"]').tooltip();
             }
 
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
