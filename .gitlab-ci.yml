@@ -4,6 +4,7 @@ stages:
 
 build:dev:
   stage: build
+  when: manual
   tags:
     - dev-server
   script:
@@ -27,6 +28,7 @@ build:dev:
 
 deploy:dev:
   stage: deploy
+  when: manual
   tags:
     - dev-server
   script:
@@ -61,6 +63,7 @@ deploy:dev:
 
 build:la:
   stage: build
+  when: manual
   tags:
     - prod-la
   script:
@@ -74,6 +77,7 @@ build:la:
 
 deploy:la:
   stage: deploy
+  when: manual
   tags:
     - prod-la
   script:
@@ -85,6 +89,7 @@ deploy:la:
 
 build:ams:
   stage: build
+  when: manual
   tags:
     - prod-ams
   script:
@@ -98,6 +103,7 @@ build:ams:
 
 deploy:ams:
   stage: deploy
+  when: manual
   tags:
     - prod-ams
   script:
@@ -109,6 +115,7 @@ deploy:ams:
 
 build:sg:
   stage: build
+  when: manual
   tags:
     - prod-sg
   script:
@@ -122,6 +129,7 @@ build:sg:
 
 deploy:sg:
   stage: deploy
+  when: manual
   tags:
     - prod-sg
   script:
@@ -130,3 +138,30 @@ deploy:sg:
     - master
   dependencies:
     - build:sg
+  
+build:syd:
+  stage: build
+  when: manual
+  tags:
+    - xm-web-syd
+  script:
+    *buildprod
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:syd:
+  stage: deploy
+  when: manual
+  tags:
+    - xm-web-syd
+  script:
+    *deployprod
+  only:
+    - master
+  dependencies:
+    - build:syd
+
