@@ -179,9 +179,10 @@
     </div>  
 </div>
     <script>
+        const forms = document.querySelectorAll('form');
         for (let i = 0; i < forms.length; i++) {
             forms[i].addEventListener("onsubmit", function(event){
-                event.preventDefault()
+                event.preventDefault();
             });
         }
     </script>

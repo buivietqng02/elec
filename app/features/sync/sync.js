@@ -29,12 +29,19 @@ define([
         const currentUserId = GLOBAL.getInfomation().id;
         const currentRoomId = GLOBAL.getCurrentRoomId();
         const newRoom = { ...room };
+        const lastNum = messages.length - 1;
 
-        newRoom.lastmessage = messages[messages.length - 1].message;
+        if (!messages[lastNum].updated && !messages[lastNum].deleted) {
+            newRoom.lastmessage = messages[messages.length - 1].message;
+        }
 
         if (currentRoomId !== room.id) {
             let unReadNum = newRoom.member.messagecounter;
             messages.forEach(message => {
+                if (message.deleted || message.updated) {
+                    return;
+                }
+
                 if (currentUserId === message.sender.id) {
                     unReadNum = 0;
                 } else {
@@ -57,24 +64,6 @@ define([
         sidebarRoomListComp.onPrepend(html);
     };
 
-    const renderMessageForActiveRoom = (messages, room) => {
-        if (GLOBAL.getCurrentRoomId() === room.id) {
-            chatboxContentComp.onSync(messages);
-        }
-    };
-
-    const handleWithRemovingMessage = (messId, roomId) => {
-        if (GLOBAL.getCurrentRoomId() === roomId) {
-            chatboxContentComp.onSyncRemove(messId);
-        } 
-    };
-
-    const handleWithUpdatingMessage = (message, roomId) => {
-        if (GLOBAL.getCurrentRoomId() === roomId) {
-            chatboxContentComp.onSyncUpdate(message);
-        }
-    };
-
     const handleWithCalling = (message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
@@ -87,6 +76,55 @@ define([
         if (currentUserId !== message.sender.id) {
             modalPhoneRequest.onEndCall(message.sender, roomId);
         }
+    };
+
+    const renderMessageForActiveRoom = (messages, roomId) => {
+        let isNotMoveRoomUp = false;
+        const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
+        messages.forEach(message => {
+            // Handle with message was deleted
+            if (message.deleted) {
+                isNotMoveRoomUp = true;
+                if (isCurrentRoom) {
+                    chatboxContentComp.onSyncRemove(message.id.messageId);
+                }
+
+                return;
+            }
+
+            // Handle with message was updated
+            if (message.updated) {
+                isNotMoveRoomUp = true;
+                if (isCurrentRoom) {
+                    chatboxContentComp.onSyncUpdate(message);
+                }
+
+                return;
+            }
+
+            isNotMoveRoomUp = false;
+
+            // Not update when someone left
+            if (message.type === 7) {
+                isNotMoveRoomUp = true;
+            }
+
+            // Handle with message is calling
+            if (message.type === 21) {
+                handleWithCalling(message, roomId);
+            }
+
+            // Handle with message is end call
+            if (message.type === 24) {
+                handleWithEndCall(message, roomId);
+            }
+
+            if (isCurrentRoom) {
+                chatboxContentComp.onSync([message]);
+            }   
+        });
+
+        return isNotMoveRoomUp;
     };
 
     const getNewGroup = (message) => API.get('chats').then(res => {
@@ -124,38 +162,20 @@ define([
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
-                    if (!(room.isLiveAssistance && messagesResponse[0].type === 7)) {
+                    if (!(room.isLiveAssistance && messages[messages.length - 1].type === 7)) {
                         notificationComp.pushNotificationForMessage(messagesResponse[0]);
                     }
                 }
 
-                // Handle with message was deleted
-                if (messagesResponse[0].deleted) {
-                    handleWithRemovingMessage(messagesResponse[0].id.messageId, room.id);
-                    return true;
-                }
+                const isNotMoveRoomUp = renderMessageForActiveRoom(objRooms[room.id], room.id);
 
-                // Handle with message was updated
-                if (messagesResponse[0].updated) {
-                    handleWithUpdatingMessage(messagesResponse[0], room.id);
-                    return true;
+                if (!isNotMoveRoomUp) {
+                    const newRoom = updateRoom(room, messagesResponse);
+                    handleMoveRoomUp(newRoom);
+                    roomsMove = roomsMove.concat(newRoom);
                 }
-
-                // Handle with message is calling
-                if (messagesResponse[0].type === 21) {
-                    handleWithCalling(messagesResponse[0], room.id);
-                }
-
-                // Handle with message is end call
-                if (messagesResponse[0].type === 24) {
-                    handleWithEndCall(messagesResponse[0], room.id);
-                }
-                
-                const newRoom = updateRoom(room, messagesResponse);
-                handleMoveRoomUp(newRoom);
-                renderMessageForActiveRoom(objRooms[room.id], room);
-                roomsMove = roomsMove.concat(newRoom);
-                return false;
+        
+                return isNotMoveRoomUp;
             }
 
             return true;
@@ -177,10 +197,11 @@ define([
 
         API.get('sync', data).then(res => {
             if (res?.data?.messages?.length) {
-                handleRealTimeMessage(res.data.messages);
+                const messages = functions.sortBy(res.data.messages, 'msgDate');
+                handleRealTimeMessage(messages);
             }
 
-            if (currentRoomId) {
+            if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                 chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
             }
 
@@ -189,6 +210,8 @@ define([
     };
 
     return {
-        onInit: onSync
+        onInit: () => {
+            onSync();
+        }
     };
 });
