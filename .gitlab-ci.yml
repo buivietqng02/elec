@@ -32,9 +32,10 @@ deploy:dev:
   tags:
     - dev-server
   script:
-    - sudo rm -rf /var/www/xm-green/html/*
-    - sudo cp -r dist/* /var/www/xm-green/html/
-    - sudo chown -R www-data:www-data /var/www/xm-green/html/*
+    - sudo rm -rf /var/www/xm.iptp.dev/html/*
+    - sudo cp -r dist/* $SITE_PATH_DEV
+    - sudo chown -R www-data:www-data $SITE_PATH_DEV
+
   only:
     - dev
   dependencies:
@@ -57,9 +58,9 @@ deploy:dev:
 
 .deployprod:
   script: &deployprod
-    - sudo rm -rf /var/www/xm.iptp.net/html/*
-    - sudo cp -r dist/* /var/www/xm.iptp.net/html
-    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+    - sudo rm -rf /var/www/xm-green/html/*
+    - sudo cp -r dist/* /var/www/xm-green/html/
+    - sudo chown -R nginx:nginx /var/www/xm-green/html/
 
 build:la:
   stage: build
