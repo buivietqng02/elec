@@ -34,10 +34,7 @@ define(['app/constant'], (constant) => {
                 </div>
             </li>
         `,
-        file: `
-            <i class="xm xm-download"></i> 
-            <a href="{src}" target="_blank">{fileName}</a> {fileSize}
-        `,
+        file: `<i class="xm xm-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
         audio: `
             <audio controls>
