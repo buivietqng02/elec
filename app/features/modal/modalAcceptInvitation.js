@@ -58,6 +58,9 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (const
             }
 
             userId = element.find(`[${constant.ATTRIBUTE_CHANGE_NAME}]`).data().userId;
+            const urlAvatar = element.find('.avatar').prop('src');
+            const position = urlAvatar.indexOf('users');
+            userId = urlAvatar.substring(position + 6, position + 18);
 
             $('#acceptInvitationModal').remove && $('#acceptInvitationModal').remove();
             $('body').append(render(template, {

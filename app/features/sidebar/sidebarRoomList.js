@@ -58,7 +58,7 @@ define([
             return false;
         })[0] || {};
 
-        if (!roomInfo || GLOBAL.getCurrentRoomId() === roomId || $this.hasClass('p_disabled')) {
+        if (!roomInfo || $this.hasClass('p_disabled')) {
             return;
         }
 
