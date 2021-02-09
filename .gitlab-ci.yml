@@ -170,7 +170,7 @@ deploy:syd:
   tags:
     - syd
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
