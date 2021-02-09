@@ -61,12 +61,20 @@ deploy:dev:
     - sudo cp -r dist/* /var/www/xm.iptp.net/html
     - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
 
+.blue-green-deploy:
+  script: &blue-green-deploy
+    - export DEPLOY_COLOR=$(if grep -q 'blue' /var/www/deployment_id; then echo 'green'; else echo 'blue'; fi;)
+    - sudo ls /var/www/xm-$DEPLOY_COLOR/html/*
+    - sudo cp -r dist/* /var/www/xm-$DEPLOY_COLOR/html
+    - sudo chown -R nginx:nginx /var/www/xm-$DEPLOY_COLOR/html
+    - sudo bash -c "echo $DEPLOY_COLOR > /var/www/deployment_id"
+
 build:la:
   stage: build
   tags:
     - prod-la
   script:
-   *buildprod
+   *blue-green-deploy
   only:
     - master
   artifacts:
@@ -79,7 +87,7 @@ deploy:la:
   tags:
     - prod-la
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
@@ -90,7 +98,7 @@ build:ams:
   tags:
     - prod-ams
   script:
-    *buildprod
+    *blue-green-deploy
   only:
     - master
   artifacts:
@@ -103,7 +111,7 @@ deploy:ams:
   tags:
     - prod-ams
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
@@ -114,7 +122,7 @@ build:sg:
   tags:
     - prod-sg
   script:
-    *buildprod
+    *blue-green-deploy
   only:
     - master
   artifacts:
@@ -127,7 +135,7 @@ deploy:sg:
   tags:
     - prod-sg
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
