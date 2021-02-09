@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -12,7 +11,7 @@ const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
     template: `html/${name}.html`,
     filename: `../${name}.html`,
     chunks: [name]
-  }));
+}));
 
 module.exports = {
     entry: {
@@ -22,7 +21,7 @@ module.exports = {
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'source'),
-        publicPath: '/source'
+        publicPath: '/source/'
     },
     plugins: [
         new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),

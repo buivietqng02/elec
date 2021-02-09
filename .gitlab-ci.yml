@@ -12,6 +12,7 @@ build:dev:
     - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
     - version=$(<VERSION)
     - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - sed -i "s|#XM_VERSION|$version|g" sw.js
     - npm install
     - yarn run build
     - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
@@ -45,6 +46,7 @@ deploy:dev:
     - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
     - version=$(<VERSION)
     - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - sed -i "s|#XM_VERSION|$version|g" sw.js
     - npm install
     - yarn run build:prod
     - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
