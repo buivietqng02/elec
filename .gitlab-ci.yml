@@ -154,7 +154,7 @@ build:syd:
   stage: build
   when: manual
   tags:
-    - xm-web-syd
+    - syd
   script:
     *buildprod
   only:
@@ -168,7 +168,7 @@ deploy:syd:
   stage: deploy
   when: manual
   tags:
-    - xm-web-syd
+    - syd
   script:
     *deployprod
   only:
