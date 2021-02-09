@@ -1,5 +1,4 @@
 define([
-    '@stomp/stompjs',
     'shared/api',
     'shared/data',
     'shared/functions',
@@ -18,7 +17,6 @@ define([
     'features/modal/modalShowImageFull',
     'features/notification/notification'
 ], (
-    Stomp,
     API,
     GLOBAL,
     functions,
@@ -88,6 +86,12 @@ define([
 
     //     client.activate();
     // };
+
+    const onRegisterSW = () => {
+        if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+            navigator.serviceWorker.register('sw.js');
+        }
+    };
 
     const onInitGeneralEvents = () => {
         // copy input value
@@ -181,8 +185,11 @@ define([
     };
 
     const onInit = () => {
+        onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
+
+        console.log('11');
 
         // Get server version
         onGetVersion();

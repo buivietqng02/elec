@@ -194,6 +194,7 @@ define([
         if (currentRoomId) {
             data.chatId = currentRoomId;
         }
+        data.onBackground = document.hidden;
 
         API.get('sync', data).then(res => {
             if (res?.data?.messages?.length) {

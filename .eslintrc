@@ -6,9 +6,11 @@
         "jQuery": "readonly",
         "jsrender": "readonly",
         "window": "readonly",
+        "confirm": "readonly",
         "define": "readonly",
         "document": "readonly",
         "Notification": "readonly",
+        "navigator": "readonly",
         "easyrtc": "readonly"
     },
     "rules": {
