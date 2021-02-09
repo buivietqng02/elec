@@ -78,7 +78,7 @@ build:la:
   tags:
     - prod-la
   script:
-   *blue-green-deploy
+   *buildprod
   only:
     - master
   artifacts:
@@ -104,7 +104,7 @@ build:ams:
   tags:
     - prod-ams
   script:
-    *blue-green-deploy
+    *buildprod
   only:
     - master
   artifacts:
@@ -130,7 +130,7 @@ build:sg:
   tags:
     - prod-sg
   script:
-    *blue-green-deploy
+    *buildprod
   only:
     - master
   artifacts:
