@@ -15,10 +15,10 @@ jQuery(function($){
 // global 
 // ==============================================================================    
 // const XM_URL = 'xm.iptp.net';    
-const XM_URL = process.env.NODE_ENV === 'production' ? 'xm.iptp.net' : 'xm.iptp.dev';
+const XM_URL = process.env.NODE_ENV === 'production' ? '' : 'https://xm.iptp.dev/';
 
 
-var baseUrl = 'https://' + XM_URL + '/xm';
+var baseUrl = XM_URL + 'xm';
 var API_URL =  baseUrl + '/api';
 
 var sessionId = localStorage.getItem("sessionId");

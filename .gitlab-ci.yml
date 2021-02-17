@@ -4,6 +4,7 @@ stages:
 
 build:dev:
   stage: build
+  when: manual
   tags:
     - dev-server
   script:
@@ -28,12 +29,14 @@ build:dev:
 
 deploy:dev:
   stage: deploy
+  when: manual
   tags:
     - dev-server
   script:
     - sudo rm -rf /var/www/xm.iptp.dev/html/*
     - sudo cp -r dist/* $SITE_PATH_DEV
     - sudo chown -R www-data:www-data $SITE_PATH_DEV
+
   only:
     - dev
   dependencies:
@@ -57,12 +60,21 @@ deploy:dev:
 
 .deployprod:
   script: &deployprod
-    - sudo rm -rf /var/www/xm.iptp.net/html/*
-    - sudo cp -r dist/* /var/www/xm.iptp.net/html
-    - sudo chown -R nginx:nginx /var/www/xm.iptp.net/html
+    - sudo rm -rf /var/www/xm-green/html/*
+    - sudo cp -r dist/* /var/www/xm-green/html/
+    - sudo chown -R nginx:nginx /var/www/xm-green/html/
+
+.blue-green-deploy:
+  script: &blue-green-deploy
+    - export DEPLOY_COLOR=$(if grep -q 'blue' /var/www/deployment_id; then echo 'green'; else echo 'blue'; fi;)
+    - sudo rm -rf /var/www/xm-$DEPLOY_COLOR/html/*
+    - sudo cp -r dist/* /var/www/xm-$DEPLOY_COLOR/html
+    - sudo chown -R nginx:nginx /var/www/xm-$DEPLOY_COLOR/html
+    - sudo bash -c "echo $DEPLOY_COLOR > /var/www/deployment_id"
 
 build:la:
   stage: build
+  when: manual
   tags:
     - prod-la
   script:
@@ -76,10 +88,11 @@ build:la:
 
 deploy:la:
   stage: deploy
+  when: manual
   tags:
     - prod-la
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
@@ -87,6 +100,7 @@ deploy:la:
 
 build:ams:
   stage: build
+  when: manual
   tags:
     - prod-ams
   script:
@@ -100,10 +114,11 @@ build:ams:
 
 deploy:ams:
   stage: deploy
+  when: manual
   tags:
     - prod-ams
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
@@ -111,6 +126,7 @@ deploy:ams:
 
 build:sg:
   stage: build
+  when: manual
   tags:
     - prod-sg
   script:
@@ -124,11 +140,39 @@ build:sg:
 
 deploy:sg:
   stage: deploy
+  when: manual
   tags:
     - prod-sg
   script:
-    *deployprod
+    *blue-green-deploy
   only:
     - master
   dependencies:
     - build:sg
+  
+build:syd:
+  stage: build
+  when: manual
+  tags:
+    - syd
+  script:
+    *buildprod
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:syd:
+  stage: deploy
+  when: manual
+  tags:
+    - syd
+  script:
+    *blue-green-deploy
+  only:
+    - master
+  dependencies:
+    - build:syd
+
