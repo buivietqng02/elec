@@ -115,7 +115,7 @@ define([
             if (!roomInfo.group) {
                 const { user } = roomInfo.members[0];
                 const name = $name.val() || user.name;
-                $(`[${ATTRIBUTE_CHANGE_NAME}="${user.id}"]`).html(name);
+                $(`[${ATTRIBUTE_CHANGE_NAME}="${user.id}"]`).text(name);
             }
         }).catch(onErrNetWork);
     };

@@ -36,20 +36,8 @@ define(['app/constant'], (constant) => {
         `,
         file: `<i class="xm xm-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
-        audio: `
-            <audio controls>
-                <source src="{audio}" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        `,
-        video: `
-            <div class="p-p-re">
-                <video width="400" controls>
-                    <source src="{video}" type="video/mp4">
-                    Your browser does not support HTML video.
-                </video>
-            </div>
-        `,
+        audio: `<audio controls>source src="{src}" type="audio/mpeg">Your browser does not support the audio element.</audio>`,
+        video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
             <li class="js_li_list_mess {who} messages__item {isFile}" data-chat-id="{id}" data-chat-type="{chatType}">
                 <div class="--content">

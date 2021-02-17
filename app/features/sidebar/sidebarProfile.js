@@ -9,7 +9,7 @@ define([
     functions, 
     modalProfileComp
 ) => {
-    const { render, getAvatar } = functions;
+    const { render, getAvatar, htmlEncode } = functions;
     const $wrapper = $('#sidebarProfile');
     const template = `
         <a title="Edit Profile" class="sipr-image">
@@ -23,7 +23,7 @@ define([
             const info = GLOBAL.getInfomation();
             const data = {
                 src: getAvatar(info.id),
-                name: info.name,
+                name: htmlEncode(info.name),
                 id: info.id
             };
 

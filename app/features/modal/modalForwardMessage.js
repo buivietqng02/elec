@@ -1,5 +1,5 @@
 define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, functions) => {
-    const { render, debounce, getAvatar } = functions;
+    const { render, debounce, getAvatar, htmlEncode } = functions;
     let $modal;
     let $closeBtn;
     let $input;
@@ -60,7 +60,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
             group: room.group ? 'hagr' : '',
             handleImageErr: `onerror="this.src='${room.group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
             src,
-            name
+            name: htmlEncode(name)
         };
 
         return render(template, data);

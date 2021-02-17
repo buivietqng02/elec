@@ -28,7 +28,8 @@ define([
         getAvatar, 
         convertMessagetime, 
         humanFileSize, 
-        transformLinkTextToHTML 
+        transformLinkTextToHTML,
+        htmlEncode
     } = functions;
 
     const $btnScrollToBottom = $('.scroll-to__bottom');
@@ -91,10 +92,12 @@ define([
                 return render(template.image, data);
                 break;
             case 3:
-                return;
+                data.src = `${API_URL}/audio?id=${file.id}`;
+                return render(template.audio, data);
                 break;
             case 4:
-                return;
+                data.src = `${API_URL}/stream?id=${file.id}`;
+                return render(template.video, data);
                 break;
             default:
                 data.src = `${API_URL}/file?id=${file.id}`;
@@ -170,8 +173,8 @@ define([
             }
 
             data.src = getAvatar(mess.sender.id);
-            data.name = roomEdited[mess.sender.id]?.user_name || mess.sender.name;
-            data.officially_name = mess.sender.name;
+            data.name = htmlEncode(roomEdited[mess.sender.id]?.user_name || mess.sender.name);
+            data.officially_name = htmlEncode(mess.sender.name);
             data.userId = mess.sender.id;
             data.show_internal = mess.internal ? '' : 'hidden';
             data.who = info.id === mess.sender.id ? 'you' : '';
@@ -182,7 +185,7 @@ define([
                 try {
                     splitMess = mess.message.split('<c style="display:none" ob="');
                     const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
-                    data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name}: ${commentInfo.mess}</div>`;
+                    data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${htmlEncode(roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name)}: ${commentInfo.mess}</div>`;
                     data.mess = transformLinkTextToHTML(splitMess[0]);
                 } catch(e) {
                     console.log(e);
@@ -201,6 +204,8 @@ define([
         } catch (e) {
             console.log('Bug render message');
             console.log(e);
+            console.log(mess);
+            console.log(messages);
             return '';
         }
     };
@@ -341,6 +346,11 @@ define([
         },
 
         onSync: (messList = []) => {
+            // Prevent duplicate message
+            if ($(`[data-chat-id="${messList[0]?.id?.messageId}"]`).length) {
+                return false;
+            }
+
             const wrapperHtml = $wrapper.get(0);
             const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
             const messagesHtml = messList.map((mess, i) => {

@@ -189,8 +189,6 @@ define([
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
-        console.log('11');
-
         // Get server version
         onGetVersion();
 
