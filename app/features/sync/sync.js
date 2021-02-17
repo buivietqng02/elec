@@ -79,12 +79,11 @@ define([
     };
 
     const renderMessageForActiveRoom = (messages, roomId) => {
-        let isNotMoveRoomUp = false;
+        let isNotMoveRoomUp = true;
         const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
         messages.forEach(message => {
             // Handle with message was deleted
             if (message.deleted) {
-                isNotMoveRoomUp = true;
                 if (isCurrentRoom) {
                     chatboxContentComp.onSyncRemove(message.id.messageId);
                 }
@@ -94,7 +93,6 @@ define([
 
             // Handle with message was updated
             if (message.updated) {
-                isNotMoveRoomUp = true;
                 if (isCurrentRoom) {
                     chatboxContentComp.onSyncUpdate(message);
                 }
@@ -102,11 +100,9 @@ define([
                 return;
             }
 
-            isNotMoveRoomUp = false;
-
             // Not update when someone left
-            if (message.type === 7) {
-                isNotMoveRoomUp = true;
+            if (message.type !== 7) {
+                isNotMoveRoomUp = false;
             }
 
             // Handle with message is calling

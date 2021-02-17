@@ -1,11 +1,13 @@
 define([
     'app/constant', 
-    'shared/data', 
+    'shared/data',
+    'shared/alert', 
     'shared/functions',
     'features/modal/modalPhoneRequest'
 ], (
     constant, 
     GLOBAL, 
+    ALERT,
     functions,
     modalPhoneRequestComp
 ) => {
@@ -111,14 +113,43 @@ define([
         });
     };
 
-    const uploadFile = (endpoint) => {
-        const file = endpoint === 'fileupload' ? $inputFile.get(0).files[0] : $inputImage.get(0).files[0];
-
-        if (!file) {
+    const checkFile = (file, isMedia) => {
+        console.log(file.type)
+        if (file.size > 500000000) {
+            ALERT.show('Maximum file size is 400MB!');
+            hideProcess();
             return;
         }
 
-        callAPI(endpoint, file);
+        if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(file.type)) {
+            callAPI('imageupload', file);
+            return;
+        }
+
+        if ((/(mp4)$/i).test(file.type)) {
+            callAPI('videoupload', file);
+            return;
+        }
+
+        if ((/audio/i).test(file.type)) {
+            callAPI('audioupload', file);
+            return;
+        }
+
+        if (isMedia && (/video/i).test(file.type)) {
+            ALERT.show('Only MP4 files supported');
+            return;
+        }
+
+        callAPI('fileupload', file);
+    };
+
+    const uploadFile = (endpoint) => {
+        if (endpoint === 'fileupload') {
+            callAPI(endpoint, $inputFile.get(0).files[0]);
+        } else {
+            checkFile($inputImage.get(0).files[0], true);
+        }
     };
 
     const onDrop = e => {
@@ -134,12 +165,8 @@ define([
             if (!item.type) {
                 return;
             }
-;
-            if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(item.type)) {
-                callAPI('imageupload', file);
-            } else {
-                callAPI('fileupload', file);
-            }
+
+            checkFile(file);
         }
 
         return false
@@ -182,11 +209,7 @@ define([
                     const item = items[index];
                     if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
                         const file = item.getAsFile();
-                        if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(file.type)) {
-                            callAPI('imageupload', file);
-                        } else {
-                            callAPI('fileupload', file);
-                        }
+                        checkFile(file);
                     }
                 }
             };

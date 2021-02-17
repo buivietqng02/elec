@@ -92,10 +92,12 @@ define([
                 return render(template.image, data);
                 break;
             case 3:
-                return;
+                data.src = `${API_URL}/audio?id=${file.id}`;
+                return render(template.audio, data);
                 break;
             case 4:
-                return;
+                data.src = `${API_URL}/stream?id=${file.id}`;
+                return render(template.video, data);
                 break;
             default:
                 data.src = `${API_URL}/file?id=${file.id}`;
@@ -202,6 +204,8 @@ define([
         } catch (e) {
             console.log('Bug render message');
             console.log(e);
+            console.log(mess);
+            console.log(messages);
             return '';
         }
     };
@@ -342,6 +346,11 @@ define([
         },
 
         onSync: (messList = []) => {
+            // Prevent duplicate message
+            if ($(`[data-chat-id="${messList[0]?.id?.messageId}"]`).length) {
+                return false;
+            }
+
             const wrapperHtml = $wrapper.get(0);
             const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
             const messagesHtml = messList.map((mess, i) => {
