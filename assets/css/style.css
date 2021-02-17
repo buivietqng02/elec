@@ -2488,10 +2488,6 @@ body.body_fz_18 {
   stroke: rgb(63,81,181);
 }
 
-.modal-content {
-  background: rgba(255,255,255,0.9) !important;
-}
-
 .--click-show-popup-up-img {
   max-width: 100%;
   max-height: 300px;
@@ -2641,13 +2637,39 @@ body.body_fz_18 {
 }
 
 #createGroupModal .crms-room {
+  padding-top: 3px;
   text-align: center;
   margin-right: 1rem;
   cursor: pointer;
+  position: relative;
 }
 
 #createGroupModal .crms-room span {
   font-size: .7rem;
+}
+
+#createGroupModal .crms-room > div {
+  position: absolute;
+  background: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: -1px;
+  right: -2px;
+}
+
+#createGroupModal .crms-room > div > div {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  margin-left: 1px;
+  border-radius: 50%;
+  background: #0288cc;
+  font-size: 14px;
+  line-height: 15px;
+  text-align: center;
+  color: #fff;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
 #createGroupModal .crms-room.admin span {
@@ -2674,7 +2696,7 @@ body.body_fz_18 {
 }
 
 #createGroupModal.room-selected .crm-room-wrapper {
-  height: 202px;
+  height: 199px;
 }
 
 #createGroupModal.room-selected .crm-room-selected-wrapper {
@@ -3510,7 +3532,7 @@ body.body_fz_18 {
   }
 
   #createGroupModal.room-selected .crm-room-wrapper {
-    height: calc(100% - 200px);
+    height: calc(100% - 204px);
   }
 
   .modal-footer {
