@@ -123,7 +123,7 @@ define([
         const { mcgsId } = $this.data();
         arrUserId = arrUserId.filter(user => user.id !== mcgsId);
         $(`[data-mcgs-id="${mcgsId}"]`).remove();
-        $('.tooltip.fade.show').remove();
+        $('.tooltip.show').remove();
         $(`[data-mcg-id="${mcgsId}"]`).removeAttr('data-mcgi-selected');
 
         if (!arrUserId.length) {
