@@ -155,7 +155,7 @@ define([
             handleImageErr: `onerror="this.src='${room.group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
             classImg: room.group ? 'hagr' : '',
             src,
-            name,
+            name: htmlEncode(name),
             mess,
             userId,
             mute: obRoomEdited[room.id]?.notification_mess === false ? 'mute' : ''
@@ -171,6 +171,6 @@ define([
 
         onPrepend: (html) => $wrapper.prepend(html),
 
-        onUpdateRoomName: (id, name) => $(`[data-room-id="${id}"]`).find('.--name.contact__name span').html(name)
+        onUpdateRoomName: (id, name) => $(`[data-room-id="${id}"]`).find('.--name.contact__name span').text(name)
     };
 });

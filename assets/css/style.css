@@ -1132,6 +1132,9 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .profile--mini .--name {
   margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .profile a {
@@ -1651,6 +1654,9 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .messages__item .--heading .--name {
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .messages__item .rep_mess {

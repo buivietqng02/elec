@@ -139,7 +139,7 @@ define([
                 $image.attr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP, roomInfo.id);
                 $image.attr('src', getAvatar(roomInfo.id, true));
                 $image.on('error', () => $image.attr('src', '/assets/images/group.svg'));
-                $name.html(roomInfo.subject);
+                $name.text(roomInfo.subject);
                 $name.removeAttr(constant.ATTRIBUTE_CHANGE_NAME);
                 $editBtn.show();
                 $internalBtn.show();
@@ -153,7 +153,7 @@ define([
                 $image.removeAttr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP);
                 $image.attr('src', getAvatar(roomInfo.members[0]?.user?.id));
                 $image.on('error', () => $image.attr('src', '/assets/images/user.jpg'));
-                $name.html(userName);
+                $name.text(userName);
                 $name.attr(constant.ATTRIBUTE_CHANGE_NAME, userId);
                 $editBtn.hide();
                 $internalBtn.hide();
@@ -177,7 +177,7 @@ define([
         },
 
         onUpdateTitle: (title) => {
-            $name.html(title);
+            $name.text(title);
         }
     };
 });

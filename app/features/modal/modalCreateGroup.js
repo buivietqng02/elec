@@ -13,7 +13,8 @@ define([
         render, 
         debounce, 
         truncate, 
-        getAvatar 
+        getAvatar,
+        htmlEncode
     } = functions;
     let arrUserId = [];
     let editId = null;
@@ -106,7 +107,7 @@ define([
         return render(template, {
             id: userId,
             src: getAvatar(userId),
-            name
+            name: htmlEncode(name)
         });
     };
 
@@ -159,8 +160,8 @@ define([
         const { mcgId, mcgName } = $this.data();
         const params = {
             id: mcgId,
-            fullName: mcgName,
-            name: truncate(mcgName.split(' ')[0], 8),
+            fullName: htmlEncode(mcgName),
+            name: truncate(htmlEncode(mcgName).split(' ')[0], 8),
             src: getAvatar(mcgId)
         };
 
@@ -375,7 +376,7 @@ define([
             const params = {
                 id: member.user.id,
                 fullName: member.user.name,
-                name: truncate(member.user.name.split(' ')[0], 8),
+                name: truncate(htmlEncode(member.user.name).split(' ')[0], 8),
                 src: getAvatar(member.user.id)
             };
 
