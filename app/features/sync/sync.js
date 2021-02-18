@@ -19,10 +19,35 @@ define([
     notificationComp,
     modalPhoneRequest
 ) => {
+    let timeout;
+    let isBlinkTitleBrowser = false;
     const { SESSION_ID } = constant;
     const data = {
         timeout: 10000,
         onBackground: false
+    };
+
+    const blinkTitle = () => {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        if (document.hasFocus()) {
+            document.title = 'Messenger';
+            $('#favicon').attr('href', 'assets/images/favicon.ico');
+            return;
+        }
+
+        if (!isBlinkTitleBrowser) {
+            document.title = 'Messenger';
+            $('#favicon').attr('href', 'assets/images/favicon1.ico');
+        } else {
+            document.title = 'New Message!';
+            $('#favicon').attr('href', 'assets/images/favicon2.ico');
+        }
+        
+        isBlinkTitleBrowser = !isBlinkTitleBrowser;
+        timeout = setTimeout(blinkTitle, 1000);
     };
 
     const updateRoom = (room, messages) => {
@@ -151,6 +176,7 @@ define([
         messages.forEach(mess => {
             (objRooms[mess.id.chatId] = (objRooms[mess.id.chatId] || []).concat(mess));
         });
+
         rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
@@ -167,6 +193,7 @@ define([
 
                 if (!isNotMoveRoomUp) {
                     const newRoom = updateRoom(room, messagesResponse);
+                    blinkTitle();
                     handleMoveRoomUp(newRoom);
                     roomsMove = roomsMove.concat(newRoom);
                 }
