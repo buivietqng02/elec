@@ -1,4 +1,5 @@
 define(() => {
+    let isNetworkStatus = true;
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
@@ -47,6 +48,11 @@ define(() => {
         getRoomInfoWasEdited: () => roomInfo,
         setRoomInfoWasEdited: (value) => {
             roomInfo = value;
+        },
+
+        getNetworkStatus: () => isNetworkStatus,
+        setNetworkStatus: (value) => {
+            isNetworkStatus = value;
         }
     };
 });

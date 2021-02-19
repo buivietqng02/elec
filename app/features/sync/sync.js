@@ -230,7 +230,7 @@ define([
             }
 
             onSync();
-        }).catch(() => setTimeout(onSync, 5000));
+        });
     };
 
     return {
