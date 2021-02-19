@@ -1,4 +1,5 @@
 define([
+    'idb-keyval',
     'shared/api',
     'shared/data',
     'shared/functions',
@@ -17,6 +18,7 @@ define([
     'features/modal/modalShowImageFull',
     'features/notification/notification'
 ], (
+    idbKeyval,
     API,
     GLOBAL,
     functions,
@@ -49,12 +51,15 @@ define([
     } = functions;
 
     const { 
+        ATTRIBUE_SIDEBAR_ROOM,
         BODY_BG_THEME,
         BODY_FZ,
         THEMES,
         FONTSIZES,
         TOKEN 
     } = constant;
+
+    const { set, get } = idbKeyval;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -87,33 +92,14 @@ define([
     //     client.activate();
     // };
 
+    const onAssignDataToStore = (data) => {
+        set('general', data);
+    };
+
     const onRegisterSW = () => {
         if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
             navigator.serviceWorker.register('sw.js');
         }
-    };
-
-    const onInitGeneralEvents = () => {
-        // copy input value
-        $(document).on('click', '.input-only-view', (event) => {
-            const $input = $(event.currentTarget).prev();
-
-            $input.get(0).select();
-            $input.get(0).setSelectionRange(0, 99999);
-            document.execCommand('copy');
-            if (window.getSelection) {
-                if (window.getSelection().empty) { 
-                    // Chrome
-                    window.getSelection().empty();
-                } else if (window.getSelection().removeAllRanges) { 
-                    // Firefox
-                    window.getSelection().removeAllRanges();
-                }
-            } else if (document.selection) { 
-                // IE?
-                document.selection.empty();
-            }
-        });
     };
 
     const onAssignAdvanceThemeBody = () => {
@@ -184,10 +170,70 @@ define([
         onAssignAdvanceThemeBody();
     };
 
+    const onInitGeneralEvents = () => {
+        // copy input value
+        $(document).on('click', '.input-only-view', (event) => {
+            const $input = $(event.currentTarget).prev();
+
+            $input.get(0).select();
+            $input.get(0).setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            if (window.getSelection) {
+                if (window.getSelection().empty) { 
+                    // Chrome
+                    window.getSelection().empty();
+                } else if (window.getSelection().removeAllRanges) { 
+                    // Firefox
+                    window.getSelection().removeAllRanges();
+                }
+            } else if (document.selection) { 
+                // IE?
+                document.selection.empty();
+            }
+        });
+
+        window.addEventListener('offline', () => GLOBAL.setNetworkStatus(false));
+
+        window.addEventListener('online', () => {
+            GLOBAL.setNetworkStatus(true);
+
+            if (GLOBAL.getCurrentRoomId()) {
+                const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${GLOBAL.getCurrentRoomId()}"]`);
+                GLOBAL.setCurrentRoomId(null);
+                $activeRoom.click();
+            }
+
+            setTimeout(() => {
+                onGetVersion();
+
+                // Get information about chat list and current user
+                // Get information about the chat list what user changed (name, description).
+                Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
+                    $('.xm-page-loading').remove();
+                    onAssignDataToStore(data);
+                    onGetPrefrences(data[1]);
+                    onGetValidate(data[0]);
+                    // onSetUpWebSocket(data[0].data.user.id);
+                });
+            }, 1000);
+        });
+    };
+
     const onInit = () => {
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
+
+        if (!window.navigator.onLine) {
+            GLOBAL.setNetworkStatus(false);
+            get('general').then((data) => {
+                $('.xm-page-loading').remove();
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            });
+
+            return;
+        }
 
         // Get server version
         onGetVersion();
@@ -196,6 +242,7 @@ define([
         // Get information about the chat list what user changed (name, description).
         Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
             $('.xm-page-loading').remove();
+            onAssignDataToStore(data);
             onGetPrefrences(data[1]);
             onGetValidate(data[0]);
             // onSetUpWebSocket(data[0].data.user.id);

@@ -51,6 +51,7 @@
   "dependencies": {
     "@stomp/stompjs": "^6.0.0",
     "bootstrap": "^4.5.3",
+    "idb-keyval": "^5.0.2",
     "jquery": "^3.5.1",
     "jsrender": "^1.0.9",
     "moment": "^2.29.1",
