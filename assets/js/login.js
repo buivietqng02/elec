@@ -14,7 +14,7 @@ jQuery(function($){
 // ==============================================================================
 // global 
 // ==============================================================================    
-// const XM_URL = 'xm.iptp.net';    
+// const XM_URL = 'https://xm.iptp.net/';    
 const XM_URL = process.env.NODE_ENV === 'production' ? '' : 'https://xm.iptp.dev/';
 
 

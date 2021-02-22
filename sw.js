@@ -9,7 +9,7 @@ const urls = [
     '/manifest.json',
     '/assets/js/socket.io.js',
     '/assets/js/easyrtc.js',
-    '/source/157.bundle.js',
+    '/source/786.bundle.js',
     '/source/755.bundle.js',
     '/source/index.bundle.js',
     '/source/login.bundle.js',

@@ -50,7 +50,8 @@ define(['app/constant', 'shared/functions'], (constant, functions) => {
             if (contentType && contentType.indexOf('application/json') !== -1) {
                 return res.json();
             } 
-                return res.text();
+            
+            return res.text();
         });
     };
     

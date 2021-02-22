@@ -1,4 +1,5 @@
 define([
+    'idb-keyval',
     'moment',
     'app/constant',
     'shared/alert', 
@@ -9,6 +10,7 @@ define([
     'features/chatbox/chatboxTopbar',
     'features/chatbox/messageSettingsSlide'
 ], (
+    idbKeyval,
     moment,
     constant, 
     ALERT,
@@ -31,7 +33,7 @@ define([
         transformLinkTextToHTML,
         htmlEncode
     } = functions;
-
+    const { set, get } = idbKeyval;
     const $btnScrollToBottom = $('.scroll-to__bottom');
     const $messageList = $('.messages__list');
     const $wrapper = $('.js_con_list_mess');
@@ -308,6 +310,20 @@ define([
         $messageList.html(messagesHtml);
         $loadingOfNew.hide();
 
+        // Assign message to store
+        get('chats').then((chats) => {
+            let tempChats;
+
+            if (!chats) {
+                tempChats = {};
+            } else {
+                tempChats = chats;
+            }
+
+            tempChats[roomInfo.id] = messages;
+            set('chats', tempChats);
+        });
+
         // Handle scroll if message list have an unread message
         if (isShowUnread) {
             handleScrollToUnreadMessage(idUnread);
@@ -342,7 +358,21 @@ define([
 
         onLoadMessage: (roomInfo, positionRoom) => {
             onRefresh();
-            onGetMessage({ ...roomInfo }, positionRoom);
+            if (GLOBAL.getNetworkStatus()) {
+                onGetMessage({ ...roomInfo }, positionRoom);
+            } else {
+                get('chats').then((chats) => {  
+                    if (!chats || !chats[roomInfo.id]) {
+                        onErrNetWork('');
+                    } else {
+                        let messagesHtml = chats[roomInfo.id].map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
+                        $messageList.html(messagesHtml);
+                        $loadingOfNew.hide();
+                        $(`[data-room-id="${roomInfo.id}"]`).find('.badge').html('');
+                        $wrapper.scrollTop($wrapper[0].scrollHeight);
+                    }
+                });
+            }
         },
 
         onSync: (messList = []) => {
