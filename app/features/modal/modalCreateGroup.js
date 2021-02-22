@@ -18,15 +18,21 @@ define([
     } = functions;
     let arrUserId = [];
     let editId = null;
+    let currentUserId; 
     let isProcess;
+    let $menu;
     let $modal;
     let $title;
     let $loading;
     let $users;
     let $selectedWrapper;
+    let $content;
     let $closeBtn;
     let $saveBtn;
     let $inputSearch;
+    let $sliceCancelBtn;
+    let $sliceDeleteBtn;
+    let $sliceAdminBtn;
     let $inputGroupName;
     let isListRoomRendered = false;
 
@@ -37,8 +43,7 @@ define([
         </div>
     `;
     const selectedTemplate = `
-        <div data-mcgs-id="{id}" class="crms-room">
-            <div><div>x</div></div>
+        <div data-mcgs-id="{id}" class="crms-room {admin}">
             <img class="--img avatar" src={src} data-toggle="tooltip" data-placement="right" title="{fullName}" />
             <span>{name}</span>
         </div>
@@ -63,6 +68,20 @@ define([
                         <input type="search" name="search" id="cgm-input-search" placeholder="Search..." />
                         <div class="crm-room-selected-wrapper"></div>
                         <div class="crm-room-wrapper">${html}</div>
+                        <div class="menu">
+                            <button type="button" class="menu__item crmm-admin-btn" data-dismiss=".menu">
+                                <i class="xm xm-key"></i>
+                                Admin
+                            </button>
+                            <button type="button" class="menu__item crmm-delete-btn" data-dismiss=".menu">
+                                <i class="xm xm-trash"></i>
+                                Delete
+                            </button>
+                            <button type="button" class="menu__item crmm-cancel-btn" data-dismiss=".menu">
+                                <i class="xm xm-close"></i>
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
@@ -121,14 +140,19 @@ define([
     const onSelectedUserClick = (e) => {
         const $this = $(e.currentTarget);
         const { mcgsId } = $this.data();
-        arrUserId = arrUserId.filter(user => user.id !== mcgsId);
-        $(`[data-mcgs-id="${mcgsId}"]`).remove();
-        $('.tooltip.show').remove();
-        $(`[data-mcg-id="${mcgsId}"]`).removeAttr('data-mcgi-selected');
+        let left = $this.offset().left - $content.offset().left;
+        const top = $this.offset().top - $content.offset().top - 5;
 
-        if (!arrUserId.length) {
-            $modal.removeClass('room-selected');
+        if (left + 150 >= ($content.width() + $content.offset().left)) {
+            left = $this.offset().left - $content.offset().left - 100;
         }
+
+        currentUserId = mcgsId;
+        $menu.css({ 
+            top, 
+            left
+        });
+        $menu.show();
     };
 
     const onUserClick = (e) => {
@@ -152,6 +176,39 @@ define([
         $modal.addClass('room-selected');
         $this.attr('data-mcgi-selected', mcgId);
         $modal.find('[data-toggle="tooltip"]').tooltip();
+    };
+
+    const onSlideCancelClick = () => $menu.hide();
+
+    const onSlideDeleteClick = () => {
+        arrUserId = arrUserId.filter(user => user.id !== currentUserId);
+        $(`[data-mcgs-id="${currentUserId}"]`).remove();
+        $(`[data-mcg-id="${currentUserId}"]`).removeAttr('data-mcgi-selected');
+
+        if (!arrUserId.length) {
+            $modal.removeClass('room-selected');
+        }
+
+        $menu.hide();
+    };
+
+    const onSlideAdminClick = () => {
+        arrUserId = arrUserId.map(user => {
+            const newUser = { ...user }; 
+            if (user.id === currentUserId) {
+                if (!user.admin) {
+                    $(`[data-mcgs-id="${currentUserId}"]`).addClass('admin');
+                    newUser.admin = true;
+                } else {
+                    $(`[data-mcgs-id="${currentUserId}"]`).removeClass('admin');
+                    delete newUser.admin;
+                }
+            }
+
+            return newUser;
+        });
+
+        $menu.hide();
     };
 
     const validate = () => {
@@ -238,10 +295,15 @@ define([
         $('body').append(renderTemplate(renderRoomList()));
         $modal = $('#createGroupModal');
         $title = $modal.find('.modal-title');
+        $content = $modal.find('.modal-content');
+        $menu = $modal.find('.menu');
         $users = $modal.find('[data-mcg-id]');
         $saveBtn = $modal.find('.btn-outline-primary');
         $closeBtn = $modal.find('.close');
         $selectedWrapper = $modal.find('.crm-room-selected-wrapper');
+        $sliceCancelBtn = $modal.find('.crmm-cancel-btn');
+        $sliceDeleteBtn = $modal.find('.crmm-delete-btn');
+        $sliceAdminBtn = $modal.find('.crmm-admin-btn');
         $loading = $modal.find('.crm-loading');
         $inputSearch = $('#cgm-input-search');
         $inputGroupName = $('#cgm-input-name');
@@ -252,13 +314,18 @@ define([
         $modal.on('click', '[data-mcg-id]', onUserClick);
         $modal.on('input', '#cgm-input-search', onSearch);
 
+        $sliceCancelBtn.click(onSlideCancelClick);
+        $sliceDeleteBtn.click(onSlideDeleteClick);
+        $sliceAdminBtn.click(onSlideAdminClick);
         $saveBtn.click(onSaveGropChat);
     };
 
     const onRefresh = () => {
         isProcess = false;
+        currentUserId = false;
         editId = null;
         arrUserId = [];
+        $menu.hide();
         $title.html('New group chat');
         $loading.hide();
         $inputSearch.val('');
