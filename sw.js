@@ -32,6 +32,8 @@ const urls = [
 ];
 
 self.addEventListener('install', function (event) {
+    self.skipWaiting();
+
     event.waitUntil(
         caches.open(version)
             .then(function (cache) {
@@ -129,8 +131,8 @@ const requestNotificationPermission = async () => {
     }
 }
 
-const main = async () => {
-    const permission = await requestNotificationPermission();
-}
+// const main = async () => {
+//     const permission = await requestNotificationPermission();
+// }
 
-main();
+// main();
