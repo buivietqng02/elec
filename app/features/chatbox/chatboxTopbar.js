@@ -169,7 +169,7 @@ define([
             }
 
             const diffInSeconds = moment().diff(moment(time), 'seconds');
-            if (diffInSeconds <= 10) {
+            if (diffInSeconds <= 30) {
                 $timeActivity.html('online');
             } else {
                 $timeActivity.html(`last seen ${moment(time).fromNow()}`);
