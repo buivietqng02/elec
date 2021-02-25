@@ -39,16 +39,16 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         return `${constant.API_URL}/${isGroup ? 'chats' : 'users'}/${id}/avatar`;
     },
 
-    sortBy: (arr, p) => arr.slice(0).sort((a, b) => {
+    sortBy: (arr, p) => arr.sort((a, b) => {
+        if (a[p] < b[p]) {
+            return -1;
+        }
+
         if (a[p] > b[p]) {
             return 1;
-        } else {
-            if (a[p] < b[p]) {
-                return - 1;
-            } else {
-                return 0;
-            }
         }
+
+        return 0;
     }),
 
     stripTags: (text) => text.replace(/(<([^>]+)>)/gi, ''),
