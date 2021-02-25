@@ -1,9 +1,13 @@
 define([
+    'app/constant',
+    'shared/icon',
     'shared/api', 
     'shared/data', 
     'shared/functions', 
     'shared/alert'
 ], (
+    constant,
+    ICON,
     API, 
     GLOBAL, 
     functions, 
@@ -11,44 +15,51 @@ define([
 ) => {
     const { 
         render, 
-        debounce, 
-        truncate, 
+        debounce,
         getAvatar,
+        htmlDecode,
         htmlEncode
     } = functions;
     let arrUserId = [];
+    let isListRoomRendered = false;
     let editId = null;
-    let currentUserId; 
     let isProcess;
-    let $menu;
     let $modal;
     let $title;
     let $loading;
-    let $users;
     let $selectedWrapper;
-    let $content;
+    let $usersWrapper;
     let $closeBtn;
     let $saveBtn;
     let $inputSearch;
-    let $sliceCancelBtn;
-    let $sliceDeleteBtn;
-    let $sliceAdminBtn;
     let $inputGroupName;
-    let isListRoomRendered = false;
+    let $numSelected;
 
     const template = `
         <div data-mcg-id="{id}" data-mcg-name="{name}" class="crm-room">
             <img class="--img avatar" src="{src}">
-            <span>{name}</span>
+            <span ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</span>
+            <div class="styled-checkbox"></div>
         </div>
     `;
     const selectedTemplate = `
-        <div data-mcgs-id="{id}" class="crms-room {admin}">
-            <img class="--img avatar" src={src} data-toggle="tooltip" data-placement="right" title="{fullName}" />
-            <span>{name}</span>
+        <div ${constant.ATTRIBUTE_CHANGE_NAME}="{id}" data-mcgs-id="{id}" class="crm-room {admin}">
+            <img class="--img avatar" src="{src}">
+            <span ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</span>
+            <div class="crmr-group-icon">
+                <div class="crmrgi-icon crmrgii-admin" data-toggle="tooltip" data-placement="left" title="Granting administrator permissions">
+                    ${ICON.ADMIN}
+                </div>
+                <div class="crmrgi-icon crmrgii-removeadmin" data-toggle="tooltip" data-placement="left" title="Removing administrator permissions">
+                    ${ICON.REMOVE_ADMIN}
+                </div>
+                <div class="crmrgi-icon crmrgii-cross" data-toggle="tooltip" data-placement="left" title="Remove this member">
+                    ${ICON.CROSS}
+                </div>
+            </div>
         </div>
     `;
-    const renderTemplate = (html) => `
+    const renderTemplate = ({ html, numMembers }) => `
         <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
@@ -62,25 +73,26 @@ define([
                     </div>
                     <div class="modal-body">
                         <div class="crm-loading">
-                            <img src="./assets/images/double-ring--load.svg" alt="loading...">
+                            <div class="pulse"></div>
                         </div>
-                        <input type="text" name="name" id="cgm-input-name" placeholder="Group Name" maxlength="50" />
-                        <input type="search" name="search" id="cgm-input-search" placeholder="Search..." />
-                        <div class="crm-room-selected-wrapper"></div>
-                        <div class="crm-room-wrapper">${html}</div>
-                        <div class="menu">
-                            <button type="button" class="menu__item crmm-admin-btn" data-dismiss=".menu">
-                                <i class="xm xm-key"></i>
-                                Admin
-                            </button>
-                            <button type="button" class="menu__item crmm-delete-btn" data-dismiss=".menu">
-                                <i class="xm xm-trash"></i>
-                                Delete
-                            </button>
-                            <button type="button" class="menu__item crmm-cancel-btn" data-dismiss=".menu">
-                                <i class="xm xm-close"></i>
-                                Cancel
-                            </button>
+                        <input type="text" name="name" id="cgm-input-name" placeholder="Enter Group Name..." maxlength="50" />
+                        <div class="crm-frame-wrapper">
+                            <div class="crmfwu">
+                                <div class="crmfwu-search-box">
+                                    <i class="xm xm-search"></i>
+                                    <input type="search" name="search" id="cgm-input-search" placeholder="Search..." />
+                                    <span class="crmfwusb-title">Group members: <span class="crmfwusbt-num">${numMembers}</span> member(s)</span>
+                                </div>
+                                <div class="crmfwus crmfwu-default-user">
+                                    ${html}
+                                </div>
+                            </div>
+                            <div class="crmfwu">
+                                <h2 class="crmfwu-title">
+                                    Selected: <span class="crmfwut-num">0</span> member(s)
+                                </h2>
+                                <div class="crmfwus crmfwu-selected-user"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -94,33 +106,50 @@ define([
         </div>
     `;
 
-    const renderRoom = (room) => {
+    const filterRoom = (room) => {
         const firstMember = room.members[0];
         const name = room.group ? room.subject : firstMember?.user?.name;
         const userId = firstMember?.user?.id || '';
 
         // only direct room
-        if (!room.id || !name || room.channel || room.group) {
-            return '';
+        if (!room.id || !name || room.channel || room.group || !userId) {
+            return false;
         }
 
-        return render(template, {
+        return true;
+    };
+
+    const mapRoom = (room) => {
+        const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
+        const firstMember = room.members[0];
+        const name = room.group ? room.subject : firstMember?.user?.name;
+        const userId = firstMember?.user?.id || '';
+        const currentName = obRoomEdited[firstMember?.user?.id]?.user_name || name;
+
+        return {
             id: userId,
             src: getAvatar(userId),
-            name: htmlEncode(name)
-        });
+            name: htmlEncode(name),
+            currentName: htmlEncode(currentName)
+        };
     };
 
     const renderRoomList = () => {
-        isListRoomRendered = true;
-        return GLOBAL.getRooms().map(renderRoom).join('');
+        const filterArr = GLOBAL.getRooms().filter(filterRoom);
+        const mapArr = [...filterArr].map(mapRoom);
+
+        return {
+            html: mapArr.sort((a, b) => a.currentName.localeCompare(b.currentName)).map(room => render(template, room)).join(''),
+            numMembers: mapArr.length
+        };
     };
 
-    const onSearch = debounce(() => {
+    const handleSearch = () => {
+        const $users = $modal.find('.crm-room');
         const value = $inputSearch.val().trim().toUpperCase();
         const handleUser = (i) => {
             const $this = $users.eq(i);
-            const name = $this.data().mcgName;
+            const name = $this.find('span').text();
 
             if (String(name).toUpperCase().indexOf(value) > -1) {
                 $this.css('display', '');
@@ -135,80 +164,86 @@ define([
         }
 
         $users.each(handleUser);
-    }, 300);
-
-    const onSelectedUserClick = (e) => {
-        const $this = $(e.currentTarget);
-        const { mcgsId } = $this.data();
-        let left = $this.offset().left - $content.offset().left;
-        const top = $this.offset().top - $content.offset().top - 5;
-
-        if (left + 150 >= ($content.width() + $content.offset().left)) {
-            left = $this.offset().left - $content.offset().left - 100;
-        }
-
-        currentUserId = mcgsId;
-        $menu.css({ 
-            top, 
-            left
-        });
-        $menu.show();
     };
+
+    const onSearch = debounce(handleSearch, 300);
 
     const onUserClick = (e) => {
         const $this = $(e.currentTarget);
         const { mcgId, mcgName } = $this.data();
-        const params = {
-            id: mcgId,
-            fullName: htmlEncode(mcgName),
-            name: truncate(htmlEncode(mcgName).split(' ')[0], 8),
-            src: getAvatar(mcgId)
-        };
 
-        arrUserId = arrUserId.concat({
-            id: mcgId,
-            name: mcgName,
-            alias: null,
-            selected: true
-        });
+        if ($this.attr('data-mcgi-selected')) {
+            arrUserId = arrUserId.filter(room => room.id !== mcgId);
+            $(`[data-mcgs-id="${mcgId}"]`).remove();
+            $this.removeAttr('data-mcgi-selected');
+        } else {
+            const obRoomEdit = GLOBAL.getRoomInfoWasEdited()[mcgId];
+            const crName = obRoomEdit?.user_name ? htmlEncode(obRoomEdit.user_name) : mcgName;
 
-        $selectedWrapper.append(render(selectedTemplate, params));
-        $modal.addClass('room-selected');
-        $this.attr('data-mcgi-selected', mcgId);
-        $modal.find('[data-toggle="tooltip"]').tooltip();
-    };
+            arrUserId = arrUserId.concat({
+                id: mcgId,
+                currentName: crName,
+                src: getAvatar(mcgId),
+                data: {
+                    id: mcgId,
+                    name: htmlDecode(mcgName),
+                    alias: null,
+                    selected: true
+                }
+            }).sort((a, b) => a.currentName.localeCompare(b.currentName));
 
-    const onSlideCancelClick = () => $menu.hide();
-
-    const onSlideDeleteClick = () => {
-        arrUserId = arrUserId.filter(user => user.id !== currentUserId);
-        $(`[data-mcgs-id="${currentUserId}"]`).remove();
-        $(`[data-mcg-id="${currentUserId}"]`).removeAttr('data-mcgi-selected');
-
-        if (!arrUserId.length) {
-            $modal.removeClass('room-selected');
+            $this.attr('data-mcgi-selected', mcgId);
+            $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+            $modal.find('[data-toggle="tooltip"]').tooltip();
+            if ($inputSearch.val()) {
+                handleSearch();
+            }
         }
 
-        $menu.hide();
+        $numSelected.text(arrUserId.length);
     };
 
-    const onSlideAdminClick = () => {
+    const onRemoveClick = (e) => {
+        const $this = $(e.target).closest('.crm-room');
+        const { mcgsId } = $this.data();
+
+        arrUserId = arrUserId.filter(room => room.id !== mcgsId);
+        $(`[data-mcg-id="${mcgsId}"]`).removeAttr('data-mcgi-selected');
+        $numSelected.text(arrUserId.length);
+        $('.tooltip.show').remove();
+        $this.remove();
+    };
+
+    const onGrantAdminClick = (e) => {
+        const $this = $(e.target).closest('.crm-room');
+        const { mcgsId } = $this.data();
+
         arrUserId = arrUserId.map(user => {
             const newUser = { ...user }; 
-            if (user.id === currentUserId) {
-                if (!user.admin) {
-                    $(`[data-mcgs-id="${currentUserId}"]`).addClass('admin');
-                    newUser.admin = true;
-                } else {
-                    $(`[data-mcgs-id="${currentUserId}"]`).removeClass('admin');
-                    delete newUser.admin;
-                }
+            if (user.id === mcgsId) {
+                $this.addClass('admin');
+                newUser.admin = 'admin';
+                newUser.data.admin = true;
             }
 
             return newUser;
         });
+    };
 
-        $menu.hide();
+    const onRemoveAdminClick = (e) => {
+        const $this = $(e.target).closest('.crm-room');
+        const { mcgsId } = $this.data();
+
+        arrUserId = arrUserId.map(user => {
+            const newUser = { ...user }; 
+            if (user.id === mcgsId) {
+                $this.removeClass('admin');
+                delete newUser.admin;
+                delete newUser.data.admin;
+            }
+
+            return newUser;
+        });
     };
 
     const validate = () => {
@@ -240,7 +275,7 @@ define([
         $saveBtn.addClass('loading-btn');
         isProcess = true;
         const params = {
-            members: arrUserId,
+            members: arrUserId.map(arr => arr.data),
             id: editId,
             subject: $inputGroupName.val()
         };
@@ -295,111 +330,95 @@ define([
         $('body').append(renderTemplate(renderRoomList()));
         $modal = $('#createGroupModal');
         $title = $modal.find('.modal-title');
-        $content = $modal.find('.modal-content');
-        $menu = $modal.find('.menu');
-        $users = $modal.find('[data-mcg-id]');
         $saveBtn = $modal.find('.btn-outline-primary');
         $closeBtn = $modal.find('.close');
-        $selectedWrapper = $modal.find('.crm-room-selected-wrapper');
-        $sliceCancelBtn = $modal.find('.crmm-cancel-btn');
-        $sliceDeleteBtn = $modal.find('.crmm-delete-btn');
-        $sliceAdminBtn = $modal.find('.crmm-admin-btn');
+        $selectedWrapper = $modal.find('.crmfwu-selected-user');
+        $usersWrapper = $modal.find('.crmfwu-default-user');
         $loading = $modal.find('.crm-loading');
+        $numSelected = $modal.find('.crmfwut-num');
         $inputSearch = $('#cgm-input-search');
         $inputGroupName = $('#cgm-input-name');
         $inputSearch.attr('autocomplete', 'off');
         $inputGroupName.attr('autocomplete', 'off');
 
-        $modal.on('click', '[data-mcgs-id]', onSelectedUserClick);
         $modal.on('click', '[data-mcg-id]', onUserClick);
+        $modal.on('click', '.crmrgii-cross', onRemoveClick);
+        $modal.on('click', '.crmrgii-admin', onGrantAdminClick);
+        $modal.on('click', '.crmrgii-removeadmin', onRemoveAdminClick);
         $modal.on('input', '#cgm-input-search', onSearch);
 
-        $sliceCancelBtn.click(onSlideCancelClick);
-        $sliceDeleteBtn.click(onSlideDeleteClick);
-        $sliceAdminBtn.click(onSlideAdminClick);
         $saveBtn.click(onSaveGropChat);
     };
 
     const onRefresh = () => {
+        $modal.find('[data-mcg-id]').css('display', '').removeAttr('data-mcgi-selected');
         isProcess = false;
-        currentUserId = false;
         editId = null;
         arrUserId = [];
-        $menu.hide();
         $title.html('New group chat');
+        $numSelected.text(arrUserId.length);
         $loading.hide();
         $inputSearch.val('');
         $inputGroupName.val('');
         $selectedWrapper.html('');
         $saveBtn.removeClass('loading-btn');
-        $saveBtn.prop('disabled', false);
-        $users.removeAttr('data-mcgi-selected');
-        $users.css('display', '');
-        $modal.removeClass('room-selected');
         $modal.modal('show');
     };
 
     const onEditInit = (id) => {
-        if (GLOBAL.getCurrentRoomId() !== id) {
-            return;
-        }
+        $loading.show();
+        API.get(`chats/${id}`).then((res) => {
+            if (res.members) {
+                const roomInfo = GLOBAL.getRooms().filter((room) => room.id === id)[0];
+                editId = id;
+                $loading.hide();
 
-        if (!GLOBAL.getCurrentGroupMembers()) {
-            $loading.show();
-            $saveBtn.prop('disabled', true);
-            setTimeout(() => {
-                if ($modal.hasClass('show')) {
-                    onEditInit(id);
+                if (!roomInfo) {
+                    $closeBtn.click();
+                    return;
                 }
-            }, 500);
-            return;
-        }
 
-        const roomInfo = GLOBAL.getRooms().filter((room) => room.id === id)[0];
-        if (!roomInfo) {
-            $closeBtn.click();
-            return;
-        }
+                $inputGroupName.val(roomInfo.subject);
+                res.members.forEach(member => {
+                    const obRoomEdit = GLOBAL.getRoomInfoWasEdited()[member.user.id];
+                    const crName = obRoomEdit?.user_name ? obRoomEdit.user_name : member.user.name;
+                    const arrItem = { 
+                        id: member.user.id,
+                        currentName: htmlEncode(crName),
+                        src: getAvatar(member.user.id),
+                        data: {
+                            id: member.user.id,
+                            name: member.user.name,
+                            alias: null,
+                            selected: true
+                        }
+                    };
+        
+                    if (member.admin) {
+                        arrItem.admin = 'admin';
+                        arrItem.data.admin = true;
+                    }
+                    
+                    $(`[data-mcg-id="${member.user.id}"]`).attr('data-mcgi-selected', member.user.id);
+                    arrUserId = arrUserId.concat(arrItem);
+                });
 
-        editId = id;
-        $loading.hide();
-        $modal.addClass('room-selected');
-        $saveBtn.prop('disabled', false);
-        $inputGroupName.val(roomInfo.subject);
-        GLOBAL.getCurrentGroupMembers().forEach(member => {
-            const arrItem = { 
-                id: member.user.id,
-                name: member.user.name,
-                alias: null,
-                selected: true
-            };
-            const params = {
-                id: member.user.id,
-                fullName: member.user.name,
-                name: truncate(htmlEncode(member.user.name).split(' ')[0], 8),
-                src: getAvatar(member.user.id)
-            };
-
-            if (member.admin) {
-                arrItem.admin = true;
-                params.admin = 'admin';
+                arrUserId.sort((a, b) => a.currentName.localeCompare(b.currentName));
+                $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+                $modal.find('[data-toggle="tooltip"]').tooltip();
             }
-
-            arrUserId = arrUserId.concat(arrItem);
-
-            $selectedWrapper.append(render(selectedTemplate, params));
-            $(`[data-mcg-id="${member.user.id}"]`).attr('data-mcgi-selected', member.user.id);
-            $modal.find('[data-toggle="tooltip"]').tooltip();
         });
     };
 
     return {
         onInit: (id) => {
             if (!isListRoomRendered) {
+                isListRoomRendered = true;
                 onInit();
             }
 
             onRefresh();
+            setTimeout(() => $usersWrapper.scrollTop(0), 200);
             setTimeout(() => $inputGroupName.focus(), 500);
 
             // handle edit group
