@@ -124,21 +124,17 @@ define([
     };
 
     const onGetValidate = (res) => {
-        if (res.status !== 0) {
-            return;
-        }
-
         setCookie(getDataToLocalApplication(TOKEN), 3650);
 
         // Store information of logging user
         GLOBAL.setInfomation({
-            ...res.data.user,
-            email: res?.data?.email,
-            erp_url: res?.data?.erp_url
+            ...res.user,
+            email: res?.email,
+            erp_url: res?.erp_url
         });
 
         // Store chat room list
-        GLOBAL.setRooms(res.data.chats);
+        GLOBAL.setRoomsWithAdapter(res.chats);
         
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();

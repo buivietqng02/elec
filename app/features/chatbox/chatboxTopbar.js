@@ -147,11 +147,11 @@ define([
                 $removeBtn.show();
                 $timeActivity.hide();
             } else {
-                const userId = roomInfo.members[0].user.id;
-                const userName = GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.members[0].user.name;
+                const userId = roomInfo.partner.id;
+                const userName = GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.partner.name;
                 
                 $image.removeAttr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP);
-                $image.attr('src', getAvatar(roomInfo.members[0]?.user?.id));
+                $image.attr('src', getAvatar(roomInfo.partner?.id));
                 $image.on('error', () => $image.attr('src', '/assets/images/user.jpg'));
                 $name.text(userName);
                 $name.attr(constant.ATTRIBUTE_CHANGE_NAME, userId);

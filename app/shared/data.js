@@ -8,6 +8,20 @@ define(() => {
     let bodyBgTheme = '';
     let bodyFontSize = '';
     let roomInfo = {};
+
+    const useAdapterForRoom = (room) => ({
+        channel: room.channel,
+        group: room.group,
+        groupAvatarType: room.groupAvatarType,
+        id: room.id,
+        isLiveAssistance: room.liveAssistance,
+        lastMessage: room.lastMessage,
+        partner: room.partner || {},
+        subject: room.subject,
+        ticket: room.ticket,
+        unreadMessages: room.unreadMessages,
+        updated: room.updated
+    });
     
     return {
         getInfomation: () => infomation,
@@ -33,6 +47,10 @@ define(() => {
         getRooms: () => rooms,
         setRooms: (value) => {
             rooms = value;
+        },
+        setRoomWithAdapter: useAdapterForRoom,
+        setRoomsWithAdapter: (value) => {
+            rooms = value.map(useAdapterForRoom);
         },
 
         getCurrentRoomId: () => currentRoomId,

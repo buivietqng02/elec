@@ -70,7 +70,7 @@ define([
 
         // Mark unread of active room to zero
         $(`[data-room-id="${activeRoom.id}"]`).find('.badge').html('');
-        activeRoom.member.messagecounter = 0;
+        activeRoom.unreadMessages = 0;
         rooms[positionRoom] = { ...activeRoom };
         GLOBAL.setRooms(rooms);
     };
@@ -275,7 +275,7 @@ define([
         }
 
         let messagesHtml = '';
-        let isShowUnread = roomInfo.member.messagecounter > 0 && roomInfo.member.messagecounter < 16;
+        let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
 
         // Mark when got all messages in this chat room
@@ -295,7 +295,7 @@ define([
 
         // Mark unread message position
         if (isShowUnread && res?.data?.messages?.length) {
-            const index = roomInfo.member.messagecounter - 1;
+            const index = roomInfo.unreadMessages - 1;
 
             if (res.data.messages[index]) {
                 res.data.messages[index].posUnread = true; 

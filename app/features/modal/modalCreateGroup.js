@@ -107,9 +107,8 @@ define([
     `;
 
     const filterRoom = (room) => {
-        const firstMember = room.members[0];
-        const name = room.group ? room.subject : firstMember?.user?.name;
-        const userId = firstMember?.user?.id || '';
+        const name = room?.partner?.name;
+        const userId = room?.partner?.id || '';
 
         // only direct room
         if (!room.id || !name || room.channel || room.group || !userId) {
@@ -121,10 +120,9 @@ define([
 
     const mapRoom = (room) => {
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
-        const firstMember = room.members[0];
-        const name = room.group ? room.subject : firstMember?.user?.name;
-        const userId = firstMember?.user?.id || '';
-        const currentName = obRoomEdited[firstMember?.user?.id]?.user_name || name;
+        const name = room?.partner?.name;
+        const userId = room?.partner?.id || '';
+        const currentName = obRoomEdited[room?.partner?.id]?.user_name || name;
 
         return {
             id: userId,
@@ -319,7 +317,7 @@ define([
         API.post('chats', params).then((res) => {
             if (res.chat) {
                 const html = sidebarRoomListComp.onRenderRoom(res.chat);
-                GLOBAL.setRooms([res.chat, ...GLOBAL.getRooms()]);
+                GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(res.chat), ...GLOBAL.getRooms()]);
                 sidebarRoomListComp.onPrepend(html);
                 $closeBtn.click();
             }
