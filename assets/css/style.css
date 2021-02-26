@@ -2767,7 +2767,11 @@ body.body_fz_18 {
   border: 1px solid #08c;
 }
 
-#forwardMessageModal .fmm-room-wrapper,
+#forwardMessageModal .fmm-room-wrapper {
+  overflow: auto;
+  height: 300px;
+}
+
 #forwardMessageModal .fmm-room,
 #createGroupModal .crm-room {
   display: flex;
