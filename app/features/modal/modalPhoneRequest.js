@@ -5,7 +5,7 @@ define([
     'shared/alert',
     'shared/functions'
 ], (
-    BASE_URL, 
+    WEBRTC_URL, 
     GLOBAL,
     API,
     ALERT,
@@ -350,7 +350,7 @@ define([
             if (!isModalRendered) {
                 isModalRendered = true;
                 $('body').append(renderTemplate);
-                easyrtc.setSocketUrl('https://xm.iptp.dev');
+                easyrtc.setSocketUrl(WEBRTC_URL);
                 onDeclareDom();
             }
 
