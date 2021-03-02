@@ -3,7 +3,6 @@ define(() => {
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
-    let currentGroupMembers = null;
     let version = '';
     let bodyBgTheme = '';
     let bodyFontSize = '';
@@ -20,7 +19,8 @@ define(() => {
         subject: room.subject,
         ticket: room.ticket,
         unreadMessages: room.unreadMessages,
-        updated: room.updated
+        updated: room.updated,
+        sender: room.sender
     });
     
     return {
@@ -56,11 +56,6 @@ define(() => {
         getCurrentRoomId: () => currentRoomId,
         setCurrentRoomId: (value) => {
             currentRoomId = value;
-        },
-
-        getCurrentGroupMembers: () => currentGroupMembers,
-        setCurrentGroupMembers: (value) => {
-            currentGroupMembers = value;
         },
 
         getRoomInfoWasEdited: () => roomInfo,

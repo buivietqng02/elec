@@ -1,5 +1,6 @@
-define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBAL) => {
-    const { htmlDecode, htmlEncode, stripTags, transformLinkTextToHTML } = functions;
+define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (constant, functions, API, GLOBAL) => {
+    const { htmlDecode, htmlEncode, stripTags, transformLinkTextToHTML, getDataToLocalApplication } = functions;
+    const token = getDataToLocalApplication(constant.TOKEN) || '';
     const $input = $('.js_endter_mess');
     const $wrapperMessages = $('.js_con_list_mess');
     const $btnSend = $('.btn__send');
@@ -7,7 +8,6 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
     const $commentBox = $commentWrapper.find('.mess-fw-box');
     const $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
     let messagesWaitProcessingArr = [];
-    let updateState = false;
     let deleteState = false;
     let commentState = false;
     let messageId = 0;
@@ -41,7 +41,6 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
     const onClear = () => {
         messageId = 0;
         deleteState = false;
-        updateState = false;
         commentState = false;
         $input.val('');
         $input.focus();
@@ -49,51 +48,76 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
         handleInputAutoExpand();
     };
 
-    const postMessage = (params) => API.post('messages', params).then(() => {
-        messagesWaitProcessingArr.shift();
-        if (messagesWaitProcessingArr.length) {
-            postMessage(messagesWaitProcessingArr[0]);
+    const postMessage = (data) => {
+        if (data.isDelete) {
+            API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
+                messagesWaitProcessingArr.shift();
+                if (messagesWaitProcessingArr.length) {
+                    postMessage(messagesWaitProcessingArr[0]);
+                }
+            }).catch(() => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000))
+            return;
         }
-    }).catch(() => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000));
+
+        if (data.messageId) {
+            $.ajax({
+                type: 'PUT',
+                url: `${constant.API_URL}/chats/${data.chatId}/messages/${data.messageId}`,
+                data: data.params.message,
+                headers: {
+                    'X-Authorization-Token': token
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: () => {
+                    messagesWaitProcessingArr.shift();
+                    if (messagesWaitProcessingArr.length) {
+                        postMessage(messagesWaitProcessingArr[0]);
+                    }
+                },
+                error: () => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
+            });
+
+            return;
+        }
+
+        API.post(`chats/${data.chatId}/messages`, data.params).then(() => {
+            messagesWaitProcessingArr.shift();
+            if (messagesWaitProcessingArr.length) {
+                postMessage(messagesWaitProcessingArr[0]);
+            }
+        }).catch(() => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000))
+    };
 
     const onSendMessage = () => {
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const roomId = GLOBAL.getCurrentRoomId();
         let text = $input.val();
-        const time = new Date().getTime();
-        let params = {};
+        let data = {};
         
-        if (!text.replace(/[\s\n]/g, '')) {
+        if (!text.replace(/[\s\n]/g, '') && !deleteState) {
             onClear();
             return;
         }
 
-        text = htmlEncode(text);
-        if (commentState) {
-            text = `${text}<c style="display:none" ob="${JSON.stringify(commentState)}"></c>`;
-        }
-
-        params = {
-            sender: GLOBAL.getInfomation(),
-            id: {
-                chatId: roomId,
-                messageId
-            },
-            comment: 1,
-            message: text,
-            type: 1,
-            deleted: deleteState,
-            updated: updateState,
-            internal: !!obRoomEdited[roomId]?.hide_mess
+        data = {
+            messageId: messageId,
+            chatId: roomId,
+            isDelete: deleteState,
+            params: {
+                message: text,
+                internal: !!obRoomEdited[roomId]?.hide_mess,
+                quotedMessageId: commentState.chatId
+            }
         };
 
-        onClear();
         if (!messagesWaitProcessingArr.length) {
-            postMessage(params);
-            messagesWaitProcessingArr = messagesWaitProcessingArr.concat(params);
-        } else {
-            messagesWaitProcessingArr = messagesWaitProcessingArr.concat(params);
-        }    
+            postMessage(data);
+        }
+
+        onClear();
+        messagesWaitProcessingArr = messagesWaitProcessingArr.concat(data);
     };
 
     const onHideCommentBox = () => {
@@ -114,7 +138,6 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
 
             $input.val(text);
             $input.focus();
-            updateState = true;
             messageId = id;
             handleInputAutoExpand();
         },
@@ -122,7 +145,6 @@ define(['shared/functions', 'shared/api', 'shared/data'], (functions, API, GLOBA
         onRemove: (id, value) => {
             deleteState = true;
             messageId = id;
-            $input.val(value);
             onSendMessage();
         },
 
