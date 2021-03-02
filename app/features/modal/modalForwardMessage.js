@@ -74,9 +74,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
             sourceChatId: GLOBAL.getCurrentRoomId(),
             destChatId: $(e.currentTarget).data().fmmRoomId,
             messageId: chatId
-        }).then((res) => {
-            console.log(res);
-        });
+        }).then();
     };
 
     const onSearch = debounce(() => {

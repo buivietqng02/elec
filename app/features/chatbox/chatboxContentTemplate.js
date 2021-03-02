@@ -47,7 +47,8 @@ define(['app/constant'], (constant) => {
                         <div class="messages--internal {show_internal}">Internal</div>
                     </div>
                     {comment}
-                    <div class="--mess">{mess}</div>
+                    <div class="above-of-mess {forward}">Forwarded message:</div>
+                    <div class="--mess {forward}">{mess}</div>
                     <div class="messages__bottom">
                         <div class="--date">{date}</div>
                         <div class="xm xm-bars --bars --menu p-cur btn-message-settings"></div>

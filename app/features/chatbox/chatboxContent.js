@@ -181,6 +181,7 @@ define([
             data.show_internal = mess.internal ? '' : 'hidden';
             data.who = info.id === mess.sender.id ? 'you' : '';
             data.date = convertMessagetime(mess.msgDate);
+            data.forward = mess.forwarded ? 'fwme' : '';
 
             // render with case of comment
             if (mess.message.indexOf('"></c>') > -1 && mess.message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
@@ -286,13 +287,6 @@ define([
         // Update time activity to top bar
         chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
 
-        // Get members of group
-        if (roomInfo.group && res.data.members) {
-            GLOBAL.setCurrentGroupMembers(res.data.members);
-        } else {
-            GLOBAL.setCurrentGroupMembers(null);
-        }
-
         // Mark unread message position
         if (isShowUnread && res?.data?.messages?.length) {
             const index = roomInfo.unreadMessages - 1;
@@ -340,7 +334,6 @@ define([
     }).catch(onErrNetWork);
 
     const onRefresh = () => {
-        GLOBAL.setCurrentGroupMembers(null);
         $loadingOfNew.show();
         $messageList.html('');
         processing = true;
