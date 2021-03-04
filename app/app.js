@@ -16,6 +16,7 @@ define([
     'features/chatbox/chatboxAttach',
     'features/chatbox/emoji',
     'features/modal/modalShowImageFull',
+    'features/modal/modalUpdateVersion',
     'features/notification/notification'
 ], (
     idbKeyval,
@@ -35,6 +36,7 @@ define([
     chatboxAttachComp,
     emojiComp,
     modalShowImageFullComp,
+    modalUpdateVersionComp,
     notificationComp
 ) => {
     require('bootstrap/js/dist/modal');
@@ -98,7 +100,15 @@ define([
 
     const onRegisterSW = () => {
         if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                modalUpdateVersionComp.onInit();
+            });
+
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                setInterval(() => {
+                    reg.update();
+                }, 900000);
+            });
         }
     };
 
