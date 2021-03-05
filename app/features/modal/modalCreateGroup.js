@@ -280,13 +280,15 @@ define([
 
         if (editId) {
             const roomId = GLOBAL.getCurrentRoomId();
-            API.put('chats', params).then((res) => {
-                if (res.status === 403) {
+            API.put('chats', params).then((chat) => {
+                /*
+                if (chat.status === 403) {
                     $closeBtn.click();
                     ALERT.show("Sorry, you don't have permission to perform this action");
                 }
+                */
 
-                if (res.chat) {
+                if (chat) {
                     chatboxTopbarComp.onUpdateTitle(params.subject);
                     sidebarRoomListComp.onUpdateRoomName(roomId, params.subject);
 
@@ -299,6 +301,7 @@ define([
                         return tempRoom;
                     }));
 
+                    /*
                     GLOBAL.setCurrentGroupMembers(arrUserId.map(member => ({
                         admin: !!member.admin,
                         user: {
@@ -306,6 +309,7 @@ define([
                             name: member.name
                         }
                     })));
+                    */
                     
                     $closeBtn.click();
                 }
@@ -314,10 +318,10 @@ define([
             return;
         }
         
-        API.post('chats', params).then((res) => {
-            if (res.chat) {
-                const html = sidebarRoomListComp.onRenderRoom(res.chat);
-                GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(res.chat), ...GLOBAL.getRooms()]);
+        API.post('chats', params).then((chat) => {
+            if (chat) {
+                const html = sidebarRoomListComp.onRenderRoom(chat);
+                GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chat), ...GLOBAL.getRooms()]);
                 sidebarRoomListComp.onPrepend(html);
                 $closeBtn.click();
             }
