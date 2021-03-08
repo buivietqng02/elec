@@ -668,6 +668,23 @@ function messageListener(easyrtcid, msgType, content) {
     }
 }
 
+function GetUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1);
+
+    var sURLVariables = sPageURL.split('&');
+
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] == sParam)
+
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
 
 function appInit() {
 
@@ -686,7 +703,8 @@ function appInit() {
     window.onresize = handleWindowResize;
     handleWindowResize(); //initial call of the top-down layout manager
 
-
+    var roomid = GetUrlParameter('id');
+    easyrtc.joinRoom(roomid, '', null, null);
     easyrtc.setRoomOccupantListener(callEverybodyElse);
     easyrtc.easyApp("easyrtc.multiparty", "box0", ["box1", "box2", "box3"], loginSuccess);
     easyrtc.setPeerListener(messageListener);
