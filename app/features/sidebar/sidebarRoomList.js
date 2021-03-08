@@ -6,6 +6,7 @@ define([
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxAttach',
+    'features/chatbox/chatboxSearch',
     'features/modal/modalAcceptInvitation'
 ], (
     constant,
@@ -15,6 +16,7 @@ define([
     chatboxInputComp,
     chatboxTopbarComp,
     chatboxAttachComp,
+    chatboxSearchComp,
     modalAcceptInvitationComp
 ) => {
     const { render, getAvatar, stripTags, htmlEncode } = functions;
@@ -90,6 +92,7 @@ define([
         $this.addClass('active');
 
         chatboxInputComp.onClear();
+        chatboxSearchComp.onCloseSearchBox();
         chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
         chatboxContentComp.onLoadMessage(roomInfo, positionRoom);

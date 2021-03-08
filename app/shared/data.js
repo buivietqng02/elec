@@ -3,6 +3,8 @@ define(() => {
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
+    let currentMessages = [];
+    let currentSearchMessages = [];
     let version = '';
     let bodyBgTheme = '';
     let bodyFontSize = '';
@@ -48,6 +50,7 @@ define(() => {
         setRooms: (value) => {
             rooms = value;
         },
+
         setRoomWithAdapter: useAdapterForRoom,
         setRoomsWithAdapter: (value) => {
             rooms = value.map(useAdapterForRoom);
@@ -56,6 +59,16 @@ define(() => {
         getCurrentRoomId: () => currentRoomId,
         setCurrentRoomId: (value) => {
             currentRoomId = value;
+        },
+
+        getCurrentMessages: () => currentMessages,
+        setCurrentMessages: (value) => {
+            currentMessages = value;
+        },
+
+        getCurrentSearchMessages: () => currentSearchMessages,
+        setCurrentSearchMessages: (value) => {
+            currentSearchMessages = value;
         },
 
         getRoomInfoWasEdited: () => roomInfo,
