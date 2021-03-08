@@ -100,6 +100,9 @@
               <div class="--name">User name</div>
               <div class="--online"></div>
             </div>
+            <button class="btn-toggle-search-box">
+              <i class="xm xm-search"></i>
+            </button>
             <a class="js-group-option btn__option" data-target="#group-option"><i class="xm xm-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
             <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
               <button class="--edit-group menu__item">
@@ -124,9 +127,35 @@
             </div>
           </div>
 
+          <div class="mess-search-box">
+            <div class="msb-group">
+              <i class="xm xm-search"></i>
+              <input type="text" id="msbg-input" placeholder="Please enter at least 3 letters..." />
+              <!-- <i class="clearable__clear"></i> -->
+              <div class="pulse"></div>
+            </div>
+            <div class="msb-position">
+              <span class="msbp-cur">0</span> / <span class="msbp-all">0</span>
+            </div>
+            <div class="msb-group-button">
+              <button class="msbgb-up">
+                <i class="xm xm-chevron-up xm-fw"></i>
+              </button>
+              <button class="msbgb-down">
+                <i class="xm xm-chevron-down xm-fw"></i>
+              </button>
+            </div>
+            <div class="msb-close">
+              Close
+            </div>
+          </div>
+
           <div class="js_con_list_mess messages scroll__wrap">
             <div class="--load-mess"><div class="pulse"></div></div>
-            <a class="scroll-to scroll-to__bottom p-cur show" style="display:none"><i class="xm xm-angle-down"></i></a>
+            <a class="scroll-to scroll-to__bottom p-cur show" style="display:none">
+              <span class="unread-message-scroll">0</span>
+              <i class="xm xm-angle-down"></i>
+            </a>
             <ul class="js_ul_list_mess messages__list scroll__inner">
               <li class="messages__item">
                 <div></div>

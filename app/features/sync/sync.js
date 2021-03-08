@@ -20,6 +20,7 @@ define([
     modalPhoneRequest
 ) => {
     let timeout;
+    let syncTimeout;
     let isBlinkTitleBrowser = false;
     const { SESSION_ID } = constant;
     const data = {
@@ -230,11 +231,17 @@ define([
             }
 
             onSync();
+        }).catch(() => {
+            syncTimeout = setTimeout(onSync, 5000);
         });
     };
 
     return {
         onInit: () => {
+            if (syncTimeout) {
+                clearTimeout(syncTimeout);
+            }
+            
             onSync();
         }
     };

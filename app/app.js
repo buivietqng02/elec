@@ -14,6 +14,7 @@ define([
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxAttach',
+    'features/chatbox/chatboxSearch',
     'features/chatbox/emoji',
     'features/modal/modalShowImageFull',
     'features/modal/modalUpdateVersion',
@@ -34,6 +35,7 @@ define([
     chatboxContentComp,
     chatboxInputComp,
     chatboxAttachComp,
+    chatboxSearchComp,
     emojiComp,
     modalShowImageFullComp,
     modalUpdateVersionComp,
@@ -148,6 +150,7 @@ define([
         chatboxContentComp.onInit();
         chatboxInputComp.onInit();
         chatboxAttachComp.onInit();
+        chatboxSearchComp.onInit();
         emojiComp.onInit();
 
         // Initialize show image full modal
