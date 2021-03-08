@@ -151,8 +151,6 @@ define([
         const data = {};
         let mementPreviousMessDate = {};
 
-        console.log(isLoadMore);
-
         if (i === 0 && isLoadMore !== 'up') {
             data.date = momentMessDate.format('MMMM DD, YYYY');
             data.dateCode = momentMessDate.format('MMDDYYYY');
