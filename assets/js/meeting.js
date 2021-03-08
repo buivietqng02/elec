@@ -703,10 +703,9 @@ function appInit() {
     window.onresize = handleWindowResize;
     handleWindowResize(); //initial call of the top-down layout manager
 
-    var roomid = GetUrlParameter('id');
-    if (roomid != "") {
-    easyrtc.joinRoom(roomid, '', null, null);
-    };
+    // var roomid = GetUrlParameter('id');
+    // easyrtc.joinRoom(roomid, '', null, null);
+    
     easyrtc.setRoomOccupantListener(callEverybodyElse);
     easyrtc.easyApp("easyrtc.multiparty", "box0", ["box1", "box2", "box3"], loginSuccess);
     easyrtc.setPeerListener(messageListener);
