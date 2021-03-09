@@ -1,7 +1,9 @@
-define(['shared/data'], (GLOBAL) => {
+define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
     const pushNotificationForMessage = message => {
+        const text = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
+
         const notification = new Notification(message.sender.name, {
-            body: message.message.replace(/<[^>]+>/g, ''),
+            body: text.replace(/<[^>]+>/g, ''),
             icon: '/assets/images/icon.png'
         });
 

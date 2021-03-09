@@ -106,6 +106,32 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         return e.innerHTML;
     },
 
+    decodeStringBase64: (string) => {
+        let text;
+
+        try {
+            text = window.atob(string);
+        } catch (err) {
+            text = string;
+            console.log(err);
+        }
+
+        return text;
+    },
+
+    encodeStringBase64: (string) => {
+        let text;
+
+        try {
+            text = window.btoa(string);
+        } catch (err) {
+            text = string;
+            console.log(err);
+        }
+
+        return text;
+    },
+
     debounce(func, wait, immediate) {
         let timeout;
         return function () {

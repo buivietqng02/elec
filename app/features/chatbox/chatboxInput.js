@@ -1,5 +1,5 @@
 define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (constant, functions, API, GLOBAL) => {
-    const { htmlDecode, htmlEncode, stripTags, transformLinkTextToHTML, getDataToLocalApplication } = functions;
+    const { htmlDecode, htmlEncode, stripTags, encodeStringBase64, transformLinkTextToHTML, getDataToLocalApplication } = functions;
     const token = getDataToLocalApplication(constant.TOKEN) || '';
     const $input = $('.js_endter_mess');
     const $wrapperMessages = $('.js_con_list_mess');
@@ -106,7 +106,7 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
             chatId: roomId,
             isDelete: deleteState,
             params: {
-                message: text,
+                message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId
             }

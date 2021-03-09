@@ -19,7 +19,7 @@ define([
     chatboxSearchComp,
     modalAcceptInvitationComp
 ) => {
-    const { render, getAvatar, stripTags, htmlEncode } = functions;
+    const { render, getAvatar, stripTags, htmlEncode, decodeStringBase64 } = functions;
     const $wrapper = $('#sidebar_room_list');
     const $caption = $('.js_caption');
     const $chatbox = $('.js_wrap_mess');
@@ -114,7 +114,7 @@ define([
         let status = !id ? 'p_disabled' : '';
         const numUnRead = unreadMessages || '';
         let name = group ? subject : (obRoomEdited[partner?.id]?.user_name || partner?.name);
-        let mess = lastMessage ? htmlEncode(stripTags(lastMessage)) : '';
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage))) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
 

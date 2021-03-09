@@ -30,7 +30,8 @@ define([
         humanFileSize, 
         transformLinkTextToHTML,
         highlightText,
-        htmlEncode
+        htmlEncode,
+        decodeStringBase64
     } = functions;
     let messages = [];
     let lastOffset = 0;
@@ -189,11 +190,11 @@ define([
     const renderMessage = (mess, search) => {
         const info = GLOBAL.getInfomation();
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
-        let message = mess.message;
+        let message = decodeStringBase64(mess.message);
         const data = {
             id: mess.id.messageId,
             chatType: mess.type
-        };  
+        };
 
         try {
             // render with case of left the room
