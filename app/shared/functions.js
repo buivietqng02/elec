@@ -110,7 +110,12 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         let text;
 
         try {
-            text = window.atob(string);
+            const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+            if (base64regex.test(string)) {
+                text = window.atob(string);
+            } else {
+                text = string;
+            }
         } catch (err) {
             text = string;
             console.log(err);
