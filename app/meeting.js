@@ -1,7 +1,9 @@
 define([
-    'features/meeting/meetingWebRTC'
+    'features/meeting/meetingWebRTC',
+    'features/meeting/meetingPreviewForm'
 ], (
-    meetingWebRTCComp
+    meetingWebRTCComp,
+    meetingPreviewFormComp
 ) => {
     require('bootstrap/js/dist/modal');
     require('bootstrap/js/dist/tooltip');
@@ -12,6 +14,7 @@ define([
 
     const onInit = () => {
         meetingWebRTCComp.onInit();
+        meetingPreviewFormComp.onInit();
     };
     
     onInit();

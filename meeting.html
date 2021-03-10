@@ -32,17 +32,27 @@
     <div class="meeting-video-wrapper">
       <div class="mvw-wrapper">
         <video autoplay="" playsinline="playsinline" muted="" volume="0" id="mvww-user-0" class="mvww-owner"></video>
-        <video autoplay="" playsinline="playsinline" muted="" volume="0" class="mvww-normal"></video>
+        <!-- <video autoplay="" playsinline="playsinline" muted="" volume="0" class="mvww-normal"></video> -->
       </div>
       <div class="mvw-meetform">
         <div class="mvwm-overlay"></div>
         <div class="mvwm-box">
           <div class="mvwmb-url">
-              <div class="mvwmb-copy">
-                https://meet.jit.si/EastRetailsPauseForth
-              </div>
+            <div class="mvwmb-copy"></div>
+            <div class="mvwmb-placeholder">Click to copy and share meeting link</div>
+            <div class="input-only-view"></div>
           </div>
           <button class="btn btn-primary mvwmb-join-btn">Join meeting</button>
+          <div class="mvwmb-group-btn">
+            <button class="btn-round mvwmb-btn-mic">
+              <span></span>
+              <i class="xm xm-microphone"></i>
+            </button>
+            <button class="btn-round mvwmb-btn-camera">
+              <span></span>
+              <i class="xm xm-video-camera btn-camera"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
