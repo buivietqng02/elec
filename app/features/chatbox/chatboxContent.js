@@ -516,7 +516,7 @@ define([
             const id = message.id.messageId;
             const $message = $(`[data-chat-id="${id}"]`);
 
-            $message.find('.--mess').html(transformLinkTextToHTML(message.message));
+            $message.find('.--mess').html(transformLinkTextToHTML(decodeStringBase64(message.message)));
             // messages = messages.map(mess => {
             //     if (mess.id.messageId === id) {
             //         mess.message = message.message;
