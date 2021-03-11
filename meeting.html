@@ -31,8 +31,9 @@
     </div>
     <div class="meeting-video-wrapper">
       <div class="mvw-wrapper">
-        <video autoplay="" playsinline="playsinline" muted="" volume="0" id="mvww-user-0" class="mvww-owner"></video>
-        <!-- <video autoplay="" playsinline="playsinline" muted="" volume="0" class="mvww-normal"></video> -->
+        <div class="mvww-div owner" style="display: flex;">
+          <video autoplay="" playsinline="playsinline" muted="" volume="0" id="mvww-user-0" class="mvww-owner"></video>
+        </div>
       </div>
       <div class="mvw-meetform">
         <div class="mvwm-overlay"></div>
@@ -44,6 +45,28 @@
           </div>
           <button class="btn btn-primary mvwmb-join-btn">Join meeting</button>
           <div class="mvwmb-group-btn">
+            <button class="btn-round mvwmb-btn-mic">
+              <span></span>
+              <i class="xm xm-microphone"></i>
+            </button>
+            <button class="btn-round mvwmb-btn-camera">
+              <span></span>
+              <i class="xm xm-video-camera btn-camera"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mvwm-settings">
+        <div class="mvwms-settings">
+          <div class="mvwmss-utility">
+            <button class="mvwmss-btn-share-screen" data-toggle="tooltip" data-placement="top" title="Share your screen">
+              <i class="xm xm-desktop xm-fw" aria-hidden="true"></i>
+            </button>
+            <button class="mvwmss-btn-add-people" data-toggle="tooltip" data-placement="top" title="Invite people">
+              <i class="xm xm-send-plus xm-fw" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="mvwmss-group-btn">
             <button class="btn-round mvwmb-btn-mic">
               <span></span>
               <i class="xm xm-microphone"></i>

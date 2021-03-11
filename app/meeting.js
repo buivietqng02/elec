@@ -1,9 +1,11 @@
 define([
+    'features/meeting/meetingPreviewForm',
     'features/meeting/meetingWebRTC',
-    'features/meeting/meetingPreviewForm'
+    'features/meeting/meetingUtility'
 ], (
+    meetingPreviewFormComp,
     meetingWebRTCComp,
-    meetingPreviewFormComp
+    meetingUtilityComp
 ) => {
     require('bootstrap/js/dist/modal');
     require('bootstrap/js/dist/tooltip');
@@ -13,8 +15,10 @@ define([
     jsrender($);
 
     const onInit = () => {
-        meetingWebRTCComp.onInit();
         meetingPreviewFormComp.onInit();
+        meetingWebRTCComp.onInit();
+        meetingUtilityComp.onInit();
+        $('[data-toggle="tooltip"]').tooltip();
     };
     
     onInit();

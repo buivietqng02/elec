@@ -1,9 +1,11 @@
 define([
     'shared/functions',
-    'shared/alert'
+    'shared/alert',
+    'features/meeting/meetingWebRTC'
 ], (
     functions,
-    ALERT
+    ALERT,
+    meetingWebRTCComp
 ) => {
     const $micBtn = $('.mvwmb-btn-mic');
     const $cameraBtn = $('.mvwmb-btn-camera');
@@ -24,7 +26,9 @@ define([
         const searchParams = new URLSearchParams(window.location.search);
         
         if (!searchParams.get('id')) {
-            insertUrlParam('id', functions.generateId());
+            let id = functions.generateId();
+            insertUrlParam('id', id);
+            $urlText.text(`${window.location.host}${window.location.pathname}?id=${id}`);
         } else {
             $urlText.text(`${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
         }
@@ -33,6 +37,13 @@ define([
     return {
         onInit: () => {
             onCreateId();
+
+            $('.mvwmb-join-btn').click(() => {
+                $('.mvw-wrapper').addClass('joining');
+                $('.mvw-meetform').hide();
+                $('.mvwm-settings').show();
+                meetingWebRTCComp.onJoinRoom();
+            });
 
             $url.click(() => {
                 const searchParams = new URLSearchParams(window.location.search);
