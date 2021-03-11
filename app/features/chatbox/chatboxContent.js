@@ -187,6 +187,18 @@ define([
         return '';
     };
 
+    const renderComment = (quotedMessage) => {
+        const roomEdited = GLOBAL.getRoomInfoWasEdited();
+        const sender = htmlEncode(roomEdited[quotedMessage?.sender?.id]?.user_name || quotedMessage?.sender?.name);
+        const message = transformLinkTextToHTML(decodeStringBase64(quotedMessage.message));
+
+        if (quotedMessage.file) {
+            message = handleMessCointainFile(mess.file);
+        }
+
+        return `<div class="comment-box-inline" style="margin-left: 0;">${sender}: ${message}</div>`;
+    }
+
     const renderMessage = (mess, search) => {
         const info = GLOBAL.getInfomation();
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
@@ -229,17 +241,20 @@ define([
             data.forward = mess.forwarded ? 'fwme' : '';
 
             // render with case of comment
-            if (message.indexOf('"></c>') > -1 && message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
+            if (message.indexOf('"></c>') > -1 && message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1 && !message.quotedMessage) {
                 try {
                     splitMess = message.split('<c style="display:none" ob="');
                     const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
                     data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${htmlEncode(roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name)}: ${commentInfo.mess}</div>`;
                     data.mess = transformLinkTextToHTML(splitMess[0]);
                 } catch(e) {
-                    console.log(e);
                     data.mess = transformLinkTextToHTML(message);
                 }
             } else {
+                if (mess.quotedMessage) {
+                    data.comment = renderComment(mess.quotedMessage);
+                }
+
                 data.mess = transformLinkTextToHTML(message);
             }
 
