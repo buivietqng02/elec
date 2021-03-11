@@ -112,7 +112,7 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         try {
             const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
             if (base64regex.test(string)) {
-                text = window.atob(string);
+                text = decodeURIComponent(escape(window.atob(string)));;
             } else {
                 text = string;
             }
@@ -128,7 +128,7 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         let text;
 
         try {
-            text = window.btoa(string);
+            text = window.btoa(unescape(encodeURIComponent(string)));
         } catch (err) {
             text = string;
             console.log(err);

@@ -24,6 +24,8 @@ define([
     let currentPos = 0;
     let totalSearch = 0;
 
+    $openBtn.hide();
+
     const refershVarible = () => {
         let $mess = $('.highlight-text').closest('.--mess');
         $mess.text($mess.text());
