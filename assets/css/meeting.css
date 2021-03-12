@@ -7,6 +7,7 @@ button {
     top: 15px;
     right: 15px;
     width: 30%;
+    min-width: 300px;
     z-index: 99999;
 }
   
@@ -38,6 +39,7 @@ button {
 }
 
 .meeting-video-wrapper {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -103,7 +105,8 @@ button {
 .mvwmb-url {
     background: rgba(28,32,37,.5);
     width: 382px;
-    padding: 0 10px;
+    max-width: 90%;
+    padding: 0 40px 0 10px;
     height: 38px;
     line-height: 38px;
     border-radius: .25rem;
@@ -113,6 +116,12 @@ button {
     font-size: 16px;
     transition: background .3s;
     position: relative;
+}
+
+.mvwmb-copy {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mvwmb-url:hover {
@@ -130,6 +139,7 @@ button {
 
 .mvwmb-join-btn {
     width: 382px;
+    max-width: 90%;
 }
 
 .mvwm-overlay {
@@ -198,7 +208,7 @@ button {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 60px;
     overflow: hidden;
     display: none;
 }
@@ -210,7 +220,7 @@ button {
 }
 
 .mvwmss-group-btn {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     justify-content: center;
 }
@@ -243,10 +253,116 @@ button {
     position: absolute;
 }
 
+.mvw-wrapper.joining .mvww-div:not(.expand):hover {
+    position: relative;
+}
+
+.mvw-wrapper.joining .mvww-div:before {
+    content: '';
+    background-image: linear-gradient(transparent,#000);
+    display: none;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.mvw-wrapper.joining .mvww-div:after {
+    content: 'Click to expand video';
+    color: #fff;
+    position: absolute;
+    display: none;
+    z-index: 2;
+    font-size: 31px;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    margin-top: -23px;
+}
+
+.mvw-wrapper.joining .mvww-div:not(.expand):hover:before,
+.mvw-wrapper.joining .mvww-div:not(.expand):hover:after {
+    display: block;
+}
+
+.mvww-div.expand {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    margin: 0;
+    cursor: default;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 98;
+    background-color: #000;
+}
+
+.mvww-div.expand > video {
+    object-fit: contain;
+}
+
+.mvw-collapse-btn {
+    position: fixed;
+    z-index: 99;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: none;
+    background-color: rgba(255, 255, 255, .4);
+}
+
+.mvw-collapse-btn:hover {
+    background-color: #007bff;
+}
+
+.mvw-collapse-btn svg {
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-top: -10px;
+    margin-left: -10px;
+    position: absolute;
+    fill: rgba(0, 0, 0, .8);
+}
+
+.mvw-collapse-btn:hover svg {
+    fill: #fff;
+}
+
+#inviteModal .mvwmb-url {
+    width: 100%;
+    max-width: 100%;
+}
+
+.im-text {
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 991px) {
+    .mvww-div {
+        width: 100%;
+    }
+}
+
 @media screen and (min-width: 360px) {
     .mvw-wrapper.joining {
         overflow: auto;
         align-content: normal;
+    }
+
+    .mvwmss-utility > button {
+        margin: 0;
     }
 
     .mvw-wrapper.shape-one .mvww-div,

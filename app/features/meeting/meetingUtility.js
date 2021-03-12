@@ -1,8 +1,9 @@
-/* eslint-disable */
 define([
-    'shared/functions'
+    'shared/functions',
+    'features/meeting/meetingInviteModal'
 ], (
-    functions
+    functions,
+    meetingInviteModalComp
 ) => {
     const $shareBtn = $('.mvwmss-btn-share-screen');
     const $inviteBtn = $('.mvwmss-btn-add-people');
@@ -12,7 +13,7 @@ define([
         audio: true,
         video: true
     };
-    const displayMediaOptions = {
+    const constraintsShare = {
         video: {
           cursor: 'always'
         },
@@ -25,7 +26,7 @@ define([
 
     const onStop = () => {
         navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            let id = functions.generateId();
+            const id = functions.generateId();
             $settings.css('pointer-events', 'visible');
             $video.get(0).srcObject = stream;
             easyrtc.register3rdPartyLocalMediaStream(stream, id);
@@ -35,28 +36,22 @@ define([
         });
     };
 
-    const onShare = () => {
-        navigator.mediaDevices.getDisplayMedia(displayMediaOptions).then(function (stream) {
-            let id = functions.generateId();
+    const onShare = () => navigator.mediaDevices.getDisplayMedia(constraintsShare).then(stream => {
+        const id = functions.generateId();
 
-            $settings.css('pointer-events', 'none');
-            stream.oninactive = onStop;
-            $video.get(0).srcObject = stream;
-            easyrtc.register3rdPartyLocalMediaStream(stream, id);
-            (window.easyrtcIds || []).forEach((easyrtcId) => {
-                easyrtc.addStreamToCall(easyrtcId, id);
-            });
-        })
-    };
-
-    const onInvite = () => {
-        
-    };
+        $settings.css('pointer-events', 'none');
+        stream.oninactive = onStop; // eslint-disable-line no-param-reassign
+        $video.get(0).srcObject = stream;
+        easyrtc.register3rdPartyLocalMediaStream(stream, id);
+        (window.easyrtcIds || []).forEach((easyrtcId) => {
+            easyrtc.addStreamToCall(easyrtcId, id);
+        });
+    });
 
     return {
         onInit: () => {
             $shareBtn.click(onShare);
-            $inviteBtn.click(onInvite);
+            $inviteBtn.click(meetingInviteModalComp.onInit);
         }
     };
 });

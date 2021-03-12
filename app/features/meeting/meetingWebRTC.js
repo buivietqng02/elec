@@ -1,10 +1,11 @@
 define([
-
+    'app/webrtc'
 ], (
-
+    URL
 ) => {
     let userList = [];
     const $videpWrapper = $('.mvw-wrapper');
+    const $collapseBtn = $('.mvw-collapse-btn');
 
     for (let i = 0; i < 8; i += 1) {
         userList = userList.concat(`mvww-user-${i + 1}`);
@@ -15,8 +16,25 @@ define([
         `);
     }
 
+    const onExpand = (e) => {
+        const $this = $(e.currentTarget);
+        if ($this.hasClass('expand')) {
+            return;
+        }
+
+        $collapseBtn.show();
+        $this.addClass('expand');
+    };
+
+    const onCollapse = () => {
+        $('.mvww-div').removeClass('expand');
+        $collapseBtn.hide();
+    };
+
     const initWepRTC = () => {
         $('.xm-page-loading').remove();
+        $('.mvww-div').click(onExpand);
+        $collapseBtn.click(onCollapse);
     };
 
     const convertListToButtons = (roomName, data) => {
@@ -26,6 +44,12 @@ define([
         }
 
         easyrtc.setRoomOccupantListener(null);
+
+        // limit number of members
+        if (Object.keys(data).length > 8) {
+            return;
+        }
+
         const list = [];
         let connectCount = 0;
         let min = 0;
@@ -62,8 +86,8 @@ define([
         }
     };
 
-    const setWidthVideo = () => {
-        const numConnect = easyrtc.getConnectionCount() + 1;
+    const setWidthVideo = (isHang) => {
+        const numConnect = easyrtc.getConnectionCount() + (isHang ? 0 : 1);
 
         $videpWrapper.removeClass('shape-one');
         $videpWrapper.removeClass('shape-two');
@@ -90,7 +114,13 @@ define([
         const $video = $(`#mvww-user-${slot + 1}`);
         const $videoWrap = $video.parent();
         $videoWrap.hide();
-        setWidthVideo();
+
+        if ($videoWrap.hasClass('expand')) {
+            $videoWrap.removeClass('expand');
+            $collapseBtn.hide();
+        }
+        
+        setWidthVideo(true);
     };
 
     const onJoinRoom = () => {
@@ -108,7 +138,7 @@ define([
 
     return {
         onInit: () => {
-            easyrtc.setSocketUrl('http://172.16.5.177:8081');
+            easyrtc.setSocketUrl(URL);
             easyrtc.dontAddCloseButtons(true);
             easyrtc.initMediaSource(() => {
                 easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
