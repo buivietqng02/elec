@@ -102,6 +102,10 @@ define([
     };
 
     const onCall = (easyrtcid, slot) => {
+        if (window.idShareScreen) {
+            easyrtc.addStreamToCall(easyrtcid, window.idShareScreen);
+        }
+
         window.easyrtcIds = (window.easyrtcIds || []).concat(easyrtcid);
         const $video = $(`#mvww-user-${slot + 1}`);
         const $videoWrap = $video.parent();

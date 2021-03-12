@@ -30,6 +30,7 @@ define([
             $settings.css('pointer-events', 'visible');
             $video.get(0).srcObject = stream;
             easyrtc.register3rdPartyLocalMediaStream(stream, id);
+            window.idShareScreen = null;
             (window.easyrtcIds || []).forEach((easyrtcId) => {
                 easyrtc.addStreamToCall(easyrtcId, id);
             });
@@ -43,6 +44,7 @@ define([
         stream.oninactive = onStop; // eslint-disable-line no-param-reassign
         $video.get(0).srcObject = stream;
         easyrtc.register3rdPartyLocalMediaStream(stream, id);
+        window.idShareScreen = id;
         (window.easyrtcIds || []).forEach((easyrtcId) => {
             easyrtc.addStreamToCall(easyrtcId, id);
         });
