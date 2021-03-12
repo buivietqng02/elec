@@ -5,7 +5,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const htmlPageNames = ['index', 'login'];
+const htmlPageNames = ['index', 'login', 'meeting'];
 const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
     cache: false,
     template: `html/${name}.html`,
@@ -16,6 +16,7 @@ const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
 module.exports = {
     entry: {
         index: './app/app.js',
+        meeting: './app/meeting.js',
         login: './assets/js/login.js'
     },
     output: {

@@ -22,6 +22,7 @@ build:dev:
     - mv .dist dist
   only:
     - dev
+    - multiparty-webrtc 
   artifacts:
     paths:
       - dist
@@ -37,6 +38,7 @@ deploy:dev:
 
   only:
     - dev
+    - multiparty-webrtc 
   dependencies:
     - build:dev
 

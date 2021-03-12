@@ -19,6 +19,7 @@ define([
     const $slide = $('#user-option');
     const $optionsBtn = $('#sidebar-options-btn');
     const $groupChatBtn = $('#group-chat-options-btn');
+    const $startConferenceBtn = $slide.find('.--start-conference');
     const $userInterFaceBtn = $slide.find('.--use-interface');
     const $sendInviteBtn = $slide.find('.--send-invite');
     const $erpContactBtn = $slide.find('.--erp-contact');
@@ -58,6 +59,11 @@ define([
         offEventClickOutside();
     };
 
+    const showMeetingPage = () => {
+        const win = window.open('/meeting.html', '_blank');
+        win.focus();
+    };
+
     const showModalSendInvite = () => {
         modalInviteComp.onInit();
         offEventClickOutside();
@@ -84,6 +90,7 @@ define([
             $optionsBtn.click(showSlide);
             $groupChatBtn.click(showModalCreateGroup);
             $userInterFaceBtn.click(showModalUserInterFace);
+            $startConferenceBtn.click(showMeetingPage);
             $sendInviteBtn.click(showModalSendInvite);
             $erpContactBtn.click(showModalERPContact);
             $aboutBtn.click(showModalAbout);
