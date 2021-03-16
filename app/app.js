@@ -109,7 +109,7 @@ define([
             navigator.serviceWorker.register('sw.js').then(reg => {
                 setInterval(() => {
                     reg.update();
-                }, 900000);
+                }, 100000);
             });
         }
     };

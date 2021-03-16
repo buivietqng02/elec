@@ -381,6 +381,7 @@ define([
                 }
 
                 $inputGroupName.val(roomInfo.subject);
+                $numSelected.text(res.members.length);
                 res.members.forEach(member => {
                     const obRoomEdit = GLOBAL.getRoomInfoWasEdited()[member.user.id];
                     const crName = obRoomEdit?.user_name ? obRoomEdit.user_name : member.user.name;
