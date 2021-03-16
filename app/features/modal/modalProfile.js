@@ -89,11 +89,10 @@ define([
         }
 
         const info = { ...GLOBAL.getInfomation() };
-        const string = `email=${info.email}&id=${info.id}&name=${$name.val() || info.name}&url=${$erp.val()}`;
         isProcessing = true;
         $save.addClass('loading-btn');
 
-        API.postForm('saveprofile', string).then(() => {
+        API.post('saveprofile', {name: `${$name.val() || info.name}`, url: `${$erp.val()}`}).then(() => {
             if ($name.val()) {
                 info.name = $name.val();
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).html($name.val());

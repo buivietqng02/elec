@@ -151,7 +151,7 @@ define([
 
     const getNewGroup = (message) => API.get('chats').then(res => {
         try {
-            const { chats } = res.data;
+            const { chats } = res;
             const { length } = chats;
 
             for (let i = 0; i < length; i += 1) {
