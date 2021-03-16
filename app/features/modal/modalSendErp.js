@@ -49,7 +49,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
             API.get('chats').then((resTwo) => {
                 const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
                 sidebarRoomListComp.onInit();
-                GLOBAL.setRooms(resTwo.data.chats);
+                GLOBAL.setRoomsWithAdapter(resTwo);
                 $btnCancel.click();
             });
         }).catch((e) => {

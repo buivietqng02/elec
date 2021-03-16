@@ -1,4 +1,4 @@
-define(['app/enviroment'], (enviroment) => {
+define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
         API_URL: `${enviroment}/api`,
         SESSION_ID: 'sessionId',
@@ -22,7 +22,8 @@ define(['app/enviroment'], (enviroment) => {
         ATTRIBUTE_CHANGE_NAME: 'data-userid-name',
         ATTRIBUTE_CHANGE_IMAGE: 'data-userid-image',
         ATTRIBUTE_CHANGE_IMAGE_GROUP: 'data-roomid-image',
-        ATTRIBUE_SIDEBAR_ROOM: 'data-room-id'
+        ATTRIBUE_SIDEBAR_ROOM: 'data-room-id',
+        WEBRTC_URL: webrtc
     };
 
     return Object.freeze(obj);

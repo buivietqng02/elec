@@ -14,6 +14,7 @@ define([
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxAttach',
+    'features/chatbox/chatboxSearch',
     'features/chatbox/emoji',
     'features/modal/modalShowImageFull',
     'features/modal/modalUpdateVersion',
@@ -34,6 +35,7 @@ define([
     chatboxContentComp,
     chatboxInputComp,
     chatboxAttachComp,
+    chatboxSearchComp,
     emojiComp,
     modalShowImageFullComp,
     modalUpdateVersionComp,
@@ -124,21 +126,17 @@ define([
     };
 
     const onGetValidate = (res) => {
-        if (res.status !== 0) {
-            return;
-        }
-
         setCookie(getDataToLocalApplication(TOKEN), 3650);
 
         // Store information of logging user
         GLOBAL.setInfomation({
-            ...res.data.user,
-            email: res?.data?.email,
-            erp_url: res?.data?.erp_url
+            ...res.user,
+            email: res?.email,
+            erp_url: res?.erp_url
         });
 
         // Store chat room list
-        GLOBAL.setRooms(res.data.chats);
+        GLOBAL.setRoomsWithAdapter(res.chats);
         
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
@@ -152,6 +150,7 @@ define([
         chatboxContentComp.onInit();
         chatboxInputComp.onInit();
         chatboxAttachComp.onInit();
+        chatboxSearchComp.onInit();
         emojiComp.onInit();
 
         // Initialize show image full modal

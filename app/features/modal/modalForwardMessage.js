@@ -37,8 +37,8 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
     const renderRoom = (room) => {
         let data = {};
         let src = '';
-        const firstMember = room.members[0];
-        const name = room.group ? room.subject : firstMember?.user?.name;
+        const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
+        const name = room.group ? room.subject : (obRoomEdited[room.partner?.id]?.user_name || room.partner?.name);
 
         // only forward to rooms with id, name and it is not channel
         if (!room.id || !name || room.channel) {
@@ -52,7 +52,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
 
         // direct chat
         if (!room.group) {
-            src = getAvatar(firstMember?.user?.id);
+            src = getAvatar(room.partner?.id);
         }
 
         data = {
@@ -70,8 +70,11 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
 
     const onRoomClick = (e) => {
         $closeBtn.click();
-        const formData = `chatSrc=${GLOBAL.getCurrentRoomId()}&chatDst=${$(e.currentTarget).data().fmmRoomId}&messageId=${chatId}`;
-        API.postForm('forwardmsg', formData).then(res => {});
+        API.post('messages/forward', {
+            sourceChatId: GLOBAL.getCurrentRoomId(),
+            destChatId: $(e.currentTarget).data().fmmRoomId,
+            messageId: chatId
+        }).then();
     };
 
     const onSearch = debounce(() => {

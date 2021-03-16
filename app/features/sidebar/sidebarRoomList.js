@@ -6,6 +6,7 @@ define([
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxAttach',
+    'features/chatbox/chatboxSearch',
     'features/modal/modalAcceptInvitation'
 ], (
     constant,
@@ -15,9 +16,10 @@ define([
     chatboxInputComp,
     chatboxTopbarComp,
     chatboxAttachComp,
+    chatboxSearchComp,
     modalAcceptInvitationComp
 ) => {
-    const { render, getAvatar, stripTags, htmlEncode } = functions;
+    const { render, getAvatar, stripTags, htmlEncode, decodeStringBase64 } = functions;
     const $wrapper = $('#sidebar_room_list');
     const $caption = $('.js_caption');
     const $chatbox = $('.js_wrap_mess');
@@ -58,10 +60,6 @@ define([
             return false;
         })[0] || {};
 
-        if (!roomInfo || $this.hasClass('p_disabled') || roomId === GLOBAL.getCurrentRoomId()) {
-            return;
-        }
-
         // Handle when the user has not accepted the invitation yet
         if (!roomId) {
             $caption.show();
@@ -69,6 +67,10 @@ define([
             GLOBAL.setCurrentRoomId(null);
             $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`).removeClass('active');
             modalAcceptInvitationComp.onInit($this);
+            return;
+        }
+
+        if ($this.hasClass('p_disabled') || roomId === GLOBAL.getCurrentRoomId()) {
             return;
         }
 
@@ -90,75 +92,80 @@ define([
         $this.addClass('active');
 
         chatboxInputComp.onClear();
+        chatboxSearchComp.onCloseSearchBox();
         chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
         chatboxContentComp.onLoadMessage(roomInfo, positionRoom);
     };
 
     const renderRoom = (room) => {
-        if (!room.members) {
-            return '';
-        }
-
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
+        const {
+            id,
+            partner,
+            unreadMessages,
+            group,
+            subject,
+            sender,
+            lastMessage
+        } = room;
         let data = {};
         let src = '';
-        const firstMember = room.members[0];
-        let status = !room.id ? 'p_disabled' : '';
-        const numUnRead = room.member.messagecounter || '';
-        let name = room.group ? room.subject : (obRoomEdited[firstMember?.user?.id]?.user_name || firstMember?.user?.name);
-        let mess = room.lastmessage ? htmlEncode(stripTags(room.lastmessage)) : '';
-        const live = (GLOBAL.getCurrentRoomId() === room.id) ? 'active' : '';
-        const userId = room.group ? '' : firstMember?.user?.id;
+        let status = !id ? 'p_disabled' : '';
+        const numUnRead = unreadMessages || '';
+        let name = group ? subject : (obRoomEdited[partner?.id]?.user_name || partner?.name);
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage))) : '';
+        const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
+        const userId = group ? '' : partner?.id;
 
         // data error during processing
-        if (room.group && !name) {
+        if (group && !name) {
             return '';
         }
 
         // group chat
-        if (room.group) {
-            src = getAvatar(room.id, true);
+        if (group) {
+            src = getAvatar(id, true);
         }
 
         // direct chat
-        if (!room.group) {
-            src = getAvatar(firstMember?.user?.id);
+        if (!group) {
+            src = getAvatar(partner?.id);
         }
 
         // direct chat but cross user has not accepted the invitation yet
-        if (!room.group && !firstMember) {
+        if (!group && !partner) {
             src = '/assets/images/user.svg';
         }
 
         // waiting cross user accept the invitation
-        if (!room.id && room.sender) {
-            name = room.member.user.name;
+        if (!id && sender) {
+            name = partner?.name;
             mess = 'Invite: pending';
-            src = getAvatar(room.member.user.id);
+            src = getAvatar(partner?.id);
         }
 
         // have not accepted the invitation yet
-        if (!room.id && !room.sender) {
-            name = room.member.user.name;
+        if (!id && !sender) {
+            name = partner?.name;
             mess = 'Invite: not accepted';
-            src = getAvatar(room.member.user.id);
+            src = getAvatar(partner?.id);
             status = '';
         }
 
         data = {
-            id: room.id,
-            isGroup: room.group ? 'data-is-group="true"' : 'data-is-group="false"',
+            id: id,
+            isGroup: group ? 'data-is-group="true"' : 'data-is-group="false"',
             status,
             live,
             unread: numUnRead,
-            handleImageErr: `onerror="this.src='${room.group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
-            classImg: room.group ? 'hagr' : '',
+            handleImageErr: `onerror="this.src='${group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
+            classImg: group ? 'hagr' : '',
             src,
             name: htmlEncode(name),
             mess,
             userId,
-            mute: obRoomEdited[room.id]?.notification_mess === false ? 'mute' : ''
+            mute: obRoomEdited[id]?.notification_mess === false ? 'mute' : ''
         };
 
         return render(template, data);

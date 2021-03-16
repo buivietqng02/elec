@@ -1,3 +1,5 @@
+const { suppressDeprecationWarnings } = require("moment");
+
 const convertToJSView = (html) => html.replace(/{([^}]+)}/g, (m, s) => {
     const key = s.replace(/\./g, '^');
     return `{^{:${key}}}`;
@@ -39,16 +41,16 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         return `${constant.API_URL}/${isGroup ? 'chats' : 'users'}/${id}/avatar`;
     },
 
-    sortBy: (arr, p) => arr.slice(0).sort((a, b) => {
+    sortBy: (arr, p) => arr.sort((a, b) => {
+        if (a[p] < b[p]) {
+            return -1;
+        }
+
         if (a[p] > b[p]) {
             return 1;
-        } else {
-            if (a[p] < b[p]) {
-                return - 1;
-            } else {
-                return 0;
-            }
         }
+
+        return 0;
     }),
 
     stripTags: (text) => text.replace(/(<([^>]+)>)/gi, ''),
@@ -104,6 +106,37 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         return e.innerHTML;
     },
 
+    decodeStringBase64: (string) => {
+        let text;
+
+        try {
+            const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+            if (base64regex.test(string)) {
+                text = decodeURIComponent(escape(window.atob(string)));;
+            } else {
+                text = string;
+            }
+        } catch (err) {
+            text = string;
+            console.log(err);
+        }
+
+        return text;
+    },
+
+    encodeStringBase64: (string) => {
+        let text;
+
+        try {
+            text = window.btoa(unescape(encodeURIComponent(string)));
+        } catch (err) {
+            text = string;
+            console.log(err);
+        }
+
+        return text;
+    },
+
     debounce(func, wait, immediate) {
         let timeout;
         return function () {
@@ -141,6 +174,40 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         }
         
         return string;
+    },
+
+    highlightText: (text, query) => {
+        let lastIndex = 0;
+        const words = query.split(/\s+/).filter((word) => (word.length > 0)).map(string => string.replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1'));
+
+        if (words.length === 0) {
+            return text;
+        }
+
+        const regexp = new RegExp(words.join("|"), "gi");
+        const tokens = [];
+
+        while (true) {
+            const match = regexp.exec(text);
+            if (!match) {
+                break;
+            }
+            const length = match[0].length;
+            const before = text.slice(lastIndex, regexp.lastIndex - length);
+            if (before.length > 0) {
+                tokens.push(before);
+            }
+            lastIndex = regexp.lastIndex;
+            tokens.push(`<span class="highlight-text">${match[0]}</span>`);
+        }
+
+        const rest = text.slice(lastIndex);
+
+        if (rest.length > 0) {
+            tokens.push(rest);
+        }
+
+        return tokens.join('')
     },
 
     generateId: () => Math.random().toString(36).substr(2, 9),

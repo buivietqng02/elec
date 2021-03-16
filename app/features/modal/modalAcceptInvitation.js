@@ -37,7 +37,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (const
             API.get('chats').then((res) => {
                 const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
                 sidebarRoomListComp.onInit();
-                GLOBAL.setRooms(res.data.chats);
+                GLOBAL.setRoomsWithAdapter(res);
                 $btnCancel.click(); 
             }).catch((err) => {
                 console.log(err);

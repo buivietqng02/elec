@@ -4,7 +4,6 @@ stages:
 
 build:dev:
   stage: build
-  when: manual
   tags:
     - dev-server
   script:
@@ -23,13 +22,13 @@ build:dev:
     - mv .dist dist
   only:
     - dev
+    - multiparty-webrtc 
   artifacts:
     paths:
       - dist
 
 deploy:dev:
   stage: deploy
-  when: manual
   tags:
     - dev-server
   script:
@@ -39,6 +38,7 @@ deploy:dev:
 
   only:
     - dev
+    - multiparty-webrtc 
   dependencies:
     - build:dev
 

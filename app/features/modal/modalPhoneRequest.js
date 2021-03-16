@@ -5,7 +5,7 @@ define([
     'shared/alert',
     'shared/functions'
 ], (
-    BASE_URL, 
+    WEBRTC_URL, 
     GLOBAL,
     API,
     ALERT,
@@ -262,23 +262,17 @@ define([
     };
 
     const setupWebrtc = () => {
+        if (roomInfo.group) {
+            return;
+        }
+
+        const idVideo = 'callerVideo';
         roomId = roomInfo.id;
         isGroupGlobal = roomInfo.group;
-        listCaller = [];
+        listCaller = [idVideo];
         isInit = false;
         $videoCallerWrap.find('video').remove();
-
-        if (roomInfo.group) {
-            for (let i = 0; i < GLOBAL.getCurrentGroupMembers().length; i += 1) {
-                const idVideo = `callerVideo${i + 1}`;
-                listCaller = listCaller.concat(idVideo);
-                $videoCallerWrap.append(`<video autoplay="autoplay" playsinline="playsinline" id="${idVideo}"></video>`);
-            }
-        } else {
-            const idVideo = 'callerVideo';
-            listCaller = listCaller.concat(idVideo);
-            $videoCallerWrap.append(`<video autoplay="autoplay" playsinline="playsinline" id="${idVideo}"></video>`);
-        }
+        $videoCallerWrap.append(`<video autoplay="autoplay" playsinline="playsinline" id="${idVideo}"></video>`);
 
         switch (listCaller.length) {
             case 1:
@@ -350,7 +344,7 @@ define([
             if (!isModalRendered) {
                 isModalRendered = true;
                 $('body').append(renderTemplate);
-                easyrtc.setSocketUrl('https://webrtc.iptp.net');
+                easyrtc.setSocketUrl(WEBRTC_URL);
                 onDeclareDom();
             }
 

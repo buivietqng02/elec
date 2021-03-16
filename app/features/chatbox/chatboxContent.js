@@ -22,29 +22,44 @@ define([
     messageSettingsSlideComp
 ) => {
     const { API_URL, ATTRIBUE_SIDEBAR_ROOM } = constant;
-    let messages = [];
-    let processing = false;
-    let isTouchLastMess = false;
+    const { set, get } = idbKeyval;
     const {
         render, 
         getAvatar, 
         convertMessagetime, 
         humanFileSize, 
         transformLinkTextToHTML,
-        htmlEncode
+        highlightText,
+        htmlEncode,
+        decodeStringBase64
     } = functions;
-    const { set, get } = idbKeyval;
+    let messages = [];
+    let lastOffset = 0;
+    let unreadScrollNum = 0;
+    let processing = false;
+    let isTouchLastMess = false;
+    let isTouchFirstMess = true;
     const $btnScrollToBottom = $('.scroll-to__bottom');
     const $messageList = $('.messages__list');
     const $wrapper = $('.js_con_list_mess');
     const $loadingOfNew = $('.--load-mess');
+    const $unreadScroll = $('.unread-message-scroll');
 
     const onWrapperScroll = () => {
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
             $btnScrollToBottom.show();
         } else {
-            $btnScrollToBottom.hide();
+            if (isTouchFirstMess) {
+                unreadScrollNum = 0;
+                $unreadScroll.text(0);
+                $unreadScroll.hide();
+                $btnScrollToBottom.hide();
+            }
+        }
+
+        if (!isTouchFirstMess && !processing && $wrapper.scrollTop() + $wrapper.height() > $wrapper[0].scrollHeight - 700) {
+            onGetMoreMessageByScrollingUp();
         }
 
         // condition 1 : When the request is being processed, this action will skip, prevent user spam
@@ -62,7 +77,21 @@ define([
         $wrapper.scrollTop(wrapperHtml.scrollHeight);
     };
 
-    const onScrollToBottom = () => $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
+    const onScrollToBottom = () => {
+        if (!isTouchFirstMess) {
+            isTouchFirstMess = true;
+            messages = GLOBAL.getCurrentMessages();
+            lastOffset = messages[0]?.id?.messageId;
+            messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, true) + renderMessage(mess, search))).join('');
+            $messageList.html(messagesHtml);
+            setTimeout(() => {
+                isTouchLastMess = false;
+            }, 200);
+            $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
+        } else {
+            $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
+        }
+    };
 
     const updateRoomInfo = (roomInfo, positionRoom) => {
         const activeRoom = { ...roomInfo };
@@ -70,7 +99,7 @@ define([
 
         // Mark unread of active room to zero
         $(`[data-room-id="${activeRoom.id}"]`).find('.badge').html('');
-        activeRoom.member.messagecounter = 0;
+        activeRoom.unreadMessages = 0;
         rooms[positionRoom] = { ...activeRoom };
         GLOBAL.setRooms(rooms);
     };
@@ -123,15 +152,26 @@ define([
         const data = {};
         let mementPreviousMessDate = {};
 
-        if (i === 0) {
+        if (i === 0 && isLoadMore !== 'up') {
             data.date = momentMessDate.format('MMMM DD, YYYY');
             data.dateCode = momentMessDate.format('MMDDYYYY');
             return render(template.rangeDate, data);
         }
 
+        if (i === 0 && isLoadMore === 'up') {
+            mementPreviousMessDate = moment(messages[messages.length - 1].msgDate);
+            if (!mementPreviousMessDate.isSame(momentMessDate, 'date')) {
+                data.date = momentMessDate.format('MMMM DD, YYYY');
+                data.dateCode = momentMessDate.format('MMDDYYYY');
+                return render(template.rangeDate, data);
+            }
+
+            return '';
+        }
+
         mementPreviousMessDate = moment(messArr[i - 1].msgDate);
 
-        if (i === messArr.length - 1 && isLoadMore) {
+        if (i === messArr.length - 1 && isLoadMore === 'down') {
             const momentNextMessDate = moment(messages[0].msgDate);
             if (momentNextMessDate.isSame(momentMessDate, 'date')) {
                 $(`[data-mess-date-code='${momentMessDate.format('MMDDYYYY')}']`).remove();
@@ -147,9 +187,22 @@ define([
         return '';
     };
 
-    const renderMessage = (mess) => {
+    const renderComment = (quotedMessage) => {
+        const roomEdited = GLOBAL.getRoomInfoWasEdited();
+        const sender = htmlEncode(roomEdited[quotedMessage?.sender?.id]?.user_name || quotedMessage?.sender?.name);
+        const message = transformLinkTextToHTML(decodeStringBase64(quotedMessage.message));
+
+        if (quotedMessage.file) {
+            message = handleMessCointainFile(mess.file);
+        }
+
+        return `<div class="comment-box-inline" style="margin-left: 0;">${sender}: ${message}</div>`;
+    }
+
+    const renderMessage = (mess, search) => {
         const info = GLOBAL.getInfomation();
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
+        let message = decodeStringBase64(mess.message);
         const data = {
             id: mess.id.messageId,
             chatType: mess.type
@@ -158,20 +211,24 @@ define([
         try {
             // render with case of left the room
             if (mess.type === 7) {
-                data.who = mess.message;
+                data.who = message;
                 return render(template.leftGroup, data);
             }
 
             // render with case of join the room
             if (mess.type === 5) {
-                data.who = mess.message;
+                data.who = message;
                 return render(template.joinGroup, data);
             }
 
             // render with calling
             if (mess.type === 21 || mess.type === 24) {
-                data.mess = mess.message;
+                data.mess = message;
                 return render(template.call, data);
+            }
+
+            if (search && search.offset && search.offset === mess.id.messageId) {
+                message = highlightText(message, search.value);
             }
 
             data.src = getAvatar(mess.sender.id);
@@ -181,20 +238,24 @@ define([
             data.show_internal = mess.internal ? '' : 'hidden';
             data.who = info.id === mess.sender.id ? 'you' : '';
             data.date = convertMessagetime(mess.msgDate);
+            data.forward = mess.forwarded ? 'fwme' : '';
 
             // render with case of comment
-            if (mess.message.indexOf('"></c>') > -1 && mess.message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1) {
+            if (message.indexOf('"></c>') > -1 && message.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1 && !message.quotedMessage) {
                 try {
-                    splitMess = mess.message.split('<c style="display:none" ob="');
+                    splitMess = message.split('<c style="display:none" ob="');
                     const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
                     data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${htmlEncode(roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name)}: ${commentInfo.mess}</div>`;
                     data.mess = transformLinkTextToHTML(splitMess[0]);
                 } catch(e) {
-                    console.log(e);
-                    data.mess = transformLinkTextToHTML(mess.message);
+                    data.mess = transformLinkTextToHTML(message);
                 }
             } else {
-                data.mess = transformLinkTextToHTML(mess.message);
+                if (mess.quotedMessage) {
+                    data.comment = renderComment(mess.quotedMessage);
+                }
+
+                data.mess = transformLinkTextToHTML(message);
             }
 
             if (mess.file) {
@@ -212,27 +273,63 @@ define([
         }
     };
 
-    const onGetMoreMessageByScrolling = () => {
+    const onGetMoreMessageByScrollingUp = () => {
+        let currentMessages = GLOBAL.getCurrentMessages();
+        let firstOffset = messages[messages.length - 1]?.id?.messageId;
+        let newestMessOffset = currentMessages[currentMessages.length - 1]?.id?.messageId;
+
         const params = {
             chatId: GLOBAL.getCurrentRoomId(),
-            offset: messages[0]?.id?.messageId
+            offset: firstOffset + 20
         };
         processing = true;
 
         API.get('messages', params).then(res => {
-            let messagesHtml = '';
-            let moreMessages = [];
-            if (res.status !== 0) {
+            if (firstOffset !== messages[messages.length - 1]?.id?.messageId || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+                processing = false;
                 return;
             }
+
+            let moreMessages = res.data.messages.filter(mess => mess.id.messageId > firstOffset).reverse();
+            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'up') + renderMessage(mess))).join('');
+            messages = [...messages, ...moreMessages];
+            $wrapper.scrollTop($wrapper.scrollTop() - 1);
+            $messageList.append(messagesHtml);
+            
+            if (newestMessOffset <= moreMessages[moreMessages.length - 1]?.id?.messageId) {
+                isTouchFirstMess = true;
+            }
+
+            setTimeout(() => {
+                processing = false;
+            }, 50);
+        });
+    };
+
+    const onGetMoreMessageByScrolling = () => {
+        const params = {
+            chatId: GLOBAL.getCurrentRoomId(),
+            offset: lastOffset
+        };
+        processing = true;
+
+        API.get('messages', params).then(res => {
+            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+                processing = false;
+                return;
+            }
+
+            let messagesHtml = '';
+            let moreMessages = [];
 
             if (res?.data?.messages?.length < 20) {
                 isTouchLastMess = true;
             }
 
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
-            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, true) + renderMessage(mess))).join('');
+            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             messages = [...moreMessages, ...messages];
+            lastOffset = moreMessages[0]?.id?.messageId;
             $wrapper.scrollTop($wrapper.scrollTop() + 10);
             $messageList.prepend(messagesHtml);
             setTimeout(() => {
@@ -275,7 +372,7 @@ define([
         }
 
         let messagesHtml = '';
-        let isShowUnread = roomInfo.member.messagecounter > 0 && roomInfo.member.messagecounter < 16;
+        let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
 
         // Mark when got all messages in this chat room
@@ -286,16 +383,9 @@ define([
         // Update time activity to top bar
         chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
 
-        // Get members of group
-        if (roomInfo.group && res.data.members) {
-            GLOBAL.setCurrentGroupMembers(res.data.members);
-        } else {
-            GLOBAL.setCurrentGroupMembers(null);
-        }
-
         // Mark unread message position
         if (isShowUnread && res?.data?.messages?.length) {
-            const index = roomInfo.member.messagecounter - 1;
+            const index = roomInfo.unreadMessages - 1;
 
             if (res.data.messages[index]) {
                 res.data.messages[index].posUnread = true; 
@@ -306,6 +396,8 @@ define([
         }
 
         messages = messages.concat((res?.data?.messages || []).reverse());
+        GLOBAL.setCurrentMessages(messages);
+        lastOffset = messages[0]?.id?.messageId;
         messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
         $messageList.html(messagesHtml);
         $loadingOfNew.hide();
@@ -340,16 +432,21 @@ define([
     }).catch(onErrNetWork);
 
     const onRefresh = () => {
-        GLOBAL.setCurrentGroupMembers(null);
         $loadingOfNew.show();
         $messageList.html('');
+        $unreadScroll.text(0);
+        $unreadScroll.hide();
+        unreadScrollNum = 0;
         processing = true;
+        isTouchFirstMess = true;
         isTouchLastMess = false;
         messages = [];
+        GLOBAL.setCurrentMessages([]);
     };
     
     return {
         onInit: () => {
+            $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
             $wrapper.scroll(onWrapperScroll);
             $btnScrollToBottom.click(onScrollToBottom);
@@ -381,24 +478,39 @@ define([
                 return false;
             }
 
-            const wrapperHtml = $wrapper.get(0);
-            const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
-            const messagesHtml = messList.map((mess, i) => {
-                if (i === 0 && messages.length) {
-                    return renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
+            // up unread message when scrollbar does not set at bottom 
+            if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 && GLOBAL.getInfomation().id !== messList[0].sender.id) {
+                unreadScrollNum += 1;
+                $unreadScroll.text(unreadScrollNum);
+                $unreadScroll.show();
+            }
+
+            if (isTouchFirstMess) {
+                const wrapperHtml = $wrapper.get(0);
+                const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
+                const messagesHtml = messList.map((mess, i) => {
+                    if (i === 0 && messages.length) {
+                        return renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
+                    }
+
+                    return renderMessage(mess);
+                }).join('');
+
+                // Render new message
+                messages = messages.concat(messList);
+                $messageList.append(messagesHtml);
+
+                // Check if chatbox scrolled to the bottom
+                if (isBottom) {
+                    $wrapper.scrollTop(wrapperHtml.scrollHeight);
+                    $messageList.find('.--click-show-popup-up-img').on('load', onLoadImage);
                 }
+            }
 
-                return renderMessage(mess);
-            }).join('');
-
-            // Render new message
-            messages = messages.concat(messList);
-            $messageList.append(messagesHtml);
-
-            // Check if chatbox scrolled to the bottom
-            if (isBottom) {
-                $wrapper.scrollTop(wrapperHtml.scrollHeight);
-                $messageList.find('.--click-show-popup-up-img').on('load', onLoadImage);
+            if (GLOBAL.getCurrentMessages().length === 20) {
+                GLOBAL.setCurrentMessages([ ...GLOBAL.getCurrentMessages().slice(1, 20), messList[0] ]);
+            } else {
+                GLOBAL.setCurrentMessages([ ...GLOBAL.getCurrentMessages(), messList[0] ]);
             }
         },
 
@@ -411,21 +523,53 @@ define([
             $prevMessageTwo.hasClass('not-mess-li') && $prevMessageTwo.remove();
             $message.remove();
 
-            messages = messages.filter(message => (message.id.messageId !== id));
+            // messages = messages.filter(message => (message.id.messageId !== id));
+            GLOBAL.setCurrentMessages(GLOBAL.getCurrentMessages().filter(message => (message.id.messageId !== id)));
         },
 
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[data-chat-id="${id}"]`);
 
-            $message.find('.--mess').html(transformLinkTextToHTML(message.message));
-            messages = messages.map(mess => {
+            $message.find('.--mess').html(transformLinkTextToHTML(decodeStringBase64(message.message)));
+            // messages = messages.map(mess => {
+            //     if (mess.id.messageId === id) {
+            //         mess.message = message.message;
+            //     }
+
+            //     return mess;
+            // });
+            
+            GLOBAL.setCurrentMessages(GLOBAL.getCurrentMessages().map(mess => {
                 if (mess.id.messageId === id) {
                     mess.message = message.message;
                 }
 
                 return mess;
-            });
+            }));
+        },
+
+        onSearch: (search, messExist) => {
+            let currentMessages = GLOBAL.getCurrentMessages();
+            let firstOffset = currentMessages[currentMessages.length - 1]?.id?.messageId;
+
+            if (!messExist) {
+                isTouchLastMess = false;
+                messages = GLOBAL.getCurrentSearchMessages();
+                lastOffset = messages[0]?.id?.messageId;
+                messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess, search))).join('');
+                $messageList.html(messagesHtml);
+            } else {
+                $(`[data-chat-id="${search.offset}"] .--mess`).html(highlightText(messExist.message, search.value));
+            }
+            
+            if ($(`[data-chat-id="${firstOffset}"]`).length) {
+                isTouchFirstMess = true;
+            } else {
+                isTouchFirstMess = false;
+            }
+
+            handleScrollToUnreadMessage(search.offset);
         }
     };
 });

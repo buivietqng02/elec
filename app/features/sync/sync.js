@@ -20,6 +20,7 @@ define([
     modalPhoneRequest
 ) => {
     let timeout;
+    let syncTimeout;
     let isBlinkTitleBrowser = false;
     const { SESSION_ID } = constant;
     const data = {
@@ -57,11 +58,11 @@ define([
         const lastNum = messages.length - 1;
 
         if (!messages[lastNum].updated && !messages[lastNum].deleted) {
-            newRoom.lastmessage = messages[messages.length - 1].message;
+            newRoom.lastMessage = messages[messages.length - 1].message;
         }
 
         if (currentRoomId !== room.id) {
-            let unReadNum = newRoom.member.messagecounter;
+            let unReadNum = newRoom.unreadMessages;
             messages.forEach(message => {
                 if (message.deleted || message.updated) {
                     return;
@@ -74,9 +75,9 @@ define([
                 }
             });
 
-            newRoom.member.messagecounter = unReadNum;
+            newRoom.unreadMessages = unReadNum;
         } else {
-            newRoom.member.messagecounter = 0;
+            newRoom.unreadMessages = 0;
         }
 
         return newRoom;
@@ -150,13 +151,13 @@ define([
 
     const getNewGroup = (message) => API.get('chats').then(res => {
         try {
-            const { chats } = res.data;
+            const { chats } = res;
             const { length } = chats;
 
             for (let i = 0; i < length; i += 1) {
                 if (chats[i].id === message.id.chatId) {
                     const html = sidebarRoomListComp.onRenderRoom(chats[i]);
-                    GLOBAL.setRooms([chats[i], ...GLOBAL.getRooms()]);
+                    GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chats[i]), ...GLOBAL.getRooms()]);
                     sidebarRoomListComp.onPrepend(html);
                     notificationComp.pushNotificationForMessage(message);
                     break;
@@ -230,11 +231,17 @@ define([
             }
 
             onSync();
+        }).catch(() => {
+            syncTimeout = setTimeout(onSync, 5000);
         });
     };
 
     return {
         onInit: () => {
+            if (syncTimeout) {
+                clearTimeout(syncTimeout);
+            }
+            
             onSync();
         }
     };

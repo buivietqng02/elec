@@ -102,10 +102,9 @@ define([
             obRoomEdited[roomInfo.id] = obRoomEdited[roomInfo.id] || {};
             obRoomEdited[roomInfo.id].user_des = $des.val();
         } else {
-            const { user } = roomInfo.members[0];
-            obRoomEdited[user.id] = obRoomEdited[user.id] || {};
-            obRoomEdited[user.id].user_des = $des.val();
-            obRoomEdited[user.id].user_name = $name.val();
+            obRoomEdited[roomInfo.partner.id] = obRoomEdited[roomInfo.partner.id] || {};
+            obRoomEdited[roomInfo.partner.id].user_des = $des.val();
+            obRoomEdited[roomInfo.partner.id].user_name = $name.val();
         }
 
         API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => {
@@ -113,8 +112,7 @@ define([
             GLOBAL.setRoomInfoWasEdited(obRoomEdited);
             
             if (!roomInfo.group) {
-                const { user } = roomInfo.members[0];
-                const name = $name.val() || user.name;
+                const name = $name.val() || roomInfo.partner.name;
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${user.id}"]`).text(name);
             }
         }).catch(onErrNetWork);
@@ -276,16 +274,14 @@ define([
 
                 $des.val(obRoomEdited[roomInfo.id]?.user_des || '');
             } else {
-                const { user } = roomInfo.members[0];
-                
                 $img.closest('.erm-image-wrapper').addClass('input-freeze');
-                $img.attr('src', getAvatar(user.id));
+                $img.attr('src', getAvatar(roomInfo.partner.id));
                 $img.on('error', () => $img.attr('src', '/assets/images/user.jpg'));
                 $name.closest('.erm-name').show();
                 $userId.closest('.erm-userid').show();
-                $userId.val(user.id);
-                $name.val(obRoomEdited[user.id]?.user_name || user.name);
-                $des.val(obRoomEdited[user.id]?.user_des || '');
+                $userId.val(roomInfo.partner.id);
+                $name.val(obRoomEdited[roomInfo.partner.id]?.user_name || roomInfo.partner.name);
+                $des.val(obRoomEdited[roomInfo.partner.id]?.user_des || '');
             }
         }
     };

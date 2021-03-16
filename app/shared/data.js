@@ -3,11 +3,27 @@ define(() => {
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
-    let currentGroupMembers = null;
+    let currentMessages = [];
+    let currentSearchMessages = [];
     let version = '';
     let bodyBgTheme = '';
     let bodyFontSize = '';
     let roomInfo = {};
+
+    const useAdapterForRoom = (room) => ({
+        channel: room.channel,
+        group: room.group,
+        groupAvatarType: room.groupAvatarType,
+        id: room.id,
+        isLiveAssistance: room.liveAssistance,
+        lastMessage: room.lastMessage,
+        partner: room.partner || {},
+        subject: room.subject,
+        ticket: room.ticket,
+        unreadMessages: room.unreadMessages,
+        updated: room.updated,
+        sender: room.sender
+    });
     
     return {
         getInfomation: () => infomation,
@@ -35,14 +51,24 @@ define(() => {
             rooms = value;
         },
 
+        setRoomWithAdapter: useAdapterForRoom,
+        setRoomsWithAdapter: (value) => {
+            rooms = value.map(useAdapterForRoom);
+        },
+
         getCurrentRoomId: () => currentRoomId,
         setCurrentRoomId: (value) => {
             currentRoomId = value;
         },
 
-        getCurrentGroupMembers: () => currentGroupMembers,
-        setCurrentGroupMembers: (value) => {
-            currentGroupMembers = value;
+        getCurrentMessages: () => currentMessages,
+        setCurrentMessages: (value) => {
+            currentMessages = value;
+        },
+
+        getCurrentSearchMessages: () => currentSearchMessages,
+        setCurrentSearchMessages: (value) => {
+            currentSearchMessages = value;
         },
 
         getRoomInfoWasEdited: () => roomInfo,
