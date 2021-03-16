@@ -832,24 +832,6 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: 1px solid transparent!important;
 }
 
-.btn {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-  font-weight: 400;
-  -webkit-user-select: none;
-  user-select: none;
-  padding: 0.45rem 1.5rem;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  min-height: 35px;
-  transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
-}
-
 .btn--circle {
   border-radius: 30px;
 }
@@ -2765,7 +2747,7 @@ body.body_fz_18 {
 #createGroupModal .crm-loading {
   position: absolute;
   width: 100%;
-  height: calc(100% + 50px);
+  height: calc(100% + 71px);
   top: 0;
   left: 0;
   background-color: #fff;
@@ -2776,7 +2758,7 @@ body.body_fz_18 {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -60px;
+  margin-top: -70px;
   margin-left: -30px;
   border: 2px solid #dee2e6;
   border-top-color: #0288D1;
