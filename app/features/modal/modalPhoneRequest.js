@@ -1,5 +1,5 @@
 define([
-    'app/enviroment', 
+    'app/webrtc', 
     'shared/data',
     'shared/api',
     'shared/alert',
