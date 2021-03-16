@@ -41,7 +41,8 @@ define([
         const id = functions.generateId();
 
         $settings.css('pointer-events', 'none');
-        stream.oninactive = onStop; // eslint-disable-line no-param-reassign
+        // stream.oninactive = onStop; // eslint-disable-line no-param-reassign
+        stream.getVideoTracks()[0].addEventListener('ended', onStop);
         $video.get(0).srcObject = stream;
         easyrtc.register3rdPartyLocalMediaStream(stream, id);
         window.idShareScreen = id;
