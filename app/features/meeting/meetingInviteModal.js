@@ -6,7 +6,7 @@ define(['shared/alert'], (ALERT) => {
 
     const template = `
         <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-dialog modal-dialog-centered" style="width: 400px;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
