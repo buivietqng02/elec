@@ -7,7 +7,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ### [3.4] - 2021-03-08
 ### Add
-- Search chat messages.
+- Add Start Conference features.
 - Display the number of unread messages on 'scroll to bottom' button when users are reviewing old messages.
 ### Update
 - Update method for message API.

@@ -29,7 +29,7 @@ define(() => {
                 $modal = $('#updateVersionModal');
                 $btnRefresh = $modal.find('.btn-outline-primary');
 
-                $btnRefresh.click(() => window.location.reload());
+                $btnRefresh.click(() => window.location.reload(true));
             }
 
             $modal.modal('show');

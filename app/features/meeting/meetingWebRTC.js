@@ -11,7 +11,7 @@ define([
         userList = userList.concat(`mvww-user-${i + 1}`);
         $videpWrapper.append(`
             <div class="mvww-div">
-                <video id="mvww-user-${i + 1}" autoplay="" playsinline="playsinline" muted="" volume="0" class="mvww-normal"></video>
+                <video id="mvww-user-${i + 1}" autoplay="" playsinline="playsinline" class="mvww-normal"></video>
             </div>
         `);
     }
