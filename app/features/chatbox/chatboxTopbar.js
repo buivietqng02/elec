@@ -108,13 +108,13 @@ define([
 
     return {
         onInit: () => {
-            $groupOptionsBtn.click(showSlide);
-            $editBtn.click(editGroup);
-            $leaveBtn.click(leaveGroup);
-            $removeBtn.click(removeGroup);
-            $notificationBtn.click(updateNotification);
-            $internalBtn.click(updateInternalMessage);
-            $image.click(modalEditRoomComp.onInit);
+            $groupOptionsBtn.off().click(showSlide);
+            $editBtn.off().click(editGroup);
+            $leaveBtn.off().click(leaveGroup);
+            $removeBtn.off().click(removeGroup);
+            $notificationBtn.off().click(updateNotification);
+            $internalBtn.off().click(updateInternalMessage);
+            $image.off().click(modalEditRoomComp.onInit);
         },
 
         onRenderInfomation: (roomInfo) => {

@@ -127,10 +127,10 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
 
     return {
         onInit: () => {
-            $input.keydown(onKeydown);
-            $input.bind('paste', onPaste);
-            $btnSend.click(onSendMessage);
-            $btnCloseCommentBox.click(onHideCommentBox);
+            $input.off('keydown').keydown(onKeydown);
+            $input.off('paste').bind('paste', onPaste);
+            $btnSend.off().click(onSendMessage);
+            $btnCloseCommentBox.off().click(onHideCommentBox);
         },
 
         onUpdate: (id, value) => {

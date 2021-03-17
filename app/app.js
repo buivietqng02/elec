@@ -179,6 +179,21 @@ define([
         onAssignAdvanceThemeBody();
     };
 
+    const initInformationFromAPI = () => {
+        $('.xm-page-loading').remove();
+        // Get server version
+        onGetVersion();
+
+        // Get information about chat list and current user
+        // Get information about the chat list what user changed (name, description).
+        Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
+            onAssignDataToStore(data);
+            onGetPrefrences(data[1]);
+            onGetValidate(data[0]);
+            // onSetUpWebSocket(data[0].data.user.id);
+        });
+    };
+
     const onInitGeneralEvents = () => {
         // copy input value
         $(document).on('click', '.input-only-view', (event) => {
@@ -213,17 +228,7 @@ define([
             }
 
             setTimeout(() => {
-                onGetVersion();
-
-                // Get information about chat list and current user
-                // Get information about the chat list what user changed (name, description).
-                Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
-                    $('.xm-page-loading').remove();
-                    onAssignDataToStore(data);
-                    onGetPrefrences(data[1]);
-                    onGetValidate(data[0]);
-                    // onSetUpWebSocket(data[0].data.user.id);
-                });
+                initInformationFromAPI();
             }, 1000);
         });
     };
@@ -244,18 +249,7 @@ define([
             return;
         }
 
-        // Get server version
-        onGetVersion();
-
-        // Get information about chat list and current user
-        // Get information about the chat list what user changed (name, description).
-        Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
-            $('.xm-page-loading').remove();
-            onAssignDataToStore(data);
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
-            // onSetUpWebSocket(data[0].data.user.id);
-        });
+        initInformationFromAPI();
     };
     
     onInit();

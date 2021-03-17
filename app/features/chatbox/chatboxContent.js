@@ -448,7 +448,9 @@ define([
         onInit: () => {
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
+            $wrapper.off('scroll');
             $wrapper.scroll(onWrapperScroll);
+            $btnScrollToBottom.off('click');
             $btnScrollToBottom.click(onScrollToBottom);
             $(document).on('click', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },

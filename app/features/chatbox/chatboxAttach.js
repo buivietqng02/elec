@@ -22,6 +22,7 @@ define([
     const $pathCircle = $progressWrapper.find('path');
     const $percentProgress = $progressWrapper.find('span');
     const $dropzone = $('.dropzone');
+    let initEventDoc = false;
     let isShow = false;
     let counter = 0;
 
@@ -179,40 +180,44 @@ define([
     
     return {
         onInit: () => {
-            $attachButton.click(showSlide);
-            $callBtn.click(showPhoneModal);
-            $wrapper.find('.menu__item').click(offEventClickOutside);
-            $inputFile.change(() => uploadFile('fileupload'));
-            $inputImage.change(() => uploadFile('imageupload'));
-            $dropzone.on('dragover', false).on('drop', onDrop);
-            document.addEventListener('dragover', e => {
-                e.preventDefault();
-            });
-            document.addEventListener('dragenter', e => {
-                e.preventDefault();
-                counter += 1;
-                $dropzone.show();
-            }, false);
-            document.addEventListener('dragleave', () => {
-                counter -= 1;
-                if (counter === 0) {
-                    $dropzone.hide();
-                }
-            }, false);
-            document.addEventListener('drop', e => {
-                counter = 0;
-                $dropzone.hide();
-            });
-            document.onpaste = (e) => {
-                const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                for (index in items) {
-                    const item = items[index];
-                    if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
-                        const file = item.getAsFile();
-                        checkFile(file);
+            $attachButton.off().click(showSlide);
+            $callBtn.off().click(showPhoneModal);
+            $wrapper.find('.menu__item').off().click(offEventClickOutside);
+            $inputFile.off().change(() => uploadFile('fileupload'));
+            $inputImage.off().change(() => uploadFile('imageupload'));
+            $dropzone.off().on('dragover', false).on('drop', onDrop);
+
+            if (!initEventDoc) {
+                initEventDoc = true;
+                document.addEventListener('dragover', e => {
+                    e.preventDefault();
+                });
+                document.addEventListener('dragenter', e => {
+                    e.preventDefault();
+                    counter += 1;
+                    $dropzone.show();
+                }, false);
+                document.addEventListener('dragleave', () => {
+                    counter -= 1;
+                    if (counter === 0) {
+                        $dropzone.hide();
                     }
-                }
-            };
+                }, false);
+                document.addEventListener('drop', e => {
+                    counter = 0;
+                    $dropzone.hide();
+                });
+                document.onpaste = (e) => {
+                    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                    for (index in items) {
+                        const item = items[index];
+                        if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
+                            const file = item.getAsFile();
+                            checkFile(file);
+                        }
+                    }
+                };
+            }
         },
 
         markPhone: (isGroup) => {

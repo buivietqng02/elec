@@ -28,7 +28,7 @@ define([
             };
 
             $wrapper.html(render(template, data));
-            $(document).on('click', '#sidebarProfile .sipr-image', modalProfileComp.onInit);
+            $(document).off('.sidebarProfile').on('click.sidebarProfile', '#sidebarProfile .sipr-image', modalProfileComp.onInit);
         }
     };
 });

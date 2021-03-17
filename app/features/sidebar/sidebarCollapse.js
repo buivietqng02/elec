@@ -3,7 +3,7 @@ define(() => {
 
     return {
         onInit: () => {
-            $('.sidebar .sidebar-collapse-btn').click(() => {
+            $('.sidebar .sidebar-collapse-btn').off().click(() => {
                 if ($frame.hasClass('indent')) {
                     $frame.removeClass('indent');
                 } else {

@@ -87,14 +87,14 @@ define([
 
     return {
         onInit: () => {
-            $optionsBtn.click(showSlide);
-            $groupChatBtn.click(showModalCreateGroup);
-            $userInterFaceBtn.click(showModalUserInterFace);
-            $startConferenceBtn.click(showMeetingPage);
-            $sendInviteBtn.click(showModalSendInvite);
-            $erpContactBtn.click(showModalERPContact);
-            $aboutBtn.click(showModalAbout);
-            $logoutBtn.click(onLogout);
+            $optionsBtn.off().click(showSlide);
+            $groupChatBtn.off().click(showModalCreateGroup);
+            $userInterFaceBtn.off().click(showModalUserInterFace);
+            $startConferenceBtn.off().click(showMeetingPage);
+            $sendInviteBtn.off().click(showModalSendInvite);
+            $erpContactBtn.off().click(showModalERPContact);
+            $aboutBtn.off().click(showModalAbout);
+            $logoutBtn.off().click(onLogout);
         }
     };
 });
