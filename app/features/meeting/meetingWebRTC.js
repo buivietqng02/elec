@@ -1,7 +1,9 @@
 define([
-    'app/webrtc'
+    'app/webrtc',
+    'features/meeting/meetingTemplate'
 ], (
-    URL
+    URL,
+    Template
 ) => {
     let userList = [];
     const $videpWrapper = $('.mvw-wrapper');
@@ -146,8 +148,12 @@ define([
             easyrtc.dontAddCloseButtons(true);
             easyrtc.initMediaSource(() => {
                 easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
-            }, (err) => {
-                console.log(err);
+            }, () => {
+                if (!navigator.mediaDevices) {
+                    $('body').append(Template.notConnectDevice);
+                } else {
+                    $('body').append(Template.notAllowDevice);
+                }
             });
         },
 
