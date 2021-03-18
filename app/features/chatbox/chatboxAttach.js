@@ -115,7 +115,6 @@ define([
     };
 
     const checkFile = (file, isMedia) => {
-        console.log(file.type)
         if (file.size > 500000000) {
             ALERT.show('Maximum file size is 400MB!');
             hideProcess();
@@ -167,7 +166,10 @@ define([
                 return;
             }
 
-            checkFile(file);
+            functions.confirm({
+                des: 'Are you sure you want to send this file?',
+                onOk: () => checkFile(file)
+            });
         }
 
         return false

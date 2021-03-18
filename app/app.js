@@ -180,7 +180,6 @@ define([
     };
 
     const initInformationFromAPI = () => {
-        $('.xm-page-loading').remove();
         // Get server version
         onGetVersion();
 
@@ -227,29 +226,27 @@ define([
                 $activeRoom.click();
             }
 
-            setTimeout(() => {
-                initInformationFromAPI();
-            }, 1000);
+            setTimeout(() => initInformationFromAPI, 1000);
         });
     };
 
     const onInit = () => {
+        $('.xm-page-loading').remove();
+        
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
         if (!window.navigator.onLine) {
             GLOBAL.setNetworkStatus(false);
-            get('general').then((data) => {
-                $('.xm-page-loading').remove();
-                onGetPrefrences(data[1]);
-                onGetValidate(data[0]);
-            });
-
-            return;
         }
 
-        initInformationFromAPI();
+        get('general').then((data) => {
+            onGetPrefrences(data[1]);
+            onGetValidate(data[0]);
+        });
+
+        setTimeout(() => initInformationFromAPI, 1000);
     };
     
     onInit();
