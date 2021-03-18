@@ -239,14 +239,13 @@ define([
 
         if (!window.navigator.onLine) {
             GLOBAL.setNetworkStatus(false);
+            get('general').then((data) => {
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            });
         }
-
-        get('general').then((data) => {
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
-        });
-
-        setTimeout(() => initInformationFromAPI, 1000);
+        
+        initInformationFromAPI();
     };
     
     onInit();
