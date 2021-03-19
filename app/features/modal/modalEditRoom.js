@@ -84,7 +84,9 @@ define([
         </div>
     `;
 
-    const onErrNetWork = () => {
+    const onErrNetWork = (err) => {
+        console.log(err);
+
         $closeBtn.click();
         ALERT.show('Unable to connect to the Internet');
     };
@@ -113,7 +115,7 @@ define([
             
             if (!roomInfo.group) {
                 const name = $name.val() || roomInfo.partner.name;
-                $(`[${ATTRIBUTE_CHANGE_NAME}="${user.id}"]`).text(name);
+                $(`[${ATTRIBUTE_CHANGE_NAME}="${roomInfo.partner.id}"]`).text(name);
             }
         }).catch(onErrNetWork);
     };
