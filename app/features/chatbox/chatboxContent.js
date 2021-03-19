@@ -448,11 +448,9 @@ define([
         onInit: () => {
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
-            $wrapper.off('scroll');
-            $wrapper.scroll(onWrapperScroll);
-            $btnScrollToBottom.off('click');
-            $btnScrollToBottom.click(onScrollToBottom);
-            $(document).on('click', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
+            $wrapper.off('scroll').scroll(onWrapperScroll);
+            $btnScrollToBottom.off('click').click(onScrollToBottom);
+            $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },
 
         onLoadMessage: (roomInfo, positionRoom) => {
