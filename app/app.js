@@ -226,7 +226,7 @@ define([
                 $activeRoom.click();
             }
 
-            setTimeout(() => initInformationFromAPI, 1000);
+            setTimeout(initInformationFromAPI, 1000);
         });
     };
 
@@ -242,11 +242,13 @@ define([
         }
 
         get('general').then((data) => {
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
+            if (data && data.length) {
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            }
         });
 
-        setTimeout(() => initInformationFromAPI, 1000);
+        setTimeout(initInformationFromAPI, 1000);
     };
     
     onInit();

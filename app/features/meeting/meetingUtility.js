@@ -16,11 +16,6 @@ define([
     const constraintsShare = {
         video: {
           cursor: 'always'
-        },
-        audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            sampleRate: 44100
         }
     };
 
@@ -37,17 +32,27 @@ define([
         });
     };
 
-    const onShare = () => navigator.mediaDevices.getDisplayMedia(constraintsShare).then(stream => {
+    const assignStream = (stream) => {
         const id = functions.generateId();
-
-        $settings.css('pointer-events', 'none');
-        // stream.oninactive = onStop; // eslint-disable-line no-param-reassign
+        
         stream.getVideoTracks()[0].addEventListener('ended', onStop);
         $video.get(0).srcObject = stream;
         easyrtc.register3rdPartyLocalMediaStream(stream, id);
         window.idShareScreen = id;
         (window.easyrtcIds || []).forEach((easyrtcId) => {
             easyrtc.addStreamToCall(easyrtcId, id);
+        });
+    };
+
+    const onShare = () => navigator.mediaDevices.getDisplayMedia(constraintsShare)
+    .then(stream => {
+        $settings.css('pointer-events', 'none');
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(audioStream => {
+            const [audioTrack] = audioStream.getAudioTracks();
+            stream.addTrack(audioTrack);
+            assignStream(stream);
+        }).catch(() => {
+            assignStream(stream);
         });
     });
 
