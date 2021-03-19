@@ -19,6 +19,7 @@ define([
     notificationComp,
     modalPhoneRequest
 ) => {
+    let isProcessing = false;
     let timeout;
     let syncTimeout;
     let isBlinkTitleBrowser = false;
@@ -149,9 +150,8 @@ define([
         return isNotMoveRoomUp;
     };
 
-    const getNewGroup = (message) => API.get('chats').then(res => {
+    const getNewGroup = (message) => API.get('chats').then(chats => {
         try {
-            const { chats } = res;
             const { length } = chats;
 
             for (let i = 0; i < length; i += 1) {
@@ -220,7 +220,12 @@ define([
         }
         data.onBackground = document.hidden;
 
+        isProcessing = true;
+
         API.get('sync', data).then(res => {
+            isProcessing = false;
+            onSync();
+
             if (res?.data?.messages?.length) {
                 const messages = functions.sortBy(res.data.messages, 'msgDate');
                 handleRealTimeMessage(messages);
@@ -229,9 +234,8 @@ define([
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                 chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
             }
-
-            onSync();
         }).catch(() => {
+            isProcessing = false;
             syncTimeout = setTimeout(onSync, 5000);
         });
     };
@@ -241,8 +245,10 @@ define([
             if (syncTimeout) {
                 clearTimeout(syncTimeout);
             }
-            
-            onSync();
+
+            if (!isProcessing) {
+                onSync();
+            }
         }
     };
 });

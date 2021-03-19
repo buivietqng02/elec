@@ -142,19 +142,36 @@ define([
         easyrtc.setOnHangup(onHangup);
     };
 
+    const initMediaSource = () => {
+        easyrtc.initMediaSource(() => {
+            easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
+        }, () => {
+            if (!navigator.mediaDevices) {
+                $('body').append(Template.notConnectDevice);
+            } else {
+                $('body').append(Template.notAllowDevice);
+            }
+        });
+    };
+
     return {
         onInit: () => {
             easyrtc.setSocketUrl(URL);
             easyrtc.dontAddCloseButtons(true);
-            easyrtc.initMediaSource(() => {
-                easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
-            }, () => {
-                if (!navigator.mediaDevices) {
-                    $('body').append(Template.notConnectDevice);
-                } else {
-                    $('body').append(Template.notAllowDevice);
-                }
-            });
+
+            if (navigator.mediaDevices.enumerateDevices) {
+                navigator.mediaDevices.enumerateDevices().then((devices) => {
+                    if (devices.length) {
+                        console.log(devices);
+                    }
+
+                    initMediaSource();
+                }).catch(() => {
+                    initMediaSource();
+                });
+            } else {
+                initMediaSource();
+            }
         },
 
         onJoinRoom
