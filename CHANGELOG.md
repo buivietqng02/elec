@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.5] - 2021-03-22
+### Fix
+- Fix sharing screen doesn't have the sound.
+- Fix user can't edit room information.
 
 ### [3.4] - 2021-03-08
 ### Add
