@@ -26,7 +26,7 @@ button {
     margin-right:.3em;
 }
 
-.input-only-view {
+.mvwmb-url .input-only-view {
     right: 10px;
     top: 9px;
     cursor: pointer;
@@ -86,7 +86,11 @@ button {
     display: none;
 }
 
-.mvww-div.owner {
+.mvw-wrapper .mvww-div.owner {
+    border: 0;
+}
+
+.mvw-wrapper.joining .mvww-div.owner {
     border: 2px solid #08c;
 }
 

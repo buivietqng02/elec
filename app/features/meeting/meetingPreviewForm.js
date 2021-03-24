@@ -1,10 +1,12 @@
 define([
     'shared/functions',
     'shared/alert',
+    'shared/data',
     'features/meeting/meetingWebRTC'
 ], (
     functions,
     ALERT,
+    GLOBAL,
     meetingWebRTCComp
 ) => {
     const $micBtn = $('.mvwmb-btn-mic');
@@ -52,6 +54,10 @@ define([
             });
 
             $micBtn.click(() => {
+                if (!GLOBAL.getIsEnabelMic()) {
+                    return;
+                }
+
                 if ($micBtn.hasClass('turn-off')) {
                     $videoSelf.get(0).srcObject.getTracks()[0].enabled = true;
                     $micBtn.removeClass('turn-off');
@@ -62,11 +68,17 @@ define([
             });
 
             $cameraBtn.click(() => {
+                if (!GLOBAL.getIsEnabelCamera()) {
+                    return;
+                }
+
+                let num = GLOBAL.getIsEnabelMic() ? 1 : 0;
+
                 if ($cameraBtn.hasClass('turn-off')) {
-                    $videoSelf.get(0).srcObject.getTracks()[1].enabled = true;
+                    $videoSelf.get(0).srcObject.getTracks()[num].enabled = true;
                     $cameraBtn.removeClass('turn-off');
                 } else {
-                    $videoSelf.get(0).srcObject.getTracks()[1].enabled = false;
+                    $videoSelf.get(0).srcObject.getTracks()[num].enabled = false;
                     $cameraBtn.addClass('turn-off');
                 }
             });

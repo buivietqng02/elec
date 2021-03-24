@@ -109,6 +109,7 @@ define([
         let isNotMoveRoomUp = true;
         const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
         messages.forEach(message => {
+            console.log(message);
             // Handle with message was deleted
             if (message.deleted) {
                 if (isCurrentRoom) {
@@ -226,13 +227,13 @@ define([
             isProcessing = false;
             onSync();
 
-            if (res?.data?.messages?.length) {
-                const messages = functions.sortBy(res.data.messages, 'msgDate');
+            if (res?.messages?.length) {
+                const messages = functions.sortBy(res.messages, 'msgDate');
                 handleRealTimeMessage(messages);
             }
 
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {
-                chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
+                chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
             }
         }).catch(() => {
             isProcessing = false;

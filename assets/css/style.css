@@ -2705,7 +2705,7 @@ body.body_fz_18 {
 }
 
 .xmmc-modal .modal-dialog textarea {
-  height: 88px;
+  height: 60px;
   resize: none;
 }
 
@@ -2996,10 +2996,15 @@ body.body_fz_18 {
   cursor: pointer;
 }
 
+.erm-image-wrapper {
+  width: 92px;
+  height: 92px;
+}
+
 #profileModal .pmm-image-wrapper img,
 .erm-image-wrapper img {
-  width: 110px;
-  height: 110px;
+  width: 100%;
+  height: 100%;
   background-color: #cccccc;
   border-radius: 50%;
 }

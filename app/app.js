@@ -3,6 +3,7 @@ define([
     'shared/api',
     'shared/data',
     'shared/functions',
+    'shared/alert',
     'app/constant',
     'features/sync/sync',
     'features/sidebar/sidebarProfile',
@@ -24,6 +25,7 @@ define([
     API,
     GLOBAL,
     functions,
+    ALERT,
     constant,
     syncComp,
     sidebarProfileComp,
@@ -201,6 +203,7 @@ define([
             $input.get(0).select();
             $input.get(0).setSelectionRange(0, 99999);
             document.execCommand('copy');
+            ALERT.show('Link copied to clipboard', 'success');
             if (window.getSelection) {
                 if (window.getSelection().empty) { 
                     // Chrome
@@ -231,7 +234,7 @@ define([
     };
 
     const onInit = () => {
-        $('.xm-page-loading').remove();
+        setTimeout(() => $('.xm-page-loading').remove(), 2000);
         
         onRegisterSW();
         onInitGeneralEvents();
