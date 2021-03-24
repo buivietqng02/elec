@@ -8,6 +8,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### Fix
 - Fix sharing screen doesn't have the sound.
 - Fix user can't edit room information.
+- Fix editing room modal does not display user's email.
+- Fix user can attend the meeting with no camera.
+### Update
+- Update UI for chat input box.
 
 ### [3.4] - 2021-03-08
 ### Add
