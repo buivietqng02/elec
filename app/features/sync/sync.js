@@ -226,13 +226,13 @@ define([
             isProcessing = false;
             onSync();
 
-            if (res?.data?.messages?.length) {
-                const messages = functions.sortBy(res.data.messages, 'msgDate');
+            if (res?.messages?.length) {
+                const messages = functions.sortBy(res.messages, 'msgDate');
                 handleRealTimeMessage(messages);
             }
 
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {
-                chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
+                chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
             }
         }).catch(() => {
             isProcessing = false;
