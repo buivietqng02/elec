@@ -4,6 +4,7 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
     const $input = $('.js_endter_mess');
     const $wrapperMessages = $('.js_con_list_mess');
     const $btnSend = $('.btn__send');
+    const $btnAttach = $('.btn__attach');
     const $commentWrapper = $('.mess-comment-box');
     const $commentBox = $commentWrapper.find('.mess-fw-box');
     const $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
@@ -18,6 +19,14 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
         const isBottom = wrapperMessages.scrollTop + wrapperMessages.clientHeight >= wrapperMessages.scrollHeight;
 
         setTimeout(() => {
+            if ($input.val().replace(/[\s\n]/g, '')) {
+                $btnSend.show();
+                $btnAttach.hide();
+            } else {
+                $btnSend.hide();
+                $btnAttach.show();
+            }
+
             input.style.cssText = '';
     
             const height = Math.min(window.outerHeight / 5, input.scrollHeight);
@@ -44,6 +53,7 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
         commentState = false;
         $input.val('');
         $input.focus();
+        $btnSend.hide();
         $commentWrapper.hide();
         handleInputAutoExpand();
     };
@@ -127,10 +137,10 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
 
     return {
         onInit: () => {
-            $input.keydown(onKeydown);
-            $input.bind('paste', onPaste);
-            $btnSend.click(onSendMessage);
-            $btnCloseCommentBox.click(onHideCommentBox);
+            $input.off('keydown').keydown(onKeydown);
+            $input.off('paste').bind('paste', onPaste);
+            $btnSend.off().click(onSendMessage);
+            $btnCloseCommentBox.off().click(onHideCommentBox);
         },
 
         onUpdate: (id, value) => {
@@ -164,6 +174,7 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
         onAddEmoji: (emoji) => {
             $input.val($input.val() + emoji);
             $input.focus();
+            handleInputAutoExpand();
         },
 
         onClear

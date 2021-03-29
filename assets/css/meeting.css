@@ -26,7 +26,7 @@ button {
     margin-right:.3em;
 }
 
-.input-only-view {
+.mvwmb-url .input-only-view {
     right: 10px;
     top: 9px;
     cursor: pointer;
@@ -86,7 +86,11 @@ button {
     display: none;
 }
 
-.mvww-div.owner {
+.mvw-wrapper .mvww-div.owner {
+    border: 0;
+}
+
+.mvw-wrapper.joining .mvww-div.owner {
     border: 2px solid #08c;
 }
 
@@ -349,6 +353,54 @@ button {
 
 .im-text {
     margin-bottom: 10px;
+}
+
+.error-device-meeting {
+    background-color: #232424;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edm-wrapper {
+    background-color: #040404;
+    border-radius: 50px;
+    padding: 30px;
+    width: 500px;
+    height: 350px;
+    max-width: 90%;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);;
+}
+
+.edmw-wrapper {
+    padding: 10px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    border: 5px solid #08c;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.edmw-wrapper h2 {
+    color: #9b0000;
+}
+
+.edmw-wrapper p {
+    color: #cfcece;
+}
+
+.edmw-wrapper button {
+    width: auto;
+    margin: 0 auto;
 }
 
 @media screen and (max-width: 991px) {

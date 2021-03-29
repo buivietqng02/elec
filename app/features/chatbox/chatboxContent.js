@@ -361,13 +361,16 @@ define([
 
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
         // Handle when user switch room but the request has not finished yet
-        if (roomInfo.id !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+        if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
             return;
         }
 
-        // Handle when room was deleted
-        if (res.status === 2) {
-            onHandleRoomWasDeleted();
+        if (res.status !== 0) {
+            // Handle when room was deleted
+            if (res.status === 2) {
+                onHandleRoomWasDeleted();
+            }
+            
             return;
         }
 
@@ -448,9 +451,9 @@ define([
         onInit: () => {
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
-            $wrapper.scroll(onWrapperScroll);
-            $btnScrollToBottom.click(onScrollToBottom);
-            $(document).on('click', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
+            $wrapper.off('scroll').scroll(onWrapperScroll);
+            $btnScrollToBottom.off('click').click(onScrollToBottom);
+            $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },
 
         onLoadMessage: (roomInfo, positionRoom) => {

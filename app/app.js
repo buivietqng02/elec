@@ -3,6 +3,7 @@ define([
     'shared/api',
     'shared/data',
     'shared/functions',
+    'shared/alert',
     'app/constant',
     'features/sync/sync',
     'features/sidebar/sidebarProfile',
@@ -24,6 +25,7 @@ define([
     API,
     GLOBAL,
     functions,
+    ALERT,
     constant,
     syncComp,
     sidebarProfileComp,
@@ -179,6 +181,20 @@ define([
         onAssignAdvanceThemeBody();
     };
 
+    const initInformationFromAPI = () => {
+        // Get server version
+        onGetVersion();
+
+        // Get information about chat list and current user
+        // Get information about the chat list what user changed (name, description).
+        Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
+            onAssignDataToStore(data);
+            onGetPrefrences(data[1]);
+            onGetValidate(data[0]);
+            // onSetUpWebSocket(data[0].data.user.id);
+        });
+    };
+
     const onInitGeneralEvents = () => {
         // copy input value
         $(document).on('click', '.input-only-view', (event) => {
@@ -187,6 +203,7 @@ define([
             $input.get(0).select();
             $input.get(0).setSelectionRange(0, 99999);
             document.execCommand('copy');
+            ALERT.show('Link copied to clipboard', 'success');
             if (window.getSelection) {
                 if (window.getSelection().empty) { 
                     // Chrome
@@ -212,50 +229,29 @@ define([
                 $activeRoom.click();
             }
 
-            setTimeout(() => {
-                onGetVersion();
-
-                // Get information about chat list and current user
-                // Get information about the chat list what user changed (name, description).
-                Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
-                    $('.xm-page-loading').remove();
-                    onAssignDataToStore(data);
-                    onGetPrefrences(data[1]);
-                    onGetValidate(data[0]);
-                    // onSetUpWebSocket(data[0].data.user.id);
-                });
-            }, 1000);
+            setTimeout(initInformationFromAPI, 1000);
         });
     };
 
     const onInit = () => {
+        setTimeout(() => $('.xm-page-loading').remove(), 2000);
+        
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
         if (!window.navigator.onLine) {
             GLOBAL.setNetworkStatus(false);
-            get('general').then((data) => {
-                $('.xm-page-loading').remove();
-                onGetPrefrences(data[1]);
-                onGetValidate(data[0]);
-            });
-
-            return;
         }
 
-        // Get server version
-        onGetVersion();
-
-        // Get information about chat list and current user
-        // Get information about the chat list what user changed (name, description).
-        Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
-            $('.xm-page-loading').remove();
-            onAssignDataToStore(data);
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
-            // onSetUpWebSocket(data[0].data.user.id);
+        get('general').then((data) => {
+            if (data && data.length) {
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            }
         });
+
+        setTimeout(initInformationFromAPI, 1000);
     };
     
     onInit();

@@ -159,13 +159,13 @@ define([
 
     return {
         onInit: () => {
-            $openBtn.click(onOpenSearchBox);
-            $closeBtn.click(onCloseSearchBox);
-            $upBtn.click(onUpMessage);
-            $downBtn.click(onDownMessage);
-            $input.bind('paste', onSearch);
+            $openBtn.off().click(onOpenSearchBox);
+            $closeBtn.off().click(onCloseSearchBox);
+            $upBtn.off().click(onUpMessage);
+            $downBtn.off().click(onDownMessage);
+            $input.off().bind('paste', onSearch);
             $input.attr('autocomplete', 'off');
-            $(document).on('input', '#msbg-input', onSearch);
+            $(document).off('.chatbotSearch').on('input.chatbotSearch', '#msbg-input', onSearch);
         },
 
         onCloseSearchBox

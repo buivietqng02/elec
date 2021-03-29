@@ -4,6 +4,19 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.6] - 2021-03-24
+### Fix
+- Fix invite.
+- Add email to editing room modal, change icon of attach button.
+
+### [3.5] - 2021-03-22
+### Fix
+- Fix sharing screen doesn't have the sound.
+- Fix user can't edit room information.
+- Fix editing room modal does not display user's email.
+- Fix user can attend the meeting with no camera.
+### Update
+- Update UI for chat input box.
 
 ### [3.4] - 2021-03-08
 ### Add

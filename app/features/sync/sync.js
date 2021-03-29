@@ -19,6 +19,7 @@ define([
     notificationComp,
     modalPhoneRequest
 ) => {
+    let isProcessing = false;
     let timeout;
     let syncTimeout;
     let isBlinkTitleBrowser = false;
@@ -108,6 +109,7 @@ define([
         let isNotMoveRoomUp = true;
         const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
         messages.forEach(message => {
+            console.log(message);
             // Handle with message was deleted
             if (message.deleted) {
                 if (isCurrentRoom) {
@@ -149,9 +151,8 @@ define([
         return isNotMoveRoomUp;
     };
 
-    const getNewGroup = (message) => API.get('chats').then(res => {
+    const getNewGroup = (message) => API.get('chats').then(chats => {
         try {
-            const { chats } = res;
             const { length } = chats;
 
             for (let i = 0; i < length; i += 1) {
@@ -220,18 +221,22 @@ define([
         }
         data.onBackground = document.hidden;
 
+        isProcessing = true;
+
         API.get('sync', data).then(res => {
-            if (res?.data?.messages?.length) {
-                const messages = functions.sortBy(res.data.messages, 'msgDate');
+            isProcessing = false;
+            onSync();
+
+            if (res?.messages?.length) {
+                const messages = functions.sortBy(res.messages, 'msgDate');
                 handleRealTimeMessage(messages);
             }
 
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {
-                chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
+                chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
             }
-
-            onSync();
         }).catch(() => {
+            isProcessing = false;
             syncTimeout = setTimeout(onSync, 5000);
         });
     };
@@ -241,8 +246,10 @@ define([
             if (syncTimeout) {
                 clearTimeout(syncTimeout);
             }
-            
-            onSync();
+
+            if (!isProcessing) {
+                onSync();
+            }
         }
     };
 });

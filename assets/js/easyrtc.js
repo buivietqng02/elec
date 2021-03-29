@@ -7960,6 +7960,11 @@ var Easyrtc = function() {
          * @param {String} error
          */
         var onUserMediaError = function(error) {
+            if (window.despiteNotHaveDevice) {
+              onUserMediaSuccess(new MediaStream());
+              return
+            }
+
             logDebug("getusermedia failed");
             logDebug("failed to get local media");
             var errText;

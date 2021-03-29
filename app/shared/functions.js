@@ -9,6 +9,25 @@ const getRndInteger = (min, max) => (
     Math.floor(Math.random() * (max - min + 1)) + min
 );
 
+const modalConfirmTemplate = (object) => `
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h2>${object.title || 'Are you sure?'}</h2>
+                    <p>${object.des || 'Are you sure you want to do this?'}</p>
+                    <button type="button" class="btn btn-outline-primary btn-small float-right" style="margin-left: 5px">
+                        ${object.textOk || 'Ok'}
+                    </button>
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                        ${object.textCancel || 'Cancel'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
 define(['moment', 'app/constant'], (moment, constant) => ({
     setCookie: (value, days) => {
         let expires = '';
@@ -184,7 +203,7 @@ define(['moment', 'app/constant'], (moment, constant) => ({
             return text;
         }
 
-        const regexp = new RegExp(words.join("|"), "gi");
+        const regexp = new RegExp(words.join('|'), 'gi');
         const tokens = [];
 
         while (true) {
@@ -208,6 +227,21 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         }
 
         return tokens.join('')
+    },
+
+    confirm: (settings) => {
+        $('#confirmModal').remove();
+        $('body').append(modalConfirmTemplate(settings || {}));
+
+        const $modal = $('#confirmModal');
+        $modal.modal('show');
+        $modal.find('.btn-outline-primary').off().click(() => {
+            $modal.find('.btn-outline-secondary').click();
+
+            if (settings.onOk) {
+                settings.onOk();
+            }
+        });
     },
 
     generateId: () => Math.random().toString(36).substr(2, 9),

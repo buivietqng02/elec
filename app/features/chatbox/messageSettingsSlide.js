@@ -116,10 +116,10 @@ define([
 
     return {
         onInit: () => {
-            $cmtBtn.click(onComment);
-            $forwardBtn.click(onForward);
-            $editBtn.click(onEdit);
-            $removeBtn.click(onRemove);
+            $cmtBtn.off().click(onComment);
+            $forwardBtn.off().click(onForward);
+            $editBtn.off().click(onEdit);
+            $removeBtn.off().click(onRemove);
         },
 
         onShow: (e) => {

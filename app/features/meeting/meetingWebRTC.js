@@ -1,11 +1,16 @@
 define([
-    'app/webrtc'
+    'app/webrtc',
+    'shared/data'
 ], (
-    URL
+    URL,
+    GLOBAL
 ) => {
     let userList = [];
+    let onlyRun = false;
     const $videpWrapper = $('.mvw-wrapper');
     const $collapseBtn = $('.mvw-collapse-btn');
+    const $micBtn = $('.mvwmb-btn-mic');
+    const $cameraBtn = $('.mvwmb-btn-camera');
 
     for (let i = 0; i < 8; i += 1) {
         userList = userList.concat(`mvww-user-${i + 1}`);
@@ -39,17 +44,24 @@ define([
 
     const convertListToButtons = (roomName, data) => {
         // prevent members of default room can attend.
-        if (roomName === 'default') {
-            return;
-        }
-
-        easyrtc.setRoomOccupantListener(null);
-
         // limit number of members
-        if (Object.keys(data).length > 8) {
+        if (roomName === 'default' || Object.keys(data).length > 8) {
             return;
         }
 
+        const easyrtcIds = GLOBAL.getEasyrtcIds() || [];
+
+        Object.keys(data).forEach((easyrtcid) => {
+            if (!easyrtcIds.filter(id => id === easyrtcid).length) {
+                GLOBAL.setEasyrtcIds(easyrtcIds.concat(easyrtcid));
+            }
+        });
+
+        if (onlyRun) {
+            return;
+        }
+
+        onlyRun = true;
         const list = [];
         let connectCount = 0;
         let min = 0;
@@ -77,7 +89,7 @@ define([
                     establishConnection(position - 1);
                 }
             };
-      
+
             easyrtc.call(list[position], callSuccess, callFailure);
         };
       
@@ -102,11 +114,17 @@ define([
     };
 
     const onCall = (easyrtcid, slot) => {
-        if (window.idShareScreen) {
-            easyrtc.addStreamToCall(easyrtcid, window.idShareScreen);
+        const easyrtcIds = GLOBAL.getEasyrtcIds() || [];
+        const idShareScreen = GLOBAL.getIdShareScreen();
+
+        if (idShareScreen) {
+            easyrtc.addStreamToCall(easyrtcid, idShareScreen);
         }
 
-        window.easyrtcIds = (window.easyrtcIds || []).concat(easyrtcid);
+        if (!easyrtcIds.filter(id => id === easyrtcid).length) {
+            GLOBAL.setEasyrtcIds(easyrtcIds.concat(easyrtcid));
+        }
+        
         const $video = $(`#mvww-user-${slot + 1}`);
         const $videoWrap = $video.parent();
         $videoWrap.show();
@@ -114,7 +132,7 @@ define([
     };
 
     const onHangup = (easyrtcid, slot) => {
-        window.easyrtcIds = (window.easyrtcIds || []).filter(id => (id !== easyrtcid));
+        GLOBAL.setEasyrtcIds((GLOBAL.getEasyrtcIds() || []).filter(id => (id !== easyrtcid)));
         const $video = $(`#mvww-user-${slot + 1}`);
         const $videoWrap = $video.parent();
         $videoWrap.hide();
@@ -140,15 +158,51 @@ define([
         easyrtc.setOnHangup(onHangup);
     };
 
+    const initMediaSource = (num) => {
+        if (num === 1) {
+            easyrtc.enableAudio(false);
+        }
+        
+        if (num === 2) {
+            easyrtc.enableAudio(true);
+            easyrtc.enableVideo(false);
+        }
+        
+        easyrtc.initMediaSource(() => {
+            easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
+        }, () => {
+            if (!num) {
+                $micBtn.addClass('turn-off');
+                GLOBAL.setIsEnabelMic(false);
+                initMediaSource(1);
+            }
+
+            if (num === 1) {
+                $micBtn.removeClass('turn-off');
+                $cameraBtn.addClass('turn-off');
+                GLOBAL.setIsEnabelMic(true);
+                GLOBAL.setIsEnabelCamera(false);
+                initMediaSource(2);
+            }
+
+            if (num === 2) {
+                $micBtn.addClass('turn-off');
+                GLOBAL.setIsEnabelMic(false);
+    
+                window.despiteNotHaveDevice = true;
+                
+                easyrtc.initMediaSource(() => {
+                    easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
+                });
+            }
+        });
+    };
+
     return {
         onInit: () => {
             easyrtc.setSocketUrl(URL);
             easyrtc.dontAddCloseButtons(true);
-            easyrtc.initMediaSource(() => {
-                easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
-            }, (err) => {
-                console.log(err);
-            });
+            initMediaSource();
         },
 
         onJoinRoom

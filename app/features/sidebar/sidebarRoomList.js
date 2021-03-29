@@ -43,8 +43,7 @@ define([
         const dataArr = rooms.map(renderRoom).join('');
 
         $wrapper.html(`${sidebarToggle}${dataArr}`);
-        $(document).off('.sidebarRoomList');
-        $(document).on('click.sidebarRoomList', `[${constant.ATTRIBUE_SIDEBAR_ROOM}]`, onRoomClick);
+        $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUE_SIDEBAR_ROOM}]`, onRoomClick);
     };
 
     const onRoomClick = (e) => {

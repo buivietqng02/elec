@@ -1,54 +1,77 @@
 define([
     'shared/functions',
-    'features/meeting/meetingInviteModal'
+    'features/meeting/meetingInviteModal',
+    'shared/data'
 ], (
     functions,
-    meetingInviteModalComp
+    meetingInviteModalComp,
+    GLOBAL
 ) => {
     const $shareBtn = $('.mvwmss-btn-share-screen');
     const $inviteBtn = $('.mvwmss-btn-add-people');
     const $video = $('#mvww-user-0');
     const $settings = $('.mvwm-settings');
-    const constraints = {
-        audio: true,
-        video: true
-    };
     const constraintsShare = {
         video: {
           cursor: 'always'
-        },
-        audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            sampleRate: 44100
         }
     };
 
     const onStop = () => {
-        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        if (GLOBAL.getIsEnabelMic() || GLOBAL.getIsEnabelCamera()) {
+            navigator.mediaDevices.getUserMedia({
+                audio: GLOBAL.getIsEnabelMic(),
+                video: GLOBAL.getIsEnabelCamera()
+            }).then((stream) => {
+                const id = functions.generateId();
+
+                $settings.css('pointer-events', 'visible');
+                GLOBAL.setIdShareScreen(null);
+                $video.get(0).srcObject = stream;
+                easyrtc.register3rdPartyLocalMediaStream(stream, id);
+                (GLOBAL.getEasyrtcIds() || []).forEach((easyrtcId) => {
+                    easyrtc.addStreamToCall(easyrtcId, id);
+                });
+            });
+        } else {
             const id = functions.generateId();
+
             $settings.css('pointer-events', 'visible');
-            $video.get(0).srcObject = stream;
-            easyrtc.register3rdPartyLocalMediaStream(stream, id);
-            window.idShareScreen = null;
-            (window.easyrtcIds || []).forEach((easyrtcId) => {
+            GLOBAL.setIdShareScreen(null);
+            easyrtc.register3rdPartyLocalMediaStream(new MediaStream(), id); // eslint-disable-line
+            (GLOBAL.getEasyrtcIds() || []).forEach((easyrtcId) => {
                 easyrtc.addStreamToCall(easyrtcId, id);
             });
-        });
+        }
     };
 
-    const onShare = () => navigator.mediaDevices.getDisplayMedia(constraintsShare).then(stream => {
+    const assignStream = (stream) => {
         const id = functions.generateId();
-
-        $settings.css('pointer-events', 'none');
-        // stream.oninactive = onStop; // eslint-disable-line no-param-reassign
+        
         stream.getVideoTracks()[0].addEventListener('ended', onStop);
         $video.get(0).srcObject = stream;
         easyrtc.register3rdPartyLocalMediaStream(stream, id);
-        window.idShareScreen = id;
-        (window.easyrtcIds || []).forEach((easyrtcId) => {
+        GLOBAL.setIdShareScreen(id);
+        (GLOBAL.getEasyrtcIds() || []).forEach((easyrtcId) => {
             easyrtc.addStreamToCall(easyrtcId, id);
         });
+    };
+
+    const onShare = () => navigator.mediaDevices.getDisplayMedia(constraintsShare)
+    .then(stream => {
+        $settings.css('pointer-events', 'none');
+
+        if (GLOBAL.getIsEnabelMic()) {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(audioStream => {
+                const [audioTrack] = audioStream.getAudioTracks();
+                stream.addTrack(audioTrack);
+                assignStream(stream);
+            }).catch(() => {
+                assignStream(stream);
+            });
+        } else {
+            assignStream(stream);
+        }
     });
 
     return {

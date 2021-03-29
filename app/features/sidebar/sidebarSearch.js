@@ -118,11 +118,11 @@ define([
     return {
         onInit: () => {
             $input.val('');
-            $options.click(onChangeFilter);
-            $optionsBtn.click(showSlide);
-            $resetInputBtn.click(resetInput);
-            $searchBtnCollapse.click(onExpandSidebar);
-            $(document).on('input', '#search .search__input', onSearch);
+            $options.off().click(onChangeFilter);
+            $optionsBtn.off().click(showSlide);
+            $resetInputBtn.off().click(resetInput);
+            $searchBtnCollapse.off().click(onExpandSidebar);
+            $(document).off('.sidebarSearch').on('input.sidebarSearch', '#search .search__input', onSearch);
         }
     };
 });

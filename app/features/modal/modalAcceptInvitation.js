@@ -36,8 +36,8 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (const
         API.post(`contacts/${userId}/accept`).then(() => {
             API.get('chats').then((res) => {
                 const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
-                sidebarRoomListComp.onInit();
                 GLOBAL.setRoomsWithAdapter(res);
+                sidebarRoomListComp.onInit();
                 $btnCancel.click(); 
             }).catch((err) => {
                 console.log(err);
@@ -57,10 +57,9 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (const
                 $(document).on('click', '#acceptInvitationModal .btn-outline-primary', onAccept);
             }
 
-            userId = element.find(`[${constant.ATTRIBUTE_CHANGE_NAME}]`).data().userId;
+            userId = element.find(`[${constant.ATTRIBUTE_CHANGE_NAME}]`).data().useridName;
             const urlAvatar = element.find('.avatar').prop('src');
             const position = urlAvatar.indexOf('users');
-            userId = urlAvatar.substring(position + 6, position + 18);
 
             $('#acceptInvitationModal').remove && $('#acceptInvitationModal').remove();
             $('body').append(render(template, {

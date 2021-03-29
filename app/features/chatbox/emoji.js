@@ -90,9 +90,9 @@ define(['features/chatbox/chatboxInput'], (chatboxInputComp) => {
     return {
         onInit: () => {
             initEmoji();
-            $tabBtn.click(switchTab);
-            $emojiBtn.click(showEmoji);
-            $(document).on('click', '[data-em-btn]', addEmojiToInput);
+            $tabBtn.off().click(switchTab);
+            $emojiBtn.off().click(showEmoji);
+            $(document).off('.emoji').on('click.emoji', '[data-em-btn]', addEmojiToInput);
         }
     };
 });

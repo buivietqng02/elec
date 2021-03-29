@@ -1,5 +1,8 @@
 define(() => {
     let isNetworkStatus = true;
+    let idShareScreen = null;
+    let isEnabelCamera = true;
+    let isEnabelMic = true;
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
@@ -9,6 +12,7 @@ define(() => {
     let bodyBgTheme = '';
     let bodyFontSize = '';
     let roomInfo = {};
+    let easyrtcIds = [];
 
     const useAdapterForRoom = (room) => ({
         channel: room.channel,
@@ -79,6 +83,26 @@ define(() => {
         getNetworkStatus: () => isNetworkStatus,
         setNetworkStatus: (value) => {
             isNetworkStatus = value;
+        },
+
+        getEasyrtcIds: () => easyrtcIds,
+        setEasyrtcIds: (value) => {
+            easyrtcIds = value;
+        },
+
+        getIdShareScreen: () => idShareScreen,
+        setIdShareScreen: (value) => {
+            idShareScreen = value;
+        },
+
+        getIsEnabelCamera: () => isEnabelCamera,
+        setIsEnabelCamera: (value) => {
+            isEnabelCamera = value;
+        },
+
+        getIsEnabelMic: () => isEnabelMic,
+        setIsEnabelMic: (value) => {
+            isEnabelMic = value;
         }
     };
 });

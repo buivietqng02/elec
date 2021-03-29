@@ -28,6 +28,7 @@ define([
     let $img;
     let $userId;
     let $chatId;
+    let $email;
     let $name;
     let $des;
     let $save;
@@ -63,6 +64,11 @@ define([
                             <input class="input-freeze" tabindex="-1" />
                             <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                         </div>
+                        <div class="xmmcm-form-group erm-email">
+                            <label>Email</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                        </div>
                         <div class="xmmcm-form-group erm-name">
                             <label>Name</label>
                             <input tabindex="-1" placeholder="Enter name" maxlength="50" />
@@ -84,7 +90,9 @@ define([
         </div>
     `;
 
-    const onErrNetWork = () => {
+    const onErrNetWork = (err) => {
+        console.log(err);
+
         $closeBtn.click();
         ALERT.show('Unable to connect to the Internet');
     };
@@ -113,7 +121,7 @@ define([
             
             if (!roomInfo.group) {
                 const name = $name.val() || roomInfo.partner.name;
-                $(`[${ATTRIBUTE_CHANGE_NAME}="${user.id}"]`).text(name);
+                $(`[${ATTRIBUTE_CHANGE_NAME}="${roomInfo.partner.id}"]`).text(name);
             }
         }).catch(onErrNetWork);
     };
@@ -167,52 +175,52 @@ define([
             } = res.guest;
 
             $contentLA.html(`
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Chat Id</label>
                     <input class="input-freeze" tabindex="-1" value="${res.id}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Guest Id</label>
                     <input class="input-freeze" tabindex="-1" value="${id || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Guest Name</label>
                     <input class="input-freeze" tabindex="-1" value="${name || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Guest Email</label>
                     <input class="input-freeze" tabindex="-1" value="${email || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>IP Address</label>
                     <input class="input-freeze" tabindex="-1" value="${ipAddress || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Device Type</label>
                     <input class="input-freeze" tabindex="-1" value="${deviceType || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Browser</label>
                     <input class="input-freeze" tabindex="-1" value="${browser || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Platform</label>
                     <input class="input-freeze" tabindex="-1" value="${platform || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>Platform Version</label>
                     <input class="input-freeze" tabindex="-1" value="${platformVersion || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
                 </div>
-                <div class="xmmcm-form-group erm-userid">
+                <div class="xmmcm-form-group">
                     <label>User Agent</label>
                     <textarea class="input-freeze" tabindex="-1">${userAgent || 'none'}</textarea>
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" style="top: 30px"></div>
@@ -234,6 +242,7 @@ define([
                 $img = $modal.find('.erm-image-wrapper img');
                 $userId = $modal.find('.erm-userid input');
                 $chatId = $modal.find('.erm-chatid input');
+                $email = $modal.find('.erm-email input');
                 $name = $modal.find('.erm-name input');
                 $des = $modal.find('.erm-des textarea');
                 $save = $modal.find('.btn-outline-primary');
@@ -271,6 +280,7 @@ define([
                 $img.attr('src', getAvatar(roomInfo.id, true));
                 $name.closest('.erm-name').hide();
                 $userId.closest('.erm-userid').hide();
+                $email.closest('.erm-email').hide();
 
                 $des.val(obRoomEdited[roomInfo.id]?.user_des || '');
             } else {
@@ -279,6 +289,9 @@ define([
                 $img.on('error', () => $img.attr('src', '/assets/images/user.jpg'));
                 $name.closest('.erm-name').show();
                 $userId.closest('.erm-userid').show();
+                $email.closest('.erm-email').show();
+
+                $email.val(roomInfo.partner.email);
                 $userId.val(roomInfo.partner.id);
                 $name.val(obRoomEdited[roomInfo.partner.id]?.user_name || roomInfo.partner.name);
                 $des.val(obRoomEdited[roomInfo.partner.id]?.user_des || '');
