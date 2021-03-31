@@ -81,7 +81,7 @@ define([
         if (!isTouchFirstMess) {
             isTouchFirstMess = true;
             messages = GLOBAL.getCurrentMessages();
-            lastOffset = messages[0]?.id?.messageId;
+            lastOffset = messages[0]?.sequence;
             messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, true) + renderMessage(mess, search))).join('');
             $messageList.html(messagesHtml);
             setTimeout(() => {
@@ -275,8 +275,8 @@ define([
 
     const onGetMoreMessageByScrollingUp = () => {
         let currentMessages = GLOBAL.getCurrentMessages();
-        let firstOffset = messages[messages.length - 1]?.id?.messageId;
-        let newestMessOffset = currentMessages[currentMessages.length - 1]?.id?.messageId;
+        let firstOffset = messages[messages.length - 1]?.sequence;
+        let newestMessOffset = currentMessages[currentMessages.length - 1]?.sequence;
 
         const params = {
             chatId: GLOBAL.getCurrentRoomId(),
@@ -285,18 +285,18 @@ define([
         processing = true;
 
         API.get('messages', params).then(res => {
-            if (firstOffset !== messages[messages.length - 1]?.id?.messageId || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+            if (firstOffset !== messages[messages.length - 1]?.sequence || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
                 processing = false;
                 return;
             }
 
-            let moreMessages = res.data.messages.filter(mess => mess.id.messageId > firstOffset).reverse();
+            let moreMessages = res.data.messages.filter(mess => mess.sequence > firstOffset).reverse();
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'up') + renderMessage(mess))).join('');
             messages = [...messages, ...moreMessages];
             $wrapper.scrollTop($wrapper.scrollTop() - 1);
             $messageList.append(messagesHtml);
             
-            if (newestMessOffset <= moreMessages[moreMessages.length - 1]?.id?.messageId) {
+            if (newestMessOffset <= moreMessages[moreMessages.length - 1]?.sequence) {
                 isTouchFirstMess = true;
             }
 
@@ -329,7 +329,7 @@ define([
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             messages = [...moreMessages, ...messages];
-            lastOffset = moreMessages[0]?.id?.messageId;
+            lastOffset = moreMessages[0]?.sequence;
             $wrapper.scrollTop($wrapper.scrollTop() + 10);
             $messageList.prepend(messagesHtml);
             setTimeout(() => {
@@ -400,7 +400,7 @@ define([
 
         messages = messages.concat((res?.data?.messages || []).reverse());
         GLOBAL.setCurrentMessages(messages);
-        lastOffset = messages[0]?.id?.messageId;
+        lastOffset = messages[0]?.sequence;
         messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
         $messageList.html(messagesHtml);
         $loadingOfNew.hide();

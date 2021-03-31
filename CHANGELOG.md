@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.7] - 2021-03-31
+### Update
+- Use 'sequence' property instead of 'id.messageId', as 'offset' when getting messages
+
 ### [3.6] - 2021-03-24
 ### Fix
 - Fix invite.
