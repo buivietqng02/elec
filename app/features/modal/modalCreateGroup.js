@@ -59,14 +59,12 @@ define([
             </div>
         </div>
     `;
-    const renderTemplate = ({ html, numMembers }) => `
+    const renderTemplate = ({ html, numMembers }, langJson) => `
         <div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
-                            New group chat
-                        </h5>
+                        <h5 class="modal-title"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -75,13 +73,17 @@ define([
                         <div class="crm-loading">
                             <div class="pulse"></div>
                         </div>
-                        <input type="text" name="name" id="cgm-input-name" placeholder="Enter Group Name..." maxlength="50" />
+                        <input data-language="ENTER_GROUP_NAME" data-lang-type="placeholder" type="text" name="name" id="cgm-input-name" placeholder="${langJson.ENTER_GROUP_NAME}" maxlength="50" />
                         <div class="crm-frame-wrapper">
                             <div class="crmfwu">
                                 <div class="crmfwu-search-box">
                                     <i class="xm xm-search"></i>
-                                    <input type="search" name="search" id="cgm-input-search" placeholder="Search..." />
-                                    <span class="crmfwusb-title">Group members: <span class="crmfwusbt-num">${numMembers}</span> member(s)</span>
+                                    <input data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" type="search" name="search" id="cgm-input-search" placeholder="${langJson.SEARCH_PLACEHOLDER}" />
+                                    <span class="crmfwusb-title">
+                                        <lang data-language="GROUP_MEMBERS">${langJson.GROUP_MEMBERS}</lang>: 
+                                        <span class="crmfwusbt-num">${numMembers}</span> 
+                                        <lang data-language="MEMBER">${langJson.MEMBER}</lang>
+                                    </span>
                                 </div>
                                 <div class="crmfwus crmfwu-default-user">
                                     ${html}
@@ -89,7 +91,7 @@ define([
                             </div>
                             <div class="crmfwu">
                                 <h2 class="crmfwu-title">
-                                    Selected: <span class="crmfwut-num">0</span> member(s)
+                                    <lang data-language="SELECTED">${langJson.SELECTED}<lang>: <span class="crmfwut-num">0</span> <lang data-language="MEMBER">${langJson.MEMBER}</lang>
                                 </h2>
                                 <div class="crmfwus crmfwu-selected-user"></div>
                             </div>
@@ -98,7 +100,7 @@ define([
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Save
+                            <lang data-language="SAVE">${langJson.SAVE}</lang>
                         </button>
                     </div>
                 </div>
@@ -329,7 +331,7 @@ define([
     };
 
     const onInit = () => {
-        $('body').append(renderTemplate(renderRoomList()));
+        $('body').append(renderTemplate(renderRoomList(), GLOBAL.getLangJson()));
         $modal = $('#createGroupModal');
         $title = $modal.find('.modal-title');
         $saveBtn = $modal.find('.btn-outline-primary');
@@ -357,7 +359,7 @@ define([
         isProcess = false;
         editId = null;
         arrUserId = [];
-        $title.html('New group chat');
+        $title.html(GLOBAL.getLangJson().NEW_GROUP_CHAT);
         $numSelected.text(arrUserId.length);
         $loading.hide();
         $inputSearch.val('');

@@ -5,15 +5,21 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
     let $btnSend;
     let $btnCancel;
 
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade" id="sendErpModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p>Enter ERP URL to load contacts</p>
+                        <p data-language="ENTER_ERP_URL">
+                            ${langJson.ENTER_ERP_URL}
+                        </p>
                         <input id="sem-url-input" placeholder="https://erp.iptp.net/erp/dispatcher" />
-                        <button type="button" class="btn btn-outline-primary btn-small float-right" disabled>Send</button>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">Cancel</button>
+                        <button data-language="SEND" type="button" class="btn btn-outline-primary btn-small float-right" disabled>
+                            ${langJson.SEND}
+                        </button>
+                        <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                            ${langJson.CANCEL}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -68,7 +74,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#sendErpModal');
                 $input = $('#sem-url-input');
