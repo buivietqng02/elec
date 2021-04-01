@@ -5,6 +5,7 @@ define([
     'shared/functions',
     'shared/alert',
     'app/constant',
+    'features/language/language',
     'features/sync/sync',
     'features/sidebar/sidebarProfile',
     'features/sidebar/sidebarRoomList',
@@ -27,6 +28,7 @@ define([
     functions,
     ALERT,
     constant,
+    languageComp,
     syncComp,
     sidebarProfileComp,
     sidebarRoomListComp,
@@ -235,7 +237,7 @@ define([
 
     const onInit = () => {
         setTimeout(() => $('.xm-page-loading').remove(), 2000);
-        
+        languageComp.onInit();
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();

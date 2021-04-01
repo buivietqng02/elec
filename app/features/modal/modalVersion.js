@@ -1,18 +1,18 @@
 define(['shared/data'], (GLOBAL) => {
     let isModalRendered = false;
     let $modal;
-    const renderTemplate = (version) => `
+    const renderTemplate = (version, langJson) => `
         <div class="modal fade" id="versionModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <img src="assets/images/icon.png" alt="Cross messenger">
-                        <h2>Cross messenger</h2>
+                        <h2 data-language="CROSS_MESSENGER">${langJson.CROSS_MESSENGER}</h2>
                         <p>
-                            Web Version: #XM_VERSION
+                            <lang data-language="WEB_VERSION">${langJson.WEB_VERSION}</lang>: #XM_VERSION
                         </p>
                         <p>
-                            Server Version: ${version}
+                            <lang data-language="SERVER_VERSION">${langJson.SERVER_VERSION}</lang>: ${version}
                         </p>
                     </div>
                 </div>
@@ -24,7 +24,7 @@ define(['shared/data'], (GLOBAL) => {
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(renderTemplate(GLOBAL.getVersion()));
+                $('body').append(renderTemplate(GLOBAL.getVersion(), GLOBAL.getLangJson()));
                 $modal = $('#versionModal');
             }
 

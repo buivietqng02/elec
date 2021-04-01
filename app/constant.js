@@ -23,7 +23,14 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ATTRIBUTE_CHANGE_IMAGE: 'data-userid-image',
         ATTRIBUTE_CHANGE_IMAGE_GROUP: 'data-roomid-image',
         ATTRIBUE_SIDEBAR_ROOM: 'data-room-id',
-        WEBRTC_URL: webrtc
+        ATTRIBUTE_LANGUAGE: 'data-language',
+        WEBRTC_URL: webrtc,
+        LANGUAGE_KEY: 'lang',
+        LANGUAGES: {
+            english: 'en',
+            russian: 'ru',
+            vietnamese: 'vi'
+        }
     };
 
     return Object.freeze(obj);

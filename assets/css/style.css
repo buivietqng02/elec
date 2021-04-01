@@ -2930,10 +2930,6 @@ body.body_fz_18 {
   text-overflow: ellipsis;
 }
 
-#user-option .menu__item {
-  width: 180px;
-}
-
 #userInterfaceModal .modal-title {
   color: #08c;
 }
@@ -2942,7 +2938,7 @@ body.body_fz_18 {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 280px;
+  max-width: 320px;
 }
 
 .uim-wrapper {
@@ -3515,6 +3511,40 @@ body.body_fz_18 {
   position: absolute;
   right: 0;
   bottom: 0;
+}
+
+#changeLanguage .clm-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#changeLanguage .clm-item:hover {
+  background-color: rgba(0,0,0,.1);
+}
+
+#changeLanguage .clm-item svg {
+  width: 50px;
+  margin: 0 20px;
+}
+
+#changeLanguage .clm-item .clmi-text {
+  font-size: 1.1rem;
+}
+
+#changeLanguage .clm-item .clmi-radio {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #dee2e6;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-left: 10px;
+}
+
+#changeLanguage .clm-item.active .clmi-radio {
+  border: 6px solid #08c;
 }
 
 @keyframes play {

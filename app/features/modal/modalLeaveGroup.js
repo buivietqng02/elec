@@ -8,18 +8,22 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
     const $caption = $('.js_caption');
     const $chatbox = $('.js_wrap_mess');
 
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade" id="leaveGroupModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h2>Leaving group chat "<span></span>" </h2>
-                        <p>You will not be able to see this group anymore. Are you sure you want to proceed?</p>
+                        <h2><lang data-language="LEAVING_GROUP_CHAT">${langJson.LEAVING_GROUP_CHAT}</lang> "<span></span>" </h2>
+                        <p data-language="YOU_WILL_NOT_BE">
+                            ${langJson.YOU_WILL_NOT_BE}
+                        </p>
                         <button type="button" class="btn btn-outline-primary btn-small float-right">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Leave
+                            <lang data-language="LEAVE">${langJson.LEAVE}</lang>
                         </button>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">Cancel</button>
+                        <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                            ${langJson.CANCEL}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -28,7 +32,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
 
     const onErrNetWork = () => {
         $btnCancel.click();
-        ALERT.show('Unable to connect to the Internet');
+        ALERT.show(GLOBAL.getLangJson().UNABLE_TO_CONNECT);
     };
 
     const onLeave = () => {
@@ -63,7 +67,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
 
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#leaveGroupModal');
                 $name = $modal.find('h2 span');

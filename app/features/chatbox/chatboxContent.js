@@ -237,7 +237,7 @@ define([
             data.userId = mess.sender.id;
             data.show_internal = mess.internal ? '' : 'hidden';
             data.who = info.id === mess.sender.id ? 'you' : '';
-            data.date = convertMessagetime(mess.msgDate);
+            data.date = convertMessagetime(mess.msgDate, GLOBAL.getLangJson());
             data.forward = mess.forwarded ? 'fwme' : '';
 
             // render with case of comment

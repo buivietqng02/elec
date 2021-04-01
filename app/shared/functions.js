@@ -1,4 +1,4 @@
-const { suppressDeprecationWarnings } = require("moment");
+const { suppressDeprecationWarnings, lang } = require("moment");
 
 const convertToJSView = (html) => html.replace(/{([^}]+)}/g, (m, s) => {
     const key = s.replace(/\./g, '^');
@@ -74,17 +74,17 @@ define(['moment', 'app/constant'], (moment, constant) => ({
 
     stripTags: (text) => text.replace(/(<([^>]+)>)/gi, ''),
 
-    convertMessagetime: (time) => {
+    convertMessagetime: (time, langJson) => {
         const timeMessage = moment(time);
         const today = moment();
         const yesterday = moment().subtract(1, 'days');
 
         if (today.isSame(timeMessage, 'date')) {
-            return `Today ${timeMessage.format('H:mm')}`;
+            return `${langJson.TODAY} ${timeMessage.format('H:mm')}`;
         }
 
         if (yesterday.isSame(timeMessage, 'date')) {
-            return `Yesterday ${timeMessage.format('H:mm')}`;
+            return `${langJson.YESTERDAY} ${timeMessage.format('H:mm')}`;
         }
 
         return timeMessage.format('D MMM, H:mm');

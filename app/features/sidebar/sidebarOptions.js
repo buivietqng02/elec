@@ -5,7 +5,8 @@ define([
     'features/modal/modalInvite',
     'features/modal/modalSendErp',
     'features/modal/modalVersion',
-    'features/modal/modalCreateGroup'
+    'features/modal/modalCreateGroup',
+    'features/modal/modalChangeLanguage'
 ], (
     constant,
     functions,
@@ -13,13 +14,15 @@ define([
     modalInviteComp,
     modalSendErpComp,
     modalVersionComp,
-    modalCreateGroupComp
+    modalCreateGroupComp,
+    modalChangeLanguageComp
 ) => {
     const { SESSION_ID, TOKEN } = constant;
     const $slide = $('#user-option');
     const $optionsBtn = $('#sidebar-options-btn');
     const $groupChatBtn = $('#group-chat-options-btn');
     const $startConferenceBtn = $slide.find('.--start-conference');
+    const $changeLanguage = $slide.find('.--change-language');
     const $userInterFaceBtn = $slide.find('.--use-interface');
     const $sendInviteBtn = $slide.find('.--send-invite');
     const $erpContactBtn = $slide.find('.--erp-contact');
@@ -50,6 +53,11 @@ define([
             $slide.show();
             handleClickOutside();
         }
+    };
+
+    const showModalChangeLanguage = () => {
+        modalChangeLanguageComp.onInit();
+        offEventClickOutside();
     };
 
     const showModalCreateGroup = () => modalCreateGroupComp.onInit();
@@ -88,6 +96,7 @@ define([
     return {
         onInit: () => {
             $optionsBtn.off().click(showSlide);
+            $changeLanguage.off().click(showModalChangeLanguage);
             $groupChatBtn.off().click(showModalCreateGroup);
             $userInterFaceBtn.off().click(showModalUserInterFace);
             $startConferenceBtn.off().click(showMeetingPage);

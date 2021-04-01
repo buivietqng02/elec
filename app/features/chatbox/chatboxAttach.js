@@ -176,15 +176,15 @@ define([
     };
 
     const showPhoneModal = () => {
+        console.log(modalPhoneRequestComp);
         modalPhoneRequestComp.onInit();
         offEventClickOutside();
-    }
+    };
     
     return {
         onInit: () => {
             $attachButton.off().click(showSlide);
             $callBtn.off().click(showPhoneModal);
-            $wrapper.find('.menu__item').off().click(offEventClickOutside);
             $inputFile.off().change(() => uploadFile('fileupload'));
             $inputImage.off().change(() => uploadFile('imageupload'));
             $dropzone.off().on('dragover', false).on('drop', onDrop);
