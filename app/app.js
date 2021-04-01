@@ -236,7 +236,7 @@ define([
     };
 
     const onInit = () => {
-        setTimeout(() => $('.xm-page-loading').remove(), 2000);
+        $('.xm-page-loading').remove();
         languageComp.onInit();
         onRegisterSW();
         onInitGeneralEvents();
@@ -253,7 +253,7 @@ define([
             }
         });
 
-        setTimeout(initInformationFromAPI, 1000);
+        initInformationFromAPI();
     };
     
     onInit();

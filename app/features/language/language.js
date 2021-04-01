@@ -24,6 +24,7 @@ define([
         placeholder: 'placeholder'
     };
 
+    const $changeLangText = $('#change-lang-btn span');
     let currentLang = getDataToLocalApplication(LANGUAGE_KEY) || LANGUAGES.english;
     let langJson;
 
@@ -57,6 +58,7 @@ define([
             }
 
             setDataToLocalApplication(LANGUAGE_KEY, currentLang);
+            $changeLangText.html(currentLang.toLocaleUpperCase());
             GLOBAL.setLangJson(langJson);
             GLOBAL.setLanguage(currentLang);
             moment.locale(currentLang);

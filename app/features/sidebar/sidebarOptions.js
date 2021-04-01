@@ -21,8 +21,8 @@ define([
     const $slide = $('#user-option');
     const $optionsBtn = $('#sidebar-options-btn');
     const $groupChatBtn = $('#group-chat-options-btn');
+    const $changeLanguageBtn = $('#change-lang-btn');
     const $startConferenceBtn = $slide.find('.--start-conference');
-    const $changeLanguage = $slide.find('.--change-language');
     const $userInterFaceBtn = $slide.find('.--use-interface');
     const $sendInviteBtn = $slide.find('.--send-invite');
     const $erpContactBtn = $slide.find('.--erp-contact');
@@ -55,10 +55,7 @@ define([
         }
     };
 
-    const showModalChangeLanguage = () => {
-        modalChangeLanguageComp.onInit();
-        offEventClickOutside();
-    };
+    const showModalChangeLanguage = () => modalChangeLanguageComp.onInit();
 
     const showModalCreateGroup = () => modalCreateGroupComp.onInit();
 
@@ -96,7 +93,7 @@ define([
     return {
         onInit: () => {
             $optionsBtn.off().click(showSlide);
-            $changeLanguage.off().click(showModalChangeLanguage);
+            $changeLanguageBtn.off().click(showModalChangeLanguage);
             $groupChatBtn.off().click(showModalCreateGroup);
             $userInterFaceBtn.off().click(showModalUserInterFace);
             $startConferenceBtn.off().click(showMeetingPage);
