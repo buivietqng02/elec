@@ -36,13 +36,18 @@ define([
                         </div>
                         <div class="clm-item" data-type="${LANGUAGES.russian}">
                             <span class="clmi-radio"></span>
-                            ${ICON.RUSIAN}
+                            ${ICON.RUSSIAN}
                             <span class="clmi-text">русский</span>
                         </div>
                         <div class="clm-item" data-type="${LANGUAGES.vietnamese}">
                             <span class="clmi-radio"></span>
                             ${ICON.VIETNAMESE}
                             <span class="clmi-text">Tiếng Việt</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.spanish}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.SPANISH}
+                            <span class="clmi-text">Español</span>
                         </div>
                     </div>
                     <div class="modal-footer">
