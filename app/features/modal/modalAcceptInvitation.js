@@ -8,7 +8,7 @@ define(['app/constant', 'shared/data', 'shared/api'], (constant, GLOBAL, API) =>
                 <div class="modal-content">
                     <div class="modal-body">
                         <h2 data-language="INVITE_CONFIRMATION">${langJson.INVITE_CONFIRMATION}</h2>
-                        <p><lang data-language="DO_YOU_ACCEPT_INVITATION"></lang>${langJson.DO_YOU_ACCEPT_INVITATION} ${name}???</p>
+                        <p><lang data-language="DO_YOU_ACCEPT_INVITATION"></lang>${langJson.DO_YOU_ACCEPT_INVITATION} ${name}?</p>
                         <button type="button" class="btn btn-outline-primary btn-small float-right">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                             <lang data-language="ACCEPT">${langJson.ACCEPT}</lang>
