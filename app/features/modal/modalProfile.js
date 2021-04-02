@@ -51,12 +51,12 @@ define([
                         <div class="pmm-form-group pmm-userid">
                             <label data-language="USER_ID">${langJson.USER_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-email">
                             <label data-language="Email">${langJson.EMAIL}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-name">
                             <label>${langJson.NAME}</label>

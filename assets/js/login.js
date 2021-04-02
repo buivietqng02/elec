@@ -8,8 +8,14 @@ if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
 
 jQuery(function($){
 
-
-
+require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap/js/dist/modal');
+const GLOBAL = require('shared/data');
+const languageComp = require('features/language/language');
+const modalChangeLanguageComp = require('features/modal/modalChangeLanguage');
+const $changeLanguageBtn = $('#change-lang-btn');
+languageComp.onInit();
+$changeLanguageBtn.click(modalChangeLanguageComp.onInit);
 
 // ==============================================================================
 // global 
@@ -59,8 +65,7 @@ let requestcodebtn = $('.js-btn-requestcode');
 let cancelbtn = $('.js-btn-cancel');
 
 setTimeout(function(){
-    login.find('[name="email"]').val('').focus();  
-
+  login.find('[name="email"]').val('').focus();  
 },200);
 
 // register new account
@@ -187,7 +192,9 @@ $(document).on('submit', '.js_login__form', function(e){
 
                   
 
-                  $this.find('.mess').html( response.details );
+                  $this.find('.mess').html(`
+                    <lang data-language="INCORRECT_EMAIL_OR_PASSWORD">${GLOBAL.getLangJson().INCORRECT_EMAIL_OR_PASSWORD}</lang>
+                  `);
 
                   $this.find('[name="password"]').val('').focus();
 
@@ -270,7 +277,7 @@ $(document).on('submit', '.js_register__form', function(e){
 
     if ( password != password2 ){
 
-       $this.find('.mess').html( 'Confirm Password was wrong' );
+       $this.find('.mess').html(GLOBAL.getLangJson().CONFIRM_PASSWORD_WRONG);
 
        return;
     }  
@@ -617,7 +624,7 @@ $(document).on('submit', '.js_forgot__form_code', function(e){
 
     if ( password != password2 ){
 
-       $this.find('.mess').html( 'Confirm Password was wrong' );
+       $this.find('.mess').html(GLOBAL.getLangJson().CONFIRM_PASSWORD_WRONG);
 
        return;
     }  

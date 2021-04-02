@@ -59,17 +59,17 @@ define([
                         <div class="xmmcm-form-group erm-userid">
                             <label data-language="USER_ID">${langJson.USER_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-chatid">
                             <label data-language="CHAT_ID">${langJson.CHAT_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-email">
                             <label data-language="EMAIL">${langJson.EMAIL}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-name">
                             <label data-language="NAME">${langJson.NAME}</label>

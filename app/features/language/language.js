@@ -21,10 +21,12 @@ define([
     } = constant;
 
     const langTypeOb = {
-        placeholder: 'placeholder'
+        placeholder: 'placeholder',
+        tooltip: 'tooltip'
     };
 
     const $changeLangText = $('#change-lang-btn span');
+    const $body = $('body');
     let currentLang = getDataToLocalApplication(LANGUAGE_KEY) || LANGUAGES.english;
     let langJson;
 
@@ -40,6 +42,11 @@ define([
             switch (langType) {
                 case langTypeOb.placeholder:
                     $this.attr('placeholder', langJson[language]);
+                    break;
+                    case langTypeOb.tooltip:
+                    $this.attr('title', langJson[language]);
+                    $this.attr('data-original-title', langJson[language]);
+                    $this.tooltip();
                     break;
                 default: 
                     $this.text(langJson[language]);
@@ -57,8 +64,13 @@ define([
                 moment.locale(currentLang);
             }
 
+            Object.values(LANGUAGES).forEach((key) => {
+                $body.removeClass(key);
+            });
+
             setDataToLocalApplication(LANGUAGE_KEY, currentLang);
             $changeLangText.html(currentLang.toLocaleUpperCase());
+            $body.addClass(currentLang);
             GLOBAL.setLangJson(langJson);
             GLOBAL.setLanguage(currentLang);
             moment.locale(currentLang);

@@ -20,10 +20,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icon/icon-App-180.png">
     <link rel="manifest" href="manifest.json">
     <link id="favicon" rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
-    <link rel="stylesheet" href="assets/css/login.css">  
-
-
-</head>
+    <link rel="stylesheet" href="assets/css/login.css">
+<link href="/source/login.css" rel="stylesheet"></head>
 
 <body style="background:linear-gradient(to bottom, #06c 0%, rgba(0, 102, 204, 0.6) 50%, rgba(0, 102, 204, 0.6) 65%, rgba(0, 102, 204, 0.4) 100%), url(assets/images/cosmos4-1.jpg) no-repeat center/cover;">
     <div class="wrap-login">
@@ -32,52 +30,46 @@
     <div class="login js-global js-login active">
         <div class="login__header">
             <img class="login__logo" src="assets/images/icon.png" alt="Cross messenger logo">
-            <h1 class="login__title">Cross Messenger</h1>
+            <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
+            <div class="language-select" id="change-lang-btn">
+                <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
+                <span></span>
+            </div>
         </div>
     
         <form name="loginForm" class="login__form js_login__form" method="post">
-            <input required="Please enter a email" type="email" name="email"
-                class="form-control" placeholder="E-mail" />
-    
-            <input required="Please enter the password" type="password" name="password" class="form-control" placeholder="Password" />
-            
+            <input data-lang-type="placeholder" data-language="EMAIL" required="Please enter a email" type="email" name="email" class="form-control" />
+            <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
             <div class="mess"></div>
-
             <button type="submit" class="login__btn-submit js-btn-spin">
                 <span class="--spin" style="display:none">◉</span>
-                LOGIN
+                <lang data-language="LOGIN"></lang>
             </button>
         </form>
     
-        <button class="xmbtn login__btn-signup js-btn-signup">Sign Up</button>
-        <button class="xmbtn login__btn-forgot js-btn-forget">Forgot Password</button>    
-       
+        <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>
+        <button data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>    
     </div>
     <!-- sign up-->
     <!-- have class active it is show / hidden is hide-->
     <div class="sign-up form-style js-global js-signup">
-        <h2 class="popup__heading">Register New Account</h2>
+        <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
         <form name="resetForm" class="js_register__form" method="post">
             <div class="form__line">
-                <label class="form__label">Name</label>
-                <input class="form-control form-control2" required type="text" placeholder="Name" name="name" />
+                <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
             </div>
             <div class="form__line">
-                <label class="form__label">E-Mail</label>
-                <input class="form-control form-control2" required type="text" placeholder="E-Mail" name="email" />
+                <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="text" name="email" />
             </div>
             <div class="form__line">
-                <label class="form__label">Password</label>
-                <input class="form-control form-control2" required type="password" placeholder="Password" name="password" />
+                <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
             </div>
             <div class="form__line">
-                <label class="form__label">Confirm Password</label>
-                <input class="form-control form-control2" required type="password" placeholder="Confirm Password" name="password2" />
+                <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
             </div>
 
             <div class="form__line form__line_code" style="display:none;">
-                <label class="form__label">Code</label>
-                <input class="form-control form-control2" type="text" placeholder="Code" name="code" />
+                <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
             </div>
 
             <div class="mess"></div>
@@ -85,12 +77,10 @@
 
            <!--  <div class="msg--status">Register success!</div> -->
             <div class="popup__bottom">
-                <button class="btn btn--second js-btn-cancel" type="button">
-                    Cancel
-                </button>
+                <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
                 <button class="btn btn--second ml-2 js-btn-spin" type="submit">
                     <span class="--spin" style="display:none">◉</span>
-                    Create
+                    <lang data-language="CREATE"></lang>
                 </button>
             </div>          
         </form>
@@ -100,22 +90,20 @@
     <!-- reset password -->
     <!-- have class active it is show / hidden is hide-->
     <div class="reset-password reset-password1 form-style js-global js-requestcode">
-        <h2 class="popup__heading">Reset password</h2>
+        <h2 data-language="RESET_PASSWORD" class="popup__heading"></h2>
         <form name="resetForm" class="js_forgot__form" method="post">
             <div class="form__line">
-                <!-- <label class="form__label">E-Mail</label> -->
-                <input class="form-control form-control2" required type="email" placeholder="E-Mail" name="email" />
-            </div>  
+                <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+            </div>
 
             <div class="mess"></div> 
 
 
             <div class="popup__bottom">
-                <button class="btn btn--second js-btn-cancel" type="button">Cancel</button>
-                <!-- <button class="btn btn--second ml-2" type="submit">Request Code</button>                 -->
+                <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
                 <button class="btn btn--second ml-2 js-btn-requestcode js-btn-spin" type="submit">
-                     <span class="--spin" style="display:none">◉</span>
-                    Request Code
+                    <span class="--spin" style="display:none">◉</span>
+                    <lang data-language="REQUEST_CODE"></lang>
                 </button>                
             </div>          
         </form>
@@ -125,33 +113,29 @@
 
     <!-- have class active it is show / hidden is hide-->
     <div class="reset-password reset-password2 form-style js-global js-forget">
-        <h2 class="popup__heading">Reset password</h2>
+        <h2 data-language="RESET_PASSWORD" class="popup__heading"></h2>
         <form name="resetForm" class="js_forgot__form_code" method="post">
             <div class="form__line">
-                <!-- <label class="form__label">E-Mail</label> -->
-                <input class="form-control form-control2" required type="text" placeholder="E-Mail" name="email" />
+                <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="text" name="email" />
             </div>
             <div class="form__line">
-                <!-- <label class="form__label">Code</label> -->
-                <input class="form-control form-control2" required type="text" placeholder="Code" name="code" />
+                <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" required type="text" name="code" />
             </div>
             <div class="form__line">
-                <!-- <label class="form__label">New Password</label> -->
-                <input class="form-control form-control2" required type="password" placeholder="New Password" name="password" />
+                <input data-lang-type="placeholder" data-language="NEW_PASSWORD" class="form-control form-control2" required type="password" name="password" />
             </div>
             <div class="form__line">
-                <!-- <label class="form__label">Confirm New Password</label> -->
-                <input class="form-control form-control2" required type="password" placeholder="Confirm New Password" name="confirmpassword" />
+                <input data-lang-type="placeholder" data-language="CONFIRM_NEW_PASSWORD" class="form-control form-control2" required type="password" name="confirmpassword" />
             </div>
 
             <div class="mess"></div> 
 
             <div class="popup__bottom">
-                <button class="btn btn--second js-btn-cancel" type="button">Cancel</button>
-                <button class="btn btn--second ml-2 js-btn-send-code" type="button">Request Code</button>                
+                <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                <button data-language="REQUEST_CODE" class="btn btn--second ml-2 js-btn-send-code" type="button"></button>                
                 <button class="btn btn--second ml-2 js-btn-spin" type="submit">
                     <span class="--spin" style="display:none">◉</span>
-                    Reset
+                    <lang data-language="RESET"></lang>
                 </button>
             </div>          
         </form>
@@ -186,7 +170,5 @@
             });
         }
     </script>
-    <!-- <script src="./assets/lib/jquery.min.js"></script>
-    <script src="./assets/js/login.min.js"></script>    -->
 <script src="/source/login.bundle.js"></script></body>
 </html>

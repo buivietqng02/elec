@@ -47,7 +47,6 @@ define([
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
-                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                             <lang data-language="SAVE">
                                 ${langJson.SAVE}
                             </lang>

@@ -139,6 +139,9 @@ button {
 
 .mvwmb-url:hover .mvwmb-placeholder {
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mvwmb-join-btn {
@@ -288,6 +291,14 @@ button {
     margin-top: -23px;
 }
 
+.vi .mvw-wrapper.joining .mvww-div:after {
+    content: 'Bấm để phóng to video';
+}
+
+.ru .mvw-wrapper.joining .mvww-div:after {
+    content: 'Нажмите, чтобы развернуть видео';
+}
+
 .mvw-wrapper.joining .mvww-div:not(.expand):hover:before,
 .mvw-wrapper.joining .mvww-div:not(.expand):hover:after {
     display: block;
@@ -401,6 +412,31 @@ button {
 .edmw-wrapper button {
     width: auto;
     margin: 0 auto;
+}
+
+.language-select {
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    padding: 0 7px 3px;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 80;
+}
+
+.language-select svg {
+    fill: #fff;
+    margin-right: 2px;
+}
+
+.language-select span {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.language-select:hover {
+    background: rgba(255,255,255,.2);
 }
 
 @media screen and (max-width: 991px) {
