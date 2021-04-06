@@ -1,4 +1,14 @@
-define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (constant, functions, API, GLOBAL) => {
+define([
+    'app/constant', 
+    'shared/functions', 
+    'shared/api', 
+    'shared/data'
+], (
+    constant, 
+    functions, 
+    API, 
+    GLOBAL
+) => {
     const { htmlDecode, htmlEncode, stripTags, encodeStringBase64, transformLinkTextToHTML, getDataToLocalApplication } = functions;
     const token = getDataToLocalApplication(constant.TOKEN) || '';
     const $input = $('.js_endter_mess');
@@ -92,15 +102,25 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
             return;
         }
 
-        API.post(`chats/${data.chatId}/messages`, data.params).then(() => {
+        API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
+            const chatboxContentComp = require('features/chatbox/chatboxContent');
+            
             messagesWaitProcessingArr.shift();
+            chatboxContentComp.onFinishPostMessage({
+                idLocal: data.idLocal,
+                ...res
+            });
             if (messagesWaitProcessingArr.length) {
                 postMessage(messagesWaitProcessingArr[0]);
             }
-        }).catch(() => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000))
+        }).catch((err) => {
+            console.log(err);
+            setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
+        })
     };
 
     const onSendMessage = () => {
+        const chatboxContentComp = require('features/chatbox/chatboxContent');
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const roomId = GLOBAL.getCurrentRoomId();
         let text = $input.val();
@@ -112,15 +132,21 @@ define(['app/constant', 'shared/functions', 'shared/api', 'shared/data'], (const
         }
 
         data = {
+            idLocal: new Date().getTime(),
             messageId: messageId,
             chatId: roomId,
             isDelete: deleteState,
+            text,
             params: {
                 message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId
             }
         };
+
+        if (!data.messageId) {
+            chatboxContentComp.onAddLocal(data);
+        }
 
         if (!messagesWaitProcessingArr.length) {
             postMessage(data);

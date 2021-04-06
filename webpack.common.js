@@ -15,7 +15,7 @@ const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
 
 module.exports = {
     entry: {
-        index: './app/app.js',
+        index: ['babel-polyfill', './app/app.js'],
         meeting: './app/meeting.js',
         login: './assets/js/login.js'
     },

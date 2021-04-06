@@ -87,7 +87,7 @@ define([
 
     const updateNotification = () => {
         const roomId = GLOBAL.getCurrentRoomId();
-        const $room = $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}="${roomId}"]`);
+        const $room = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
         const obRoomEdited = { ...GLOBAL.getRoomInfoWasEdited() };
         obRoomEdited[roomId] = obRoomEdited[roomId] || {};
 

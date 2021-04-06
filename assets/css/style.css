@@ -1649,22 +1649,12 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   margin-bottom: 0;
 }
 
-@media screen and (max-width:575px) {
-  .messages__intro {
-    margin-top: 1rem;
-  }
+.js_li_mess_local {
+  opacity: .6;
 }
 
-@media screen and (max-width:575px) {
-  .messages__intro img {
-    width: 100px;
-  }
-}
-
-@media screen and (max-width:575px) {
-  .messages__intro .--title {
-    margin-top: 2rem;
-  }
+.js_li_mess_local .btn-message-settings {
+  display: none;
 }
 
 .messages__intro .--content {
@@ -1740,7 +1730,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .messages__item .--content {
-  background: rgba(255,255,255,0.7);
+  background: #fff;
   color: #000;
   max-width: 70%;
   min-width: 170px;
@@ -1754,10 +1744,6 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .messages__item .--content:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-
-.messages__item.you .--content {
-  background: #fff;
 }
 
 .messages__item .--heading {
@@ -3567,6 +3553,16 @@ body.body_fz_18 {
     }
 }
 
+@media (max-width: 1099px) {
+  .sidebar__option button {
+    text-align: center;
+  }
+
+  .sidebar__option button span {
+    display: none;
+  }
+}
+
 @media (max-width: 767px) {
   .contact-list::webkit-scrollbar {
     display: none;
@@ -3847,13 +3843,17 @@ body.body_fz_18 {
   }
 }
 
-@media (max-width: 1099px) {
-  .sidebar__option button {
-    text-align: center;
+@media screen and (max-width:575px) {
+  .messages__intro {
+    margin-top: 1rem;
   }
 
-  .sidebar__option button span {
-    display: none;
+  .messages__intro .--title {
+    margin-top: 2rem;
+  }
+
+  .messages__intro img {
+    width: 100px;
   }
 }
 

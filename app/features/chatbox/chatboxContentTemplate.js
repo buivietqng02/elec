@@ -8,7 +8,7 @@ define(['app/constant'], (constant) => {
             </li>
         `,
         call: `
-            <li class="not-mess-li call-mess" data-chat-id="{id}">
+            <li class="not-mess-li call-mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}">
                 <div class="messages__unreadLine">
                     {mess}
                 </div>
@@ -22,14 +22,14 @@ define(['app/constant'], (constant) => {
              </li>
         `,
         leftGroup: `
-            <li class="js_li_list_mess" data-chat-id="{id}">
+            <li class="js_li_list_mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}">
                 <div class="messages__left-chat">
                     {who} - left chat
                 </div>
             </li>
         `,
         joinGroup: `
-            <li class="js_li_list_mess" data-chat-id="{id}">
+            <li class="js_li_list_mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}">
                 <div class="messages__join-chat">{who}  - joined chat
                 </div>
             </li>
@@ -39,7 +39,7 @@ define(['app/constant'], (constant) => {
         audio: `<audio controls>source src="{src}" type="audio/mpeg">Your browser does not support the audio element.</audio>`,
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} messages__item {isFile}" data-chat-id="{id}" data-chat-type="{chatType}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
                 <div class="--content">
                     <div class="--heading">
                         <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">

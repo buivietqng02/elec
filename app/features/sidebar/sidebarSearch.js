@@ -19,7 +19,7 @@ define([
     const $resetInputBtn = $wrapper.find('.clearable__clear');
 
     const onSearch = debounce(() => {
-        const $rooms = $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`);
+        const $rooms = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`);
         const value = $input.val().trim().toUpperCase();
 
         $rooms.removeAttr('data-search-sidebar-hide');
@@ -59,7 +59,7 @@ define([
     };
 
     const onChangeFilter = (e) => {
-        const $rooms = $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`);
+        const $rooms = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`);
         const $this = $(e.currentTarget);
         const { s } = $this.data();
         offEventClickOutside();
@@ -111,7 +111,7 @@ define([
     };
 
     const resetInput = () => {
-        $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`).removeAttr('data-search-sidebar-hide');
+        $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`).removeAttr('data-search-sidebar-hide');
         $input.val('');
     };
 

@@ -57,7 +57,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
             $btnCancel.click();
             $caption.show();
             $chatbox.hide();
-            $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}="${id}"]`).remove();
+            $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${id}"]`).remove();
         }).catch(onErrNetWork);
     };
 
