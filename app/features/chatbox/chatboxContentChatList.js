@@ -39,16 +39,20 @@ define([
 
             if (messObject.sender.id === info.id) {
                 const { length } = room;
+                let isCheck = false;
                 for (let i = length - 1; i >= 0; i -= 1) {
                     const mess = room[i];
                     if (mess?.id?.messageId === messObject.id.messageId) {
+                        isCheck = true;
                         room[i] = messObject;
                         rooms[id] = room;
                         break;
                     }
                 }
 
-                rooms[id] = room.concat(messObject);
+                if (!isCheck) {
+                    rooms[id] = room.concat(messObject);
+                }
             } else {
                 rooms[id] = room.concat(messObject);
             }
