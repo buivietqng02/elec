@@ -75,7 +75,7 @@ define([
             onGetMoreMessageByScrollingUp();
         }
 
-        // condition 1 : When the request is being processed, this action will skip, prevent user spam
+        // condition 1: When the request is being processed, this action will skip, prevent user spam
         // condition 2: If message number gets from API have length small than 20, this action will skip
         // condition 3: When scroll to near bottom, get more messages
         if (processing || isTouchLastMess || $wrapper.scrollTop() > 700) {
@@ -446,6 +446,13 @@ define([
 
             if (!isInit) {
                 messages = await getChatById(rid) || [];
+            }
+
+            if (data.params.quotedMessageId) {
+                const quotedObject = messages.find(item => item.id.messageId === data.params.quotedMessageId);
+                if (quotedObject && quotedObject?.id) {
+                    mess.quotedMessage = quotedObject;
+                }
             }
 
             if (messages.length) {
