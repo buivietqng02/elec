@@ -104,7 +104,6 @@ define([
 
         API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
             const chatboxContentComp = require('features/chatbox/chatboxContent');
-            
             messagesWaitProcessingArr.shift();
             chatboxContentComp.onFinishPostMessage({
                 idLocal: data.idLocal,
@@ -115,7 +114,9 @@ define([
             }
         }).catch((err) => {
             console.log(err);
-            setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
+            if (!GLOBAL.getNetworkStatus()) {
+                setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
+            }
         })
     };
 
