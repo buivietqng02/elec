@@ -48,6 +48,7 @@ define([
 
     const onRoomClick = (e) => {
         let positionRoom = 0;
+        const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
         const { roomId } = $this.data();
         let roomInfo = GLOBAL.getRooms().filter((room, index) => {
@@ -70,7 +71,7 @@ define([
             return;
         }
 
-        if ($this.hasClass('p_disabled') || roomId === GLOBAL.getCurrentRoomId()) {
+        if ($this.hasClass('p_disabled') || roomId === lastRoomId) {
             return;
         }
 
@@ -80,6 +81,9 @@ define([
         } else {
             $('.messages-input-wrap').show();
         }
+
+        // Handle draft
+        chatboxInputComp.onHandleDraft(lastRoomId, roomId);
         
         // Update new room
         GLOBAL.setCurrentRoomId(roomId);

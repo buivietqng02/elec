@@ -21,13 +21,13 @@ define([
             }
 
             if (messObject.deleted) {
-                rooms[id] = room.filter(mess => messObject.id.messageId !== mess.id.messageId);
+                rooms[id] = room.filter(mess => messObject?.id?.messageId !== mess?.id?.messageId);
                 return;
             }
 
             if (messObject.updated) {
                 rooms[id] = room.map(mess => {
-                    if (messObject.id.messageId === mess.id.messageId) {
+                    if (messObject?.id?.messageId === mess?.id?.messageId) {
                         return messObject;
                     }
 
@@ -42,7 +42,7 @@ define([
                 let isCheck = false;
                 for (let i = length - 1; i >= 0; i -= 1) {
                     const mess = room[i];
-                    if (mess?.id?.messageId === messObject.id.messageId) {
+                    if (mess?.id?.messageId === messObject?.id?.messageId) {
                         isCheck = true;
                         room[i] = messObject;
                         rooms[id] = room;

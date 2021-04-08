@@ -3171,6 +3171,10 @@ body.body_fz_18 {
   display: inline-block;
 }
 
+.draft {
+  color: rgb(221,44,0);
+}
+
 *,
 *:before,
 *:after {

@@ -9,7 +9,16 @@ define([
     API, 
     GLOBAL
 ) => {
-    const { htmlDecode, htmlEncode, stripTags, encodeStringBase64, transformLinkTextToHTML, getDataToLocalApplication } = functions;
+    const { 
+        htmlDecode, 
+        htmlEncode, 
+        stripTags, 
+        decodeStringBase64,
+        encodeStringBase64, 
+        transformLinkTextToHTML, 
+        getDataToLocalApplication 
+    } = functions;
+
     const token = getDataToLocalApplication(constant.TOKEN) || '';
     const $input = $('.js_endter_mess');
     const $wrapperMessages = $('.js_con_list_mess');
@@ -23,16 +32,30 @@ define([
     let commentState = false;
     let messageId = 0;
 
+    const removeDraft = () => {
+        const roomDraft = GLOBAL.getRoomDraft() || {};
+        const rid = GLOBAL.getCurrentRoomId();
+
+        if (roomDraft[rid]) {
+            const queryStr = `[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${rid}"] .preview`;
+            const roomInfo = GLOBAL.getRooms().filter((room) => String(room.id) === String(rid))[0] || {};
+            roomDraft[rid] = '';
+            GLOBAL.setRoomDraft(roomDraft);
+            $(queryStr).removeClass('draft').text(decodeStringBase64(roomInfo.lastMessage) || '');
+        }
+    };
+
     const handleInputAutoExpand = () => {
         const input = $input.get(0);
         const wrapperMessages = $wrapperMessages.get(0);
         const isBottom = wrapperMessages.scrollTop + wrapperMessages.clientHeight >= wrapperMessages.scrollHeight;
-
+        
         setTimeout(() => {
             if ($input.val().replace(/[\s\n]/g, '')) {
                 $btnSend.show();
                 $btnAttach.hide();
             } else {
+                removeDraft();
                 $btnSend.hide();
                 $btnAttach.show();
             }
@@ -43,12 +66,13 @@ define([
             input.style.cssText = `height: ${height}px`;
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
             isBottom && wrapperMessages.scrollTo(0, wrapperMessages.scrollHeight);
-        }, 0);
+        }, 10);
     };
 
     const onKeydown = (e) => {
         if (e.keyCode === 13 && !e.shiftKey) {
             e.preventDefault();
+            removeDraft();
             onSendMessage();
         }
 
@@ -58,13 +82,21 @@ define([
     const onPaste = () => handleInputAutoExpand();
 
     const onClear = () => {
+        const roomDraft = GLOBAL.getRoomDraft();
+        const rid = GLOBAL.getCurrentRoomId();
         messageId = 0;
         deleteState = false;
         commentState = false;
-        $input.val('');
         $input.focus();
         $btnSend.hide();
         $commentWrapper.hide();
+
+        if (roomDraft[rid]) {
+            $input.val(roomDraft[rid]);
+        } else {
+            $input.val('');
+        }
+
         handleInputAutoExpand();
     };
 
@@ -204,6 +236,18 @@ define([
             handleInputAutoExpand();
         },
 
-        onClear
+        onClear,
+
+        onHandleDraft: (currentId) => {
+            const value = $input.val() || '';
+            const roomDraft = GLOBAL.getRoomDraft();
+
+            if (value) {
+                $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${currentId}"] .preview`).addClass('draft').text(`[draft] ${value}`);
+            }
+
+            roomDraft[currentId] = value;
+            GLOBAL.setRoomDraft(roomDraft);
+        }
     };
 });
