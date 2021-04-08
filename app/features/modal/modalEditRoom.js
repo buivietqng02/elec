@@ -1,3 +1,5 @@
+const { lang } = require("moment");
+
 define([
     'app/constant',
     'shared/alert', 
@@ -34,13 +36,13 @@ define([
     let $save;
     let $closeBtn;
     let $inputFile;
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade xmmc-modal" id="editRoomModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
-                            Edit Room
+                        <h5 class="modal-title" data-language="EDIT_ROOM">
+                            ${langJson.EDIT_ROOM}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -55,34 +57,34 @@ define([
                             </div>
                         </label>
                         <div class="xmmcm-form-group erm-userid">
-                            <label>User Id</label>
+                            <label data-language="USER_ID">${langJson.USER_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-chatid">
-                            <label>Chat Id</label>
+                            <label data-language="CHAT_ID">${langJson.CHAT_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-email">
-                            <label>Email</label>
+                            <label data-language="EMAIL">${langJson.EMAIL}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                         </div>
                         <div class="xmmcm-form-group erm-name">
-                            <label>Name</label>
-                            <input tabindex="-1" placeholder="Enter name" maxlength="50" />
+                            <label data-language="NAME">${langJson.NAME}</label>
+                            <input data-language="ENTER_NAME" data-lang-type="placeholder" tabindex="-1" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
                         <div class="xmmcm-form-group erm-des">
-                            <label>Description</label>
-                            <textarea style="margin-bottom: 0" placeholder="Enter description"></textarea>
+                            <label data-language="DESCRIPTION">${langJson.DESCRIPTION}</label>
+                            <textarea data-language="ENTER_DESCRIPTION" data-lang-type="placeholder" style="margin-bottom: 0" placeholder="${langJson.ENTER_DESCRIPTION}"></textarea>
                         </div>
                     </div>
                     <div class="modal-body modal-live-assistance hidden"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Save
+                            <lang data-language="SAVE">${langJson.SAVE}</lang>
                         </button>
                     </div>
                 </div>
@@ -94,7 +96,7 @@ define([
         console.log(err);
 
         $closeBtn.click();
-        ALERT.show('Unable to connect to the Internet');
+        ALERT.show(GLOBAL.getLangJson().UNABLE_TO_CONNECT);
     };
 
     const onUpdateInfomation = () => {
@@ -174,56 +176,58 @@ define([
                 userAgent,
             } = res.guest;
 
+            const langJson = GLOBAL.getLangJson();
+
             $contentLA.html(`
                 <div class="xmmcm-form-group">
-                    <label>Chat Id</label>
+                    <label>${langJson.CHAT_ID}</label>
                     <input class="input-freeze" tabindex="-1" value="${res.id}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Guest Id</label>
+                    <label>${langJson.GUEST_ID}</label>
                     <input class="input-freeze" tabindex="-1" value="${id || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Guest Name</label>
+                    <label>${langJson.GUEST_NAME}</label>
                     <input class="input-freeze" tabindex="-1" value="${name || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Guest Email</label>
+                    <label>${langJson.GUEST_EMAIL}</label>
                     <input class="input-freeze" tabindex="-1" value="${email || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>IP Address</label>
+                    <label>${langJson.IP_ADDRESS}</label>
                     <input class="input-freeze" tabindex="-1" value="${ipAddress || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Device Type</label>
+                    <label>${langJson.DEVICE_TYPE}</label>
                     <input class="input-freeze" tabindex="-1" value="${deviceType || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Browser</label>
+                    <label>${langJson.BROWSER}</label>
                     <input class="input-freeze" tabindex="-1" value="${browser || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Platform</label>
+                    <label>${langJson.PLATFORM}</label>
                     <input class="input-freeze" tabindex="-1" value="${platform || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>Platform Version</label>
+                    <label>${langJson.PLATFORM_VERSION}</label>
                     <input class="input-freeze" tabindex="-1" value="${platformVersion || 'none'}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
-                    <label>User Agent</label>
+                    <label>${langJson.USER_AGENT}</label>
                     <textarea class="input-freeze" tabindex="-1">${userAgent || 'none'}</textarea>
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard" style="top: 30px"></div>
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" style="top: 30px"></div>
                 </div>
             `);
 
@@ -235,7 +239,7 @@ define([
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#editRoomModal');
                 $modalBody = $modal.find('.not-live-assistance');
                 $contentLA = $modal.find('.modal-live-assistance');

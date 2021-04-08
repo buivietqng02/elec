@@ -25,7 +25,7 @@ define([
     const $chatbox = $('.js_wrap_mess');
     const sidebarToggle = '<a class="sidebar__toggle"><i class="xm xm-search --icon p-cur"></i></a>';
     const template = `
-        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${constant.ATTRIBUE_SIDEBAR_ROOM}="{id}" {isGroup}>
+        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${constant.ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup}>
             <img ${constant.ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
             <div class="badge badge-orange">{unread}</div>
             <div class="p-pl-10 meta">
@@ -43,14 +43,15 @@ define([
         const dataArr = rooms.map(renderRoom).join('');
 
         $wrapper.html(`${sidebarToggle}${dataArr}`);
-        $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUE_SIDEBAR_ROOM}]`, onRoomClick);
+        $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`, onRoomClick);
     };
 
     const onRoomClick = (e) => {
         let positionRoom = 0;
+        const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
         const { roomId } = $this.data();
-        const roomInfo = GLOBAL.getRooms().filter((room, index) => {
+        let roomInfo = GLOBAL.getRooms().filter((room, index) => {
             if (String(room.id) === String(roomId)) {
                 positionRoom = index;
                 return true;
@@ -58,18 +59,19 @@ define([
 
             return false;
         })[0] || {};
+        roomInfo = JSON.parse(JSON.stringify(roomInfo));
 
         // Handle when the user has not accepted the invitation yet
         if (!roomId) {
             $caption.show();
             $chatbox.hide();
             GLOBAL.setCurrentRoomId(null);
-            $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`).removeClass('active');
+            $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`).removeClass('active');
             modalAcceptInvitationComp.onInit($this);
             return;
         }
 
-        if ($this.hasClass('p_disabled') || roomId === GLOBAL.getCurrentRoomId()) {
+        if ($this.hasClass('p_disabled') || roomId === lastRoomId) {
             return;
         }
 
@@ -79,11 +81,14 @@ define([
         } else {
             $('.messages-input-wrap').show();
         }
+
+        // Handle draft
+        chatboxInputComp.onHandleDraft(lastRoomId, roomId);
         
         // Update new room
         GLOBAL.setCurrentRoomId(roomId);
         // Hide background what express the active state of the room
-        $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}]`).removeClass('active');
+        $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`).removeClass('active');
         // Hide the caption when user start entering the room
         $caption.hide();
         $chatbox.show();

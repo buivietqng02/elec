@@ -13,6 +13,9 @@ define(() => {
     let bodyFontSize = '';
     let roomInfo = {};
     let easyrtcIds = [];
+    let language = '';
+    let langJson = {};
+    let roomDraft = {};
 
     const useAdapterForRoom = (room) => ({
         channel: room.channel,
@@ -103,6 +106,21 @@ define(() => {
         getIsEnabelMic: () => isEnabelMic,
         setIsEnabelMic: (value) => {
             isEnabelMic = value;
+        },
+
+        getLanguage: () => language,
+        setLanguage: (value) => {
+            language = value;
+        },
+
+        getLangJson: () => langJson,
+        setLangJson: (value) => {
+            langJson = value;
+        },
+
+        getRoomDraft: () => roomDraft,
+        setRoomDraft: (value) => {
+            roomDraft = value;
         }
     };
 });

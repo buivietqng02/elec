@@ -1,10 +1,11 @@
 define([
-    'idb-keyval',
     'shared/api',
     'shared/data',
     'shared/functions',
     'shared/alert',
+    'shared/offlineData',
     'app/constant',
+    'features/language/language',
     'features/sync/sync',
     'features/sidebar/sidebarProfile',
     'features/sidebar/sidebarRoomList',
@@ -21,12 +22,13 @@ define([
     'features/modal/modalUpdateVersion',
     'features/notification/notification'
 ], (
-    idbKeyval,
     API,
     GLOBAL,
     functions,
     ALERT,
+    offlineData,
     constant,
+    languageComp,
     syncComp,
     sidebarProfileComp,
     sidebarRoomListComp,
@@ -65,7 +67,8 @@ define([
         TOKEN 
     } = constant;
 
-    const { set, get } = idbKeyval;
+    const { setGeneral, getGeneral } = offlineData;
+    let isRunFristTime = false;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -99,7 +102,7 @@ define([
     // };
 
     const onAssignDataToStore = (data) => {
-        set('general', data);
+        setGeneral(data);
     };
 
     const onRegisterSW = () => {
@@ -133,7 +136,6 @@ define([
         // Store information of logging user
         GLOBAL.setInfomation({
             ...res.user,
-            email: res?.email,
             erp_url: res?.erp_url
         });
 
@@ -218,24 +220,31 @@ define([
             }
         });
 
-        window.addEventListener('offline', () => GLOBAL.setNetworkStatus(false));
+        window.addEventListener('offline', () => {
+            GLOBAL.setNetworkStatus(false);
+        });
 
         window.addEventListener('online', () => {
             GLOBAL.setNetworkStatus(true);
 
-            if (GLOBAL.getCurrentRoomId()) {
-                const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${GLOBAL.getCurrentRoomId()}"]`);
-                GLOBAL.setCurrentRoomId(null);
-                $activeRoom.click();
-            }
+            if (!isRunFristTime) {
+                isRunFristTime = true;
+                const id = GLOBAL.getCurrentRoomId();
+                if (id) {
+                    const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${id}"]`);
+                    GLOBAL.setCurrentRoomId(null);
+                    $activeRoom.click();
+                    GLOBAL.setCurrentRoomId(id);
+                }
 
-            setTimeout(initInformationFromAPI, 1000);
+                setTimeout(initInformationFromAPI, 1000); 
+            }
         });
     };
 
-    const onInit = () => {
-        setTimeout(() => $('.xm-page-loading').remove(), 2000);
-        
+    const onInit = async () => {
+        $('.xm-page-loading').remove();
+        languageComp.onInit();
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
@@ -244,14 +253,13 @@ define([
             GLOBAL.setNetworkStatus(false);
         }
 
-        get('general').then((data) => {
-            if (data && data.length) {
-                onGetPrefrences(data[1]);
-                onGetValidate(data[0]);
-            }
-        });
+        const data = await getGeneral();
+        if (data && data.length) {
+            onGetPrefrences(data[1]);
+            onGetValidate(data[0]);
+        }
 
-        setTimeout(initInformationFromAPI, 1000);
+        initInformationFromAPI();
     };
     
     onInit();

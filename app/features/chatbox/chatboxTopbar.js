@@ -73,10 +73,10 @@ define([
         obRoomEdited[roomId] = obRoomEdited[roomId] || {};
 
         if (obRoomEdited[roomId].hide_mess) {
-            $textInternalBtn.html('Enable');
+            $textInternalBtn.html(GLOBAL.getLangJson().ENABLE);
             delete obRoomEdited[roomId].hide_mess;
         } else {
-            $textInternalBtn.html('Disable');
+            $textInternalBtn.html(GLOBAL.getLangJson().DISABLE);
             obRoomEdited[roomId].hide_mess = true;
         }
         
@@ -87,17 +87,17 @@ define([
 
     const updateNotification = () => {
         const roomId = GLOBAL.getCurrentRoomId();
-        const $room = $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}="${roomId}"]`);
+        const $room = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
         const obRoomEdited = { ...GLOBAL.getRoomInfoWasEdited() };
         obRoomEdited[roomId] = obRoomEdited[roomId] || {};
 
         if (obRoomEdited[roomId].notification_mess === false) {
             $room.removeClass('mute');
-            $textNotiBtn.html('Disable');
+            $textNotiBtn.html(GLOBAL.getLangJson().DISABLE);
             delete obRoomEdited[roomId].notification_mess;
         } else {
             $room.addClass('mute');
-            $textNotiBtn.html('Enable');
+            $textNotiBtn.html(GLOBAL.getLangJson().ENABLE);
             obRoomEdited[roomId].notification_mess = false;
         }
         
@@ -124,15 +124,15 @@ define([
 
             // Check status of notification
             if (obRoomEdited[roomInfo.id]?.notification_mess === false) {
-                $textNotiBtn.html('Enable');
+                $textNotiBtn.html(GLOBAL.getLangJson().ENABLE);
             } else {
-                $textNotiBtn.html('Disable');
+                $textNotiBtn.html(GLOBAL.getLangJson().DISABLE);
             }
 
             if (obRoomEdited[roomInfo.id]?.hide_mess) {
-                $textInternalBtn.html('Disable');
+                $textInternalBtn.html(GLOBAL.getLangJson().DISABLE);
             } else {
-                $textInternalBtn.html('Enable');
+                $textInternalBtn.html(GLOBAL.getLangJson().ENABLE);
             }
             
             if (roomInfo.group) {
@@ -170,9 +170,9 @@ define([
 
             const diffInSeconds = moment().diff(moment(time), 'seconds');
             if (diffInSeconds <= 30) {
-                $timeActivity.html('online');
+                $timeActivity.html(`<lang data-language="ONLINE">${GLOBAL.getLangJson().ONLINE}</lang>`);
             } else {
-                $timeActivity.html(`last seen ${moment(time).fromNow()}`);
+                $timeActivity.html(`<lang data-language="LAST_SEEN">${GLOBAL.getLangJson().LAST_SEEN}</lang> ${moment(time).fromNow()}`);
             }
         },
 

@@ -7,18 +7,24 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
     const $caption = $('.js_caption');
     const $chatbox = $('.js_wrap_mess');
 
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade" id="removeGroupModal" tabindex="-1" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h2>Delete Group Chat</h2>
-                        <p>Group Chat including history will be deleted, are you sure?</p>
+                        <h2 data-language="DELETE_GROUP_CHAT">
+                            ${langJson.DELETE_GROUP_CHAT}
+                        </h2>
+                        <p data-language="GROUP_CHAT_INCLUDING">
+                            ${langJson.GROUP_CHAT_INCLUDING}
+                        </p>
                         <button type="button" class="btn btn-outline-primary btn-small float-right" disabled>
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Remove
+                            <lang data-language="REMOVE">${langJson.REMOVE}</lang>
                         </button>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">Cancel</button>
+                        <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                            ${langJson.CANCEL}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -51,7 +57,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
             $btnCancel.click();
             $caption.show();
             $chatbox.hide();
-            $(`[${constant.ATTRIBUE_SIDEBAR_ROOM}="${id}"]`).remove();
+            $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${id}"]`).remove();
         }).catch(onErrNetWork);
     };
 
@@ -59,7 +65,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#removeGroupModal');
                 $btnRemove = $modal.find('.btn-outline-primary');

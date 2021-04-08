@@ -1,8 +1,24 @@
-define(['shared/api', 'shared/data', 'shared/functions', 'app/constant'], (API, GLOBAL, functions, constant) => {
-    const { render, setDataToLocalApplication } = functions;
+define([
+    'shared/api', 
+    'shared/data', 
+    'shared/functions', 
+    'app/constant'
+], (
+    API, 
+    GLOBAL, 
+    functions, 
+    constant
+) => {
+    const { 
+        render, 
+        setDataToLocalApplication 
+    } = functions;
     const {
- BODY_BG_THEME, BODY_FZ, THEMES, FONTSIZES 
-} = constant;
+        BODY_BG_THEME, 
+        BODY_FZ, 
+        THEMES, 
+        FONTSIZES 
+    } = constant;
     let theme;
     let fontsize;
     let $modal;
@@ -13,13 +29,13 @@ define(['shared/api', 'shared/data', 'shared/functions', 'app/constant'], (API, 
     let isModalRendered = false;
     const themeTemplate = '<div class="uimw-theme-item" data-uimw-theme="{name}" style="background: {color}"></div>';
     const fontTemplate = '<div class="uimw-font-item" data-uimw-font="{size}" style="font-size: {size}">Aa</div>';
-    const renderTemplate = (themeHtml, fontHtml) => `
+    const renderTemplate = (themeHtml, fontHtml, langJson) => `
         <div class="modal fade" id="userInterfaceModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
-                            User Interface
+                        <h5 class="modal-title" data-language="USER_INTERFACE">
+                            ${langJson.USER_INTERFACE}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -27,19 +43,19 @@ define(['shared/api', 'shared/data', 'shared/functions', 'app/constant'], (API, 
                     </div>
                     <div class="modal-body">
                         <div class="uim-wrapper">
-                            <div class="uimw-title">
-                                Theme
+                            <div class="uimw-title" data-language="THEME">
+                                ${langJson.THEME}
                             </div>
                             ${themeHtml}
                         </div>
                         <div class="uim-wrapper">
-                            <div class="uimw-title">
-                                Font
+                            <div class="uimw-title" data-language="FONT">
+                                ${langJson.FONT}
                             </div>
                             ${fontHtml}
                         </div>
-                        <button type="button" class="btn btn-outline-primary float-right">
-                            Save
+                        <button data-language="SAVE" type="button" class="btn btn-outline-primary float-right">
+                            ${langJson.SAVE}
                         </button>
                     </div>
                 </div>
@@ -81,7 +97,7 @@ define(['shared/api', 'shared/data', 'shared/functions', 'app/constant'], (API, 
                 const themeHtml = THEMES.map(theme => render(themeTemplate, theme)).join('');
                 const fontHtml = FONTSIZES.map(font => render(fontTemplate, { size: font })).join('');
                 isModalRendered = true;
-                $('body').append(renderTemplate(themeHtml, fontHtml));
+                $('body').append(renderTemplate(themeHtml, fontHtml, GLOBAL.getLangJson()));
                 $modal = $('#userInterfaceModal');
                 $closeBtn = $modal.find('.close');
                 $themes = $('[data-uimw-theme]');

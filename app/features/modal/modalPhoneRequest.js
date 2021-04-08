@@ -269,27 +269,16 @@ define([
         const idVideo = 'callerVideo';
         roomId = roomInfo.id;
         isGroupGlobal = roomInfo.group;
-        listCaller = [idVideo];
         isInit = false;
         $videoCallerWrap.find('video').remove();
         $videoCallerWrap.append(`<video autoplay="autoplay" playsinline="playsinline" id="${idVideo}"></video>`);
-
-        switch (listCaller.length) {
-            case 1:
-                $videoCallerWrap.attr('class', '').addClass('video-caller');
-                break;
-            case 2: 
-                $videoCallerWrap.addClass('total-num-2');
-                break;
-            default:
-                $videoCallerWrap.addClass('total-num-3');
-        }
+        $videoCallerWrap.attr('class', '').addClass('video-caller');
 
         easyrtc.initMediaSource(() => {
             easyrtc.dontAddCloseButtons(true);
-            easyrtc.easyApp('easyrtc.videoChatHd', selfVideoId, listCaller, onInit);
+            easyrtc.easyApp('easyrtc.videoChatHd', selfVideoId, [idVideo], onInit);
         }, (err) => {
-            ALERT.show('Browser does not support calls or you have locked mic and camera');
+            ALERT.show('Audio and Video calls not supported by browser.');
             console.log(err);
         });
     };

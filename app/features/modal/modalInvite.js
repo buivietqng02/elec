@@ -5,15 +5,21 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
     let $btnSend;
     let $btnCancel;
 
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p>Enter email address to send invitation</p>
+                        <p data-language="ENTER_EMAIL_ADDRESS">
+                            ${langJson.ENTER_EMAIL_ADDRESS}
+                        </p>
                         <input id="im-email-input" placeholder="user@mail.com" />
-                        <button type="button" class="btn btn-outline-primary btn-small float-right" disabled>Send</button>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">Cancel</button>
+                        <button data-language="SEND" type="button" class="btn btn-outline-primary btn-small float-right" disabled>
+                            ${langJson.SEND}
+                        </button>
+                        <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                            ${langJson.CANCEL}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -65,7 +71,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
         onInit: () => {
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#inviteModal');
                 $input = $('#im-email-input');

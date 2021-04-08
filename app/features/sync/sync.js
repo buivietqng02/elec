@@ -1,10 +1,11 @@
 define([
-    'app/constant', 
-    'shared/api', 
-    'shared/data', 
+    'app/constant',
+    'shared/api',
+    'shared/data',
     'shared/functions',
     'features/sidebar/sidebarRoomList',
     'features/chatbox/chatboxContent',
+    'features/chatbox/chatboxContentChatList',
     'features/chatbox/chatboxTopbar',
     'features/notification/notification',
     'features/modal/modalPhoneRequest'
@@ -15,15 +16,16 @@ define([
     functions,
     sidebarRoomListComp,
     chatboxContentComp,
+    chatboxContentChatListComp,
     chatboxTopbarComp,
     notificationComp,
     modalPhoneRequest
 ) => {
-    let isProcessing = false;
     let timeout;
-    let syncTimeout;
+    let isInit = false;
     let isBlinkTitleBrowser = false;
     const { SESSION_ID } = constant;
+    const { handleSyncData } = chatboxContentChatListComp;
     const data = {
         timeout: 10000,
         onBackground: false
@@ -109,7 +111,7 @@ define([
         let isNotMoveRoomUp = true;
         const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
         messages.forEach(message => {
-            console.log(message);
+            handleSyncData(message, roomId);
             // Handle with message was deleted
             if (message.deleted) {
                 if (isCurrentRoom) {
@@ -221,10 +223,7 @@ define([
         }
         data.onBackground = document.hidden;
 
-        isProcessing = true;
-
         API.get('sync', data).then(res => {
-            isProcessing = false;
             onSync();
 
             if (res?.messages?.length) {
@@ -235,19 +234,16 @@ define([
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                 chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
             }
-        }).catch(() => {
-            isProcessing = false;
-            syncTimeout = setTimeout(onSync, 5000);
+        }).catch((err) => {
+            console.log(err);
+            setTimeout(onSync, 5000);
         });
     };
 
     return {
         onInit: () => {
-            if (syncTimeout) {
-                clearTimeout(syncTimeout);
-            }
-
-            if (!isProcessing) {
+            if (!isInit) {
+                isInit = true;
                 onSync();
             }
         }

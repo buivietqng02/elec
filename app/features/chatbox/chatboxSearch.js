@@ -1,10 +1,11 @@
-/* eslint-disable */
 define([
+    'app/constant',
     'shared/data',
     'shared/api',
     'shared/functions',
-    'features/chatbox/chatboxContent',
+    'features/chatbox/chatboxContent'
 ], (
+    constant,
     GLOBAL, 
     API,
     functions,
@@ -27,7 +28,7 @@ define([
     $openBtn.hide();
 
     const refershVarible = () => {
-        let $mess = $('.highlight-text').closest('.--mess');
+        const $mess = $('.highlight-text').closest('.--mess');
         $mess.text($mess.text());
         $currentPos.text(0);
         $totalSearch.text(0);
@@ -62,10 +63,13 @@ define([
             }
 
             $loading.hide();
-            let $mess = $('.highlight-text').closest('.--mess');
-            $mess.text($mess.text());
+            const $mess = $('.highlight-text').closest('.--mess');
             const prevMessages = res[0].data.messages.reverse();
-            const nextMessages = res[1].data.messages.filter(mess => mess.id.messageId >= message.id.messageId).reverse();
+            const nextMessages = res[1].data.messages.filter(mess => (
+                mess.id.messageId >= message.id.messageId
+            )).reverse();
+
+            $mess.text($mess.text());
             GLOBAL.setCurrentSearchMessages(prevMessages.concat(nextMessages));
 
             chatboxContentComp.onSearch({
@@ -76,8 +80,8 @@ define([
     };
 
     const debounceInitListMessages = debounce(() => {
-        if ($(`[data-chat-id="${searchs[currentPos].id.messageId}"]`).length) {
-            let $mess = $('.highlight-text').closest('.--mess');
+        if ($(`[${constant.ATTRIBUTE_MESSAGE_ID}="${searchs[currentPos].id.messageId}"]`).length) {
+            const $mess = $('.highlight-text').closest('.--mess');
             $mess.text($mess.text());
             chatboxContentComp.onSearch({
                 value: $input.val(),
@@ -85,7 +89,12 @@ define([
             }, searchs[currentPos]);
         } else {
             $loading.show();
-            initListMessages(GLOBAL.getCurrentRoomId(), searchs[currentPos], currentPos, $input.val())
+            initListMessages(
+                GLOBAL.getCurrentRoomId(), 
+                searchs[currentPos], 
+                currentPos, 
+                $input.val()
+            );
         }
     }, 500);
 
@@ -141,7 +150,7 @@ define([
                 $currentPos.text(currentPos + 1);
                 $totalSearch.text(res.data.messages.length);
 
-                if ($(`[data-chat-id="${searchs[0].id.messageId}"]`).length) {
+                if ($(`[${constant.ATTRIBUTE_MESSAGE_ID}="${searchs[0].id.messageId}"]`).length) {
                     $loading.hide();
                     chatboxContentComp.onSearch({
                         value: $input.val(),
@@ -150,11 +159,10 @@ define([
                 } else {
                     initListMessages(roomId, searchs[0], currentPos, $input.val());
                 }
-
             } else {
                 $loading.hide();
             }
-        })
+        });
     }, 1000);
 
     return {

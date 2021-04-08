@@ -50,7 +50,7 @@ define([
             $url.click(() => {
                 const searchParams = new URLSearchParams(window.location.search);
                 navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
-                ALERT.show('Link copied to clipboard', 'success');
+                ALERT.show(GLOBAL.getLangJson().COPY_TO_CLIPBOARD, 'success');
             });
 
             $micBtn.click(() => {

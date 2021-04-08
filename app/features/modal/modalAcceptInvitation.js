@@ -1,20 +1,21 @@
-define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (constant, GLOBAL, API, functions) => {
-    const { render } = functions;
+define(['app/constant', 'shared/data', 'shared/api'], (constant, GLOBAL, API) => {
     let userId;
     let isProcessing;
     let isInitEvent;
-    const template = `
+    const renderTemplate = (name, langJson) => `
         <div class="modal fade" id="acceptInvitationModal" tabindex="-1" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h2>Invite confirmation</h2>
-                        <p>Do you accept invitation from {name}</p>
+                        <h2 data-language="INVITE_CONFIRMATION">${langJson.INVITE_CONFIRMATION}</h2>
+                        <p><lang data-language="DO_YOU_ACCEPT_INVITATION"></lang>${langJson.DO_YOU_ACCEPT_INVITATION} ${name}?</p>
                         <button type="button" class="btn btn-outline-primary btn-small float-right">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Accept
+                            <lang data-language="ACCEPT">${langJson.ACCEPT}</lang>
                         </button>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">Cancel</button>
+                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
+                            <lang data-language="CANCEL">${langJson.CANCEL}</lang>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -62,9 +63,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/functions'], (const
             const position = urlAvatar.indexOf('users');
 
             $('#acceptInvitationModal').remove && $('#acceptInvitationModal').remove();
-            $('body').append(render(template, {
-                name: element.find('.contact__name span').text()
-            }));
+            $('body').append(renderTemplate(element.find('.contact__name span').text(), GLOBAL.getLangJson()));
             $('#acceptInvitationModal').modal('show');
         }
     };

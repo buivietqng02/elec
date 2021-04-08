@@ -28,13 +28,13 @@ define([
     let $closeBtn;
     let $inputFile;
     let $save;
-    const template = `
+    const renderTemplate = (langJson) => `
         <div class="modal fade xmmc-modal" id="profileModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
-                            Edit Infomation
+                        <h5 class="modal-title" data-language="EDIT_INFORMATION">
+                            ${langJson.EDIT_INFORMATION}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -49,18 +49,18 @@ define([
                             </div>
                         </label>
                         <div class="pmm-form-group pmm-userid">
-                            <label>User Id</label>
+                            <label data-language="USER_ID">${langJson.USER_ID}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-email">
-                            <label>Email</label>
+                            <label data-language="Email">${langJson.EMAIL}</label>
                             <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></div>
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-name">
-                            <label>Name</label>
-                            <input placeholder="Enter name" maxlength="50" />
+                            <label>${langJson.NAME}</label>
+                            <input data-language="ENTER_NAME" data-lang-type="placeholder" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
                         <div class="pmm-form-group pmm-erp">
                             <label>ERP/CRM URL</label>
@@ -70,7 +70,7 @@ define([
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                            Save
+                            <lang data-language="SAVE">${langJson.SAVE}</lang>
                         </button>
                     </div>
                 </div>
@@ -80,7 +80,7 @@ define([
 
     const onErrNetWork = () => {
         $closeBtn.click();
-        ALERT.show('Unable to connect to the Internet');
+        ALERT.show(GLOBAL.getLangJson().UNABLE_TO_CONNECT);
     };
 
     const onUpdateInfomation = () => {
@@ -141,7 +141,7 @@ define([
 
             if (!isModalRendered) {
                 isModalRendered = true;
-                $('body').append(template);
+                $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#profileModal');
                 $img = $modal.find('.pmm-image-wrapper img');
                 $img.attr('src', getAvatar(info.id));

@@ -1,4 +1,4 @@
-const path = require('path');
+/* eslint-disable import/no-extraneous-dependencies */
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -9,14 +9,14 @@ module.exports = merge(common, {
     optimization: {
         minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
         splitChunks: {
-            chunks: 'all',
+            // chunks: 'all',
             cacheGroups: {
                 styles: {
                     name: 'styles',
                     test: /\.css$/,
-                    chunks: 'all',
+                    // chunks: 'all',
                     enforce: true
-                }
+                }   
             }
         }
     }

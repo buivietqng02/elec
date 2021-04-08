@@ -11,20 +11,20 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
             <span>{name}</span>
         </div>
     `;
-    const renderTemplate = (html) => `
+    const renderTemplate = (html, langJson) => `
         <div class="modal fade" id="forwardMessageModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">
-                            Forward message to chat...
+                        <h5 class="modal-title" data-language="FORWARD_MESSAGE_TO_CHAT">
+                            ${langJson.FORWARD_MESSAGE_TO_CHAT}
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="search" name="search" id="fmm-input" placeholder="Search..." />
+                        <input data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" type="search" name="search" id="fmm-input" placeholder="${langJson.SEARCH_PLACEHOLDER}" />
                         <div class="fmm-room-wrapper">
                             ${html}
                         </div>
@@ -104,7 +104,7 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
                 isListRoomRendered = true;
                 $(document).on('click', '[data-fmm-room-id]', onRoomClick);
                 $(document).on('input', '#fmm-input', onSearch);
-                $('body').append(renderTemplate(renderRoomList()));
+                $('body').append(renderTemplate(renderRoomList(), GLOBAL.getLangJson()));
                 $modal = $('#forwardMessageModal');
                 $closeBtn = $modal.find('.close');
                 $rooms = $('[data-fmm-room-id]');

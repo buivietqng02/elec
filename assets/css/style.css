@@ -1620,6 +1620,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .messages__time-chat {
+  text-transform: capitalize;
   text-align: center;
   color: rgba(255,255,255,0.7);
   padding: 10px;
@@ -1649,22 +1650,12 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   margin-bottom: 0;
 }
 
-@media screen and (max-width:575px) {
-  .messages__intro {
-    margin-top: 1rem;
-  }
+.js_li_mess_local {
+  opacity: .6;
 }
 
-@media screen and (max-width:575px) {
-  .messages__intro img {
-    width: 100px;
-  }
-}
-
-@media screen and (max-width:575px) {
-  .messages__intro .--title {
-    margin-top: 2rem;
-  }
+.js_li_mess_local .btn-message-settings {
+  display: none;
 }
 
 .messages__intro .--content {
@@ -1740,7 +1731,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .messages__item .--content {
-  background: rgba(255,255,255,0.7);
+  background: #fff;
   color: #000;
   max-width: 70%;
   min-width: 170px;
@@ -1754,10 +1745,6 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .messages__item .--content:hover {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-
-.messages__item.you .--content {
-  background: #fff;
 }
 
 .messages__item .--heading {
@@ -1821,7 +1808,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .messages__input {
   position: relative;
-  top: 6px;
+  top: 4px;
   width: calc(100% - 50px);
   border: 0;
   background: transparent;
@@ -2441,7 +2428,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   font-size: 0.85em;
   font-family: "Roboto Condensed";
   padding: 0.75rem 1rem;
-  width: 50%;
+  width: 33.333333%;
   text-align: left;
   border-radius: 5px;
   height: 44px;
@@ -2457,7 +2444,12 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .sidebar__option button i {
   margin-right: 8px;
-  font-size: 1em;
+  font-size: 14px;
+}
+
+.sidebar__option button svg {
+  margin-right: 8px;
+  fill: #f5f5f5;
 }
 
 .sidebar__toggle {
@@ -2930,10 +2922,6 @@ body.body_fz_18 {
   text-overflow: ellipsis;
 }
 
-#user-option .menu__item {
-  width: 180px;
-}
-
 #userInterfaceModal .modal-title {
   color: #08c;
 }
@@ -2942,7 +2930,7 @@ body.body_fz_18 {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 280px;
+  max-width: 320px;
 }
 
 .uim-wrapper {
@@ -3181,6 +3169,10 @@ body.body_fz_18 {
 #removeGroupModal .btn:disabled .spinner-grow,
 #acceptInvitationModal .btn:disabled .spinner-grow {
   display: inline-block;
+}
+
+.draft {
+  color: rgb(221,44,0);
 }
 
 *,
@@ -3517,6 +3509,40 @@ body.body_fz_18 {
   bottom: 0;
 }
 
+#changeLanguage .clm-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#changeLanguage .clm-item:hover {
+  background-color: rgba(0,0,0,.1);
+}
+
+#changeLanguage .clm-item svg {
+  width: 50px;
+  margin: 0 20px;
+}
+
+#changeLanguage .clm-item .clmi-text {
+  font-size: 1.1rem;
+}
+
+#changeLanguage .clm-item .clmi-radio {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #dee2e6;
+  display: inline-block;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-left: 10px;
+}
+
+#changeLanguage .clm-item.active .clmi-radio {
+  border: 6px solid #08c;
+}
+
 @keyframes play {
     0% {
         transform: scale(1);
@@ -3530,6 +3556,16 @@ body.body_fz_18 {
     25% {
         box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.4), 0 0 0 30px rgba(255, 255, 255, 0.2);
     }
+}
+
+@media (max-width: 1099px) {
+  .sidebar__option button {
+    text-align: center;
+  }
+
+  .sidebar__option button span {
+    display: none;
+  }
 }
 
 @media (max-width: 767px) {
@@ -3576,7 +3612,7 @@ body.body_fz_18 {
 
   .btn__attach {
     font-size: 1rem;
-    width: 30px;
+    width: 45px;
   }
 
   .--load-mess {
@@ -3624,14 +3660,22 @@ body.body_fz_18 {
     display: none;
   }
 
-  #frame .sidebar .sidebar__option button i {
+  #frame .sidebar .sidebar__option button i,
+  #frame .sidebar .sidebar__option button svg {
     margin: 0;
     position: relative;
     top: 2px;
+    font-size: 18px;
+  }
+
+  #frame .sidebar .sidebar__option button svg {
+    top: -2px;
+    width: 18px;
+    height: 18px;
   }
 
   #frame .contacts {
-    height: calc(100% - 248px);
+    height: calc(100% - 288px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
   }
@@ -3682,19 +3726,9 @@ body.body_fz_18 {
     align-items: center;
   }
 
-  #frame.indent .sidebar .sidebar__option button i {
-    margin-right: 7px;
-  }
-
   #frame.indent .sidebar .sidebar__option button {
-    font-size: 0.85em;
-    width: 50%;
-    text-align: left;
+    width: 33.333%;
     height: 36px;
-  }
-
-  #frame.indent .sidebar .sidebar__option button span {
-    display: inline;
   }
 
   #frame.indent .sidebar-collapse-btn span {
@@ -3814,6 +3848,20 @@ body.body_fz_18 {
   }
 }
 
+@media screen and (max-width:575px) {
+  .messages__intro {
+    margin-top: 1rem;
+  }
+
+  .messages__intro .--title {
+    margin-top: 2rem;
+  }
+
+  .messages__intro img {
+    width: 100px;
+  }
+}
+
 @media screen and (min-width: 767px) {
   #frame.indent .content {
     width: calc(100% - 70px);
@@ -3844,8 +3892,18 @@ body.body_fz_18 {
     width: 70px;
     text-align: center;
     border-radius: 0;
-    font-size: 1.4rem;
-    height: auto;
+  }
+
+  #frame.indent .sidebar .sidebar__option button i {
+    font-size: 18px;
+  }
+
+  #frame.indent .sidebar .sidebar__option button svg {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    position: relative;
+    top: -1px;
   }
 
   #frame.indent .sidebar .sidebar__option button span {
@@ -3859,7 +3917,7 @@ body.body_fz_18 {
   }
 
   #frame.indent .contacts {
-    height: calc(100% - 282px);
+    height: calc(100% - 300px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
   }
@@ -3894,11 +3952,11 @@ body.body_fz_18 {
   .sidebar .profile,
   .sidebar-collapse-btn,
   .sidebar__option {
-    width: 350px;
+    width: 390px;
   }
 
   .content {
-    width: calc(100% - 350px);
+    width: calc(100% - 390px);
   }
 }
  
