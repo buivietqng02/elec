@@ -67,7 +67,7 @@ define([
         TOKEN 
     } = constant;
 
-    const { setGeneral, getGeneral } = offlineData;
+    const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
 
     // const onSetUpWebSocket = (userId) => {
@@ -141,7 +141,6 @@ define([
 
         // Store chat room list
         GLOBAL.setRoomsWithAdapter(res.chats);
-        
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
         sidebarRoomListComp.onInit();
@@ -254,9 +253,15 @@ define([
         }
 
         const data = await getGeneral();
+
         if (data && data.length) {
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
+            try {
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            } catch (err) {
+                console.log(err);
+                clear();
+            }
         }
 
         initInformationFromAPI();

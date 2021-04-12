@@ -1,5 +1,6 @@
 define([
     'app/constant',
+    'shared/offlineData',
     'shared/functions',
     'features/modal/modalUserInterface',
     'features/modal/modalInvite',
@@ -9,6 +10,7 @@ define([
     'features/modal/modalChangeLanguage'
 ], (
     constant,
+    offlineData,
     functions,
     modalUserInterfaceComp,
     modalInviteComp,
@@ -85,6 +87,7 @@ define([
     };
 
     const onLogout = () => {
+        offlineData.clear();
         functions.removeDataInLocalApplication(SESSION_ID);
         functions.removeDataInLocalApplication(TOKEN);
         window.location = 'login.html';
