@@ -273,7 +273,11 @@ define([
         storeRoomById(roomInfo.id, messages);
 
         handleDataFromGetMess(messages, roomInfo, positionRoom);
-    }).catch(onErrNetWork);
+    }).catch(err => {
+        if (err === 19940402) {
+            onErrNetWork(err);
+        }
+    });
 
     const onGetMessageFromCache = (roomInfo, positionRoom) => {
         handleDataFromGetMess(getRoomById(roomInfo.id), roomInfo, positionRoom);

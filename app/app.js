@@ -193,6 +193,25 @@ define([
             onGetPrefrences(data[1]);
             onGetValidate(data[0]);
             // onSetUpWebSocket(data[0].data.user.id);
+        }).catch((err) => {
+            if (err === 19940402) {
+                setTimeout(() => {
+                    if (!isRunFristTime && GLOBAL.getNetworkStatus()) {
+                        isRunFristTime = true;
+                        const id = GLOBAL.getCurrentRoomId();
+                        if (id) {
+                            const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${id}"]`);
+                            GLOBAL.setCurrentRoomId(null);
+                            $activeRoom.click();
+                            GLOBAL.setCurrentRoomId(id);
+                        }
+        
+                        setTimeout(initInformationFromAPI, 1000); 
+                    } else {
+                        initInformationFromAPI();
+                    }
+                }, 2500);
+            }
         });
     };
 
@@ -216,27 +235,6 @@ define([
             } else if (document.selection) { 
                 // IE?
                 document.selection.empty();
-            }
-        });
-
-        window.addEventListener('offline', () => {
-            GLOBAL.setNetworkStatus(false);
-        });
-
-        window.addEventListener('online', () => {
-            GLOBAL.setNetworkStatus(true);
-
-            if (!isRunFristTime) {
-                isRunFristTime = true;
-                const id = GLOBAL.getCurrentRoomId();
-                if (id) {
-                    const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${id}"]`);
-                    GLOBAL.setCurrentRoomId(null);
-                    $activeRoom.click();
-                    GLOBAL.setCurrentRoomId(id);
-                }
-
-                setTimeout(initInformationFromAPI, 1000); 
             }
         });
     };

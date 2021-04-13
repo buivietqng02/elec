@@ -1,4 +1,16 @@
-define(['app/constant', 'shared/functions'], (constant, functions) => {
+define([
+    'shared/data',
+    'app/constant', 
+    'shared/functions',
+    'shared/offlineData',
+    'axios'
+], (
+    GLOBAL,
+    constant, 
+    functions,
+    offlineData,
+    axios
+) => {
     const {
         TOKEN,
         SESSION_ID,
@@ -36,52 +48,50 @@ define(['app/constant', 'shared/functions'], (constant, functions) => {
     };
 
     // Interceptors
-    const originalFetch = fetch;
-    fetch = function () {
-        return originalFetch.apply(this, arguments).then((res) => {
-            if (res.status === 401) {
-                functions.removeDataInLocalApplication(SESSION_ID);
-                functions.removeDataInLocalApplication(TOKEN);
-                window.location = 'login.html';
-                return res.json().then(err => { throw err; });
-            }
+    axios.interceptors.response.use((response) => {
+        GLOBAL.setNetworkStatus(true);
+        return response.data;
+    }, (error) => {
+        if (!error.status) {
+            GLOBAL.setNetworkStatus(false);
+            return Promise.reject(19940402);
+        } else {
+            GLOBAL.setNetworkStatus(true);
+        }
 
-            const contentType = res.headers.get('content-type');
-            if (contentType && contentType.indexOf('application/json') !== -1) {
-                return res.json();
-            } 
+        if (error.response.status === 401) {
+            offlineData.clear();
+            functions.removeDataInLocalApplication(SESSION_ID);
+            functions.removeDataInLocalApplication(TOKEN);
+            window.location = 'login.html';
+        }
+
+        if (error.response.status === 403) {
             
-            return res.text();
-        });
-    };
+        }
+
+        return Promise.reject(error);
+    });
     
     return {
-        get: (endpoint = '', params = {}) => fetch(`${API_URL}/${endpoint}${toQueryString(params)}`, {
-            method: 'GET',
+        get: (endpoint = '', params = {}) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
             headers: headerJson
         }),
 
-        post: (endpoint = '', params = {}) => fetch(`${API_URL}/${endpoint}`, {
-            method: 'POST',
-            headers: headerJson,
-            body: JSON.stringify(params)
-        }),
-
-        put: (endpoint = '', params = {}) => fetch(`${API_URL}/${endpoint}`, {
-            method: 'PUT',
-            headers: headerJson,
-            body: JSON.stringify(params)
-        }),
-
-        delete: (endpoint = '') => fetch(`${API_URL}/${endpoint}`, {
-            method: 'DELETE',
+        post: (endpoint = '', params = {}) => axios.post(`${API_URL}/${endpoint}`, params, {
             headers: headerJson
         }),
 
-        postForm: (endpoint = '', formData) => fetch(`${API_URL}/${endpoint}`, {
-            method: 'POST',
+        put: (endpoint = '', params = {}) => axios.put(`${API_URL}/${endpoint}`, params, {
+            headers: headerJson
+        }),
+
+        delete: (endpoint = '') => axios.delete(`${API_URL}/${endpoint}`, {
+            headers: headerJson
+        }),
+
+        postForm: (endpoint = '', formData) => axios.post(`${API_URL}/${endpoint}`, formData, {
             headers: headerForm,
-            body: formData
         })
     };
 });

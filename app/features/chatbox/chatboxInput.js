@@ -100,6 +100,13 @@ define([
         handleInputAutoExpand();
     };
 
+    const onErrFetch = (err) => {
+        console.log(err);
+        if (err === 19940402) {
+            setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 3000)
+        }
+    };
+
     const postMessage = (data) => {
         if (data.isDelete) {
             API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
@@ -107,29 +114,18 @@ define([
                 if (messagesWaitProcessingArr.length) {
                     postMessage(messagesWaitProcessingArr[0]);
                 }
-            }).catch(() => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000))
+            }).catch(onErrFetch);
+            
             return;
         }
 
         if (data.messageId) {
-            $.ajax({
-                type: 'PUT',
-                url: `${constant.API_URL}/chats/${data.chatId}/messages/${data.messageId}`,
-                data: data.params.message,
-                headers: {
-                    'X-Authorization-Token': token
-                },
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: () => {
-                    messagesWaitProcessingArr.shift();
-                    if (messagesWaitProcessingArr.length) {
-                        postMessage(messagesWaitProcessingArr[0]);
-                    }
-                },
-                error: () => setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
-            });
+            API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
+                messagesWaitProcessingArr.shift();
+                if (messagesWaitProcessingArr.length) {
+                    postMessage(messagesWaitProcessingArr[0]);
+                }
+            }).catch(onErrFetch);
 
             return;
         }
@@ -144,12 +140,7 @@ define([
             if (messagesWaitProcessingArr.length) {
                 postMessage(messagesWaitProcessingArr[0]);
             }
-        }).catch((err) => {
-            console.log(err);
-            if (!GLOBAL.getNetworkStatus()) {
-                setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 5000)
-            }
-        })
+        }).catch(onErrFetch);
     };
 
     const onSendMessage = () => {
