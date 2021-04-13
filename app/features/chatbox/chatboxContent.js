@@ -21,6 +21,7 @@ define([
     chatboxTopbarComp,
     messageSettingsSlideComp
 ) => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
     const { 
         ATTRIBUTE_SIDEBAR_ROOM, 
@@ -58,7 +59,7 @@ define([
     const $loadingOfNew = $('.--load-mess');
     const $unreadScroll = $('.unread-message-scroll');
 
-    const onWrapperScroll = () => {
+    const onWrapperScroll = (event) => {
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
             $btnScrollToBottom.show();
@@ -78,7 +79,8 @@ define([
         // condition 1: When the request is being processed, this action will skip, prevent user spam
         // condition 2: If message number gets from API have length small than 20, this action will skip
         // condition 3: When scroll to near bottom, get more messages
-        if (processing || isTouchLastMess || $wrapper.scrollTop() > 700) {
+        const isToPosition = isMobile ?  $wrapper.scrollTop() > 1 : $wrapper.scrollTop() > 700
+        if (processing || isTouchLastMess || isToPosition) {
             return;
         }
 
@@ -168,6 +170,7 @@ define([
     const onGetMoreMessageByScrolling = () => {
         let id = GLOBAL.getCurrentRoomId();
         let messages = getRoomById(id);
+        const wrapperHtml = $wrapper.get(0);
 
         const params = {
             chatId: id,
@@ -193,8 +196,9 @@ define([
             lastOffset = moreMessages[0]?.sequence;
 
             storeRoomById(id, [...moreMessages, ...messages]);
-            $wrapper.scrollTop($wrapper.scrollTop() + 1);
+            const pos = wrapperHtml.scrollHeight + $wrapper.scrollTop();
             $messageList.prepend(messagesHtml);
+            $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
             setTimeout(() => {
                 processing = false;
             }, 50);
@@ -205,6 +209,7 @@ define([
         let messagesHtml = '';
         let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
+        const timeWait = isMobile ? 300 : 50;
 
         // Mark when got all messages in this chat room
         if (messages.length < 20) {
@@ -240,7 +245,7 @@ define([
         setTimeout(() => {
             updateRoomInfo(roomInfo, positionRoom);
             processing = false;
-        }, 50);
+        }, timeWait);
     };
 
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
@@ -268,7 +273,11 @@ define([
         storeRoomById(roomInfo.id, messages);
 
         handleDataFromGetMess(messages, roomInfo, positionRoom);
-    }).catch(onErrNetWork);
+    }).catch(err => {
+        if (err === 19940402) {
+            onErrNetWork(err);
+        }
+    });
 
     const onGetMessageFromCache = (roomInfo, positionRoom) => {
         handleDataFromGetMess(getRoomById(roomInfo.id), roomInfo, positionRoom);

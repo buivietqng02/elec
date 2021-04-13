@@ -67,7 +67,7 @@ define([
         TOKEN 
     } = constant;
 
-    const { setGeneral, getGeneral } = offlineData;
+    const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
 
     // const onSetUpWebSocket = (userId) => {
@@ -141,7 +141,6 @@ define([
 
         // Store chat room list
         GLOBAL.setRoomsWithAdapter(res.chats);
-        
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
         sidebarRoomListComp.onInit();
@@ -194,6 +193,25 @@ define([
             onGetPrefrences(data[1]);
             onGetValidate(data[0]);
             // onSetUpWebSocket(data[0].data.user.id);
+        }).catch((err) => {
+            if (err === 19940402) {
+                setTimeout(() => {
+                    if (!isRunFristTime && GLOBAL.getNetworkStatus()) {
+                        isRunFristTime = true;
+                        const id = GLOBAL.getCurrentRoomId();
+                        if (id) {
+                            const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${id}"]`);
+                            GLOBAL.setCurrentRoomId(null);
+                            $activeRoom.click();
+                            GLOBAL.setCurrentRoomId(id);
+                        }
+        
+                        setTimeout(initInformationFromAPI, 1000); 
+                    } else {
+                        initInformationFromAPI();
+                    }
+                }, 2500);
+            }
         });
     };
 
@@ -219,27 +237,6 @@ define([
                 document.selection.empty();
             }
         });
-
-        window.addEventListener('offline', () => {
-            GLOBAL.setNetworkStatus(false);
-        });
-
-        window.addEventListener('online', () => {
-            GLOBAL.setNetworkStatus(true);
-
-            if (!isRunFristTime) {
-                isRunFristTime = true;
-                const id = GLOBAL.getCurrentRoomId();
-                if (id) {
-                    const $activeRoom = $(`[${ATTRIBUE_SIDEBAR_ROOM}="${id}"]`);
-                    GLOBAL.setCurrentRoomId(null);
-                    $activeRoom.click();
-                    GLOBAL.setCurrentRoomId(id);
-                }
-
-                setTimeout(initInformationFromAPI, 1000); 
-            }
-        });
     };
 
     const onInit = async () => {
@@ -254,9 +251,15 @@ define([
         }
 
         const data = await getGeneral();
+
         if (data && data.length) {
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
+            try {
+                onGetPrefrences(data[1]);
+                onGetValidate(data[0]);
+            } catch (err) {
+                console.log(err);
+                clear();
+            }
         }
 
         initInformationFromAPI();

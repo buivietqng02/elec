@@ -1,14 +1,20 @@
 define(['idb-keyval'], (idbKeyval) => {
     const CHATS = 'chats';
     const GENERAL = 'general';
-    const { set, get } = idbKeyval;
+    const {
+        set,
+        get,
+        createStore,
+        clear
+    } = idbKeyval;
     const ob = {};
+    const store = createStore('xm', 'xm');
 
-    ob.getChatById = (id) => get(CHATS).then((chats) => chats[id]);
+    ob.getChatById = (id) => get(CHATS, store).then((chats) => chats[id]).catch(() => null);
 
-    ob.getChats = () => get(CHATS).then((chats) => chats);
+    ob.getChats = () => get(CHATS, store).then((chats) => chats).catch(() => null);
 
-    ob.setChats = value => set(CHATS, value);
+    ob.setChats = value => set(CHATS, value, store);
 
     ob.setChatsById = (id, value) => get(CHATS).then((chats) => {
         let tempChats;
@@ -23,9 +29,11 @@ define(['idb-keyval'], (idbKeyval) => {
         ob.setChats(tempChats);
     });
 
-    ob.getGeneral = () => get(GENERAL).then(data => data);
+    ob.getGeneral = () => get(GENERAL, store).then(data => data).catch(() => null);
 
-    ob.setGeneral = (value) => set(GENERAL, value);
+    ob.setGeneral = (value) => set(GENERAL, value, store);
+
+    ob.clear = () => clear(store);
 
     return ob;
 });

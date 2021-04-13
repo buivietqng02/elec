@@ -4,6 +4,13 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.8] - 2021-04-13
+### Update
+- Fix issue loading previous messages on Safari.
+- Fix issue when access use Private Mode on Firefox.
+- Fix issue when adding messages on Safari.
+- Refactor API access.
+
 ### [3.7] - 2021-03-31
 ### Update
 - Use 'sequence' property instead of 'id.messageId', as 'offset' when getting messages.

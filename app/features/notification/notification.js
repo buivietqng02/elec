@@ -18,7 +18,23 @@ define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
     };
 
     return {
-        onInit: () => Notification.requestPermission().then(() => {}),
+        onInit: () => {
+            if (window.Notification) {
+                if (!('Notification' in window)) {
+                    return;
+                }
+                
+                try {
+                    Notification.requestPermission().then(() => {});
+                } catch (error) {
+                    if (error instanceof TypeError) {
+                        Notification.requestPermission();
+                    } else {
+                        throw error;
+                    }
+                }  
+            }
+        },
 
         pushNotificationForMessage: message => {
             const info = GLOBAL.getInfomation();
