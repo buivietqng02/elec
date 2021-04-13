@@ -42,18 +42,18 @@ define([
             <div class="styled-checkbox"></div>
         </div>
     `;
-    const selectedTemplate = `
+    const renderSelectedTemplate = (langJson) => `
         <div ${constant.ATTRIBUTE_CHANGE_NAME}="{id}" data-mcgs-id="{id}" class="crm-room {admin}">
             <img class="--img avatar" src="{src}">
             <span ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</span>
             <div class="crmr-group-icon">
-                <div class="crmrgi-icon crmrgii-admin" data-toggle="tooltip" data-placement="left" title="Granting administrator permissions">
+                <div class="crmrgi-icon crmrgii-admin" data-toggle="tooltip" data-placement="left" title="${langJson.GRANTING_ADMINISTRATOR}" data-lang-type="tooltip" data-language="GRANTING_ADMINISTRATOR">
                     ${ICON.ADMIN}
                 </div>
-                <div class="crmrgi-icon crmrgii-removeadmin" data-toggle="tooltip" data-placement="left" title="Removing administrator permissions">
+                <div class="crmrgi-icon crmrgii-removeadmin" data-toggle="tooltip" data-placement="left" title="${langJson.REMOVING_ADMINISTRATOR}" data-lang-type="tooltip" data-language="REMOVING_ADMINISTRATOR">
                     ${ICON.REMOVE_ADMIN}
                 </div>
-                <div class="crmrgi-icon crmrgii-cross" data-toggle="tooltip" data-placement="left" title="Remove this member">
+                <div class="crmrgi-icon crmrgii-cross" data-toggle="tooltip" data-placement="left" title="${langJson.REMOVE_MEMBER}" data-lang-type="tooltip" data-language="REMOVE_MEMBER">
                     ${ICON.CROSS}
                 </div>
             </div>
@@ -193,7 +193,7 @@ define([
             }).sort((a, b) => a.currentName.localeCompare(b.currentName));
 
             $this.attr('data-mcgi-selected', mcgId);
-            $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+            $selectedWrapper.html(arrUserId.map(room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)));
             $modal.find('[data-toggle="tooltip"]').tooltip();
             if ($inputSearch.val()) {
                 handleSearch();
@@ -409,7 +409,7 @@ define([
                 });
 
                 arrUserId.sort((a, b) => a.currentName.localeCompare(b.currentName));
-                $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+                $selectedWrapper.html(arrUserId.map(room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)));
                 $modal.find('[data-toggle="tooltip"]').tooltip();
             }
         });
