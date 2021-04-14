@@ -1,20 +1,20 @@
 define([
     'app/constant',
     'shared/icon',
-    'shared/api', 
-    'shared/data', 
-    'shared/functions', 
+    'shared/api',
+    'shared/data',
+    'shared/functions',
     'shared/alert'
 ], (
     constant,
     ICON,
-    API, 
-    GLOBAL, 
-    functions, 
+    API,
+    GLOBAL,
+    functions,
     ALERT
 ) => {
-    const { 
-        render, 
+    const {
+        render,
         debounce,
         getAvatar,
         htmlDecode,
@@ -193,7 +193,9 @@ define([
             }).sort((a, b) => a.currentName.localeCompare(b.currentName));
 
             $this.attr('data-mcgi-selected', mcgId);
-            $selectedWrapper.html(arrUserId.map(room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)));
+            $selectedWrapper.html(arrUserId.map(
+                room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)
+            ));
             $modal.find('[data-toggle="tooltip"]').tooltip();
             if ($inputSearch.val()) {
                 handleSearch();
@@ -219,7 +221,7 @@ define([
         const { mcgsId } = $this.data();
 
         arrUserId = arrUserId.map(user => {
-            const newUser = { ...user }; 
+            const newUser = { ...user };
             if (user.id === mcgsId) {
                 $this.addClass('admin');
                 newUser.admin = 'admin';
@@ -235,13 +237,13 @@ define([
         const { mcgsId } = $this.data();
 
         arrUserId = arrUserId.map(user => {
-            const newUser = { ...user }; 
+            const newUser = { ...user };
             if (user.id === mcgsId) {
                 $this.removeClass('admin');
                 delete newUser.admin;
                 delete newUser.data.admin;
             }
-             
+
             return newUser;
         });
     };
@@ -299,7 +301,7 @@ define([
                         if (roomId === room.id) {
                             tempRoom.subject = params.subject;
                         }
-                        
+
                         return tempRoom;
                     }));
 
@@ -312,14 +314,14 @@ define([
                         }
                     })));
                     */
-                    
+
                     $closeBtn.click();
                 }
             }).catch(onErrNetWork);
 
             return;
         }
-        
+
         API.post('chats', params).then((chat) => {
             if (chat) {
                 const html = sidebarRoomListComp.onRenderRoom(chat);
@@ -387,7 +389,7 @@ define([
                 res.members.forEach(member => {
                     const obRoomEdit = GLOBAL.getRoomInfoWasEdited()[member.user.id];
                     const crName = obRoomEdit?.user_name ? obRoomEdit.user_name : member.user.name;
-                    const arrItem = { 
+                    const arrItem = {
                         id: member.user.id,
                         currentName: htmlEncode(crName),
                         src: getAvatar(member.user.id),
@@ -398,18 +400,20 @@ define([
                             selected: true
                         }
                     };
-        
+
                     if (member.admin) {
                         arrItem.admin = 'admin';
                         arrItem.data.admin = true;
                     }
-                    
+
                     $(`[data-mcg-id="${member.user.id}"]`).attr('data-mcgi-selected', member.user.id);
                     arrUserId = arrUserId.concat(arrItem);
                 });
 
                 arrUserId.sort((a, b) => a.currentName.localeCompare(b.currentName));
-                $selectedWrapper.html(arrUserId.map(room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)));
+                $selectedWrapper.html(arrUserId.map(
+                    room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)
+                ));
                 $modal.find('[data-toggle="tooltip"]').tooltip();
             }
         });

@@ -1,4 +1,4 @@
-define(['shared/data'],(GLOBAL) => {
+define(['shared/data'], (GLOBAL) => {
     let isModalRendered = false;
     let $modal;
     let $btnRefresh;
