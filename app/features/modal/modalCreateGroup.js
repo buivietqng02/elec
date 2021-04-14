@@ -428,7 +428,7 @@ define([
 
             // handle edit group
             if (id) {
-                $title.html('Edit group chat');
+                $title.html(GLOBAL.getLangJson().EDIT_GROUP);
                 onEditInit(id);
             }
         }
