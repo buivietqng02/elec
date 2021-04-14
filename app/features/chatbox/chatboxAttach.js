@@ -161,13 +161,17 @@ define([
         if (e.originalEvent.dataTransfer.items && e.originalEvent.dataTransfer.items.length) {
             const item = e.originalEvent.dataTransfer.items[0];
             const file = item.getAsFile();
+            const langJson = GLOBAL.getLangJson();
             
             if (!item.type) {
                 return;
             }
 
             functions.confirm({
-                des: 'Are you sure you want to send this file?',
+                title: langJson.ARE_YOU_SURE,
+                textOk: langJson.OK,
+                textCancel: langJson.CANCEL,
+                des: langJson.ARE_YOU_SURE_SEND_FILE,
                 onOk: () => checkFile(file)
             });
         }
