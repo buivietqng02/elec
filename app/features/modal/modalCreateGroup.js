@@ -241,7 +241,7 @@ define([
                 delete newUser.admin;
                 delete newUser.data.admin;
             }
-
+             
             return newUser;
         });
     };
