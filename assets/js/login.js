@@ -815,7 +815,7 @@ $(document).on('click', '.js-btn-send-code', function(e){
 
 });
 
-
+/*******Check is mobile********/
 const  appDownloadContent = `
   <a class="download-app__link"
       href="https://play.google.com/store/apps/details?id=net.iptp.chat&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
