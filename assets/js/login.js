@@ -816,6 +816,30 @@ $(document).on('click', '.js-btn-send-code', function(e){
 });
 
 
+const  appDownloadContent = `
+  <a class="download-app__link"
+      href="https://play.google.com/store/apps/details?id=net.iptp.chat&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+      target="_blank" rel="nofollow">
+      <img class="download-app__img" src="assets/images/google-play-badge.png"
+          alt="Download Cross Messenger for Android">
+  </a>
+  <a class="download-app__link" href="https://apps.apple.com/us/app/cross-messenger/id1498791933?ls=1"
+      target="_blank" rel="nofollow">
+      <img class="download-app__img" src="assets/images/appstore-badge2.png"
+          alt="Download Cross Messenger for iOS">
+  </a>
+  <a class="download-app__link apk" href="https://fstor.iptp.net/files/xm.apk" target="_blank" rel="nofollow">
+      Download Android APK
+  </a>
+`;
+
+function isMobileDevice() {            
+  return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);            
+};
+
+if(!isMobileDevice()){
+  $('.download-app').append(appDownloadContent);
+}
 
 
 
