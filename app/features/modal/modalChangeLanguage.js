@@ -49,6 +49,16 @@ define([
                             ${ICON.SPANISH}
                             <span class="clmi-text">Español</span>
                         </div>
+                        <div class="clm-item" data-type="${LANGUAGES.chinese_simplified}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.CHINESE}
+                            <span class="clmi-text">简化字</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.chinese_traditional}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.CHINESE}
+                            <span class="clmi-text">正體字</span>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
