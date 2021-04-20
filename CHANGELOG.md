@@ -4,6 +4,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.9] - 2021-04-19
+### Added
+- Added languages: Chinese Simplified and Chinese Traditional.
+- Other minor fixes.
+
 ### [3.8] - 2021-04-13
 ### Update
 - Fix issue loading previous messages on Safari.

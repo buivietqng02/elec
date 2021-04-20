@@ -15,8 +15,8 @@ define([
     ALERT,
     sidebarService
 ) => {
-    const { 
-        render, 
+    const {
+        render,
         debounce,
         getAvatar,
         htmlDecode,
@@ -44,18 +44,18 @@ define([
             <div class="styled-checkbox"></div>
         </div>
     `;
-    const selectedTemplate = `
+    const renderSelectedTemplate = (langJson) => `
         <div ${constant.ATTRIBUTE_CHANGE_NAME}="{id}" data-mcgs-id="{id}" class="crm-room {admin}">
             <img class="--img avatar" src="{src}">
             <span ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</span>
             <div class="crmr-group-icon">
-                <div class="crmrgi-icon crmrgii-admin" data-toggle="tooltip" data-placement="left" title="Granting administrator permissions">
+                <div class="crmrgi-icon crmrgii-admin" data-toggle="tooltip" data-placement="left" title="${langJson.GRANTING_ADMINISTRATOR}" data-lang-type="tooltip" data-language="GRANTING_ADMINISTRATOR">
                     ${ICON.ADMIN}
                 </div>
-                <div class="crmrgi-icon crmrgii-removeadmin" data-toggle="tooltip" data-placement="left" title="Removing administrator permissions">
+                <div class="crmrgi-icon crmrgii-removeadmin" data-toggle="tooltip" data-placement="left" title="${langJson.REMOVING_ADMINISTRATOR}" data-lang-type="tooltip" data-language="REMOVING_ADMINISTRATOR">
                     ${ICON.REMOVE_ADMIN}
                 </div>
-                <div class="crmrgi-icon crmrgii-cross" data-toggle="tooltip" data-placement="left" title="Remove this member">
+                <div class="crmrgi-icon crmrgii-cross" data-toggle="tooltip" data-placement="left" title="${langJson.REMOVE_MEMBER}" data-lang-type="tooltip" data-language="REMOVE_MEMBER">
                     ${ICON.CROSS}
                 </div>
             </div>
@@ -195,7 +195,9 @@ define([
             }).sort((a, b) => a.currentName.localeCompare(b.currentName));
 
             $this.attr('data-mcgi-selected', mcgId);
-            $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+            $selectedWrapper.html(arrUserId.map(
+                room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)
+            ));
             $modal.find('[data-toggle="tooltip"]').tooltip();
             if ($inputSearch.val()) {
                 handleSearch();
@@ -221,7 +223,7 @@ define([
         const { mcgsId } = $this.data();
 
         arrUserId = arrUserId.map(user => {
-            const newUser = { ...user }; 
+            const newUser = { ...user };
             if (user.id === mcgsId) {
                 $this.addClass('admin');
                 newUser.admin = 'admin';
@@ -237,7 +239,7 @@ define([
         const { mcgsId } = $this.data();
 
         arrUserId = arrUserId.map(user => {
-            const newUser = { ...user }; 
+            const newUser = { ...user };
             if (user.id === mcgsId) {
                 $this.removeClass('admin');
                 delete newUser.admin;
@@ -291,17 +293,16 @@ define([
                         if (roomId === room.id) {
                             tempRoom.subject = params.subject;
                         }
-                        
+
                         return tempRoom;
                     }));
-                    
                     $closeBtn.click();
                 }
             }).catch(onErrNetWork);
 
             return;
         }
-        
+
         API.post('chats', params).then((chat) => {
             if (chat) {
                 GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chat), ...GLOBAL.getRooms()]);
@@ -368,7 +369,7 @@ define([
                 res.members.forEach(member => {
                     const obRoomEdit = GLOBAL.getRoomInfoWasEdited()[member.user.id];
                     const crName = obRoomEdit?.user_name ? obRoomEdit.user_name : member.user.name;
-                    const arrItem = { 
+                    const arrItem = {
                         id: member.user.id,
                         currentName: htmlEncode(crName),
                         src: getAvatar(member.user.id),
@@ -379,18 +380,20 @@ define([
                             selected: true
                         }
                     };
-        
+
                     if (member.admin) {
                         arrItem.admin = 'admin';
                         arrItem.data.admin = true;
                     }
-                    
+
                     $(`[data-mcg-id="${member.user.id}"]`).attr('data-mcgi-selected', member.user.id);
                     arrUserId = arrUserId.concat(arrItem);
                 });
 
                 arrUserId.sort((a, b) => a.currentName.localeCompare(b.currentName));
-                $selectedWrapper.html(arrUserId.map(room => render(selectedTemplate, room)));
+                $selectedWrapper.html(arrUserId.map(
+                    room => render(renderSelectedTemplate(GLOBAL.getLangJson()), room)
+                ));
                 $modal.find('[data-toggle="tooltip"]').tooltip();
             }
         });
@@ -409,7 +412,7 @@ define([
 
             // handle edit group
             if (id) {
-                $title.html('Edit group chat');
+                $title.html(GLOBAL.getLangJson().EDIT_GROUP);
                 onEditInit(id);
             }
         }
