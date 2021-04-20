@@ -141,6 +141,7 @@ define([
                 $image.on('error', () => $image.attr('src', '/assets/images/group.svg'));
                 $name.text(roomInfo.subject);
                 $name.removeAttr(constant.ATTRIBUTE_CHANGE_NAME);
+                $name.attr(constant.ATTRIBUTE_CHANGE_GROUP_NAME, roomInfo.id);
                 $editBtn.show();
                 $internalBtn.show();
                 $leaveBtn.show();
@@ -155,6 +156,7 @@ define([
                 $image.on('error', () => $image.attr('src', '/assets/images/user.jpg'));
                 $name.text(userName);
                 $name.attr(constant.ATTRIBUTE_CHANGE_NAME, userId);
+                $name.removeAttr(constant.ATTRIBUTE_CHANGE_GROUP_NAME);
                 $editBtn.hide();
                 $internalBtn.hide();
                 $leaveBtn.hide();
@@ -174,10 +176,6 @@ define([
             } else {
                 $timeActivity.html(`<lang data-language="LAST_SEEN">${GLOBAL.getLangJson().LAST_SEEN}</lang> ${moment(time).fromNow()}`);
             }
-        },
-
-        onUpdateTitle: (title) => {
-            $name.text(title);
         }
     };
 });

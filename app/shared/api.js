@@ -52,7 +52,7 @@ define([
         GLOBAL.setNetworkStatus(true);
         return response.data;
     }, (error) => {
-        if (!error.status) {
+        if (!error.response) {
             GLOBAL.setNetworkStatus(false);
             return Promise.reject(19940402);
         } else {

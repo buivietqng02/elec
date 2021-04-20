@@ -149,7 +149,7 @@ define([
         const roomId = GLOBAL.getCurrentRoomId();
         let text = $input.val();
         let data = {};
-        
+
         if (!text.replace(/[\s\n]/g, '') && !deleteState) {
             onClear();
             return;

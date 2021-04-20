@@ -223,7 +223,7 @@ define([
             $input.get(0).select();
             $input.get(0).setSelectionRange(0, 99999);
             document.execCommand('copy');
-            ALERT.show('Link copied to clipboard', 'success');
+            ALERT.show(GLOBAL.getLangJson().COPY_TO_CLIPBOARD, 'success');
             if (window.getSelection) {
                 if (window.getSelection().empty) { 
                     // Chrome

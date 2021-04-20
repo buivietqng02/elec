@@ -4,14 +4,16 @@ define([
     'shared/api', 
     'shared/data', 
     'shared/functions', 
-    'shared/alert'
+    'shared/alert',
+    'features/sidebar/sidebarService'
 ], (
     constant,
     ICON,
     API, 
     GLOBAL, 
     functions, 
-    ALERT
+    ALERT,
+    sidebarService
 ) => {
     const { 
         render, 
@@ -270,8 +272,6 @@ define([
             return;
         }
 
-        const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
-        const chatboxTopbarComp = require('features/chatbox/chatboxTopbar');
         $saveBtn.addClass('loading-btn');
         isProcess = true;
         const params = {
@@ -283,16 +283,8 @@ define([
         if (editId) {
             const roomId = GLOBAL.getCurrentRoomId();
             API.put('chats', params).then((chat) => {
-                /*
-                if (chat.status === 403) {
-                    $closeBtn.click();
-                    ALERT.show("Sorry, you don't have permission to perform this action");
-                }
-                */
-
                 if (chat) {
-                    chatboxTopbarComp.onUpdateTitle(params.subject);
-                    sidebarRoomListComp.onUpdateRoomName(roomId, params.subject);
+                    $(`[${constant.ATTRIBUTE_CHANGE_GROUP_NAME}="${roomId}"]`).text(params.subject);
 
                     GLOBAL.setRooms(GLOBAL.getRooms().map(room => {
                         const tempRoom = { ...room };
@@ -302,16 +294,6 @@ define([
                         
                         return tempRoom;
                     }));
-
-                    /*
-                    GLOBAL.setCurrentGroupMembers(arrUserId.map(member => ({
-                        admin: !!member.admin,
-                        user: {
-                            id: member.id,
-                            name: member.name
-                        }
-                    })));
-                    */
                     
                     $closeBtn.click();
                 }
@@ -322,9 +304,8 @@ define([
         
         API.post('chats', params).then((chat) => {
             if (chat) {
-                const html = sidebarRoomListComp.onRenderRoom(chat);
                 GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chat), ...GLOBAL.getRooms()]);
-                sidebarRoomListComp.onPrepend(html);
+                sidebarService.newRoomUp(chat);
                 $closeBtn.click();
             }
         }).catch(onErrNetWork);

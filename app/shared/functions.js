@@ -131,7 +131,7 @@ define(['moment', 'app/constant'], (moment, constant) => ({
         try {
             const base64regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
             if (base64regex.test(string)) {
-                text = decodeURIComponent(escape(window.atob(string)));;
+                text = decodeURIComponent(escape(window.atob(string)));
             } else {
                 text = string;
             }

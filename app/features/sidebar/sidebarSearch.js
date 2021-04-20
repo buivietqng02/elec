@@ -1,11 +1,13 @@
 define([
     'app/constant',
     'shared/data', 
-    'shared/functions'
+    'shared/functions',
+    'features/sidebar/sidebarService'
 ], (
     constant,
     GLOBAL,
-    functions
+    functions,
+    sidebarService
 ) => {
     const { debounce } = functions;
     let currentOptions = 1;
@@ -19,24 +21,8 @@ define([
     const $resetInputBtn = $wrapper.find('.clearable__clear');
 
     const onSearch = debounce(() => {
-        const $rooms = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`);
         const value = $input.val().trim().toUpperCase();
-
-        $rooms.removeAttr('data-search-sidebar-hide');
-        if (!value) {
-            return;
-        }
-
-        $rooms.each(i => {
-            const $room = $rooms.eq(i);
-            const name = $room.find('[data-userid-name]').html();
-
-            if (String(name).toUpperCase().indexOf(value) > -1) {
-                $room.removeAttr('data-search-sidebar-hide');
-            } else {
-                $room.attr('data-search-sidebar-hide', true);
-            }
-        });
+        sidebarService.onChangeSearch(value);
     }, 300);
 
     const offEventClickOutside = () => {
@@ -59,7 +45,6 @@ define([
     };
 
     const onChangeFilter = (e) => {
-        const $rooms = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`);
         const $this = $(e.currentTarget);
         const { s } = $this.data();
         offEventClickOutside();
@@ -71,33 +56,7 @@ define([
         currentOptions = s;
         $options.removeClass('active');
         $this.addClass('active');
-        $rooms.removeAttr('data-filter-sidebar-hide');
-
-        // filter with all
-        if (s === 1) {
-            return;
-        }
-
-        $rooms.each(i => {
-            const $room = $rooms.eq(i);
-            const { isGroup } = $room.data();
-            // filter with unread
-            if (s === 2 && !$room.find('.badge.badge-orange').html()) {
-                $room.attr('data-filter-sidebar-hide', true);
-                return;
-            }
-
-            // filter with group
-            if (s === 3 && !isGroup) {
-                $room.attr('data-filter-sidebar-hide', true);
-                return;
-            }
-
-            // filter with direct
-            if (s === 4 && isGroup) {
-                $room.attr('data-filter-sidebar-hide', true);
-            }
-        });
+        sidebarService.onChangeFilter(Number(s));
     };
 
     const onExpandSidebar = () => {
@@ -111,8 +70,8 @@ define([
     };
 
     const resetInput = () => {
-        $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`).removeAttr('data-search-sidebar-hide');
         $input.val('');
+        sidebarService.onChangeSearch('');
     };
 
     return {
