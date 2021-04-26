@@ -51,7 +51,7 @@ define([
     let unreadScrollNum = 0;
     let processing = false;
     let isTouchLastMess = false;
-    let isTouchFirstMess = true;
+    let isSearchMode = false;
     let isInit = false;
     const $btnScrollToBottom = $('.scroll-to__bottom');
     const $messageList = $('.messages__list');
@@ -64,23 +64,17 @@ define([
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
             $btnScrollToBottom.show();
         } else {
-            if (isTouchFirstMess) {
-                unreadScrollNum = 0;
-                $unreadScroll.text(0);
-                $unreadScroll.hide();
-                $btnScrollToBottom.hide();
-            }
-        }
-
-        if (!isTouchFirstMess && !processing && $wrapper.scrollTop() + $wrapper.height() > $wrapper[0].scrollHeight - 700) {
-            onGetMoreMessageByScrollingUp();
+            unreadScrollNum = 0;
+            $unreadScroll.text(0);
+            $unreadScroll.hide();
+            $btnScrollToBottom.hide();
         }
 
         // condition 1: When the request is being processed, this action will skip, prevent user spam
         // condition 2: If message number gets from API have length small than 20, this action will skip
         // condition 3: When scroll to near bottom, get more messages
         const isToPosition = isMobile ?  $wrapper.scrollTop() > 1 : $wrapper.scrollTop() > 700
-        if (processing || isTouchLastMess || isToPosition) {
+        if (processing || isTouchLastMess || isToPosition || isSearchMode) {
             return;
         }
 
@@ -93,19 +87,7 @@ define([
     };
 
     const onScrollToBottom = () => {
-        if (!isTouchFirstMess) {
-            isTouchFirstMess = true;
-            messages = getRoomById(GLOBAL.getCurrentRoomId());
-            lastOffset = messages[0]?.sequence;
-            messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, true) + renderMessage(mess, search))).join('');
-            $messageList.html(messagesHtml);
-            setTimeout(() => {
-                isTouchLastMess = false;
-            }, 200);
-            $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
-        } else {
-            $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
-        }
+        $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
     };
 
     const updateRoomInfo = (roomInfo) => {
@@ -137,80 +119,21 @@ define([
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
 
-    const onGetMoreMessageByScrollingUp = (num = 20) => {
-        let id = GLOBAL.getCurrentRoomId();
-        let currentSearchMessages = GLOBAL.getCurrentSearchMessages();
-        let firstOffset = currentSearchMessages[currentSearchMessages.length - 1]?.sequence;
-
-        const params = {
-            chatId: id,
-            offset: firstOffset + num
-        };
-        processing = true;
-
-        API.get('messages', params).then(res => {
-            if (
-                firstOffset !== currentSearchMessages[currentSearchMessages.length - 1]?.sequence || 
-                params.chatId !== GLOBAL.getCurrentRoomId() || 
-                res.status !== 0 ||
-                isTouchFirstMess
-            ) {
-                processing = false;
-                return;
-            }
-
-            let messages = getRoomById(id);
-            let newestMessOffset = messages[messages.length - 1]?.sequence;
-            let moreMessages = res.data.messages.filter(mess => mess.sequence > firstOffset).reverse();
-
-            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'up') + renderMessage(mess))).join('');
-
-            // prevent remove over 20 messages
-            if (!messagesHtml) {
-                const messageList = getRoomById(params.chatId);
-                const [lastMessage] = messageList.slice(-1);
-                if (firstOffset >= lastMessage?.sequence) {
-                    isTouchFirstMess = true;
-                    storeRoomById(id, [...currentSearchMessages, ...moreMessages]);
-                    GLOBAL.setCurrentSearchMessages([]);
-                } else {
-                    onGetMoreMessageByScrollingUp(40);
-                }
-            }
-
-            $wrapper.scrollTop($wrapper.scrollTop() - 1);
-            $messageList.append(messagesHtml);
-            
-            if (newestMessOffset <= moreMessages[moreMessages.length - 1]?.sequence) {
-                isTouchFirstMess = true;
-                storeRoomById(id, [...currentSearchMessages, ...moreMessages]);
-                GLOBAL.setCurrentSearchMessages([]);
-            } else {
-                GLOBAL.setCurrentSearchMessages([...currentSearchMessages, ...moreMessages]);
-            }
-
-            setTimeout(() => {
-                processing = false;
-            }, 50);
-        });
-    };
-
     const onGetMoreMessageByScrolling = () => {
-        let id = GLOBAL.getCurrentRoomId();
-        const wrapperHtml = $wrapper.get(0);
-
         const params = {
-            chatId: id,
+            chatId: GLOBAL.getCurrentRoomId(),
             offset: lastOffset
         };
         processing = true;
 
         API.get('messages', params).then(res => {
-            if (params.offset !== lastOffset || params.chatId !== id || res.status !== 0) {
+            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
                 processing = false;
                 return;
             }
 
+            const wrapperHtml = $wrapper.get(0);
+            const pos = wrapperHtml.scrollHeight + $wrapper.scrollTop();
             let messagesHtml = '';
             let moreMessages = [];
 
@@ -221,14 +144,7 @@ define([
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
-
-            if (isTouchFirstMess) {
-                storeRoomById(id, [...moreMessages, ...getRoomById(id)]);
-            } else {
-                GLOBAL.setCurrentSearchMessages([...moreMessages, ...GLOBAL.getCurrentSearchMessages()]);
-            }
-
-            const pos = wrapperHtml.scrollHeight + $wrapper.scrollTop();
+            storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
             setTimeout(() => {
@@ -237,7 +153,7 @@ define([
         });
     };
 
-    const handleDataFromGetMess = (messages, roomInfo, search) => {
+    const handleDataFromGetMess = (messages, roomInfo) => {
         let messagesHtml = '';
         let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
@@ -262,7 +178,7 @@ define([
 
         lastOffset = messages[0]?.sequence;
         messagesHtml = messages.map((mess, i, messArr) => (
-            renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess, search))
+            renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
         ).join('');
         $messageList.html(messagesHtml);
 
@@ -324,7 +240,7 @@ define([
         $unreadScroll.hide();
         unreadScrollNum = 0;
         processing = true;
-        isTouchFirstMess = true;
+        isSearchMode = false;
         isTouchLastMess = false;
     };
     
@@ -375,15 +291,16 @@ define([
 
             // up unread message when scrollbar does not set at bottom 
             if (
-                $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 
-                && GLOBAL.getInfomation().id !== mess.sender.id
+                $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 && 
+                GLOBAL.getInfomation().id !== mess.sender.id &&
+                !isSearchMode
             ) {
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
                 $unreadScroll.show();
             }
 
-            if (isTouchFirstMess) {
+            if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
@@ -416,44 +333,12 @@ define([
             $message.find('.--mess').html(transformLinkTextToHTML(decodeStringBase64(message.message)));       
         },
 
-        onSearch: (search, messExist) => {
-            if (messExist && !messExist?.intoCache) {
-                $(`[${ATTRIBUTE_MESSAGE_ID}="${search.id}"] .--mess`).html(
-                    highlightText(decodeStringBase64(messExist.message), decodeStringBase64(search.value))
-                );
-            }
-
-            if (messExist && messExist?.intoCache) {
-                const currentSearchMessages = getRoomById(GLOBAL.getCurrentRoomId());
-                let roomInfo = GLOBAL.getRooms().filter((room) => {
-                    if (String(room.id) === String(search.id)) {
-                        return true;
-                    }
-        
-                    return false;
-                })[0] || {};
-                isTouchFirstMess = true;
-                roomInfo = JSON.parse(JSON.stringify(roomInfo));
-
-                handleDataFromGetMess(currentSearchMessages, roomInfo, search);
-            }
-
-            if (!messExist) {
-                const currentSearchMessages = GLOBAL.getCurrentSearchMessages();
-                let roomInfo = GLOBAL.getRooms().filter((room) => {
-                    if (String(room.id) === String(search.id)) {
-                        return true;
-                    }
-        
-                    return false;
-                })[0] || {};
-                isTouchFirstMess = false;
-                roomInfo = JSON.parse(JSON.stringify(roomInfo));
-
-                handleDataFromGetMess(currentSearchMessages, roomInfo, search);
-            }
-
-            handleScrollToUnreadMessage(search.id);
+        onSearch: (searchMessageList, search) => {
+            const messagesHtml = searchMessageList.map(mess => renderMessage(mess, search));
+            isSearchMode = true;
+            $messageList.html(messagesHtml);
+            $wrapper.scrollTop($wrapper.get(0).scrollHeight);
+            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         },
 
         onFinishPostMessage: (data) => {
@@ -523,7 +408,7 @@ define([
 
             storeRoomById(rid, messages.concat(mess));
 
-            if (isTouchFirstMess) {
+            if (!isSearchMode) {
                 $messageList.append(messagesHtml);
                 $wrapper.scrollTop(wrapperHtml.scrollHeight);
                 $messageList.find(IMAGE_CLASS).on('load', onLoadImage);

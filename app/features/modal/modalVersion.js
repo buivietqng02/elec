@@ -9,6 +9,9 @@ define(['shared/data'], (GLOBAL) => {
                         <img src="assets/images/icon.png" alt="Cross messenger">
                         <h2 data-language="CROSS_MESSENGER">${langJson.CROSS_MESSENGER}</h2>
                         <p>
+                            xm-support@iptp.net
+                        </p>
+                        <p>
                             <lang data-language="WEB_VERSION">${langJson.WEB_VERSION}</lang>: #XM_VERSION
                         </p>
                         <p>

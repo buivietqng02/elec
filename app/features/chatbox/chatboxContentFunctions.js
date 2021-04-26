@@ -183,8 +183,8 @@ define([
             }
 
             // highlight text if search exist
-            if (search && search.id && search.id === id?.messageId) {
-                text = highlightText(text, decodeStringBase64(search.value));
+            if (search) {
+                text = highlightText(text, decodeStringBase64(search));
             }
 
             data.src = getAvatar(sender?.id);
