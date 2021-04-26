@@ -95,7 +95,7 @@ define([
     const onScrollToBottom = () => {
         if (!isTouchFirstMess) {
             isTouchFirstMess = true;
-            messages = GLOBAL.getCurrentMessages();
+            messages = getRoomById(GLOBAL.getCurrentRoomId());
             lastOffset = messages[0]?.sequence;
             messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, true) + renderMessage(mess, search))).join('');
             $messageList.html(messagesHtml);
@@ -108,14 +108,19 @@ define([
         }
     };
 
-    const updateRoomInfo = (roomInfo, positionRoom) => {
-        const rooms = GLOBAL.getRooms();
-
+    const updateRoomInfo = (roomInfo) => {
         // Mark unread of active room to zero
-        $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomInfo.id}"]`).find('.badge').html('');
-        roomInfo.unreadMessages = 0;
-        rooms[positionRoom] = roomInfo;
-        GLOBAL.setRooms(rooms);
+        if (roomInfo.unreadMessages !== 0) {
+            const rooms = GLOBAL.getRooms();
+            const positionRoom = rooms.findIndex(room => room.id === roomInfo.id);
+            $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomInfo.id}"]`).find('.badge').html('');
+
+            if (positionRoom !== -1) {
+                roomInfo.unreadMessages = 0;
+                rooms[positionRoom] = roomInfo;
+                GLOBAL.setRooms(rooms);
+            }
+        }
     };
 
     const handleScrollToUnreadMessage = (idMess) => {
@@ -132,33 +137,56 @@ define([
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
 
-    const onGetMoreMessageByScrollingUp = () => {
+    const onGetMoreMessageByScrollingUp = (num = 20) => {
         let id = GLOBAL.getCurrentRoomId();
-        let messages = getRoomById(id);
-        let currentMessages = GLOBAL.getCurrentMessages();
-        let firstOffset = messages[messages.length - 1]?.sequence;
-        let newestMessOffset = currentMessages[currentMessages.length - 1]?.sequence;
+        let currentSearchMessages = GLOBAL.getCurrentSearchMessages();
+        let firstOffset = currentSearchMessages[currentSearchMessages.length - 1]?.sequence;
 
         const params = {
             chatId: id,
-            offset: firstOffset + 20
+            offset: firstOffset + num
         };
         processing = true;
 
         API.get('messages', params).then(res => {
-            if (firstOffset !== messages[messages.length - 1]?.sequence || params.chatId !== id || res.status !== 0) {
+            if (
+                firstOffset !== currentSearchMessages[currentSearchMessages.length - 1]?.sequence || 
+                params.chatId !== GLOBAL.getCurrentRoomId() || 
+                res.status !== 0 ||
+                isTouchFirstMess
+            ) {
                 processing = false;
                 return;
             }
 
+            let messages = getRoomById(id);
+            let newestMessOffset = messages[messages.length - 1]?.sequence;
             let moreMessages = res.data.messages.filter(mess => mess.sequence > firstOffset).reverse();
+
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'up') + renderMessage(mess))).join('');
-            messages = [...messages, ...moreMessages];
+
+            // prevent remove over 20 messages
+            if (!messagesHtml) {
+                const messageList = getRoomById(params.chatId);
+                const [lastMessage] = messageList.slice(-1);
+                if (firstOffset >= lastMessage?.sequence) {
+                    isTouchFirstMess = true;
+                    storeRoomById(id, [...currentSearchMessages, ...moreMessages]);
+                    GLOBAL.setCurrentSearchMessages([]);
+                } else {
+                    onGetMoreMessageByScrollingUp(40);
+                }
+            }
+
             $wrapper.scrollTop($wrapper.scrollTop() - 1);
             $messageList.append(messagesHtml);
             
             if (newestMessOffset <= moreMessages[moreMessages.length - 1]?.sequence) {
                 isTouchFirstMess = true;
+                storeRoomById(id, [...currentSearchMessages, ...moreMessages]);
+                GLOBAL.setCurrentSearchMessages([]);
+            } else {
+                GLOBAL.setCurrentSearchMessages([...currentSearchMessages, ...moreMessages]);
             }
 
             setTimeout(() => {
@@ -169,7 +197,6 @@ define([
 
     const onGetMoreMessageByScrolling = () => {
         let id = GLOBAL.getCurrentRoomId();
-        let messages = getRoomById(id);
         const wrapperHtml = $wrapper.get(0);
 
         const params = {
@@ -195,7 +222,12 @@ define([
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
 
-            storeRoomById(id, [...moreMessages, ...messages]);
+            if (isTouchFirstMess) {
+                storeRoomById(id, [...moreMessages, ...getRoomById(id)]);
+            } else {
+                GLOBAL.setCurrentSearchMessages([...moreMessages, ...GLOBAL.getCurrentSearchMessages()]);
+            }
+
             const pos = wrapperHtml.scrollHeight + $wrapper.scrollTop();
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
@@ -205,7 +237,7 @@ define([
         });
     };
 
-    const handleDataFromGetMess = (messages, roomInfo, positionRoom) => {
+    const handleDataFromGetMess = (messages, roomInfo, search) => {
         let messagesHtml = '';
         let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
@@ -229,7 +261,9 @@ define([
         }
 
         lastOffset = messages[0]?.sequence;
-        messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
+        messagesHtml = messages.map((mess, i, messArr) => (
+            renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess, search))
+        ).join('');
         $messageList.html(messagesHtml);
 
         // Handle scroll if message list have an unread message
@@ -243,7 +277,7 @@ define([
         $loadingOfNew.hide();
         
         setTimeout(() => {
-            updateRoomInfo(roomInfo, positionRoom);
+            updateRoomInfo(roomInfo);
             processing = false;
         }, timeWait);
     };
@@ -272,7 +306,7 @@ define([
         setChatsById(roomInfo.id, messages);
         storeRoomById(roomInfo.id, messages);
 
-        handleDataFromGetMess(messages, roomInfo, positionRoom);
+        handleDataFromGetMess(messages, roomInfo);
     }).catch(err => {
         if (err === 19940402) {
             onErrNetWork(err);
@@ -280,7 +314,7 @@ define([
     });
 
     const onGetMessageFromCache = (roomInfo, positionRoom) => {
-        handleDataFromGetMess(getRoomById(roomInfo.id), roomInfo, positionRoom);
+        handleDataFromGetMess(getRoomById(roomInfo.id), roomInfo);
     };
 
     const onRefresh = () => {
@@ -303,17 +337,17 @@ define([
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },
 
-        onLoadMessage: async (roomInfo, positionRoom) => {
+        onLoadMessage: async (roomInfo) => {
             onRefresh();
 
             if (getRoomById(roomInfo.id) && isInit) {
-                onGetMessageFromCache(roomInfo, positionRoom);
+                onGetMessageFromCache(roomInfo);
                 return;
             }
 
             if (GLOBAL.getNetworkStatus()) {
                 isInit = true;
-                onGetMessage(roomInfo, positionRoom);
+                onGetMessage(roomInfo);
             } else {
                 const messagesChat = await getChatById(roomInfo.id);
                 if (!messagesChat) {
@@ -383,26 +417,43 @@ define([
         },
 
         onSearch: (search, messExist) => {
-            let currentMessages = GLOBAL.getCurrentMessages();
-            let firstOffset = currentMessages[currentMessages.length - 1]?.id?.messageId;
+            if (messExist && !messExist?.intoCache) {
+                $(`[${ATTRIBUTE_MESSAGE_ID}="${search.id}"] .--mess`).html(
+                    highlightText(decodeStringBase64(messExist.message), decodeStringBase64(search.value))
+                );
+            }
+
+            if (messExist && messExist?.intoCache) {
+                const currentSearchMessages = getRoomById(GLOBAL.getCurrentRoomId());
+                let roomInfo = GLOBAL.getRooms().filter((room) => {
+                    if (String(room.id) === String(search.id)) {
+                        return true;
+                    }
+        
+                    return false;
+                })[0] || {};
+                isTouchFirstMess = true;
+                roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+                handleDataFromGetMess(currentSearchMessages, roomInfo, search);
+            }
 
             if (!messExist) {
-                isTouchLastMess = false;
-                messages = GLOBAL.getCurrentSearchMessages();
-                lastOffset = messages[0]?.id?.messageId;
-                messagesHtml = messages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess, search))).join('');
-                $messageList.html(messagesHtml);
-            } else {
-                $(`[${ATTRIBUTE_MESSAGE_ID}="${search.offset}"] .--mess`).html(highlightText(messExist.message, search.value));
-            }
-            
-            if ($(`[${ATTRIBUTE_MESSAGE_ID}="${firstOffset}"]`).length) {
-                isTouchFirstMess = true;
-            } else {
+                const currentSearchMessages = GLOBAL.getCurrentSearchMessages();
+                let roomInfo = GLOBAL.getRooms().filter((room) => {
+                    if (String(room.id) === String(search.id)) {
+                        return true;
+                    }
+        
+                    return false;
+                })[0] || {};
                 isTouchFirstMess = false;
+                roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+                handleDataFromGetMess(currentSearchMessages, roomInfo, search);
             }
 
-            handleScrollToUnreadMessage(search.offset);
+            handleScrollToUnreadMessage(search.id);
         },
 
         onFinishPostMessage: (data) => {
@@ -471,9 +522,12 @@ define([
             }
 
             storeRoomById(rid, messages.concat(mess));
-            $messageList.append(messagesHtml);
-            $wrapper.scrollTop(wrapperHtml.scrollHeight);
-            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+
+            if (isTouchFirstMess) {
+                $messageList.append(messagesHtml);
+                $wrapper.scrollTop(wrapperHtml.scrollHeight);
+                $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+            }
         },
     };
 });

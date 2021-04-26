@@ -127,18 +127,6 @@ define([
     const checkRoom = (rid, range) => getRooms().some(room => (room.id === rid));
 
     ob.renderRoom = (room) => {
-        console.log(getRooms().map(r => {
-            const {
-                partner
-            } = r;
-
-            if (r.group) {
-                return r.subject;
-            }
-
-            return GLOBAL.getRoomInfoWasEdited()[partner?.id]?.user_name || partner?.name;
-        }));
-
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const {
             id,

@@ -1,17 +1,21 @@
+/* eslint-disable */
 define([
     'app/constant',
     'shared/data',
     'shared/api',
     'shared/functions',
-    'features/chatbox/chatboxContent'
+    'features/chatbox/chatboxContent',
+    'features/chatbox/chatboxContentChatList',
 ], (
     constant,
     GLOBAL, 
     API,
     functions,
-    chatboxContentComp
+    chatboxContentComp,
+    chatboxContentChatListComp,
 ) => {
     const { debounce } = functions;
+    const { getRoomById } = chatboxContentChatListComp;
     const $wrapper = $('.mess-search-box');
     const $input = $('#msbg-input');
     const $loading = $wrapper.find('.pulse');
@@ -25,8 +29,6 @@ define([
     let currentPos = 0;
     let totalSearch = 0;
 
-    $openBtn.hide();
-
     const refershVarible = () => {
         const $mess = $('.highlight-text').closest('.--mess');
         $mess.text($mess.text());
@@ -37,6 +39,11 @@ define([
         totalSearch = 0;
         searchs = [];
     };
+
+    const onHandleSearchCallback = (value, id, searchObj) => chatboxContentComp.onSearch({
+        value,
+        id
+    }, searchObj);
 
     const onOpenSearchBox = () => {
         $wrapper.addClass('open');
@@ -54,9 +61,19 @@ define([
             return;
         }
 
+        const messages = getRoomById(GLOBAL.getCurrentRoomId());
+        const firstMessage = messages[0];
+
+        if (message.sequence >= firstMessage.sequence) {
+            $loading.hide();
+            GLOBAL.setCurrentSearchMessages([]);
+            onHandleSearchCallback(searchVal, message.id.messageId, { intoCache: true });
+            return;
+        }
+
         Promise.all([
-            API.get('messages', { chatId: roomId, offset: message.id.messageId }),
-            API.get('messages', { chatId: roomId, offset: message.id.messageId + 20 })
+            API.get('messages', { chatId: roomId, offset: message.sequence }),
+            API.get('messages', { chatId: roomId, offset: message.sequence + 20 })
         ]).then(res => {
             if (searchVal !== $input.val() || lastCurrentPos !== currentPos) {
                 return;
@@ -71,11 +88,7 @@ define([
 
             $mess.text($mess.text());
             GLOBAL.setCurrentSearchMessages(prevMessages.concat(nextMessages));
-
-            chatboxContentComp.onSearch({
-                value: searchVal,
-                offset: message.id.messageId
-            });
+            onHandleSearchCallback(searchVal, message.id.messageId);
         });
     };
 
@@ -83,10 +96,7 @@ define([
         if ($(`[${constant.ATTRIBUTE_MESSAGE_ID}="${searchs[currentPos].id.messageId}"]`).length) {
             const $mess = $('.highlight-text').closest('.--mess');
             $mess.text($mess.text());
-            chatboxContentComp.onSearch({
-                value: $input.val(),
-                offset: searchs[currentPos].id.messageId
-            }, searchs[currentPos]);
+            onHandleSearchCallback($input.val(), searchs[currentPos].id.messageId, searchs[currentPos]);
         } else {
             $loading.show();
             initListMessages(
@@ -152,10 +162,7 @@ define([
 
                 if ($(`[${constant.ATTRIBUTE_MESSAGE_ID}="${searchs[0].id.messageId}"]`).length) {
                     $loading.hide();
-                    chatboxContentComp.onSearch({
-                        value: $input.val(),
-                        offset: searchs[0].id.messageId
-                    }, searchs[0]);
+                    onHandleSearchCallback($input.val(), searchs[0].id.messageId, searchs[0]);
                 } else {
                     initListMessages(roomId, searchs[0], currentPos, $input.val());
                 }

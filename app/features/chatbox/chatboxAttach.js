@@ -180,7 +180,6 @@ define([
     };
 
     const showPhoneModal = () => {
-        console.log(modalPhoneRequestComp);
         modalPhoneRequestComp.onInit();
         offEventClickOutside();
     };

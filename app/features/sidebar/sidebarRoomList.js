@@ -24,13 +24,11 @@ define([
     const $chatbox = $('.js_wrap_mess');
 
     const onRoomClick = (e) => {
-        let positionRoom = 0;
         const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
         const { roomId } = $this.data();
-        let roomInfo = GLOBAL.getRooms().filter((room, index) => {
+        let roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
-                positionRoom = index;
                 return true;
             }
 
@@ -76,7 +74,7 @@ define([
         chatboxSearchComp.onCloseSearchBox();
         chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
-        chatboxContentComp.onLoadMessage(roomInfo, positionRoom);
+        chatboxContentComp.onLoadMessage(roomInfo);
     };
 
     const onInit = () => {
