@@ -4,9 +4,14 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
-### [3.91] - 2021-04-19
+### [3.10] - 2021-04-28
 ### Added
-- search for message
+- Messages searching functionality.
+- Shows dialog to when app is loading.
+### Update
+- Chats list now loads in batchs.
+### Fix
+- Fix phone does not working when camera is damaged.
 
 ### [3.9] - 2021-04-19
 ### Added
