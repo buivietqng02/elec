@@ -14,11 +14,13 @@ define([
     const {
         TOKEN,
         SESSION_ID,
-        API_URL
+        API_URL,
+        USER_ID,
     } = constant;
 
     const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
     const token = functions.getDataToLocalApplication(TOKEN) || '';
+    const userId = functions.getDataToLocalApplication(USER_ID) || '';
     const headerForm = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Authorization-Token': token
@@ -27,9 +29,17 @@ define([
         'Content-Type': 'application/json',
         'X-Authorization-Token': token
     };
-    
-    if (!sessionId || !token) {
+
+    const onLogout = () => {
+        offlineData.clear();
+        functions.removeDataInLocalApplication(SESSION_ID);
+        functions.removeDataInLocalApplication(TOKEN);
+        functions.removeDataInLocalApplication(USER_ID);
         window.location = 'login.html';
+    };
+    
+    if (!sessionId || !token || !userId) {
+        onLogout();
     }
 
     const toQueryString = (params = {}) => {
@@ -52,7 +62,7 @@ define([
         GLOBAL.setNetworkStatus(true);
         return response.data;
     }, (error) => {
-        if (!error.status) {
+        if (!error.response) {
             GLOBAL.setNetworkStatus(false);
             return Promise.reject(19940402);
         } else {
@@ -60,10 +70,7 @@ define([
         }
 
         if (error.response.status === 401) {
-            offlineData.clear();
-            functions.removeDataInLocalApplication(SESSION_ID);
-            functions.removeDataInLocalApplication(TOKEN);
-            window.location = 'login.html';
+            onLogout();
         }
 
         if (error.response.status === 403) {

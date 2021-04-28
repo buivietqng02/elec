@@ -3,7 +3,7 @@ define([
     'shared/api',
     'shared/data',
     'shared/functions',
-    'features/sidebar/sidebarRoomList',
+    'features/sidebar/sidebarService',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxContentChatList',
     'features/chatbox/chatboxTopbar',
@@ -14,7 +14,7 @@ define([
     API, 
     GLOBAL, 
     functions,
-    sidebarRoomListComp,
+    sidebarService,
     chatboxContentComp,
     chatboxContentChatListComp,
     chatboxTopbarComp,
@@ -86,12 +86,7 @@ define([
         return newRoom;
     };
 
-    const handleMoveRoomUp = (room) => {
-        const html = sidebarRoomListComp.onRenderRoom(room);
-
-        $(`[data-room-id="${room.id}"]`).remove();
-        sidebarRoomListComp.onPrepend(html);
-    };
+    const handleMoveRoomUp = (room) => sidebarService.moveRoomUp(room);
 
     const handleWithCalling = (message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
@@ -159,9 +154,8 @@ define([
 
             for (let i = 0; i < length; i += 1) {
                 if (chats[i].id === message.id.chatId) {
-                    const html = sidebarRoomListComp.onRenderRoom(chats[i]);
                     GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chats[i]), ...GLOBAL.getRooms()]);
-                    sidebarRoomListComp.onPrepend(html);
+                    sidebarService.newRoomUp(chats[i]);
                     notificationComp.pushNotificationForMessage(message);
                     break;
                 }

@@ -6,7 +6,6 @@ define(() => {
     let infomation = {};
     let rooms = [];
     let currentRoomId = '';
-    let currentMessages = [];
     let currentSearchMessages = [];
     let version = '';
     let bodyBgTheme = '';
@@ -66,11 +65,6 @@ define(() => {
         getCurrentRoomId: () => currentRoomId,
         setCurrentRoomId: (value) => {
             currentRoomId = value;
-        },
-
-        getCurrentMessages: () => currentMessages,
-        setCurrentMessages: (value) => {
-            currentMessages = value;
         },
 
         getCurrentSearchMessages: () => currentSearchMessages,

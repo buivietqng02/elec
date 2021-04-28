@@ -1,5 +1,17 @@
 /* eslint no-underscore-dangle: 0 */
-define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant, GLOBAL, API, ALERT) => {
+define([
+    'app/constant',
+    'shared/data',
+    'shared/api',
+    'shared/alert',
+    'features/sidebar/sidebarService'
+], (
+    constant,
+    GLOBAL,
+    API,
+    ALERT,
+    sidebarService
+) => {
     let isModalRendered = false;
     let $modal;
     let $btnRemove;
@@ -54,10 +66,10 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
 
             GLOBAL.setRooms(rooms);
             GLOBAL.setCurrentRoomId(null);
+            sidebarService.lostRoom(id);
             $btnCancel.click();
             $caption.show();
             $chatbox.hide();
-            $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${id}"]`).remove();
         }).catch(onErrNetWork);
     };
 

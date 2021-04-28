@@ -111,7 +111,8 @@ define([
         }
 
         setTimeout(() => {
-            easyrtc.getLocalStream().getTracks().forEach(track => track.stop());
+            ((easyrtc.getLocalStream() || { getTracks: () => {} })
+                .getTracks() || []).forEach(track => track.stop());
             $videoCallerWrap.addClass(hide);
             $videoSelfWrap.removeClass('calling');
             $phoneBtn.removeClass('btn-calling');
@@ -261,26 +262,40 @@ define([
         $phoneBtn.click(onPhoneClick);
     };
 
+    const onInitMediaSource = (num) => easyrtc.initMediaSource(() => {
+        easyrtc.dontAddCloseButtons(true);
+        easyrtc.easyApp('easyrtc.videoChatHd', selfVideoId, ['callerVideo'], onInit);
+    }, (err) => {
+        if (!num) {
+            easyrtc.enableAudio(false);
+            onInitMediaSource(1);
+        }
+
+        if (num === 1) {
+            easyrtc.enableAudio(true);
+            easyrtc.enableVideo(false);
+            onInitMediaSource(2);
+        }
+
+        if (num === 2) {
+            ALERT.show('Audio and Video calls not supported by browser.');
+            console.log(err);
+        }
+    });
+
     const setupWebrtc = () => {
         if (roomInfo.group) {
             return;
         }
 
-        const idVideo = 'callerVideo';
         roomId = roomInfo.id;
         isGroupGlobal = roomInfo.group;
         isInit = false;
         $videoCallerWrap.find('video').remove();
-        $videoCallerWrap.append(`<video autoplay="autoplay" playsinline="playsinline" id="${idVideo}"></video>`);
+        $videoCallerWrap.append('<video autoplay="autoplay" playsinline="playsinline" id="callerVideo"></video>');
         $videoCallerWrap.attr('class', '').addClass('video-caller');
 
-        easyrtc.initMediaSource(() => {
-            easyrtc.dontAddCloseButtons(true);
-            easyrtc.easyApp('easyrtc.videoChatHd', selfVideoId, [idVideo], onInit);
-        }, (err) => {
-            ALERT.show('Audio and Video calls not supported by browser.');
-            console.log(err);
-        });
+        onInitMediaSource();
     };
 
     const onAccept = () => {

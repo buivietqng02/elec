@@ -115,8 +115,6 @@ cancelbtn.on('click',function(){
 // ==============================================================================
 // ==============================================================================
 
-console.log('token:' + token);
-
 $(document).on('submit', '.js_login__form', function(e){
      e.preventDefault();
 
@@ -158,11 +156,9 @@ $(document).on('submit', '.js_login__form', function(e){
 
 
            200: function(  response ) {
-              console.log( response );
-
-
                  localStorage.setItem("sessionId", response.data.sessionId);
                  localStorage.setItem("token", response.data.token);
+                 localStorage.setItem("userId", response.data.userId);
 
                  token =  response.data.sessionId;
                  sessionId = response.data.token;
@@ -213,6 +209,7 @@ $(document).on('submit', '.js_login__form', function(e){
 
                    localStorage.setItem("sessionId", response.data.sessionId);
                    localStorage.setItem("token", response.data.token);
+                   localStorage.setItem("userId", response.data.userId);
 
                    token =  response.data.sessionId;
                    sessionId = response.data.token;
@@ -522,9 +519,6 @@ $(document).on('submit', '.js_forgot__form', function(e){
 
 
            200: function(  response ) {
-              console.log( response );
-
-
                 $('.reset-password1').removeClass('active');
                 $('.reset-password2').addClass('active');
 

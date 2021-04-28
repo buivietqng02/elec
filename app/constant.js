@@ -3,6 +3,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         API_URL: `${enviroment}/api`,
         SESSION_ID: 'sessionId',
         TOKEN: 'token',
+        USER_ID: 'userId',
         BODY_BG_THEME: 'body_bg_theme',
         BODY_FZ: 'body_fz',
         THEMES: [{
@@ -20,6 +21,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         }],
         FONTSIZES: ['12px', '14px', '16px', '18px'],
         ATTRIBUTE_CHANGE_NAME: 'data-userid-name',
+        ATTRIBUTE_CHANGE_GROUP_NAME: 'data-groupid-name',
         ATTRIBUTE_CHANGE_IMAGE: 'data-userid-image',
         ATTRIBUTE_CHANGE_IMAGE_GROUP: 'data-roomid-image',
         ATTRIBUTE_SIDEBAR_ROOM: 'data-room-id',

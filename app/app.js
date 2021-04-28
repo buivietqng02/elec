@@ -57,18 +57,18 @@ define([
         setDataToLocalApplication, 
         getDataToLocalApplication 
     } = functions;
-
     const { 
         ATTRIBUE_SIDEBAR_ROOM,
         BODY_BG_THEME,
         BODY_FZ,
         THEMES,
         FONTSIZES,
-        TOKEN 
+        TOKEN,
+        USER_ID
     } = constant;
-
     const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
+    const $notiBoard = $('.notify-update-info');
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -130,17 +130,13 @@ define([
         body.css('font-size', bodySize);
     };
 
-    const onGetValidate = (res) => {
+    const onGetRoomList = (chats) => GLOBAL.setRoomsWithAdapter(chats);
+
+    const onGetUserInfo = (obj) => GLOBAL.setInfomation(obj);
+
+    const onInitEventComponent = () => {
         setCookie(getDataToLocalApplication(TOKEN), 3650);
 
-        // Store information of logging user
-        GLOBAL.setInfomation({
-            ...res.user,
-            erp_url: res?.erp_url
-        });
-
-        // Store chat room list
-        GLOBAL.setRoomsWithAdapter(res.chats);
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
         sidebarRoomListComp.onInit();
@@ -183,15 +179,19 @@ define([
     };
 
     const initInformationFromAPI = () => {
+        const userId = functions.getDataToLocalApplication(USER_ID) || '';
+
         // Get server version
         onGetVersion();
-
         // Get information about chat list and current user
         // Get information about the chat list what user changed (name, description).
-        Promise.all([API.post('validate'), API.get('users/preferences')]).then(data => {
+        Promise.all([API.get('chats'), API.get(`users/${userId}`), API.get('users/preferences')]).then(data => {
             onAssignDataToStore(data);
-            onGetPrefrences(data[1]);
-            onGetValidate(data[0]);
+            onGetPrefrences(data[2]);
+            onGetRoomList(data[0]);
+            onGetUserInfo(data[1]);
+            onInitEventComponent();
+            $notiBoard.removeClass('run');
             // onSetUpWebSocket(data[0].data.user.id);
         }).catch((err) => {
             if (err === 19940402) {
@@ -223,7 +223,7 @@ define([
             $input.get(0).select();
             $input.get(0).setSelectionRange(0, 99999);
             document.execCommand('copy');
-            ALERT.show(GLOBAL.getLangJson().LINK_COPIED, 'success');
+            ALERT.show(GLOBAL.getLangJson().COPY_TO_CLIPBOARD, 'success');
             if (window.getSelection) {
                 if (window.getSelection().empty) { 
                     // Chrome
@@ -241,6 +241,7 @@ define([
 
     const onInit = async () => {
         $('.xm-page-loading').remove();
+        $notiBoard.addClass('run');
         languageComp.onInit();
         onRegisterSW();
         onInitGeneralEvents();
@@ -252,10 +253,12 @@ define([
 
         const data = await getGeneral();
 
-        if (data && data.length) {
+        if (data && data.length && data.length === 3) {
             try {
-                onGetPrefrences(data[1]);
-                onGetValidate(data[0]);
+                onGetPrefrences(data[2]);
+                onGetRoomList(data[0]);
+                onGetUserInfo(data[1]);
+                onInitEventComponent();
             } catch (err) {
                 console.log(err);
                 clear();
