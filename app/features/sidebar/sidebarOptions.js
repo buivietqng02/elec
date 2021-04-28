@@ -19,7 +19,7 @@ define([
     modalCreateGroupComp,
     modalChangeLanguageComp
 ) => {
-    const { SESSION_ID, TOKEN } = constant;
+    const { SESSION_ID, TOKEN, USER_ID } = constant;
     const $slide = $('#user-option');
     const $optionsBtn = $('#sidebar-options-btn');
     const $groupChatBtn = $('#group-chat-options-btn');
@@ -90,6 +90,7 @@ define([
         offlineData.clear();
         functions.removeDataInLocalApplication(SESSION_ID);
         functions.removeDataInLocalApplication(TOKEN);
+        functions.removeDataInLocalApplication(USER_ID);
         window.location = 'login.html';
     };
 

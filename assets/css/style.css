@@ -3537,6 +3537,23 @@ body.body_fz_18 {
     }
 }
 
+.notify-update-info {
+  position: absolute;
+  padding: 5px 20px;
+  background-color: #fff;
+  transform: translateX(-50%);
+  left: 50%;
+  border-radius: 8px;
+  top: -50px;
+  color: #08c;
+  transition: top ease-in-out .5s;
+  box-shadow: rgb(0 0 0 / 25%) 0px 54px 55px, rgb(0 0 0 / 12%) 0px -12px 30px, rgb(0 0 0 / 12%) 0px 4px 6px, rgb(0 0 0 / 17%) 0px 12px 13px, rgb(0 0 0 / 9%) 0px -3px 5px;
+}
+
+.notify-update-info.run {
+  top: 72px;
+}
+
 @media (max-width: 1099px) {
   .sidebar__option button {
     text-align: center;

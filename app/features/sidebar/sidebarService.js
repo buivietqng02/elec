@@ -7,6 +7,7 @@ define([
     GLOBAL,
     functions
 ) => {
+    const contactHeight = $('.contacts').eq(0).height() || 1000;
     const {
         render,
         getAvatar,
@@ -23,7 +24,7 @@ define([
     const $wrapper = $('#sidebar_room_list');
     const $scroll = $wrapper.parent();
     const ob = {};
-    const offset = 10;
+    const offset = contactHeight < 600 ? 10 : Math.ceil(contactHeight/60);
     let range = [0, offset];
     let process = false;
     let search = '';

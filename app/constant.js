@@ -3,6 +3,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         API_URL: `${enviroment}/api`,
         SESSION_ID: 'sessionId',
         TOKEN: 'token',
+        USER_ID: 'userId',
         BODY_BG_THEME: 'body_bg_theme',
         BODY_FZ: 'body_fz',
         THEMES: [{
