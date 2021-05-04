@@ -35,7 +35,9 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             vietnamese: 'vi',
             spanish: 'es',
             chinese_simplified: 'zh-cn',
-            chinese_traditional: 'zh-tw'
+            chinese_traditional: 'zh-tw',
+            japanese: 'ja',
+            portuguese: 'pt'
         }
     };
 
