@@ -29,26 +29,6 @@ define([
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="clm-item" data-type="${LANGUAGES.english}">
-                            <span class="clmi-radio"></span>
-                            ${ICON.ENGLISH}
-                            <span class="clmi-text">English</span>
-                        </div>
-                        <div class="clm-item" data-type="${LANGUAGES.russian}">
-                            <span class="clmi-radio"></span>
-                            ${ICON.RUSSIAN}
-                            <span class="clmi-text">русский</span>
-                        </div>
-                        <div class="clm-item" data-type="${LANGUAGES.vietnamese}">
-                            <span class="clmi-radio"></span>
-                            ${ICON.VIETNAMESE}
-                            <span class="clmi-text">Tiếng Việt</span>
-                        </div>
-                        <div class="clm-item" data-type="${LANGUAGES.spanish}">
-                            <span class="clmi-radio"></span>
-                            ${ICON.SPANISH}
-                            <span class="clmi-text">Español</span>
-                        </div>
                         <div class="clm-item" data-type="${LANGUAGES.chinese_simplified}">
                             <span class="clmi-radio"></span>
                             ${ICON.CHINESE}
@@ -58,6 +38,36 @@ define([
                             <span class="clmi-radio"></span>
                             ${ICON.CHINESE}
                             <span class="clmi-text">正體字</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.english}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.ENGLISH}
+                            <span class="clmi-text">English</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.japanese}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.JAPANESE}
+                            <span class="clmi-text">日本語</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.portuguese}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.PORTUGUESE}
+                            <span class="clmi-text">Portugues</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.russian}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.RUSSIAN}
+                            <span class="clmi-text">русский</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.spanish}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.SPANISH}
+                            <span class="clmi-text">Español</span>
+                        </div>
+                        <div class="clm-item" data-type="${LANGUAGES.vietnamese}">
+                            <span class="clmi-radio"></span>
+                            ${ICON.VIETNAMESE}
+                            <span class="clmi-text">Tiếng Việt</span>
                         </div>
                     </div>
                     <div class="modal-footer">

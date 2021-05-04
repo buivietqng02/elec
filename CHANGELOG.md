@@ -4,6 +4,14 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.11] - 2021-05-04
+### Add
+- Add Japanese and Portuguese translations. 
+### Update
+- Update Spanish translation.
+### Fix
+- Hide "Updating" dialog correctly on mobile devices.
+
 ### [3.10] - 2021-04-28
 ### Added
 - Messages searching functionality.

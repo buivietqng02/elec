@@ -3538,6 +3538,7 @@ body.body_fz_18 {
 }
 
 .notify-update-info {
+  white-space: nowrap;
   position: absolute;
   padding: 5px 20px;
   background-color: #fff;
