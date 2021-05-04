@@ -7,7 +7,7 @@ define(['shared/data'], (GLOBAL) => {
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p>A new version of Cross Messenger is avaible</p>
+                        <p>${langJson.NEW_VERSION_AVAILABLE}</p>
                         <button style="margin-right: 10px" type="button" class="btn btn-outline-primary btn-small float-right">
                             ${langJson.REFRESH}
                         </button>
