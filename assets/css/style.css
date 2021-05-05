@@ -3555,6 +3555,11 @@ body.body_fz_18 {
   top: 72px;
 }
 
+.change-language-wrapper {
+  max-height: 300px;
+  overflow: auto;
+}
+
 @media (max-width: 1099px) {
   .sidebar__option button {
     text-align: center;

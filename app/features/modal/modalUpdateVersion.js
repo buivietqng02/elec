@@ -8,7 +8,7 @@ define(['shared/data'], (GLOBAL) => {
                 <div class="modal-content">
                     <div class="modal-body">
                         <p>${langJson.NEW_VERSION_AVAILABLE}</p>
-                        <button style="margin-right: 10px" type="button" class="btn btn-outline-primary btn-small float-right">
+                        <button style="margin-left: 10px" type="button" class="btn btn-outline-primary btn-small float-right">
                             ${langJson.REFRESH}
                         </button>
                         <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
