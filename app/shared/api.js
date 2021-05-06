@@ -21,13 +21,21 @@ define([
     const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
     const token = functions.getDataToLocalApplication(TOKEN) || '';
     const userId = functions.getDataToLocalApplication(USER_ID) || '';
-    const headerForm = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Authorization-Token': token
+
+    const getHeaderJson = () => {
+        return {
+            'Accept-Language': GLOBAL.getLanguage(),
+            'Content-Type': 'application/json',
+            'X-Authorization-Token': token
+        }
     };
-    const headerJson = {
-        'Content-Type': 'application/json',
-        'X-Authorization-Token': token
+
+    const getHeaderForm = () => {
+        return {
+            'Accept-Language': GLOBAL.getLanguage(),
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Authorization-Token': token
+        }
     };
 
     const onLogout = () => {
@@ -82,23 +90,23 @@ define([
     
     return {
         get: (endpoint = '', params = {}) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
-            headers: headerJson
+            headers: getHeaderJson()
         }),
 
         post: (endpoint = '', params = {}) => axios.post(`${API_URL}/${endpoint}`, params, {
-            headers: headerJson
+            headers: getHeaderJson()
         }),
 
         put: (endpoint = '', params = {}) => axios.put(`${API_URL}/${endpoint}`, params, {
-            headers: headerJson
+            headers: getHeaderJson()
         }),
 
         delete: (endpoint = '') => axios.delete(`${API_URL}/${endpoint}`, {
-            headers: headerJson
+            headers: getHeaderJson()
         }),
 
         postForm: (endpoint = '', formData) => axios.post(`${API_URL}/${endpoint}`, formData, {
-            headers: headerForm,
+            headers: getHeaderForm(),
         })
     };
 });

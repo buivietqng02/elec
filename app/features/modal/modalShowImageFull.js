@@ -18,7 +18,7 @@ define(() => {
 
     const showImage = (e) => {
         $modal.modal('show');
-        $img.attr('src', e.target.src.replace('&small=1', '&large=1'));
+        $img.attr('src', e.target.src.replace('&small=1', '&small=0'));
         $img.removeClass('zoomout');
         $img.removeAttr('style');
     };

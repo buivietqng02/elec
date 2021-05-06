@@ -95,7 +95,7 @@ define([
         API.post('saveprofile', {name: `${$name.val() || info.name}`, url: `${$erp.val()}`}).then(() => {
             if ($name.val()) {
                 info.name = $name.val();
-                $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).html($name.val());
+                $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).text($name.val());
             }
             
             info.erp_url = $erp.val();

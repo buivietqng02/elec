@@ -157,7 +157,7 @@ define([
                 chatType: type,
                 idLocal
             };
-            let text = decodeStringBase64(message);
+            let text = htmlEncode(decodeStringBase64(message));
 
             // check add local
             if (idLocal) {
@@ -193,30 +193,15 @@ define([
             data.userId = sender?.id;
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
-            data.date = convertMessagetime(msgDate, GLOBAL.getLangJson());
+            data.date = convertMessagetime(msgDate, GLOBAL.getLangJson(), !!search);
             data.forward = forwarded ? 'fwme' : '';
 
             // render with case of comment
-            if (
-                text.indexOf('"></c>') > -1 
-                && text.indexOf('<div class="col-xs-12 comment-box-inline" style="margin-left: 0;">') === -1 
-                && !quotedMessage
-            ) {
-                try {
-                    const splitMess = text.split('<c style="display:none" ob="');
-                    const commentInfo = JSON.parse(splitMess[1].replace('"></c>', ''));
-                    data.comment = `<div class="comment-box-inline" style="margin-left: 0;">${htmlEncode(roomEdited[commentInfo?.userId]?.user_name || commentInfo?.name)}: ${commentInfo.mess}</div>`;
-                    data.mess = transformLinkTextToHTML(splitMess[0]);
-                } catch (e) {
-                    data.mess = transformLinkTextToHTML(text);
-                }
-            } else {
-                if (quotedMessage) {
-                    data.comment = renderComment(quotedMessage);
-                }
-
-                data.mess = transformLinkTextToHTML(text);
+            if (quotedMessage) {
+                data.comment = renderComment(quotedMessage);
             }
+
+            data.mess = transformLinkTextToHTML(text);
 
             // render with case of file
             if (file) {

@@ -30,6 +30,7 @@ define([
     const {
         transformLinkTextToHTML,
         highlightText,
+        htmlEncode,
         decodeStringBase64
     } = functions;
     const {
@@ -330,7 +331,7 @@ define([
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
 
-            $message.find('.--mess').html(transformLinkTextToHTML(decodeStringBase64(message.message)));       
+            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));       
         },
 
         onSearch: (searchMessageList, search) => {
