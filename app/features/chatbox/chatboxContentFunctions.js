@@ -193,7 +193,7 @@ define([
             data.userId = sender?.id;
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
-            data.date = convertMessagetime(msgDate, GLOBAL.getLangJson());
+            data.date = convertMessagetime(msgDate, GLOBAL.getLangJson(), !!search);
             data.forward = forwarded ? 'fwme' : '';
 
             // render with case of comment

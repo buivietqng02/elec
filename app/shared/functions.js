@@ -74,10 +74,14 @@ define(['moment', 'app/constant'], (moment, constant) => ({
 
     stripTags: (text) => text.replace(/(<([^>]+)>)/gi, ''),
 
-    convertMessagetime: (time, langJson) => {
+    convertMessagetime: (time, langJson, isSearch) => {
         const timeMessage = moment(time);
         const today = moment();
         const yesterday = moment().subtract(1, 'days');
+        let dateFormat = 'D MMM';
+        if (isSearch) {
+            dateFormat = 'D MMM YYYY';
+        }
 
         if (today.isSame(timeMessage, 'date')) {
             return `${langJson.TODAY} ${timeMessage.format('H:mm')}`;
@@ -87,7 +91,7 @@ define(['moment', 'app/constant'], (moment, constant) => ({
             return `${langJson.YESTERDAY} ${timeMessage.format('H:mm')}`;
         }
 
-        return timeMessage.format('D MMM, H:mm');
+        return timeMessage.format(`${dateFormat}, H:mm`);
     },
 
     humanFileSize: (bytes) => {
