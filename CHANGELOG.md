@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.12] - 2021-05-06
+### Update
+- Add 'Accept-Language' header to API requests.
+- Update image large URL.
+- Update size of language icon.
+### Fix
+- Show year messages date.
+- Fix user can add html tag to chatbox
+
 ### [3.11] - 2021-05-04
 ### Add
 - Add Japanese and Portuguese translations. 

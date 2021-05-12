@@ -537,6 +537,12 @@ $(document).on('submit', '.js_forgot__form', function(e){
          
               },
 
+              400: function(response) {
+                $this.find('.mess').html(response.responseJSON.details);
+                $this.find('.js-btn-spin').find('.--spin').hide();
+                $this.find('.js-btn-spin').attr('disabled', false);
+              },
+
               404: function(  response ) {
 
 
