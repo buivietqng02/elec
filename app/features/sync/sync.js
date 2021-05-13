@@ -10,9 +10,9 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest'
 ], (
-    constant, 
-    API, 
-    GLOBAL, 
+    constant,
+    API,
+    GLOBAL,
     functions,
     sidebarService,
     chatboxContentComp,
@@ -49,7 +49,7 @@ define([
             document.title = 'New Message!';
             $('#favicon').attr('href', 'assets/images/favicon2.ico');
         }
-        
+
         isBlinkTitleBrowser = !isBlinkTitleBrowser;
         timeout = setTimeout(blinkTitle, 1000);
     };
@@ -70,10 +70,8 @@ define([
                 if (message.deleted || message.updated) {
                     return;
                 }
-
-                if (currentUserId === message.sender.id) {
-                    unReadNum = 0;
-                } else {
+                if (currentUserId !== message.sender.id && message.msgDate > room.updated
+                    && message.unread === true) {
                     unReadNum += 1;
                 }
             });
@@ -142,7 +140,7 @@ define([
 
             if (isCurrentRoom) {
                 chatboxContentComp.onSync([message]);
-            }   
+            }
         });
 
         return isNotMoveRoomUp;
@@ -178,7 +176,7 @@ define([
         rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
-                
+
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
@@ -195,7 +193,7 @@ define([
                     handleMoveRoomUp(newRoom);
                     roomsMove = roomsMove.concat(newRoom);
                 }
-        
+
                 return isNotMoveRoomUp;
             }
 
