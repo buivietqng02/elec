@@ -37,7 +37,7 @@
     "ENABLE": "Включить",
     "ENTER_DESCRIPTION": "Введите описание",
     "ENTER_EMAIL_ADDRESS": "Введите адрес электронной почты для отправки приглашения",
-    "ENTER_ERP_URL": "Введите URL-адрес ERP для загрузки контактов",
+    "INTEGRATE_ERP_CONTACTS": "Хотите импортировать контакты из ERP?",
     "ENTER_GROUP_NAME": "Введите имя группы...",
     "ENTER_NAME": "Введите имя",
     "ERP_CONTACTS": "ERP Контакты",
