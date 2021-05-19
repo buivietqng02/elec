@@ -38,16 +38,16 @@ define([
 
         if (document.hasFocus()) {
             document.title = 'Messenger';
-            $('#favicon').attr('href', 'assets/images/favicon.ico');
+            $('#favicon').attr('href', '/assets/images/favicon.ico');
             return;
         }
 
         if (!isBlinkTitleBrowser) {
             document.title = 'Messenger';
-            $('#favicon').attr('href', 'assets/images/favicon1.ico');
+            $('#favicon').attr('href', '/assets/images/favicon1.ico');
         } else {
             document.title = 'New Message!';
-            $('#favicon').attr('href', 'assets/images/favicon2.ico');
+            $('#favicon').attr('href', '/assets/images/favicon2.ico');
         }
 
         isBlinkTitleBrowser = !isBlinkTitleBrowser;

@@ -5113,6 +5113,11 @@
   "resolved" "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   "version" "1.4.0"
 
+"navigo@^8.11.1":
+  "integrity" "sha512-e3sc1UzakF+bWquC8/dbPCgo7LgPEW1ekgwb4pmEcl8tOc/I7lML8r7HBql+b0VRk7tJWTZqtkeObwJAVR1pxg=="
+  "resolved" "https://registry.npmjs.org/navigo/-/navigo-8.11.1.tgz"
+  "version" "8.11.1"
+
 "negotiator@0.6.2":
   "integrity" "sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw=="
   "resolved" "https://registry.npmjs.org/negotiator/-/negotiator-0.6.2.tgz"

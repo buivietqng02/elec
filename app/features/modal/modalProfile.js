@@ -17,7 +17,6 @@ define([
 } = constant;
     const token = getDataToLocalApplication(TOKEN) || '';
 
-    let isModalRendered = false;
     let isProcessing;
     let $modal;
     let $img;
@@ -139,8 +138,7 @@ define([
         onInit: (id) => {
             const info = GLOBAL.getInfomation();
 
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if ($('#profileModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#profileModal');
                 $img = $modal.find('.pmm-image-wrapper img');

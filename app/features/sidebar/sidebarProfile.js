@@ -10,7 +10,6 @@ define([
     modalProfileComp
 ) => {
     const { render, getAvatar, htmlEncode } = functions;
-    const $wrapper = $('#sidebarProfile');
     const template = `
         <a title="Edit Profile" class="sipr-image">
             <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{id}" class="--avatar avatar p-cur" src="{src}" onerror="this.src='/assets/images/user.jpg'">
@@ -27,7 +26,7 @@ define([
                 id: info.id
             };
 
-            $wrapper.html(render(template, data));
+            $('#sidebarProfile').html(render(template, data));
             $(document).off('.sidebarProfile').on('click.sidebarProfile', '#sidebarProfile .sipr-image', modalProfileComp.onInit);
         }
     };

@@ -12,11 +12,11 @@ define([
     chatboxContentComp
 ) => {
     const { debounce } = functions;
-    const $wrapper = $('.mess-search-box');
-    const $input = $('#msbg-input');
-    const $loading = $wrapper.find('.pulse');
-    const $closeBtn = $wrapper.find('.msb-close');
-    const $openBtn = $('.btn-toggle-search-box');
+    let $wrapper;
+    let $input;
+    let $loading;
+    let $closeBtn;
+    let $openBtn;
 
     const onOpenSearchBox = () => {
         $wrapper.addClass('open');
@@ -63,6 +63,12 @@ define([
 
     return {
         onInit: () => {
+            $wrapper = $('.mess-search-box');
+            $input = $('#msbg-input');
+            $loading = $wrapper.find('.pulse');
+            $closeBtn = $wrapper.find('.msb-close');
+            $openBtn = $('.btn-toggle-search-box');
+
             $openBtn.off().click(onOpenSearchBox);
             $closeBtn.off().click(() => onCloseSearchBox(true));
             $input.off().bind('paste', onSearch);

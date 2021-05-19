@@ -54,11 +54,11 @@ define([
     let isTouchLastMess = false;
     let isSearchMode = false;
     let isInit = false;
-    const $btnScrollToBottom = $('.scroll-to__bottom');
-    const $messageList = $('.messages__list');
-    const $wrapper = $('.js_con_list_mess');
-    const $loadingOfNew = $('.--load-mess');
-    const $unreadScroll = $('.unread-message-scroll');
+    let $btnScrollToBottom;
+    let $messageList;
+    let $wrapper;
+    let $loadingOfNew;
+    let $unreadScroll;
 
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
@@ -247,6 +247,12 @@ define([
     
     return {
         onInit: () => {
+            $btnScrollToBottom = $('.scroll-to__bottom');
+            $messageList = $('.messages__list');
+            $wrapper = $('.js_con_list_mess');
+            $loadingOfNew = $('.--load-mess');
+            $unreadScroll = $('.unread-message-scroll');
+
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
             $wrapper.off('scroll').scroll(onWrapperScroll);

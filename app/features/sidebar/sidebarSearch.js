@@ -11,14 +11,14 @@ define([
 ) => {
     const { debounce } = functions;
     let currentOptions = 1;
-    const $frame = $('#frame');
-    const $wrapper = $('#search');
-    const $searchBtnCollapse = $wrapper.find('.search-toggle');
-    const $slide = $wrapper.find('.js-menu');
-    const $options = $wrapper.find('[data-s]');
-    const $optionsBtn = $wrapper.find('.search__option');
-    const $input = $wrapper.find('.search__input');
-    const $resetInputBtn = $wrapper.find('.clearable__clear');
+    let $frame;
+    let $wrapper;
+    let $searchBtnCollapse;
+    let $slide;
+    let $options;
+    let $optionsBtn;
+    let $input;
+    let $resetInputBtn;
 
     const onSearch = debounce(() => {
         const value = $input.val().trim().toUpperCase();
@@ -76,6 +76,16 @@ define([
 
     return {
         onInit: () => {
+            currentOptions = 1;
+            $frame = $('#frame');
+            $wrapper = $('#search');
+            $searchBtnCollapse = $wrapper.find('.search-toggle');
+            $slide = $wrapper.find('.js-menu');
+            $options = $wrapper.find('[data-s]');
+            $optionsBtn = $wrapper.find('.search__option');
+            $input = $wrapper.find('.search__input');
+            $resetInputBtn = $wrapper.find('.clearable__clear');
+
             $input.val('');
             $options.off().click(onChangeFilter);
             $optionsBtn.off().click(showSlide);

@@ -1,12 +1,11 @@
 /* eslint no-underscore-dangle: 0 */
 define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant, GLOBAL, API, ALERT) => {
-    let isModalRendered = false;
     let $modal;
     let $name;
     let $btnLeave;
     let $btnCancel;
-    const $caption = $('.js_caption');
-    const $chatbox = $('.js_wrap_mess');
+    let $caption;
+    let $chatbox;
 
     const renderTemplate = (langJson) => `
         <div class="modal fade" id="leaveGroupModal" tabindex="-1" role="dialog">
@@ -65,14 +64,15 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
             const id = GLOBAL.getCurrentRoomId();
             const roomInfo = GLOBAL.getRooms().filter((room) => (room.id === id))[0] || {};
 
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#leaveGroupModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#leaveGroupModal');
                 $name = $modal.find('h2 span');
                 $btnLeave = $modal.find('.btn-outline-primary');
                 $btnCancel = $modal.find('.btn-outline-secondary');
+                $caption = $('.js_caption');
+                $chatbox = $('.js_wrap_mess');
 
                 $btnLeave.click(onLeave);
             }

@@ -19,9 +19,9 @@ define([
     chatboxSearchComp,
     modalAcceptInvitationComp
 ) => {
-    const { getRooms } = services;
-    const $caption = $('.js_caption');
-    const $chatbox = $('.js_wrap_mess');
+    const { getRooms, initScroll } = services;
+    let $caption;
+    let $chatbox;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
@@ -78,6 +78,9 @@ define([
     };
 
     const onInit = () => {
+        $caption = $('.js_caption');
+        $chatbox = $('.js_wrap_mess');
+        initScroll();
         getRooms();
         $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`, onRoomClick);
     };

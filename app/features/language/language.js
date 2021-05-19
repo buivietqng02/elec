@@ -25,8 +25,8 @@ define([
         tooltip: 'tooltip'
     };
 
-    const $changeLangText = $('#change-lang-btn span');
-    const $body = $('body');
+    let $changeLangText;
+    let $body;
     let currentLang = getDataToLocalApplication(LANGUAGE_KEY) || LANGUAGES.english;
     let langJson;
 
@@ -55,6 +55,9 @@ define([
     };
 
     const onInit = () => {
+        $changeLangText = $('#change-lang-btn span');
+        $body = $('body');
+
         try {
             langJson = require(`app/i18n/${currentLang}.json`); // eslint-disable-line import/no-dynamic-require
 

@@ -12,12 +12,11 @@ define([
     ALERT,
     sidebarService
 ) => {
-    let isModalRendered = false;
     let $modal;
     let $btnRemove;
     let $btnCancel;
-    const $caption = $('.js_caption');
-    const $chatbox = $('.js_wrap_mess');
+    let $caption;
+    let $chatbox;
 
     const renderTemplate = (langJson) => `
         <div class="modal fade" id="removeGroupModal" tabindex="-1" role="dialog" data-backdrop="static">
@@ -45,7 +44,7 @@ define([
 
     const onErrNetWork = () => {
         $btnCancel.click();
-        ALERT.show('Unable to connect to the Internet');
+        ALERT.show(GLOBAL.getLangJson().UNABLE_TO_CONNECT);
     };
 
     const onRemove = () => {
@@ -75,13 +74,14 @@ define([
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if ($('#removeGroupModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#removeGroupModal');
                 $btnRemove = $modal.find('.btn-outline-primary');
                 $btnCancel = $modal.find('.btn-outline-secondary');
+                $caption = $('.js_caption');
+                $chatbox = $('.js_wrap_mess');
 
                 $btnRemove.click(onRemove);
             }

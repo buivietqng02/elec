@@ -1,5 +1,4 @@
 define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
-    let isModalRendered = false;
     let $input;
     let $modal;
     let $btnSend;
@@ -72,8 +71,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#sendErpModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#sendErpModal');

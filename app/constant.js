@@ -38,6 +38,11 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             chinese_traditional: 'zh-tw',
             japanese: 'ja',
             portuguese: 'pt'
+        },
+        ROUTE: {
+            login: '/login',
+            meeting: '/meeting',
+            index: '/'
         }
     };
 

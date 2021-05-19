@@ -45,13 +45,6 @@ define([
     modalUpdateVersionComp,
     notificationComp
 ) => {
-    require('bootstrap/js/dist/modal');
-    require('bootstrap/js/dist/tooltip');
-    require('bootstrap/dist/css/bootstrap.min.css');
-    require('assets/css/p_style.css');
-    require('assets/css/style.css');
-    jsrender($);
-
     const { 
         setCookie,
         setDataToLocalApplication, 
@@ -68,7 +61,7 @@ define([
     } = constant;
     const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
-    const $notiBoard = $('.notify-update-info');
+    let $notiBoard;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -241,6 +234,7 @@ define([
 
     const onInit = async () => {
         $('.xm-page-loading').remove();
+        $notiBoard = $('.notify-update-info');
         $notiBoard.addClass('run');
         languageComp.onInit();
         onRegisterSW();
@@ -268,5 +262,7 @@ define([
         initInformationFromAPI();
     };
     
-    onInit();
+    return {
+        onInit
+    };
 });

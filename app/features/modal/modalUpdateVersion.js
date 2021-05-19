@@ -1,5 +1,4 @@
 define(['shared/data'], (GLOBAL) => {
-    let isModalRendered = false;
     let $modal;
     let $btnRefresh;
     const renderTemplate = (langJson) => `
@@ -22,8 +21,7 @@ define(['shared/data'], (GLOBAL) => {
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#updateVersionModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#updateVersionModal');

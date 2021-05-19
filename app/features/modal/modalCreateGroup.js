@@ -16,7 +16,6 @@ define([
     createGroupService
 ) => {
     let arrUserId = [];
-    let isListRoomRendered = false;
     let editId = null;
     let isProcess;
     let $modal;
@@ -222,8 +221,7 @@ define([
 
     return {
         onInit: (id) => {
-            if (!isListRoomRendered) {
-                isListRoomRendered = true;
+            if (!$('#createGroupModal').length) {
                 onInit();
             }
 

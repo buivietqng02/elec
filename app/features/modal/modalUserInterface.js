@@ -26,7 +26,6 @@ define([
     let $themes;
     let $fontsizes;
     let $saveBtn;
-    let isModalRendered = false;
     const themeTemplate = '<div class="uimw-theme-item" data-uimw-theme="{name}" style="background: {color}"></div>';
     const fontTemplate = '<div class="uimw-font-item" data-uimw-font="{size}" style="font-size: {size}">Aa</div>';
     const renderTemplate = (themeHtml, fontHtml, langJson) => `
@@ -93,10 +92,10 @@ define([
     
     return {
         onInit: () => {
-            if (!isModalRendered) {
+            if (!$('#userInterfaceModal').length) {
                 const themeHtml = THEMES.map(theme => render(themeTemplate, theme)).join('');
                 const fontHtml = FONTSIZES.map(font => render(fontTemplate, { size: font })).join('');
-                isModalRendered = true;
+
                 $('body').append(renderTemplate(themeHtml, fontHtml, GLOBAL.getLangJson()));
                 $modal = $('#userInterfaceModal');
                 $closeBtn = $modal.find('.close');

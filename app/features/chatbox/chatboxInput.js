@@ -20,13 +20,13 @@ define([
     } = functions;
 
     const token = getDataToLocalApplication(constant.TOKEN) || '';
-    const $input = $('.js_endter_mess');
-    const $wrapperMessages = $('.js_con_list_mess');
-    const $btnSend = $('.btn__send');
-    const $btnAttach = $('.btn__attach');
-    const $commentWrapper = $('.mess-comment-box');
-    const $commentBox = $commentWrapper.find('.mess-fw-box');
-    const $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
+    let $input;
+    let $wrapperMessages;
+    let $btnSend;
+    let $btnAttach;
+    let $commentWrapper;
+    let $commentBox;
+    let $btnCloseCommentBox;
     let messagesWaitProcessingArr = [];
     let deleteState = false;
     let commentState = false;
@@ -187,6 +187,18 @@ define([
 
     return {
         onInit: () => {
+            $input = $('.js_endter_mess');
+            $wrapperMessages = $('.js_con_list_mess');
+            $btnSend = $('.btn__send');
+            $btnAttach = $('.btn__attach');
+            $commentWrapper = $('.mess-comment-box');
+            $commentBox = $commentWrapper.find('.mess-fw-box');
+            $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
+            messagesWaitProcessingArr = [];
+            deleteState = false;
+            commentState = false;
+            messageId = 0;
+
             $input.off('keydown').keydown(onKeydown);
             $input.off('paste').bind('paste', onPaste);
             $btnSend.off().click(onSendMessage);

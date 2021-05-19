@@ -1,5 +1,4 @@
 define([
-    'app/constant',
     'shared/offlineData',
     'shared/functions',
     'features/modal/modalUserInterface',
@@ -7,9 +6,9 @@ define([
     'features/modal/modalSendErp',
     'features/modal/modalVersion',
     'features/modal/modalCreateGroup',
-    'features/modal/modalChangeLanguage'
+    'features/modal/modalChangeLanguage',
+    'features/logout/logout'
 ], (
-    constant,
     offlineData,
     functions,
     modalUserInterfaceComp,
@@ -17,19 +16,19 @@ define([
     modalSendErpComp,
     modalVersionComp,
     modalCreateGroupComp,
-    modalChangeLanguageComp
+    modalChangeLanguageComp,
+    Logout
 ) => {
-    const { SESSION_ID, TOKEN, USER_ID } = constant;
-    const $slide = $('#user-option');
-    const $optionsBtn = $('#sidebar-options-btn');
-    const $groupChatBtn = $('#group-chat-options-btn');
-    const $changeLanguageBtn = $('#change-lang-btn');
-    const $startConferenceBtn = $slide.find('.--start-conference');
-    const $userInterFaceBtn = $slide.find('.--use-interface');
-    const $sendInviteBtn = $slide.find('.--send-invite');
-    const $erpContactBtn = $slide.find('.--erp-contact');
-    const $aboutBtn = $slide.find('.--about');
-    const $logoutBtn = $slide.find('.--logout');
+    let $slide;
+    let $optionsBtn; 
+    let $groupChatBtn; 
+    let $changeLanguageBtn; 
+    let $startConferenceBtn; 
+    let $userInterFaceBtn;
+    let $sendInviteBtn;
+    let $erpContactBtn;
+    let $aboutBtn; 
+    let $logoutBtn;
     let isShow = false;
 
     const offEventClickOutside = () => {
@@ -86,16 +85,20 @@ define([
         offEventClickOutside();
     };
 
-    const onLogout = () => {
-        offlineData.clear();
-        functions.removeDataInLocalApplication(SESSION_ID);
-        functions.removeDataInLocalApplication(TOKEN);
-        functions.removeDataInLocalApplication(USER_ID);
-        window.location = 'login.html';
-    };
-
     return {
         onInit: () => {
+            isShow = false;
+            $slide = $('#user-option');
+            $optionsBtn = $('#sidebar-options-btn');
+            $groupChatBtn = $('#group-chat-options-btn');
+            $changeLanguageBtn = $('#change-lang-btn');
+            $startConferenceBtn = $slide.find('.--start-conference');
+            $userInterFaceBtn = $slide.find('.--use-interface');
+            $sendInviteBtn = $slide.find('.--send-invite');
+            $erpContactBtn = $slide.find('.--erp-contact');
+            $aboutBtn = $slide.find('.--about');
+            $logoutBtn = $slide.find('.--logout');
+
             $optionsBtn.off().click(showSlide);
             $changeLanguageBtn.off().click(showModalChangeLanguage);
             $groupChatBtn.off().click(showModalCreateGroup);
@@ -104,7 +107,7 @@ define([
             $sendInviteBtn.off().click(showModalSendInvite);
             $erpContactBtn.off().click(showModalERPContact);
             $aboutBtn.off().click(showModalAbout);
-            $logoutBtn.off().click(onLogout);
+            $logoutBtn.off().click(Logout.onLogout);
         }
     };
 });
