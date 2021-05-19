@@ -1,20 +1,20 @@
 define([
     'app/constant',
     'shared/alert',
-    'shared/api', 
-    'shared/data', 
+    'shared/api',
+    'shared/data',
     'shared/functions'
 ], (
     constant,
     ALERT,
-    API, 
-    GLOBAL, 
+    API,
+    GLOBAL,
     functions
 ) => {
     const { render, getAvatar, getDataToLocalApplication } = functions;
     const {
- API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE 
-} = constant;
+        API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
+    } = constant;
     const token = getDataToLocalApplication(TOKEN) || '';
 
     let isModalRendered = false;
@@ -92,12 +92,12 @@ define([
         isProcessing = true;
         $save.addClass('loading-btn');
 
-        API.post('saveprofile', {name: `${$name.val() || info.name}`, url: `${$erp.val()}`}).then(() => {
+        API.post('saveprofile', { name: `${$name.val() || info.name}`, url: `${$erp.val()}` }).then(() => {
             if ($name.val()) {
                 info.name = $name.val();
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).text($name.val());
             }
-            
+
             info.erp_url = $erp.val();
             $closeBtn.click();
             GLOBAL.setInfomation(info);
@@ -112,11 +112,11 @@ define([
         if (!file) {
             return;
         }
-        
+
         FR.addEventListener('load', (e) => {
             $img.attr('src', e.target.result);
             $(`[${ATTRIBUTE_CHANGE_IMAGE}="${GLOBAL.getInfomation().id}"]`).attr('src', e.target.result);
-        }); 
+        });
         FR.readAsDataURL(file);
 
         fd.append('avatarfile', file);
@@ -130,8 +130,8 @@ define([
             cache: false,
             contentType: false,
             processData: false,
-            success: () => {},
-            error: () => {}
+            success: () => { },
+            error: () => { }
         });
     };
 
