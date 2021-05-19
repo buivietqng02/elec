@@ -656,81 +656,53 @@ jQuery(function ($) {
     $.ajax({
       url: API_URL + '/reset',
       data: {
-
         email: email,
         code: code,
-        password: password,
-        // password2: password2,
-
+        password: password
       },
       type: "post",
-
       dataType: "json",
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
 
       beforeSend: function () {
-
         $this.find('.js-btn-spin').find('.--spin').show();
         $this.find('.js-btn-spin').attr('disabled', true);
-
         $this.find('.mess').html('');
-
-
       },
 
-
       statusCode: {
-
-
         200: function (response) {
-
           $this.find('.mess').html(response.message);
 
           setTimeout(function () {
-
             window.location = location.href;
-
           }, 1000);
 
           $this.find('.js-btn-spin').find('.--spin').hide();
           $this.find('.js-btn-spin').attr('disabled', false);
-
-
-
         },
-
-
-
-        404: function (response) {
-
+        400: function (response) {
           if (response.responseJSON) {
-
             response = response.responseJSON;
-
           }
-
-
           $this.find('.mess').html(response.details);
-
           $this.find('.js-btn-spin').find('.--spin').hide();
           $this.find('.js-btn-spin').attr('disabled', false);
-
-
         },
+        404: function (response) {
+          if (response.responseJSON) {
+            response = response.responseJSON;
+          }
 
-
-
-
-
+          $this.find('.mess').html(response.details);
+          $this.find('.js-btn-spin').find('.--spin').hide();
+          $this.find('.js-btn-spin').attr('disabled', false);
+        }
       },
 
-
-
       success: function (response) {
-
-
         if (response.status == 0) {
 
 
