@@ -73,10 +73,10 @@ define([
         obRoomEdited[roomId] = obRoomEdited[roomId] || {};
 
         if (obRoomEdited[roomId].hide_mess) {
-            $textInternalBtn.html(GLOBAL.getLangJson().ENABLE);
+            $textInternalBtn.html(GLOBAL.getLangJson().ENABLE_INTERNAL_MESSAGES);
             delete obRoomEdited[roomId].hide_mess;
         } else {
-            $textInternalBtn.html(GLOBAL.getLangJson().DISABLE);
+            $textInternalBtn.html(GLOBAL.getLangJson().DISABLE_INTERNAL_MESSAGES);
             obRoomEdited[roomId].hide_mess = true;
         }
         
@@ -93,11 +93,11 @@ define([
 
         if (obRoomEdited[roomId].notification_mess === false) {
             $room.removeClass('mute');
-            $textNotiBtn.html(GLOBAL.getLangJson().DISABLE);
+            $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
             delete obRoomEdited[roomId].notification_mess;
         } else {
             $room.addClass('mute');
-            $textNotiBtn.html(GLOBAL.getLangJson().ENABLE);
+            $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
             obRoomEdited[roomId].notification_mess = false;
         }
         
@@ -124,15 +124,15 @@ define([
 
             // Check status of notification
             if (obRoomEdited[roomInfo.id]?.notification_mess === false) {
-                $textNotiBtn.html(GLOBAL.getLangJson().ENABLE);
+                $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
             } else {
-                $textNotiBtn.html(GLOBAL.getLangJson().DISABLE);
+                $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
             }
 
             if (obRoomEdited[roomInfo.id]?.hide_mess) {
-                $textInternalBtn.html(GLOBAL.getLangJson().DISABLE);
+                $textInternalBtn.html(GLOBAL.getLangJson().DISABLE_INTERNAL_MESSAGES);
             } else {
-                $textInternalBtn.html(GLOBAL.getLangJson().ENABLE);
+                $textInternalBtn.html(GLOBAL.getLangJson().ENABLE_INTERNAL_MESSAGES);
             }
             
             if (roomInfo.group) {
