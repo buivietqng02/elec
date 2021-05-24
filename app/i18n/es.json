@@ -37,7 +37,7 @@
     "ENABLE": "Habilitar",
     "ENTER_DESCRIPTION": "Ingrese una descripción",
     "ENTER_EMAIL_ADDRESS": "Ingrese el correo electrónico para enviar la invitación",
-    "ENTER_ERP_URL": "Ingrese la URL del ERP para cargar los contactos",
+    "INTEGRATE_ERP_CONTACTS": "¿Desea importar contactos desde el ERP?",
     "ENTER_GROUP_NAME": "Ingrese un nombre para el grupo",
     "ENTER_NAME": "Ingrese el nombre",
     "ERP_CONTACTS": "Contactos del ERP",
