@@ -210,7 +210,7 @@ define([
 
     const onInitGeneralEvents = () => {
         // copy input value
-        $(document).on('click', '.input-only-view', (event) => {
+        $(document).off('.appCopyEvent').on('click.appCopyEvent', '.input-only-view', (event) => {
             const $input = $(event.currentTarget).prev();
 
             $input.get(0).select();
@@ -233,10 +233,12 @@ define([
     };
 
     const onInit = async () => {
-        $('.xm-page-loading').remove();
+        isRunFristTime = false;
+        $('.xm-page-loading').hide();
         $notiBoard = $('.notify-update-info');
         $notiBoard.addClass('run');
         languageComp.onInit();
+        syncComp.onInitAgain();
         onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();

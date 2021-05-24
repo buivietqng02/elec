@@ -160,6 +160,7 @@ define([
     };
 
     const onInit = () => {
+        createGroupService.onInit();
         $('body').append(renderTemplate(renderRoomList(), GLOBAL.getLangJson()));
         $modal = $('#createGroupModal');
         $title = $modal.find('.modal-title');
@@ -174,15 +175,15 @@ define([
         $inputSearch.attr('autocomplete', 'off');
         $inputGroupName.attr('autocomplete', 'off');
 
-        $usersWrapper.scroll(createGroupService.getMoreUserOfLeft);
-        $selectedWrapper.scroll(createGroupService.getMoreUserOfRight);
-        $modal.on('click', '[data-mcg-id]', onUserClick);
-        $modal.on('click', '.crmrgii-cross', onRemoveClick);    
-        $modal.on('click', '.crmrgii-admin', createGroupService.grantAdminClick);
-        $modal.on('click', '.crmrgii-removeadmin', createGroupService.removeAdminClick);
-        $modal.on('input', '#cgm-input-search', createGroupService.handleSearch);
+        $usersWrapper.off('scroll').scroll(createGroupService.getMoreUserOfLeft);
+        $selectedWrapper.off('scroll').scroll(createGroupService.getMoreUserOfRight);
+        $modal.off('.dataMcgId').on('click.dataMcgId', '[data-mcg-id]', onUserClick);
+        $modal.off('.crmrgiiCross').on('click.crmrgiiCross', '.crmrgii-cross', onRemoveClick);    
+        $modal.off('.crmrgiiAdmin').on('click.crmrgiiAdmin', '.crmrgii-admin', createGroupService.grantAdminClick);
+        $modal.off('.crmrgiiRemoveadmin').on('click.crmrgiiRemoveadmin', '.crmrgii-removeadmin', createGroupService.removeAdminClick);
+        $modal.off('.cgmInputSearch').on('input.cgmInputSearch', '#cgm-input-search', createGroupService.handleSearch);
 
-        $saveBtn.click(onSaveGropChat);
+        $saveBtn.off('click').click(onSaveGropChat);
     };
 
     const onRefresh = () => {

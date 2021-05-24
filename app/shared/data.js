@@ -30,6 +30,25 @@ define(() => {
         updated: room.updated,
         sender: room.sender
     });
+
+    const refresh = () => {
+        isNetworkStatus = true;
+        idShareScreen = null;
+        isEnabelCamera = true;
+        isEnabelMic = true;
+        infomation = {};
+        rooms = [];
+        currentRoomId = '';
+        currentSearchMessages = [];
+        version = '';
+        bodyBgTheme = '';
+        bodyFontSize = '';
+        roomInfo = {};
+        easyrtcIds = [];
+        language = '';
+        langJson = {};
+        roomDraft = {};
+    };
     
     return {
         getInfomation: () => infomation,
@@ -115,6 +134,8 @@ define(() => {
         getRoomDraft: () => roomDraft,
         setRoomDraft: (value) => {
             roomDraft = value;
-        }
+        },
+        
+        refresh
     };
 });

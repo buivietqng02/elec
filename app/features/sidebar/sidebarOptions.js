@@ -1,4 +1,5 @@
 define([
+    'app/constant',
     'shared/offlineData',
     'shared/functions',
     'features/modal/modalUserInterface',
@@ -9,6 +10,7 @@ define([
     'features/modal/modalChangeLanguage',
     'features/logout/logout'
 ], (
+    constant,
     offlineData,
     functions,
     modalUserInterfaceComp,
@@ -65,10 +67,7 @@ define([
         offEventClickOutside();
     };
 
-    const showMeetingPage = () => {
-        const win = window.open('/meeting.html', '_blank');
-        win.focus();
-    };
+    const showMeetingPage = () => functions.navigate(constant.ROUTE.meeting);
 
     const showModalSendInvite = () => {
         modalInviteComp.onInit();

@@ -247,28 +247,199 @@ define(() => ({
         </div>
     `,
     login: `
-        <div class="login js-global js-login active">
-            <div class="login__header">
-                <img class="login__logo" src="assets/images/icon.png" alt="Cross messenger logo">
-                <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
-                <div class="language-select" id="change-lang-btn">
-                    <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
-                    <span></span>
+        <div class="wrap-login">
+            <div class="login js-global js-login active">
+                <div class="login__header">
+                    <img class="login__logo" src="assets/images/icon.png" alt="Cross messenger logo">
+                    <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
+                    <div class="language-select" id="change-lang-btn">
+                        <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
+                        <span></span>
+                    </div>
                 </div>
+
+                <form name="loginForm" class="login__form js_login__form" method="post">
+                    <input data-lang-type="placeholder" data-language="EMAIL" required="Please enter a email" type="email" name="email" class="form-control" />
+                    <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
+                    <div class="mess"></div>
+                    <button type="submit" class="login__btn-submit js-btn-spin">
+                        <span class="--spin" style="display:none">◉</span>
+                        <lang data-language="LOGIN"></lang>
+                    </button>
+                </form>
+
+                <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>
+                <button data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>    
             </div>
 
-            <form name="loginForm" class="login__form js_login__form" method="post">
-                <input data-lang-type="placeholder" data-language="EMAIL" required="Please enter a email" type="email" name="email" class="form-control" />
-                <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
-                <div class="mess"></div>
-                <button type="submit" class="login__btn-submit js-btn-spin">
-                    <span class="--spin" style="display:none">◉</span>
-                    <lang data-language="LOGIN"></lang>
-                </button>
-            </form>
+            <div class="sign-up form-style js-global js-signup">
+                <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
+                <form name="resetForm" class="js_register__form" method="post">
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
+                    </div>
 
-            <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>
-            <button data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>    
+                    <div class="form__line form__line_code" style="display:none;">
+                        <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
+                    </div>
+                    <div class="mess"></div>
+                    <div class="popup__bottom">
+                        <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                        <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                            <span class="--spin" style="display:none">◉</span>
+                            <lang data-language="CREATE"></lang>
+                        </button>
+                    </div>          
+                </form>
+            </div>
+
+            <div class="reset-password reset-password2 form-style js-global js-forget">
+                <h2 data-language="RESET_PASSWORD" class="popup__heading"></h2>
+                <form name="resetForm" class="js_forgot__form_code" method="post">
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+                    </div>
+                    <div class="form__line">
+                        <div class="captcha-wrapper">
+                            <div class="pulse"></div>
+                            <img src="" class="mt-2 mb-2 rounded float-left" name="captcha-img"/>
+                            <button class="btn" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/></svg>
+                            </button>
+                        </div>
+                        <input data-lang-type="placeholder" data-language="CAPTCHA" class="form-control form-control2" required type="text" name="captcha" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="NEW_PASSWORD" class="form-control form-control2" type="password" name="password" />
+                    </div>
+                    <div class="form__line">
+                        <input data-lang-type="placeholder" data-language="CONFIRM_NEW_PASSWORD" class="form-control form-control2" type="password" name="confirmpassword" />
+                    </div>
+
+                    <div class="mess"></div> 
+
+                    <div class="popup__bottom">
+                        <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                        <button class="btn btn--second ml-2 js-btn-send-code js-btn-spin" type="submit">
+                            <span class="--spin" style="display:none">◉</span>
+                            <lang data-language="REQUEST_CODE"></lang>
+                        </button>                
+                        <button class="btn btn--second ml-2 js-btn-spin js-btn-reset-code" type="submit">
+                            <span class="--spin" style="display:none">◉</span>
+                            <lang data-language="RESET"></lang>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="download-app"></div>
         </div>
-    `
+    `,
+    meeting: `
+        <div class="meeting-video-wrapper">
+            <div class="language-select" id="change-lang-btn">
+                <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"></path>
+                </svg>
+                <span>RU</span>
+            </div>
+            <div class="mvw-wrapper">
+                <div class="mvww-div owner" style="display: flex;">
+                    <video autoplay="" playsinline="playsinline" id="mvww-user-0" class="mvww-owner"></video>
+                </div>
+            </div>
+            <div class="mvw-meetform">
+                <div class="mvwm-overlay"></div>
+                <div class="mvwm-box">
+                    <div class="mvwmb-url">
+                        <div class="mvwmb-copy"></div>
+                        <div data-language="CLICK_TO_COPY_AND_SHARE" class="mvwmb-placeholder"></div>
+                        <div class="input-only-view"></div>
+                    </div>
+                    <button data-language="JOIN_MEETING" class="btn btn-primary mvwmb-join-btn"></button>
+                    <button class="btn btn-secondary mvwmb-back-btn">
+                        Back to chat list
+                    </button>
+                    <div class="mvwmb-group-btn">
+                        <button class="btn-round mvwmb-btn-mic">
+                            <span></span>
+                            <i class="xm xm-microphone"></i>
+                        </button>
+                        <button class="btn-round mvwmb-btn-camera">
+                            <span></span>
+                            <i class="xm xm-video-camera btn-camera"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mvwm-settings">
+                <div class="mvwms-settings">
+                    <div class="mvwmss-utility">
+                        <button data-lang-type="tooltip" data-language="SHARE_YOUR_SCREEN" class="mvwmss-btn-share-screen" data-toggle="tooltip" data-placement="top" title="Share your screen">
+                            <i class="xm xm-desktop xm-fw" aria-hidden="true"></i>
+                        </button>
+                        <button data-lang-type="tooltip" data-language="INVITE_PEOPLE" class="mvwmss-btn-add-people" data-toggle="tooltip" data-placement="top" title="Invite people">
+                            <i class="xm xm-send-plus xm-fw" aria-hidden="true"></i>
+                        </button>
+                        <button class="mvwmss-btn-left-conference" data-toggle="tooltip" data-placement="top" title="Left the conference">
+                            <i class="xm xm-mail-forward xm-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="mvwmss-group-btn">
+                        <button class="btn-round mvwmb-btn-mic">
+                            <span></span>
+                            <i class="xm xm-microphone"></i>
+                        </button>
+                        <button class="btn-round mvwmb-btn-camera">
+                            <span></span>
+                            <i class="xm xm-video-camera btn-camera"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mvw-collapse-btn">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 612 612" style="enable-background:new 0 0 612 612;" xml:space="preserve">
+                    <g>
+                        <g id="_x36_">
+                            <g>
+                                <path d="M248.542,343.929H78.879c-10.452,0-18.917,8.428-18.917,18.842c0,10.395,8.465,18.84,18.917,18.84h125.351L0,584.979
+                        l26.751,26.639l204.019-203.18l-0.592,123.822c0,10.395,8.465,18.84,18.917,18.84c10.452,0,18.917-8.426,18.917-18.84v-169.51
+                        c0-5.58-2.312-10.09-5.981-13.186C258.573,346.126,253.815,343.929,248.542,343.929z M533.141,230.388H407.79L612,27.019
+                        L585.248,0.382l-204,203.178l0.593-123.822c0-10.395-8.465-18.841-18.917-18.841s-18.917,8.427-18.917,18.841v169.51
+                        c0,5.58,2.312,10.089,5.961,13.166c3.439,3.478,8.179,5.675,13.472,5.675h169.662c10.452,0,18.918-8.427,18.918-18.841
+                        C552.038,238.834,543.573,230.388,533.141,230.388z" />
+                            </g>
+                        </g>
+                    </g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                    <g></g>
+                </svg>
+            </div>
+        </div>    
+    `,
 }));

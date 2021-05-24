@@ -334,5 +334,15 @@ define([
         });
     };
 
+    ob.onInit = () => {
+        $selectedWrapper = undefined;
+        $usersWrapper = undefined;
+        search = '';
+        offset = 0;
+        offsetSelected = 0;
+        mapArr = undefined;
+        arrSelectedUsers = [];
+    };
+
     return ob;
 });

@@ -39,7 +39,6 @@ define([
     let toggleCameraClick = 0;
     let toggleMicClick = 0;
     let togglePhoneClick = 0;
-    let isModalRendered = false;
     const hide = 'hidden';
     const selfVideoId = 'selfVideo';
     const btnClassClicked = 'btn-slash';
@@ -345,9 +344,9 @@ define([
                 return;
             }
 
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#modalPhoneRequest').length) {
                 $('body').append(renderTemplate);
+                easyrtc.disconnect();
                 easyrtc.setSocketUrl(WEBRTC_URL);
                 onDeclareDom();
             }

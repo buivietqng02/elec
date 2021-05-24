@@ -9,7 +9,7 @@ define([
     GLOBAL,
     constant
 ) => {
-    const { setDataToLocalApplication, navigate } = functions;
+    const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
         TOKEN,
         SESSION_ID,
@@ -31,14 +31,12 @@ define([
             return;
         }
 
-        const { password, email } = functions.getFormData($loginForm);
+        const { password, email } = getFormData($loginForm);
         loading = true;
         $errMess.html('');
         $loader.show();
 
         API.postForm('login', `password=${password}&email=${email}`).then(res => {
-            loading = false;
-            $loader.hide();
             if (res?.data) {
                 setDataToLocalApplication(SESSION_ID, res.data.sessionId);
                 setDataToLocalApplication(USER_ID, res.data.userId);
@@ -58,12 +56,18 @@ define([
     };
 
     ob.onInit = () => {
+        loading = false;
         $loginForm = $('.js_login__form');
         $loginForm.off('submit').on('submit', onSubmit);
         $emailField = $loginForm.find('[name="email"]');
         $passwordField = $loginForm.find('[name="password"]');
         $errMess = $loginForm.find('.mess');
         $loader = $loginForm.find('.js-btn-spin .--spin');
+
+        $passwordField.val('');
+        $emailField.val('');
+        $errMess.html('');
+        $loader.hide();
     };
     
     return ob;

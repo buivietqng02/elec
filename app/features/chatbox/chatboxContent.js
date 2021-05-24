@@ -247,6 +247,12 @@ define([
     
     return {
         onInit: () => {
+            lastOffset = 0;
+            unreadScrollNum = 0;
+            processing = false;
+            isTouchLastMess = false;
+            isSearchMode = false;
+            isInit = false;
             $btnScrollToBottom = $('.scroll-to__bottom');
             $messageList = $('.messages__list');
             $wrapper = $('.js_con_list_mess');

@@ -24,11 +24,19 @@ define([
     let timeout;
     let isInit = false;
     let isBlinkTitleBrowser = false;
-    const { SESSION_ID } = constant;
+    const { SESSION_ID, TOKEN, USER_ID } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
         timeout: 10000,
         onBackground: false
+    };
+
+    const isLogin = () => {
+        const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
+        const token = functions.getDataToLocalApplication(TOKEN) || '';
+        const userId = functions.getDataToLocalApplication(USER_ID) || '';
+        
+        return !!(sessionId && token && userId);
     };
 
     const blinkTitle = () => {
@@ -216,6 +224,10 @@ define([
         data.onBackground = document.hidden;
 
         API.get('sync', data).then(res => {
+            if (!isLogin() || !!(functions.getRouter()?.current || [])[0]?.url) {
+                return;
+            }
+
             onSync();
 
             if (res?.messages?.length) {
@@ -238,6 +250,10 @@ define([
                 isInit = true;
                 onSync();
             }
+        },
+
+        onInitAgain: () => {
+            isInit = false;
         }
     };
 });
