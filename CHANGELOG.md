@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.14] - 2021-05-18
+### Update
+- Update router for app
+
 ### [3.13] - 2021-05-18
 ### Fix
 - Fix issue with ERP integration.
