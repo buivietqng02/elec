@@ -5,7 +5,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const htmlPageNames = ['index', 'login', 'meeting'];
+const htmlPageNames = ['index'];
 const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
     cache: false,
     template: `html/${name}.html`,
@@ -15,9 +15,7 @@ const multipleHtmlPlugins = htmlPageNames.map(name => new HtmlWebpackPlugin({
 
 module.exports = {
     entry: {
-        index: ['babel-polyfill', './app/router.js'],
-        meeting: './app/meeting.js',
-        login: './assets/js/login.js'
+        index: ['babel-polyfill', './app/router.js']
     },
     output: {
         filename: '[name].bundle.js',

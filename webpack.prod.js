@@ -9,12 +9,12 @@ module.exports = merge(common, {
     optimization: {
         minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
         splitChunks: {
-            // chunks: 'all',
+            chunks: 'all',
             cacheGroups: {
                 styles: {
                     name: 'styles',
                     test: /\.css$/,
-                    // chunks: 'all',
+                    chunks: 'all',
                     enforce: true
                 }   
             }
