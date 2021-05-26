@@ -108,13 +108,11 @@ define(() => ({
                             </button>
                             <button class="--internal menu__item">
                                 <i class="xm xm-comments"></i>
-                                <span data-language="ENABLE"></span>&nbsp;
-                                <lang data-language="INTERNAL_MESSAGES"></lang>
+                                <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
                             </button>
                             <button class="--disabled menu__item">
                                 <i class="xm xm-volume-mute" aria-hidden="true"></i>
-                                <span data-language="DISABLE"></span>&nbsp;
-                                <lang data-language="NOTIFICATIONS"></lang>
+                                <span data-language="DISABLE_NOTIFICATIONS"></span>
                             </button>
                             <button class="--leave menu__item">
                                 <i class="xm xm-mail-forward" aria-hidden="true"></i>
