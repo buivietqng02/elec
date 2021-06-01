@@ -24,7 +24,7 @@ img {
 	align-items: center;
 	flex-direction: column;
 	width: 100%;
-	max-width: 360px;
+	max-width: 400px;
 	color: #fff;
 	margin-left: auto;
 	margin-right: auto;
@@ -63,22 +63,28 @@ img {
 	color: #555
 }
 
-.login__btn-submit {
+.login__btn-submit,
+.login-erp-btn {
 	border-radius: 8px;
 	font-size: 1.3rem;
 	font-weight: 400;
-	padding: 18px 10px;
+	padding: 8px 0;
 	background: #007af5;
 	white-space: nowrap;
 	border: none;
 	color: #fff;
 	width: 100%;
-	min-height: 60px
+	height: 47px;
 }
 
-.login__btn-submit:hover {
+.login__btn-submit:hover,
+.login-erp-btn:hover {
 	box-shadow: 0 0 10px;
-	cursor: pointer
+	cursor: pointer;
+}
+
+.login-erp-btn {
+	background-color: #000;
 }
 
 .login__btn-signup {
@@ -92,7 +98,7 @@ img {
 	border: none;
 	color: #fff;
 	display: inline-block;
-	margin-top: 2em
+	margin-top: 1.5em;
 }
 
 .login__btn-signup:hover {
@@ -102,31 +108,34 @@ img {
 }
 
 .login__btn-forgot {
+	float: right;
 	border: none;
 	background: 0 0;
-	padding: 5px;
-	display: inline-block;
-	margin-top: 2em;
-	color: #fff;
-	border-radius: 8px;
+	padding: 0;
+	color: #cac8c8;
 	font-size: 1rem;
 	text-decoration: underline;
-	margin-bottom: auto
 }
 
 .login__btn-forgot:hover {
 	text-shadow: 0 0 10px;
-	cursor: pointer
+	color: #fff;
+	cursor: pointer;
 }
 
 .login input:required:invalid {
 	color: #f60
 }
 
+.neccessary-wrapper {
+	width: 100%;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+
 .mess {
-	min-height: 3rem;
+	float: left;
 	color: #fff;
-	margin-top: 1rem
 }
 
 .form-style {
@@ -152,13 +161,13 @@ img {
 	color: #fff
 }
 
-.popup__bottom {
+.wrap-login .popup__bottom {
 	display: flex;
 	align-items: center;
-	justify-content: flex-end
+	justify-content: flex-end;
 }
 
-.popup__bottom .btn {
+.wrap-login .popup__bottom .btn {
 	flex: auto
 }
 
@@ -394,4 +403,72 @@ img {
 	position: absolute;
     top: 13px;
     left: 70px;
+}
+
+.or-sign-in {
+	margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+    color: #cac8c8;
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.or-sign-in:before,
+.or-sign-in:after {
+	content: '';
+	border-bottom: 1px solid #cac8c8;
+	position: absolute;
+	width: 41%;
+	left: 0;
+	top: 11.5px;
+}
+
+.or-sign-in:after {
+	left: auto;
+	right: 0;
+}
+
+.erp-login-form {
+	width: 100%;
+    margin-left: 130px;
+    margin-top: 3.5rem;
+    position: relative;
+}
+
+.erp-login-form img {
+	width: 150px;
+    height: 150px;
+    position: absolute;
+    left: -180px;
+    top: 0;
+}
+
+.erp-login-form  .erp-cancel-btn {
+	width: 48%;
+    float: left;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding: 8px 0;
+    white-space: nowrap;
+    border: none;
+    color: #fff;
+    height: 47px;
+}
+
+.erp-login-form .login__btn-submit {
+	width: 48%;
+	float: right;
+}
+
+@media screen and (max-width: 768px) {
+    .erp-login-form {
+		margin-left: 0;
+		margin-top: 3rem;
+	}
+	
+	.erp-login-form img {
+		display: none;
+	}
 }
