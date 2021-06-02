@@ -83,11 +83,17 @@ img {
 
 .login-erp-btn {
 	background-color: #000;
-	width: 45px;
-	height: 45px;
+	width: 55px;
+	height: 55px;
 	border-radius: 50%;
 	border: 0;
 	position: relative;
+}
+
+.login-erp-btn svg {
+	width: 55px;
+	position: relative;
+	left: -6px;
 }
 
 .login-erp-btn .st0 {
