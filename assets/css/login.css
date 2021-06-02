@@ -63,8 +63,7 @@ img {
 	color: #555
 }
 
-.login__btn-submit,
-.login-erp-btn {
+.login__btn-submit {
 	border-radius: 8px;
 	font-size: 1.3rem;
 	font-weight: 400;
@@ -77,14 +76,36 @@ img {
 	height: 47px;
 }
 
-.login__btn-submit:hover,
-.login-erp-btn:hover {
+.login__btn-submit:hover {
 	box-shadow: 0 0 10px;
 	cursor: pointer;
 }
 
 .login-erp-btn {
 	background-color: #000;
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	border: 0;
+	position: relative;
+}
+
+.login-erp-btn .st0 {
+	fill:#fff;
+}
+.login-erp-btn .st1 {
+	fill:#fff;
+}
+
+.login-erp-btn:hover {
+	background-color: #fff;
+}
+
+.login-erp-btn:hover .st0 {
+	fill:#000;
+}
+.login-erp-btn:hover .st1 {
+	fill:#000;
 }
 
 .login__btn-signup {
@@ -419,7 +440,7 @@ img {
 	content: '';
 	border-bottom: 1px solid #cac8c8;
 	position: absolute;
-	width: 41%;
+	width: 30%;
 	left: 0;
 	top: 11.5px;
 }
@@ -462,7 +483,7 @@ img {
 	float: right;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 5768px) {
     .erp-login-form {
 		margin-left: 0;
 		margin-top: 3rem;

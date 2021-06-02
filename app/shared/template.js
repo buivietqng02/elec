@@ -1,4 +1,4 @@
-define(() => ({
+define(['shared/icon'], (ICON) => ({
     main: `
         <div id="frame">
             <div class="sidebar">
@@ -268,12 +268,13 @@ define(() => ({
                         <lang data-language="LOGIN"></lang>
                     </button>
                     <div class="or-sign-in">
-                        OR
+                        OR LOGIN WITH
                     </div>
-                    <button type="button" class="login-erp-btn js-btn-spin">
-                        <span class="--spin" style="display:none">◉</span>
-                        Login with ERP
-                    </button>
+                    <div>
+                        <button type="button" class="login-erp-btn">
+                            ${ICON.ERP_LOGO}
+                        </button>
+                    </div>
                 </form>
 
                 <form class="erp-login-form" style="display: none">
