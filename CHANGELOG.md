@@ -7,6 +7,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### [3.14] - 2021-05-18
 ### Update
 - Update router for app
+- Update login page
+### Add
+- Add Captcha to forget password form
+- Add login with ERP feature
 
 ### [3.13] - 2021-05-18
 ### Fix
