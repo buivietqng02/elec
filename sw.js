@@ -10,6 +10,7 @@ const urls = [
     '/source/index.bundle.js',
     '/source/77.bundle.js',
     '/source/styles.bundle.js',
+    '/source/styles.css',
     '/assets/css/xm-icon.min.css',
     '/source/700-scaled.jpg',
     '/assets/images/cosmos4-1.jpg',

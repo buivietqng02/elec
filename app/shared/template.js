@@ -261,7 +261,7 @@ define(['shared/icon'], (ICON) => ({
                     <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
                     <div class="clearfix neccessary-wrapper">
                         <div class="mess"></div>
-                        <button data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>
+                        <button type="button" data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>
                     </div>
                     <button type="submit" class="login__btn-submit js-btn-spin">
                         <span class="--spin" style="display:none">◉</span>
