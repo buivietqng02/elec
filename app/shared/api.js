@@ -3,52 +3,32 @@ define([
     'app/constant', 
     'shared/functions',
     'shared/offlineData',
+    'features/logout/logout',
     'axios'
 ], (
     GLOBAL,
     constant, 
     functions,
     offlineData,
+    Logout,
     axios
 ) => {
     const {
         TOKEN,
-        SESSION_ID,
         API_URL,
-        USER_ID,
     } = constant;
 
-    const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
-    const token = functions.getDataToLocalApplication(TOKEN) || '';
-    const userId = functions.getDataToLocalApplication(USER_ID) || '';
+    const getHeaderJson = () => ({
+        'Accept-Language': GLOBAL.getLanguage(),
+        'Content-Type': 'application/json',
+        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+    });
 
-    const getHeaderJson = () => {
-        return {
-            'Accept-Language': GLOBAL.getLanguage(),
-            'Content-Type': 'application/json',
-            'X-Authorization-Token': token
-        }
-    };
-
-    const getHeaderForm = () => {
-        return {
-            'Accept-Language': GLOBAL.getLanguage(),
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Authorization-Token': token
-        }
-    };
-
-    const onLogout = () => {
-        offlineData.clear();
-        functions.removeDataInLocalApplication(SESSION_ID);
-        functions.removeDataInLocalApplication(TOKEN);
-        functions.removeDataInLocalApplication(USER_ID);
-        window.location = 'login.html';
-    };
-    
-    if (!sessionId || !token || !userId) {
-        onLogout();
-    }
+    const getHeaderForm = () => ({
+        'Accept-Language': GLOBAL.getLanguage(),
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+    });
 
     const toQueryString = (params = {}) => {
         const parts = [];
@@ -78,7 +58,7 @@ define([
         }
 
         if (error.response.status === 401) {
-            onLogout();
+            Logout.onLogout();
         }
 
         if (error.response.status === 403) {
@@ -89,24 +69,24 @@ define([
     });
     
     return {
-        get: (endpoint = '', params = {}) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
-            headers: getHeaderJson()
+        get: (endpoint = '', params = {}, headers) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
+            headers: headers ? headers : getHeaderJson()
         }),
 
-        post: (endpoint = '', params = {}) => axios.post(`${API_URL}/${endpoint}`, params, {
-            headers: getHeaderJson()
+        post: (endpoint = '', params = {}, headers) => axios.post(`${API_URL}/${endpoint}`, params, {
+            headers: headers ? headers : getHeaderJson()
         }),
 
-        put: (endpoint = '', params = {}) => axios.put(`${API_URL}/${endpoint}`, params, {
-            headers: getHeaderJson()
+        put: (endpoint = '', params = {}, headers) => axios.put(`${API_URL}/${endpoint}`, params, {
+            headers: headers ? headers : getHeaderJson()
         }),
 
-        delete: (endpoint = '') => axios.delete(`${API_URL}/${endpoint}`, {
-            headers: getHeaderJson()
+        delete: (endpoint = '', headers) => axios.delete(`${API_URL}/${endpoint}`, {
+            headers: headers ? headers : getHeaderJson()
         }),
 
-        postForm: (endpoint = '', formData) => axios.post(`${API_URL}/${endpoint}`, formData, {
-            headers: getHeaderForm(),
+        postForm: (endpoint = '', formData, headers) => axios.post(`${API_URL}/${endpoint}`, formData, {
+            headers: headers ? headers : getHeaderForm()
         })
     };
 });

@@ -10,12 +10,12 @@ define([
     const message = {};
     let $message;
     let isShow = false;
-    const $wrapper = $('.js_con_list_mess');
-    const $slide = $('.js-menu-messages');
-    const $cmtBtn = $('.js-menu-messages-cmt');
-    const $forwardBtn = $('.js-menu-messages-forward');
-    const $editBtn = $('.js-menu-messages-edit');
-    const $removeBtn = $('.js-menu-messages-remove');
+    let $wrapper;
+    let $slide;
+    let $cmtBtn;
+    let $forwardBtn;
+    let $editBtn;
+    let $removeBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -116,6 +116,14 @@ define([
 
     return {
         onInit: () => {
+            isShow = false;
+            $wrapper = $('.js_con_list_mess');
+            $slide = $('.js-menu-messages');
+            $cmtBtn = $('.js-menu-messages-cmt');
+            $forwardBtn = $('.js-menu-messages-forward');
+            $editBtn = $('.js-menu-messages-edit');
+            $removeBtn = $('.js-menu-messages-remove');
+
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
             $editBtn.off().click(onEdit);

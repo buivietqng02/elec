@@ -56,11 +56,13 @@ define(() => {
 
     return {
         onInit: () => {
-            $('body').append(renderTemplate);
-            $modal = $('#showImageFull');
-            $img = $modal.find('img');
-            $(document).on('click', '.--click-show-popup-up-img', showImage);
-            $img.click(zoomImage);
+            if (!$('#showImageFull').length) {
+                $('body').append(renderTemplate);
+                $modal = $('#showImageFull');
+                $img = $modal.find('img');
+                $(document).on('click', '.--click-show-popup-up-img', showImage);
+                $img.click(zoomImage);
+            }
         }
     };
 });

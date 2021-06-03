@@ -33,7 +33,7 @@
     "ENABLE_NOTIFICATIONS": "啟用通知",
     "ENTER_DESCRIPTION": "輸入描述",
     "ENTER_EMAIL_ADDRESS": "輸入電郵地址及發送邀請",
-    "ENTER_ERP_URL": "輸入ERP網址以載入聯絡人",
+    "INTEGRATE_ERP_CONTACTS": "您要從ERP導入聯繫人嗎？",
     "ENTER_GROUP_NAME": "輸入群組名稱",
     "ENTER_NAME": "輸入名稱",
     "ERP_CONTACTS": "ERP 聯絡人",

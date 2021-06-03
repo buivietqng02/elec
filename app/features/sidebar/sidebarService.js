@@ -21,8 +21,6 @@ define([
         ATTRIBUTE_CHANGE_GROUP_NAME,
         ATTRIBUTE_CHANGE_NAME,
     } = constant;
-    const $wrapper = $('#sidebar_room_list');
-    const $scroll = $wrapper.parent();
     const ob = {};
     const offset = contactHeight < 600 ? 10 : Math.ceil(contactHeight/60);
     let range = [0, offset];
@@ -43,14 +41,7 @@ define([
         </li>
     `;
 
-    $scroll.scroll(() => {
-        if ($scroll.scrollTop() + $scroll.height() < $scroll[0].scrollHeight - 100 || process) {
-            return;
-        }
-
-        range = [range[1], range[1] + offset];
-        ob.appendRoom();
-    });
+    const getWrapper = () => $('#sidebar_room_list');
 
     const getRoomsHtml = (rooms, range) => rooms.slice(range[0], range[1]).map(ob.renderRoom);
     
@@ -126,6 +117,23 @@ define([
     };
 
     const checkRoom = (rid, range) => getRooms().some(room => (room.id === rid));
+
+    ob.initScroll = () => {
+        range = [0, offset];
+        process = false;
+        search = '';
+        filter = 1;
+
+        const $scroll = getWrapper().parent();
+        $scroll.off().scroll(() => {
+            if ($scroll.scrollTop() + $scroll.height() < $scroll[0].scrollHeight - 100 || process) {
+                return;
+            }
+    
+            range = [range[1], range[1] + offset];
+            ob.appendRoom();
+        });
+    };
 
     ob.renderRoom = (room) => {
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
@@ -203,12 +211,12 @@ define([
     ob.getRooms = () => {
         range = [0, offset];
         
-        $wrapper.html(getRoomsHtml(getRooms(), range));
+        getWrapper().html(getRoomsHtml(getRooms(), range));
     };
     
     ob.appendRoom = () => {
         process = true;
-        $wrapper.append(getRoomsHtml(getRooms(), range));
+        getWrapper().append(getRoomsHtml(getRooms(), range));
 
         setTimeout(() => {
             process = false;
@@ -220,19 +228,19 @@ define([
 
         if (!$room.length && checkRoom(room.id)) {
             range = [range[0] + 1, range[1] + 1];
-            $wrapper.prepend(ob.renderRoom(room));
+            getWrapper().prepend(ob.renderRoom(room));
         }
 
         if ($room.length) {
             $room.remove();
-            $wrapper.prepend(ob.renderRoom(room));
+            getWrapper().prepend(ob.renderRoom(room));
         }
     };
 
     ob.newRoomUp = (room) => {
         if (checkRoom(room.id)) {
             range = [range[0] + 1, range[1] + 1];
-            $wrapper.prepend(ob.renderRoom(room));
+            getWrapper().prepend(ob.renderRoom(room));
         }
     };
 

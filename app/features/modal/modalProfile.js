@@ -1,30 +1,28 @@
 define([
     'app/constant',
     'shared/alert',
-    'shared/api', 
-    'shared/data', 
+    'shared/api',
+    'shared/data',
     'shared/functions'
 ], (
     constant,
     ALERT,
-    API, 
-    GLOBAL, 
+    API,
+    GLOBAL,
     functions
 ) => {
-    const { render, getAvatar, getDataToLocalApplication } = functions;
+    const { getAvatar, getDataToLocalApplication } = functions;
     const {
- API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE 
-} = constant;
+        API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
+    } = constant;
     const token = getDataToLocalApplication(TOKEN) || '';
 
-    let isModalRendered = false;
     let isProcessing;
     let $modal;
     let $img;
     let $userId;
     let $name;
     let $email;
-    let $erp;
     let $closeBtn;
     let $inputFile;
     let $save;
@@ -62,10 +60,6 @@ define([
                             <label>${langJson.NAME}</label>
                             <input data-language="ENTER_NAME" data-lang-type="placeholder" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
-                        <div class="pmm-form-group pmm-erp">
-                            <label>ERP/CRM URL</label>
-                            <input style="margin-bottom: 0" placeholder="https://erp.iptp.net/erp/dispatcher" />
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
@@ -92,13 +86,12 @@ define([
         isProcessing = true;
         $save.addClass('loading-btn');
 
-        API.post('saveprofile', {name: `${$name.val() || info.name}`, url: `${$erp.val()}`}).then(() => {
+        API.post('saveprofile', { name: `${$name.val() || info.name}` }).then(() => {
             if ($name.val()) {
                 info.name = $name.val();
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).text($name.val());
             }
-            
-            info.erp_url = $erp.val();
+
             $closeBtn.click();
             GLOBAL.setInfomation(info);
         }).catch(onErrNetWork);
@@ -112,11 +105,11 @@ define([
         if (!file) {
             return;
         }
-        
+
         FR.addEventListener('load', (e) => {
             $img.attr('src', e.target.result);
             $(`[${ATTRIBUTE_CHANGE_IMAGE}="${GLOBAL.getInfomation().id}"]`).attr('src', e.target.result);
-        }); 
+        });
         FR.readAsDataURL(file);
 
         fd.append('avatarfile', file);
@@ -130,17 +123,16 @@ define([
             cache: false,
             contentType: false,
             processData: false,
-            success: () => {},
-            error: () => {}
+            success: () => { },
+            error: () => { }
         });
     };
 
     return {
-        onInit: (id) => {
+        onInit: () => {
             const info = GLOBAL.getInfomation();
 
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#profileModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#profileModal');
                 $img = $modal.find('.pmm-image-wrapper img');
@@ -150,7 +142,6 @@ define([
                 $name = $modal.find('.pmm-form-group.pmm-name input');
                 $email = $modal.find('.pmm-form-group.pmm-email input');
                 $email.val(info.email);
-                $erp = $modal.find('.pmm-form-group.pmm-erp input');
                 $save = $modal.find('.btn-outline-primary');
                 $closeBtn = $modal.find('.close');
                 $inputFile = $modal.find('.pmm-image-wrapper .pmmiw-file');
@@ -163,7 +154,6 @@ define([
             isProcessing = false;
             $save.removeClass('loading-btn');
             $name.val(info.name);
-            $erp.val(info.erp_url);
             $modal.modal('show');
         }
     };

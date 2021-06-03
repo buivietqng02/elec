@@ -13,15 +13,15 @@ define([
 ) => {
     const { API_URL, TOKEN } = constant;
     const token = functions.getDataToLocalApplication(TOKEN) || '';
-    const $attachButton = $('.btn__attach');
-    const $inputFile = $('.--input-up-file');
-    const $inputImage = $('.--input-up-media');
-    const $wrapper = $('#media-menu');
-    const $callBtn = $wrapper.find('.js-up-phone');
-    const $progressWrapper = $('.chatbox-progress-upload');
-    const $pathCircle = $progressWrapper.find('path');
-    const $percentProgress = $progressWrapper.find('span');
-    const $dropzone = $('.dropzone');
+    let $attachButton;
+    let $inputFile;
+    let $inputImage;
+    let $wrapper;
+    let $callBtn;
+    let $progressWrapper;
+    let $pathCircle;
+    let $percentProgress;
+    let $dropzone;
     let initEventDoc = false;
     let isShow = false;
     let counter = 0;
@@ -186,6 +186,18 @@ define([
     
     return {
         onInit: () => {
+            isShow = false;
+            counter = 0;
+            $attachButton = $('.btn__attach');
+            $inputFile = $('.--input-up-file');
+            $inputImage = $('.--input-up-media');
+            $wrapper = $('#media-menu');
+            $callBtn = $wrapper.find('.js-up-phone');
+            $progressWrapper = $('.chatbox-progress-upload');
+            $pathCircle = $progressWrapper.find('path');
+            $percentProgress = $progressWrapper.find('span');
+            $dropzone = $('.dropzone');
+
             $attachButton.off().click(showSlide);
             $callBtn.off().click(showPhoneModal);
             $inputFile.off().change(() => uploadFile('fileupload'));

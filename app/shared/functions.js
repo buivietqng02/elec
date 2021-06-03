@@ -1,4 +1,4 @@
-const { suppressDeprecationWarnings, lang } = require("moment");
+let router;
 
 const convertToJSView = (html) => html.replace(/{([^}]+)}/g, (m, s) => {
     const key = s.replace(/\./g, '^');
@@ -28,7 +28,7 @@ const modalConfirmTemplate = (object) => `
     </div>
 `;
 
-define(['moment', 'app/constant'], (moment, constant) => ({
+define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     setCookie: (value, days) => {
         let expires = '';
 
@@ -249,6 +249,33 @@ define(['moment', 'app/constant'], (moment, constant) => ({
     },
 
     generateId: () => Math.random().toString(36).substr(2, 9),
+
+    getRouter: () => {
+        if (!router) {
+            router = new Navigo('/');
+        }
+
+        return router;
+    },
+
+    navigate: (path) => {
+        if (!router) {
+            router = new Navigo('/');
+        }
+
+        return router.navigate(path);
+    },
+
+    getFormData: ($form) => {
+        const unindexedArray = $form.serializeArray();
+        const indexedArray = {};
+    
+        $.map(unindexedArray, (n) => {
+            indexedArray[n.name] = n.value;
+        });
+    
+        return indexedArray;
+    },
 
     render: (html, data) => $.templates(convertToJSView(html)).render(data)
 }));

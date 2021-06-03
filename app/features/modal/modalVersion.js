@@ -1,6 +1,4 @@
 define(['shared/data'], (GLOBAL) => {
-    let isModalRendered = false;
-    let $modal;
     const renderTemplate = (version, langJson) => `
         <div class="modal fade" id="versionModal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -25,8 +23,9 @@ define(['shared/data'], (GLOBAL) => {
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            let $modal = $('#versionModal');
+            
+            if (!$modal.length) {
                 $('body').append(renderTemplate(GLOBAL.getVersion(), GLOBAL.getLangJson()));
                 $modal = $('#versionModal');
             }

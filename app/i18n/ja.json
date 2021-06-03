@@ -41,7 +41,7 @@
     "ENABLE_NOTIFICATIONS": "通知を ON にする",
     "ENTER_DESCRIPTION": "情報入力",
     "ENTER_EMAIL_ADDRESS": "招待するユーザーのメールアドレスを入力してください。",
-    "ENTER_ERP_URL": "ERP URLを入力して連絡先を導入します。",
+    "INTEGRATE_ERP_CONTACTS": "ERPから連絡先をインポートしますか。",
     "ENTER_GROUP_NAME": "グループ名を入力",
     "ENTER_NAME": "名前を入力",
     "ERP_CONTACTS": "ERPの連絡先",

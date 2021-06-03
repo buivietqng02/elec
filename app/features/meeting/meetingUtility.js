@@ -1,20 +1,33 @@
 define([
+    'app/constant',
     'shared/functions',
     'features/meeting/meetingInviteModal',
     'shared/data'
 ], (
+    constant,
     functions,
     meetingInviteModalComp,
     GLOBAL
 ) => {
-    const $shareBtn = $('.mvwmss-btn-share-screen');
-    const $inviteBtn = $('.mvwmss-btn-add-people');
-    const $video = $('#mvww-user-0');
-    const $settings = $('.mvwm-settings');
+    let $shareBtn;
+    let $inviteBtn;
+    let $leftBtn;
+    let $video;
+    let $settings;
     const constraintsShare = {
         video: {
           cursor: 'always'
         }
+    };
+
+    const onLeft = () => {
+        $('.tooltip.show').remove();
+        easyrtc.hangupAll();
+        easyrtc.setRoomOccupantListener(null);
+        easyrtc.disconnect();
+        ((easyrtc.getLocalStream() || { getTracks: () => {} })
+        .getTracks() || []).forEach(track => track.stop());
+        functions.navigate(constant.ROUTE.index);
     };
 
     const onStop = () => {
@@ -76,8 +89,15 @@ define([
 
     return {
         onInit: () => {
-            $shareBtn.click(onShare);
-            $inviteBtn.click(meetingInviteModalComp.onInit);
+            $shareBtn = $('.mvwmss-btn-share-screen');
+            $inviteBtn = $('.mvwmss-btn-add-people');
+            $leftBtn = $('.mvwmss-btn-left-conference');
+            $video = $('#mvww-user-0');
+            $settings = $('.mvwm-settings');
+
+            $shareBtn.off('click').click(onShare);
+            $inviteBtn.off('click').click(meetingInviteModalComp.onInit);
+            $leftBtn.off('click').click(onLeft);
         }
     };
 });

@@ -4,6 +4,18 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.14] - 2021-05-18
+### Update
+- Update router for app
+- Update login page
+### Add
+- Add Captcha to forget password form
+- Add login with ERP feature
+
+### [3.13] - 2021-05-18
+### Fix
+- Fix issue with ERP integration.
+
 ### [3.12] - 2021-05-06
 ### Update
 - Add 'Accept-Language' header to API requests.

@@ -23,7 +23,6 @@ define([
     const token = getDataToLocalApplication(TOKEN) || '';
     let roomInfo;
     let isProcessing;
-    let isModalRendered = false;
     let $modal;
     let $modalBody;
     let $contentLA;
@@ -237,8 +236,7 @@ define([
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#editRoomModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#editRoomModal');
                 $modalBody = $modal.find('.not-live-assistance');

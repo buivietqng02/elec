@@ -147,6 +147,12 @@ button {
 .mvwmb-join-btn {
     width: 382px;
     max-width: 90%;
+    margin-bottom: 18px;
+}
+
+.mvwmb-back-btn {
+    width: 382px;
+    max-width: 90%;
 }
 
 .mvwm-overlay {
@@ -442,6 +448,14 @@ button {
 @media screen and (max-width: 991px) {
     .mvww-div {
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .mvwmss-utility {
+        position: fixed;
+        top: 10px;
+        left: 0;
     }
 }
 

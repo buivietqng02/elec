@@ -7,19 +7,10 @@ define([
 ) => {
     let userList = [];
     let onlyRun = false;
-    const $videpWrapper = $('.mvw-wrapper');
-    const $collapseBtn = $('.mvw-collapse-btn');
-    const $micBtn = $('.mvwmb-btn-mic');
-    const $cameraBtn = $('.mvwmb-btn-camera');
-
-    for (let i = 0; i < 8; i += 1) {
-        userList = userList.concat(`mvww-user-${i + 1}`);
-        $videpWrapper.append(`
-            <div class="mvww-div">
-                <video id="mvww-user-${i + 1}" autoplay="" playsinline="playsinline" class="mvww-normal"></video>
-            </div>
-        `);
-    }
+    let $videpWrapper;
+    let $collapseBtn;
+    let $micBtn;
+    let $cameraBtn;
 
     const onExpand = (e) => {
         const $this = $(e.currentTarget);
@@ -192,7 +183,7 @@ define([
                 window.despiteNotHaveDevice = true;
                 
                 easyrtc.initMediaSource(() => {
-                    easyrtc.easyApp('easyrtc.videoChatHd', 'mvww-user-0', userList, initWepRTC);
+                    easyrtc.easyApp(`easyrtc.${new Date().getTime()}`, 'mvww-user-0', userList, initWepRTC);
                 });
             }
         });
@@ -200,6 +191,22 @@ define([
 
     return {
         onInit: () => {
+            userList = [];
+            onlyRun = false;
+            $videpWrapper = $('.mvw-wrapper');
+            $collapseBtn = $('.mvw-collapse-btn');
+            $micBtn = $('.mvwmb-btn-mic');
+            $cameraBtn = $('.mvwmb-btn-camera');
+
+            for (let i = 0; i < 8; i += 1) {
+                userList = userList.concat(`mvww-user-${i + 1}`);
+                $videpWrapper.append(`
+                    <div class="mvww-div">
+                        <video id="mvww-user-${i + 1}" autoplay="" playsinline="playsinline" class="mvww-normal"></video>
+                    </div>
+                `);
+            }
+
             easyrtc.setSocketUrl(URL);
             easyrtc.dontAddCloseButtons(true);
             initMediaSource();

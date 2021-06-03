@@ -1,19 +1,21 @@
 define([
+    'app/constant',
     'shared/functions',
     'shared/alert',
     'shared/data',
     'features/meeting/meetingWebRTC'
 ], (
+    constant,
     functions,
     ALERT,
     GLOBAL,
     meetingWebRTCComp
 ) => {
-    const $micBtn = $('.mvwmb-btn-mic');
-    const $cameraBtn = $('.mvwmb-btn-camera');
-    const $url = $('.mvwmb-url');
-    const $urlText = $('.mvwmb-copy');
-    const $videoSelf = $('#mvww-user-0');
+    let $micBtn;
+    let $cameraBtn;
+    let $url;
+    let $urlText;
+    let $videoSelf;
 
     const insertUrlParam = (key, value) => {
         if (window.history.pushState) {
@@ -38,22 +40,37 @@ define([
 
     return {
         onInit: () => {
+            $micBtn = $('.mvwmb-btn-mic');
+            $cameraBtn = $('.mvwmb-btn-camera');
+            $url = $('.mvwmb-url');
+            $urlText = $('.mvwmb-copy');
+            $videoSelf = $('#mvww-user-0');
+
             onCreateId();
 
-            $('.mvwmb-join-btn').click(() => {
+            $('.mvwmb-join-btn').off('click').click(() => {
                 $('.mvw-wrapper').addClass('joining');
                 $('.mvw-meetform').hide();
                 $('.mvwm-settings').show();
                 meetingWebRTCComp.onJoinRoom();
             });
 
-            $url.click(() => {
+            $('.mvwmb-back-btn').off('click').click(() => {
+                easyrtc.hangupAll();
+                easyrtc.setRoomOccupantListener(null);
+                easyrtc.disconnect();
+                ((easyrtc.getLocalStream() || { getTracks: () => {} })
+                .getTracks() || []).forEach(track => track.stop());
+                functions.navigate(constant.ROUTE.index);
+            });
+
+            $url.off('click').click(() => {
                 const searchParams = new URLSearchParams(window.location.search);
                 navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
                 ALERT.show(GLOBAL.getLangJson().COPY_TO_CLIPBOARD, 'success');
             });
 
-            $micBtn.click(() => {
+            $micBtn.off('click').click(() => {
                 if (!GLOBAL.getIsEnabelMic()) {
                     return;
                 }
@@ -67,7 +84,7 @@ define([
                 }
             });
 
-            $cameraBtn.click(() => {
+            $cameraBtn.off('click').click(() => {
                 if (!GLOBAL.getIsEnabelCamera()) {
                     return;
                 }

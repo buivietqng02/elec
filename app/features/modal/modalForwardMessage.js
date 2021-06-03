@@ -100,10 +100,9 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
     return {
         onInit: (id) => {
             const roomList = GLOBAL.getRooms().filter(room => room.id);
-            if (!isListRoomRendered) {
-                isListRoomRendered = true;
-                $(document).on('click', '[data-fmm-room-id]', onRoomClick);
-                $(document).on('input', '#fmm-input', onSearch);
+            if (!$('#forwardMessageModal').length) {
+                $(document).off('.forwardMessageClick').on('click.forwardMessageClick', '[data-fmm-room-id]', onRoomClick);
+                $(document).off('.forwardMessageInput').on('input.forwardMessageInput', '#fmm-input', onSearch);
                 $('body').append(renderTemplate(renderRoomList(), GLOBAL.getLangJson()));
                 $modal = $('#forwardMessageModal');
                 $closeBtn = $modal.find('.close');

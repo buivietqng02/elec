@@ -41,7 +41,7 @@
     "ENABLE_NOTIFICATIONS": "Bật thông báo",
     "ENTER_DESCRIPTION": "Nhập mô tả",
     "ENTER_EMAIL_ADDRESS": "Nhập địa chỉ email để gửi lời mời",
-    "ENTER_ERP_URL": "Nhập URL ERP để tải danh bạ",
+    "INTEGRATE_ERP_CONTACTS": "Bạn có muốn nhập danh bạ từ ERP không?",
     "ENTER_GROUP_NAME": "Nhập Tên Nhóm ...",
     "ENTER_NAME": "Nhập tên",
     "ERP_CONTACTS": "Danh bạ ERP",

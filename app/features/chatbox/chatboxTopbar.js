@@ -20,18 +20,18 @@ define([
     modalLeaveGroupComp
 ) => {
     const { getAvatar } = functions;
-    const $groupOptionsBtn = $('.js-group-option');
-    const $slide = $('#chatbox-group-option');
-    const $editBtn = $slide.find('.--edit-group');
-    const $internalBtn = $slide.find('.--internal');
-    const $textInternalBtn = $internalBtn.find('span');
-    const $notificationBtn = $slide.find('.--disabled');
-    const $textNotiBtn = $notificationBtn.find('span');
-    const $leaveBtn = $slide.find('.--leave');
-    const $removeBtn = $slide.find('.--remove');
-    const $name = $('.js_info_parnter .toolbar-name .--name');
-    const $image = $('.js_info_parnter .--img.avatar');
-    const $timeActivity = $('.js_info_parnter .toolbar-name .--online');
+    let $groupOptionsBtn;
+    let $slide;
+    let $editBtn;
+    let $internalBtn;
+    let $textInternalBtn;
+    let $notificationBtn;
+    let $textNotiBtn;
+    let $leaveBtn;
+    let $removeBtn;
+    let $name;
+    let $image;
+    let $timeActivity;
 
     const offEventClickOutside = () => {
         $slide.hide();
@@ -108,6 +108,19 @@ define([
 
     return {
         onInit: () => {
+            $groupOptionsBtn = $('.js-group-option');
+            $slide = $('#chatbox-group-option');
+            $editBtn = $slide.find('.--edit-group');
+            $internalBtn = $slide.find('.--internal');
+            $textInternalBtn = $internalBtn.find('span');
+            $notificationBtn = $slide.find('.--disabled');
+            $textNotiBtn = $notificationBtn.find('span');
+            $leaveBtn = $slide.find('.--leave');
+            $removeBtn = $slide.find('.--remove');
+            $name = $('.js_info_parnter .toolbar-name .--name');
+            $image = $('.js_info_parnter .--img.avatar');
+            $timeActivity = $('.js_info_parnter .toolbar-name .--online');
+
             $groupOptionsBtn.off().click(showSlide);
             $editBtn.off().click(editGroup);
             $leaveBtn.off().click(leaveGroup);

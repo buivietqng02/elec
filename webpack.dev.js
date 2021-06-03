@@ -9,6 +9,9 @@ module.exports = merge(common, {
         host: '0.0.0.0',
         port: 8080,
         contentBase: __dirname,
-        publicPath: '/source'
+        publicPath: '/source',
+        historyApiFallback: {
+            index: 'index.html'
+        }
     }
 });

@@ -6,7 +6,7 @@ Warning: Make sure you're using the latest version of Node.js and NPM
 $ git clone https://{{username}}@git.iptp.dev/andre/xm-web.git
 
 # change directory to your app
-$ cd xm-web-client
+$ cd xm-web
 
 # install the dependencies with npm
 $ npm install

@@ -10,7 +10,6 @@ define([
     languageComp
 ) => {
     const { LANGUAGES } = constant;
-    let isModalRendered = false;
     let $modal;
     let $langs;
     let $submitBtn;
@@ -100,8 +99,7 @@ define([
 
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#changeLanguage').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
                 $modal = $('#changeLanguage');
                 $langs = $modal.find('.clm-item');

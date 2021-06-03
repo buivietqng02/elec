@@ -10,9 +10,9 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest'
 ], (
-    constant, 
-    API, 
-    GLOBAL, 
+    constant,
+    API,
+    GLOBAL,
     functions,
     sidebarService,
     chatboxContentComp,
@@ -24,11 +24,19 @@ define([
     let timeout;
     let isInit = false;
     let isBlinkTitleBrowser = false;
-    const { SESSION_ID } = constant;
+    const { SESSION_ID, TOKEN, USER_ID } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
         timeout: 10000,
         onBackground: false
+    };
+
+    const isLogin = () => {
+        const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
+        const token = functions.getDataToLocalApplication(TOKEN) || '';
+        const userId = functions.getDataToLocalApplication(USER_ID) || '';
+        
+        return !!(sessionId && token && userId);
     };
 
     const blinkTitle = () => {
@@ -38,18 +46,18 @@ define([
 
         if (document.hasFocus()) {
             document.title = 'Messenger';
-            $('#favicon').attr('href', 'assets/images/favicon.ico');
+            $('#favicon').attr('href', '/assets/images/favicon.ico');
             return;
         }
 
         if (!isBlinkTitleBrowser) {
             document.title = 'Messenger';
-            $('#favicon').attr('href', 'assets/images/favicon1.ico');
+            $('#favicon').attr('href', '/assets/images/favicon1.ico');
         } else {
             document.title = 'New Message!';
-            $('#favicon').attr('href', 'assets/images/favicon2.ico');
+            $('#favicon').attr('href', '/assets/images/favicon2.ico');
         }
-        
+
         isBlinkTitleBrowser = !isBlinkTitleBrowser;
         timeout = setTimeout(blinkTitle, 1000);
     };
@@ -70,10 +78,8 @@ define([
                 if (message.deleted || message.updated) {
                     return;
                 }
-
-                if (currentUserId === message.sender.id) {
-                    unReadNum = 0;
-                } else {
+                if (currentUserId !== message.sender.id && message.msgDate > room.updated
+                    && message.unread === true) {
                     unReadNum += 1;
                 }
             });
@@ -142,7 +148,7 @@ define([
 
             if (isCurrentRoom) {
                 chatboxContentComp.onSync([message]);
-            }   
+            }
         });
 
         return isNotMoveRoomUp;
@@ -178,7 +184,7 @@ define([
         rooms = rooms.filter((room) => {
             if (objRooms[room.id]) {
                 const messagesResponse = objRooms[room.id];
-                
+
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
@@ -195,7 +201,7 @@ define([
                     handleMoveRoomUp(newRoom);
                     roomsMove = roomsMove.concat(newRoom);
                 }
-        
+
                 return isNotMoveRoomUp;
             }
 
@@ -218,6 +224,10 @@ define([
         data.onBackground = document.hidden;
 
         API.get('sync', data).then(res => {
+            if (!isLogin() || !!(functions.getRouter()?.current || [])[0]?.url) {
+                return;
+            }
+
             onSync();
 
             if (res?.messages?.length) {
@@ -240,6 +250,10 @@ define([
                 isInit = true;
                 onSync();
             }
+        },
+
+        onInitAgain: () => {
+            isInit = false;
         }
     };
 });

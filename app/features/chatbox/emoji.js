@@ -30,16 +30,24 @@ define(['features/chatbox/chatboxInput'], (chatboxInputComp) => {
     '✔️', '☑️', '🔘', '🔗', '➰', '〰️', '〽️', '🔱', '◼️', '◻️', '◾', '◽', '▪️', '▫️', '🔺', '🔲', '🔳', '⚫', '⚪', '🔴', '🔵', '🔻', '⬜', '⬛', '🔶', '🔷', '🔸', '🔹'];
 
     let isShow = false;
-    const $wrapper = $('.wrap-emojis');
-    const $emojiBtn = $('.btn__emoji');
-    const $tabBtn = $('[data-em-tab-btn]');
-    const $tabContentOne = $('[data-em-tab-content="--tab-1"]');
-    const $tabContentTwo = $('[data-em-tab-content="--tab-2"]');
-    const $tabContentThree = $('[data-em-tab-content="--tab-3"]');
+    let $wrapper;
+    let $emojiBtn;
+    let $tabBtn;
+    let $tabContentOne;
+    let $tabContentTwo;
+    let $tabContentThree;
 
     const renderButton = (entity) => (`<button data-em-btn="${entity}" class="btn-em">${entity}</button>`);
 
     const initEmoji = () => {
+        isShow = false;
+        $wrapper = $('.wrap-emojis');
+        $emojiBtn = $('.btn__emoji');
+        $tabBtn = $('[data-em-tab-btn]');
+        $tabContentOne = $('[data-em-tab-content="--tab-1"]');
+        $tabContentTwo = $('[data-em-tab-content="--tab-2"]');
+        $tabContentThree = $('[data-em-tab-content="--tab-3"]');
+
         $tabContentOne.html(tabOne.map(renderButton).join(''));
         $tabContentTwo.html(tabTwo.map(renderButton).join(''));
         $tabContentThree.html(tabThree.map(renderButton).join(''));

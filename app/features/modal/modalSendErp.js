@@ -1,6 +1,4 @@
 define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
-    let isModalRendered = false;
-    let $input;
     let $modal;
     let $btnSend;
     let $btnCancel;
@@ -10,12 +8,11 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p data-language="ENTER_ERP_URL">
-                            ${langJson.ENTER_ERP_URL}
+                        <p data-language="INTEGRATE_ERP_CONTACTS">
+                            ${langJson.INTEGRATE_ERP_CONTACTS}
                         </p>
-                        <input id="sem-url-input" placeholder="https://erp.iptp.net/erp/dispatcher" />
-                        <button data-language="SEND" type="button" class="btn btn-outline-primary btn-small float-right" disabled>
-                            ${langJson.SEND}
+                        <button data-language="ACCEPT" type="button" class="btn btn-outline-primary btn-small float-right">
+                            ${langJson.ACCEPT}
                         </button>
                         <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right">
                             ${langJson.CANCEL}
@@ -26,27 +23,9 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
         </div>
     `;
 
-    const onChange = () => {
-        const value = $input.val();
-        
-        if (!value) {
-            $input.addClass('error');
-            $btnSend.prop('disabled', true);
-        } else {
-            $input.removeClass('error');
-            $btnSend.prop('disabled', false);
-        }
-    };
-
     const onSend = () => {
-        const value = $input.val();
-
-        if (!value) {
-            return;
-        }
-
         $btnCancel.click();
-        API.postForm('integrateERP', `url=${value}&email=${GLOBAL.getInfomation().email}`).then((res) => {
+        API.post('integrateERP').then((res) => {
             if (res.status === 2) {
                 ALERT.show(res.message);
                 return;
@@ -59,44 +38,23 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
                 $btnCancel.click();
             });
         }).catch((e) => {
+            console.error(e);
             ALERT.show(e);
         });
     };
 
-    const onKeyDown = (e) => {
-        if (e.keyCode === 13 && !e.shiftKey) {
-            e.preventDefault();
-            onSend();
-        }
-    };
-
     return {
         onInit: () => {
-            if (!isModalRendered) {
-                isModalRendered = true;
+            if (!$('#sendErpModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 
                 $modal = $('#sendErpModal');
-                $input = $('#sem-url-input');
                 $btnSend = $modal.find('.btn-outline-primary');
                 $btnCancel = $modal.find('.btn-outline-secondary');
-
-                $(document).on('input', '#sem-url-input', onChange);
-                $input.keydown(onKeyDown);
                 $btnSend.click(onSend);
             }
 
-            const erp = GLOBAL.getInfomation().erp_url || '';
-
-            if (erp) {
-                $btnSend.prop('disabled', false);
-            } else {
-                $btnSend.prop('disabled', true);
-            }
-
             $modal.modal('show');
-            $input.val(erp);
-            setTimeout(() => $input.focus(), 500);
         }
     };
 });

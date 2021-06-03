@@ -1,5 +1,4 @@
 define(['shared/alert', 'shared/data'], (ALERT, GLOBAL) => {
-    let isInitEvent;
     let $modal;
     let $url;
     let $urlText;
@@ -33,22 +32,19 @@ define(['shared/alert', 'shared/data'], (ALERT, GLOBAL) => {
 
     return {
         onInit: () => {
-            if (!isInitEvent) {
+            const searchParams = new URLSearchParams(window.location.search);
+
+            $('body').append(renderTemplate(GLOBAL.getLangJson()));
+            $modal = $('#inviteModal');
+            $url = $modal.find('.mvwmb-url');
+            $urlText = $modal.find('.mvwmb-copy');
+            $urlText.text(`${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
+
+            $url.off('click').click(() => {
                 const searchParams = new URLSearchParams(window.location.search);
-
-                isInitEvent = true;
-                $('body').append(renderTemplate(GLOBAL.getLangJson()));
-                $modal = $('#inviteModal');
-                $url = $modal.find('.mvwmb-url');
-                $urlText = $modal.find('.mvwmb-copy');
-                $urlText.text(`${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
-
-                $url.click(() => {
-                    const searchParams = new URLSearchParams(window.location.search);
-                    navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
-                    ALERT.show(GLOBAL.getLangJson().LINK_COPIED, 'success');
-                });
-            }
+                navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
+                ALERT.show(GLOBAL.getLangJson().LINK_COPIED, 'success');
+            });
 
             $modal.modal('show');
         }
