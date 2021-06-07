@@ -92,11 +92,17 @@ define([
     };
 
     const handleOptionsByUser = () => {
+        console.log($message);
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
 
         if (isActiveUser) {
-            $editBtn.show();
+            if ($message.find('.--mess.fwme').length) {
+                $editBtn.hide();
+            } else {
+                $editBtn.show();
+            }
+            
             $removeBtn.show();
         } else {
             $editBtn.hide();
