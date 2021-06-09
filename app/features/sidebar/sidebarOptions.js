@@ -67,7 +67,9 @@ define([
         offEventClickOutside();
     };
 
-    const showMeetingPage = () => functions.navigate(constant.ROUTE.meeting);
+    const showMeetingPage = () => {
+        window.open(constant.ROUTE.meeting, '_blank').focus();
+    };
 
     const showModalSendInvite = () => {
         modalInviteComp.onInit();
