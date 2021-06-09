@@ -31,55 +31,8 @@ define(['shared/icon'], (ICON) => ({
                         <a class="sidebar__toggle"><i class="xm xm-search --icon p-cur"></i></a>
                     </ul>
                 </div>
-                <div class="p-r">
-                    <div class="sidebar__option">
-                        <button id="sidebar-options-btn" title="Option" data-target="#user-option">
-                            <i class="xm xm-cog xm-fw" aria-hidden="true"></i>
-                            <span class="--text" data-language="OPTIONS"></span>
-                        </button>
-                        <button id="group-chat-options-btn" class="js-op-new-group" title="New Group Chat">
-                            <i class="xm xm-comments xm-fw" aria-hidden="true"></i>
-                            <span class="--text" data-language="START_CHAT"></span>
-                        </button>
-                        <button type="button" id="change-lang-btn">
-                            <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg">
-                                <path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0" /></svg>
-                            <span>VI</span>
-                        </button>
-                    </div>
-                    <div id="user-option" class="js-op user-option js-dismiss-menu menu">
-                        <button type="button" class="--use-interface menu__item" data-dismiss=".menu">
-                            <i class="xm xm-desktop xm-fw" aria-hidden="true"></i>
-                            <span data-language="USER_INTERFACE"></span>
-                        </button>
-                        <button type="button" class="--start-conference menu__item" data-dismiss=".menu">
-                            <i class="xm xm-video-camera xm-fw" aria-hidden="true"></i>
-                            <span data-language="START_CONFERENCE"></span>
-                        </button>
-                        <button type="button" class="--send-invite menu__item" data-dismiss=".menu">
-                            <i class="xm xm-send-plus xm-fw" aria-hidden="true"></i>
-                            <span data-language="SEND_INVITE"></span>
-                        </button>
-                        <button type="button" class="--erp-contact menu__item" data-dismiss=".menu">
-                            <i class="xm xm-users xm-fw" aria-hidden="true"></i>
-                            <span data-language="ERP_CONTACTS"></span>
-                        </button>
-                        <button type="button" class="--about menu__item" data-dismiss=".menu">
-                            <i class="xm xm-info-circle xm-fw ng-scope" aria-hidden="true"></i>
-                            <span data-language="ABOUT"></span>
-                        </button>
-                        <button type="button" class="--logout menu__item" data-dismiss=".menu">
-                            <i class="xm xm-sign-out xm-fw" aria-hidden="true"></i>
-                            <span data-language="LOGOUT"></span>
-                        </button>
-                    </div>
+                <div class="sidebar-options">
                 </div>
-                <button class="sidebar-collapse-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M2.293 7.293l5-5a1 1 0 0 1 1.497 1.32l-.083.094L4.414 8l4.293 4.293a1 1 0 0 1-1.32 1.497l-.094-.083-5-5a1 1 0 0 1-.083-1.32l.083-.094 5-5-5 5zm5 0l5-5a1 1 0 0 1 1.497 1.32l-.083.094L9.414 8l4.293 4.293a1 1 0 0 1-1.32 1.497l-.094-.083-5-5a1 1 0 0 1-.083-1.32l.083-.094 5-5-5 5z"></path>
-                    </svg>
-                    <span data-language="COLLAPSE_SIDEBAR"></span>
-                </button>
             </div>
             <div class="main-right content">
                 <div class="notify-update-info">Updating Information...</div>

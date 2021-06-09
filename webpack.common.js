@@ -47,13 +47,21 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.less$/i,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'less-loader'
+                ]
+            },
+            {
                 test: /\.css$/i,
                 use: [{
                     loader: MiniCssExtractPlugin.loader
                 }, 'css-loader']
             },
             {
-                test: /\.(ttf|eot|svg|png|jpg|gif|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                test: /\.(ttf|eot|svg|png|jpg|gif|ico|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 use: [
                     {
                         loader: 'file-loader',
