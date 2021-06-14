@@ -1,5 +1,10 @@
 define(['shared/icon'], (ICON) => ({
     main: `
+        <div id="leftbar">
+            <div class="lb-cuser-avatar">
+                <img class="avatar" src="/assets/images/user.jpg" alt="" />
+            </div>
+        </div>
         <div id="frame">
             <div class="sidebar">
                 <div class="profile profile--mini js_info_you" id="sidebarProfile">
@@ -27,11 +32,60 @@ define(['shared/icon'], (ICON) => ({
                     </span>
                 </div>
                 <div class="contacts">
-                    <ul class="contact-list js_ul_list_user" id="sidebar_room_list">
-                        <a class="sidebar__toggle"><i class="xm xm-search --icon p-cur"></i></a>
-                    </ul>
+                    <ul class="contact-list js_ul_list_user" id="sidebar_room_list"></ul>
                 </div>
                 <div class="sidebar-options">
+                    <button class="btn btn-sidebar-contacts">
+                        <i class="icon-users"></i>
+                        <span>
+                            Contacts
+                        </span>
+                        <div class="xm-dropdown dropdown-soc">
+                            <div class="sodi-startchat">
+                                <i class="icon-comments"></i>
+                                Start Chat
+                            </div>
+                            <div class="sodi-conference">
+                                <i class="icon-video-camera"></i>
+                               Start Conference
+                            </div>
+                            <div class="sodi-invite">
+                                <i class="icon-send"></i>
+                                Send Invite
+                            </div>
+                            <div class="sodi-erpcontacrt">
+                                <i class="icon-users"></i>
+                                ERP Contacts
+                            </div>
+                        </div>
+                    </button>
+                    <button class="btn btn-sidebar-options">
+                        <i class="icon-cog"></i>
+                        <span>
+                            Options
+                        </span>
+                        <div class="xm-dropdown dropdown-soo">
+                            <div class="sodi-interface">
+                                <i class="icon-users"></i>
+                                User Interface
+                            </div>
+                            <div class="sodi-about">
+                                <i class="icon-info-circle"></i>
+                               About
+                            </div>
+                            <div class="sodi-language">
+                                <i class="icon-language"></i>
+                                Language
+                            </div>
+                            <div class="sodi-logout">
+                                <i class="icon-info-circle"></i>
+                                Logout
+                            </div>
+                        </div>
+                    </button>
+                    <button class="btn btn-sidebar-collapse">
+                        <i class="icon-angle-up"></i>
+                    </button>
                 </div>
             </div>
             <div class="main-right content">

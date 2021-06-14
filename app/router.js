@@ -23,7 +23,7 @@ define([
     require('assets/css/login.css');
     require('assets/css/meeting.css');
     require('assets/css/style.css');
-    require('assets/css/sidebar-options.less');
+    require('assets/css/index.less');
     jsrender($);
 
     const {

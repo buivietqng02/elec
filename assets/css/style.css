@@ -1841,7 +1841,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .contacts {
-  height: calc(100% - 212px);
+  height: calc(100% - 196px);
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -3560,7 +3560,7 @@ body.body_fz_18 {
   }
 
   #frame.indent .contacts {
-    height: calc(100% - 204px);
+    height: calc(100% - 196px);
   }
 
   #frame.indent .sidebar {
@@ -3708,7 +3708,7 @@ body.body_fz_18 {
   }
 
   #frame.indent .contacts {
-    height: calc(100% - 300px);
+    height: calc(100% - 294px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;
   }
