@@ -19,9 +19,11 @@ define([
     require('bootstrap/js/dist/tooltip');
     require('bootstrap/dist/css/bootstrap.min.css');
     require('assets/css/p_style.css');
+    require('assets/css/icon.css');
     require('assets/css/login.css');
     require('assets/css/meeting.css');
     require('assets/css/style.css');
+    require('assets/css/index.less');
     jsrender($);
 
     const {
