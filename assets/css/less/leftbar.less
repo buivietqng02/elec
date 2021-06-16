@@ -2,7 +2,45 @@
     display: none;
 }
 
+#leftbar-mobile {
+    position: fixed;
+    height: 40px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 7%), 0 2px 4px rgb(0 0 0 / 7%), 0 4px 8px rgb(0 0 0 / 7%), 0 8px 16px rgb(0 0 0 / 7%), 0 16px 32px rgb(0 0 0 / 7%), 0 32px 64px rgb(0 0 0 / 7%);
+
+    .lbm-item {
+        padding: 0;
+        height: 40px;
+        width: 50px;
+        margin: 0 10px;
+        color: #fff;
+        text-align: center;
+        &.active {
+            border-bottom: 1px solid;
+            border-radius: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #frame {
+        height: calc(100% - 40px);
+        position: relative;
+        top: 40px;
+    }
+}
+
 @media screen and (min-width: 768px) {
+    #leftbar-mobile {
+        display: none;
+    }
+
     #frame {
         width: calc(100% - 60px);
         position: relative;
@@ -19,6 +57,33 @@
         background: rgba(0, 0, 0, 0.65);
         .lb-cuser-avatar {
             padding: 10px;
+            cursor: pointer;
+        }
+
+        .lb-item {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            color: #fff;
+            cursor: pointer;
+            &:hover, &.active {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            i {
+                position: absolute;
+                transform: translate(-50%, -50%);
+                left: 50%;
+                top: 50%;
+            }
+        }
+
+        .lbi-chats {
+            font-size: 30px;
+        }
+
+        .lbi-cart {
+            font-size: 24px;
         }
     }
 }

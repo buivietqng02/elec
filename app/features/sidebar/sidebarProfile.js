@@ -16,6 +16,9 @@ define([
         </a>
         <p ${constant.ATTRIBUTE_CHANGE_NAME}="{id}" class="--name">{name}</p>
     `;
+    const templateLeftBar = `
+        <img src="{src}" ${constant.ATTRIBUTE_CHANGE_IMAGE}="{id}" class="avatar" onerror="this.src='/assets/images/user.jpg'" alt="" />
+    `;
 
     return {
         onInit: () => {
@@ -27,7 +30,9 @@ define([
             };
 
             $('#sidebarProfile').html(render(template, data));
-            $(document).off('.sidebarProfile').on('click.sidebarProfile', '#sidebarProfile .sipr-image', modalProfileComp.onInit);
+            $('#leftbar .lb-cuser-avatar').html(render(templateLeftBar, data));
+            $('#sidebarProfile .sipr-image').off().click(modalProfileComp.onInit);
+            $('#leftbar .lb-cuser-avatar').off().click(modalProfileComp.onInit);
         }
     };
 });

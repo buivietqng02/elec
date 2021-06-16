@@ -9,9 +9,10 @@ define([
     'features/sync/sync',
     'features/sidebar/sidebarProfile',
     'features/sidebar/sidebarRoomList',
-    'features/sidebar/sidebarOptions',
     'features/sidebar/sidebarSearch',
     'features/sidebar/sidebarCollapse',
+    'features/sidebar/sidebarOptions',
+    'features/sidebar/sidebarLeftBar',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
@@ -33,8 +34,9 @@ define([
     sidebarProfileComp,
     sidebarRoomListComp,
     sidebarSearchComp,
-    sidbarCollapseComp,
+    sidebarCollapseComp,
     sidebarOptionsComp,
+    sidebarLeftBarComp,
     chatboxTopbarComp,
     chatboxContentComp,
     chatboxInputComp,
@@ -135,7 +137,8 @@ define([
         sidebarRoomListComp.onInit();
         sidebarOptionsComp.onInit();
         sidebarSearchComp.onInit();
-        sidbarCollapseComp.onInit();
+        sidebarCollapseComp.onInit();
+        sidebarLeftBarComp.onInit();
         
         // Initialize chatbox DOM and register event
         chatboxTopbarComp.onInit();

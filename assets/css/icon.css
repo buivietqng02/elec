@@ -181,4 +181,6 @@
   .icon-volume:before {
     content: "\e934";
   }
-  
+  .icon-cart:before {
+    content: "\e93a";
+  }

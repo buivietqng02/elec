@@ -1,8 +1,44 @@
 define(['shared/icon'], (ICON) => ({
     main: `
+        <div id="leftbar-mobile">
+            <button class="btn lbm-item lbmi-chats">
+                <i class="icon-comments"></i>
+            </button>
+            <button class="btn lbm-item lbmi-cart">
+                <i class="icon-cart"></i>
+            </button>
+        </div>
         <div id="leftbar">
-            <div class="lb-cuser-avatar">
-                <img class="avatar" src="/assets/images/user.jpg" alt="" />
+            <div class="lb-cuser-avatar"></div>
+            <div class="lb-item lbi-chats">
+                <i class="icon-comments"></i>
+            </div>
+            <div class="lb-item lbi-cart">
+                <i class="icon-cart"></i>
+            </div>
+        </div>
+        <div id="cart-packages" style="display: none">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="cp-product">
+                        <div>
+                            <img src="/assets/images/lagbalster.png" />
+                        </div>
+                        <div class="cpp-content clearfix">
+                            <h2>
+                                Lagbalster
+                            </h2>
+                            <p>
+                                An innovative Gaming Network for Vietnam especially enabling console users.
+                            </p>
+                            <a href="https://lagblaster.org/" target="_blank" class="btn btn-info">
+                                Preview
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                </div>
             </div>
         </div>
         <div id="frame">
