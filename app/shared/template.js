@@ -73,49 +73,49 @@ define(['shared/icon'], (ICON) => ({
                 <div class="sidebar-options">
                     <button class="btn btn-sidebar-contacts">
                         <i class="icon-users"></i>
-                        <span>
+                        <span data-language="CONTACTS">
                             Contacts
                         </span>
                         <div class="xm-dropdown dropdown-soc">
                             <div class="sodi-startchat">
                                 <i class="icon-comments"></i>
-                                Start Chat
+                                <lang data-language="START_CHAT"></lang>
                             </div>
                             <div class="sodi-conference">
                                 <i class="icon-video-camera"></i>
-                               Start Conference
+                               <lang data-language="START_CONFERENCE"></lang>
                             </div>
                             <div class="sodi-invite">
                                 <i class="icon-send"></i>
-                                Send Invite
+                                <lang data-language="SEND_INVITE"></lang>
                             </div>
                             <div class="sodi-erpcontacrt">
                                 <i class="icon-users"></i>
-                                ERP Contacts
+                                <lang data-language="ERP_CONTACTS"></lang>
                             </div>
                         </div>
                     </button>
                     <button class="btn btn-sidebar-options">
                         <i class="icon-cog"></i>
-                        <span>
+                        <span data-language="OPTIONS">
                             Options
                         </span>
                         <div class="xm-dropdown dropdown-soo">
                             <div class="sodi-interface">
                                 <i class="icon-users"></i>
-                                User Interface
+                                <lang data-language="USER_INTERFACE"></lang>
                             </div>
                             <div class="sodi-about">
                                 <i class="icon-info-circle"></i>
-                               About
+                                <lang data-language="ABOUT"></lang>
                             </div>
                             <div class="sodi-language">
                                 <i class="icon-language"></i>
-                                Language
+                                <lang data-language="LANGUAGE"></lang>
                             </div>
                             <div class="sodi-logout">
                                 <i class="icon-info-circle"></i>
-                                Logout
+                                <lang data-language="LOGOUT"></lang>
                             </div>
                         </div>
                     </button>

@@ -1,0 +1,21 @@
+@green: #22CC00;
+@grey: #808080;
+@black: #000;
+
+#xm-app(@color: @blue) {
+    .xm-dropdown > div > i {
+        color: @color;
+    }
+}
+
+.body_theme_gray {
+    #xm-app(@grey);
+}
+
+.body_theme_green {
+    #xm-app(@green);
+}
+
+.body_theme_black {
+    #xm-app(@black);
+}
