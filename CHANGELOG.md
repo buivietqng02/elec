@@ -4,6 +4,12 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.16] - 2021-06-24
+### Add
+- Add super market
+### Update
+- Update options of sidbear
+
 ### [3.15] - 2021-06-07
 ### Fix
 - Hide "Edit" option for forwarded messages.
