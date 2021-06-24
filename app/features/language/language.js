@@ -25,6 +25,8 @@ define([
         tooltip: 'tooltip'
     };
 
+    const defaultLangJson = require(`app/i18n/${LANGUAGES.english}.json`); // eslint-disable-line import/no-dynamic-require
+
     let $changeLangText;
     let $body;
     let currentLang = getDataToLocalApplication(LANGUAGE_KEY) || LANGUAGES.english;
@@ -38,18 +40,19 @@ define([
                 language,
                 langType
             } = $this.data();
+            const text = langJson[language] || defaultLangJson[language];
 
             switch (langType) {
                 case langTypeOb.placeholder:
-                    $this.attr('placeholder', langJson[language]);
+                    $this.attr('placeholder', text);
                     break;
                     case langTypeOb.tooltip:
                     $this.attr('title', langJson[language]);
-                    $this.attr('data-original-title', langJson[language]);
+                    $this.attr('data-original-title', text);
                     $this.tooltip();
                     break;
                 default: 
-                    $this.text(langJson[language]);
+                    $this.text(text);
             }
         });
     };

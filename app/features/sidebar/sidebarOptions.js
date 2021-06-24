@@ -21,8 +21,10 @@ define([
     modalChangeLanguageComp,
     Logout
 ) => {
-    let $slide;
+    let $slideOptions;
+    let $slideContacts;
     let $optionsBtn; 
+    let $contactsBtn;
     let $groupChatBtn; 
     let $changeLanguageBtn; 
     let $startConferenceBtn; 
@@ -31,74 +33,125 @@ define([
     let $erpContactBtn;
     let $aboutBtn; 
     let $logoutBtn;
-    let isShow = false;
+    let isShowOptions = false;
+    let isShowContacts = false;
 
     const offEventClickOutside = () => {
-        isShow = false;
-        $slide.hide();
+        isShowOptions = false;
+        isShowContacts = false;
+        $slideOptions.hide();
+        $slideContacts.hide();
         $(document).off('.hideOptionsSlide');
+        $(document).off('.hideContactsSlide');
     };
 
-    const handleClickOutside = () => $(document).on('click.hideOptionsSlide', (e) => {
-        if (!$slide.is(e.target) && $slide.has(e.target).length === 0) {
+    const handleOptionsClickOutside = () => $(document).on('click.hideOptionsSlide', (e) => {
+        if (!$slideOptions.is(e.target) && $slideOptions.has(e.target).length === 0) {
             offEventClickOutside();
         }
     });
 
-    const showSlide = (e) => {
+    const handleContactsClickOutside = () => $(document).on('click.hideContactsSlide', (e) => {
+        if (!$slideContacts.is(e.target) && $slideContacts.has(e.target).length === 0) {
+            offEventClickOutside();
+        }
+    });
+
+    const showSlideOptions = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        offEventClickOutside();
 
-        if (isShow) {
-            offEventClickOutside();
-        } else {
-            isShow = true;
-            $slide.show();
-            handleClickOutside();
+        if (!isShowOptions) {
+            isShowOptions = true;
+            $slideOptions.show();
+            handleOptionsClickOutside();
         }
     };
 
-    const showModalChangeLanguage = () => modalChangeLanguageComp.onInit();
-
-    const showModalCreateGroup = () => modalCreateGroupComp.onInit();
-
-    const showModalUserInterFace = () => {
-        modalUserInterfaceComp.onInit();
+    const showSlideContacts = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         offEventClickOutside();
+
+        if (!isShowContacts) {
+            isShowContacts = true;
+            $slideContacts.show();
+            handleContactsClickOutside();
+        }
     };
 
-    const showMeetingPage = () => functions.navigate(constant.ROUTE.meeting);
+    const showModalChangeLanguage = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        offEventClickOutside();
+        modalChangeLanguageComp.onInit();
+    };
 
-    const showModalSendInvite = () => {
+    const showModalCreateGroup = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        offEventClickOutside();
+        modalCreateGroupComp.onInit();
+    };
+
+    const showModalUserInterFace = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        offEventClickOutside();
+        modalUserInterfaceComp.onInit();
+    };
+
+    const showMeetingPage = () => {
+        offEventClickOutside();
+        window.open(constant.ROUTE.meeting, '_blank').focus();
+    };
+
+    const showModalSendInvite = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         modalInviteComp.onInit();
         offEventClickOutside();
     };
 
-    const showModalERPContact = () => {
+    const showModalERPContact = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         modalSendErpComp.onInit();
         offEventClickOutside();
     };
 
-    const showModalAbout = () => {
+    const showModalAbout = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         modalVersionComp.onInit();
         offEventClickOutside();
     };
 
     return {
         onInit: () => {
-            isShow = false;
-            $slide = $('#user-option');
-            $optionsBtn = $('#sidebar-options-btn');
-            $groupChatBtn = $('#group-chat-options-btn');
-            $changeLanguageBtn = $('#change-lang-btn');
-            $startConferenceBtn = $slide.find('.--start-conference');
-            $userInterFaceBtn = $slide.find('.--use-interface');
-            $sendInviteBtn = $slide.find('.--send-invite');
-            $erpContactBtn = $slide.find('.--erp-contact');
-            $aboutBtn = $slide.find('.--about');
-            $logoutBtn = $slide.find('.--logout');
+            isShowOptions = false;
+            $slideOptions = $('.dropdown-soo');
+            $slideContacts = $('.dropdown-soc');
+            $optionsBtn = $('.btn-sidebar-options');
+            $contactsBtn = $('.btn-sidebar-contacts');
+            $groupChatBtn = $slideContacts.find('.sodi-startchat');
+            $startConferenceBtn = $slideContacts.find('.sodi-conference');
+            $sendInviteBtn = $slideContacts.find('.sodi-invite');
+            $erpContactBtn = $slideContacts.find('.sodi-erpcontacrt');
+            $changeLanguageBtn = $slideOptions.find('.sodi-language');
+            $userInterFaceBtn = $slideOptions.find('.sodi-interface');
+            $aboutBtn = $slideOptions.find('.sodi-about');
+            $logoutBtn = $slideOptions.find('.sodi-logout');
 
-            $optionsBtn.off().click(showSlide);
+            $optionsBtn.off().click(showSlideOptions);
+            $contactsBtn.off().click(showSlideContacts);
             $changeLanguageBtn.off().click(showModalChangeLanguage);
             $groupChatBtn.off().click(showModalCreateGroup);
             $userInterFaceBtn.off().click(showModalUserInterFace);

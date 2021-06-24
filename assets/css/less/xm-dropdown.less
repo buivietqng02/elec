@@ -1,0 +1,26 @@
+.xm-dropdown {
+    display: none;
+    position: absolute;
+    box-shadow: 0 2px 24px rgba(0, 0, 0, 0.32);
+    overflow: hidden;
+    min-width: 200px;
+    min-height: 150px;
+    background: #fff;
+    border-radius: 8px;
+    > div {
+        font-family: "Roboto Condensed";
+        line-height: 40px;
+        padding: 0 17px;
+        color: #000000B2;
+        text-align: left;
+        &:hover {
+            background: rgba(0, 0, 0, 0.1);
+            box-shadow: 1px 0 2px rgba(0, 0, 0, 0.16);
+        }
+
+        > i {
+            margin-right: 12px;
+            color: @blue;
+        }
+    }
+}
