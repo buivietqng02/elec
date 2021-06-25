@@ -16,7 +16,7 @@ build:dev:
     - npm install
     - yarn run build
     - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
-    - rm -r node_modules
+    - rm -r node_modules docs
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
@@ -53,7 +53,7 @@ deploy:dev:
     - npm install
     - yarn run build:prod
     - rm -f README.md package-lock.json package.json package-lock.json webpack.common.js webpack.dev.js  webpack.prod.js yarn.lock 
-    - rm -r node_modules
+    - rm -r node_modules docs
     - mkdir .dist
     - cp -r * .dist
     - mv .dist dist
