@@ -26,7 +26,7 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                         <div class="cpp-content clearfix">
                             <h2>
-                                LagBalster
+                                LagBlaster
                             </h2>
                             <p>
                                 An innovative Gaming Network for Vietnam especially enabling console users.
