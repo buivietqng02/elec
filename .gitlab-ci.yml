@@ -177,7 +177,7 @@ switch:prod:
     - export NEW_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'green'; else echo 'blue'; fi;)
     - sudo sed -i "s|nginx-$CURR_ENV.inc|nginx-$NEW_ENV.inc|g" /var/www/nginx/conf.d/default.conf
     - sudo sed -i "s|$CURR_ENV|$NEW_ENV|g" /var/www/deployment_id
-    - docker exec nginx-load-balancer nginx -s reload
+    - docker exec xm-nginx-load-balancer nginx -s reload
   when: manual
   tags:
     - prod
