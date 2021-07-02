@@ -70,7 +70,7 @@ define([
     };
 
     const onKeydown = (e) => {
-        if (e.keyCode === 13 && !e.shiftKey) {
+        if (e.keyCode === 13 && e.shiftKey) {
             e.preventDefault();
             removeDraft();
             onSendMessage();
