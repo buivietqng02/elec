@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy
+  - switch
 
 build:dev:
   stage: build
