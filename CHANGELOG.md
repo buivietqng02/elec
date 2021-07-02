@@ -4,6 +4,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.17] - 2021-07-02
+### Update
+- Changes in chat box input: Now 'Enter' adds a new line and 'Shift+Enter' send message.
+- Add switch environment job on gitlab-ci.
+
 ### [3.16] - 2021-06-24
 ### Add
 - Add super market

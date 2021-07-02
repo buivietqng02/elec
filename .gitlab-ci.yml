@@ -69,7 +69,7 @@ build:la:
   stage: build
   when: manual
   tags:
-    - prod-la
+    - la
   script:
    *build-prod
   only:
@@ -83,7 +83,7 @@ deploy:la:
   stage: deploy
   when: manual
   tags:
-    - prod-la
+    - la
   script:
     *deploy-prod
   only:
@@ -95,7 +95,7 @@ build:ams:
   stage: build
   when: manual
   tags:
-    - prod-ams
+    - ams
   script:
     *build-prod
   only:
@@ -109,7 +109,7 @@ deploy:ams:
   stage: deploy
   when: manual
   tags:
-    - prod-ams
+    - ams
   script:
     *deploy-prod
   only:
@@ -121,7 +121,7 @@ build:sg:
   stage: build
   when: manual
   tags:
-    - prod-sg
+    - sg
   script:
     *build-prod
   only:
@@ -135,7 +135,7 @@ deploy:sg:
   stage: deploy
   when: manual
   tags:
-    - prod-sg
+    - sg
   script:
     *deploy-prod
   only:
@@ -168,3 +168,18 @@ deploy:syd:
     - master
   dependencies:
     - build:syd
+
+switch:prod:
+  stage: switch
+  script:
+    - export CURR_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'blue'; else echo 'green'; fi;)
+    - export NEW_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'green'; else echo 'blue'; fi;)
+    - sudo sed -i "s|nginx-$CURR_ENV.inc|nginx-$NEW_ENV.inc|g" /var/www/nginx/conf.d/default.conf
+    - sudo sed -i "s|$CURR_ENV|$NEW_ENV|g" /var/www/deployment_id
+    - docker exec nginx-load-balancer nginx -s reload
+  when: manual
+  tags:
+    - prod
+    - nginx
+  only:
+    - master
