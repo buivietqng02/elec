@@ -6,6 +6,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         USER_ID: 'userId',
         BODY_BG_THEME: 'body_bg_theme',
         BODY_FZ: 'body_fz',
+        ENTER_KEY_PREFERENCE: 'enter_key_preference',
         THEMES: [{
             name: 'body_theme_blue',
             color: '#3263d5'
@@ -20,6 +21,13 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             color: '#808080'
         }],
         FONTSIZES: ['12px', '14px', '16px', '18px'],
+        ENTER_KEY_PREFERENCES: [{
+            name: 'Start a new line',
+            value: 'new-line'
+        }, {
+            name: 'Send the message',
+            value: 'send-msg'
+        }],
         ATTRIBUTE_CHANGE_NAME: 'data-userid-name',
         ATTRIBUTE_CHANGE_GROUP_NAME: 'data-groupid-name',
         ATTRIBUTE_CHANGE_IMAGE: 'data-userid-image',

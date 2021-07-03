@@ -10,6 +10,7 @@ define(() => {
     let version = '';
     let bodyBgTheme = '';
     let bodyFontSize = '';
+    let enterKeyPreference = '';
     let roomInfo = {};
     let easyrtcIds = [];
     let language = '';
@@ -69,6 +70,11 @@ define(() => {
         getBodyFontSize: () => bodyFontSize,
         setBodyFontSize: (value) => {
             bodyFontSize = value;
+        },
+
+        getEnterKeyPreference: () => enterKeyPreference,
+        setEnterKeyPreference: (value) => {
+            enterKeyPreference = value;
         },
 
         getRooms: () => rooms,

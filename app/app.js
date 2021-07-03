@@ -56,8 +56,10 @@ define([
         ATTRIBUE_SIDEBAR_ROOM,
         BODY_BG_THEME,
         BODY_FZ,
+        ENTER_KEY_PREFERENCE,
         THEMES,
         FONTSIZES,
+        ENTER_KEY_PREFERENCES,
         TOKEN,
         USER_ID
     } = constant;
@@ -163,13 +165,16 @@ define([
     const onGetPrefrences = (res) => {
         const theme = res?.body_bg_theme || THEMES[0].name;
         const fontsize = res?.body_fz || FONTSIZES[2];
+        const enterKeyPreference = res?.enter_key_preference || ENTER_KEY_PREFERENCES[0].value;
         const roomInfo = res?.user_chat_info || {};
 
         GLOBAL.setRoomInfoWasEdited(roomInfo);
         GLOBAL.setBodyBgTheme(theme);
         GLOBAL.setBodyFontSize(fontsize);
+        GLOBAL.setEnterKeyPreference(enterKeyPreference);
         setDataToLocalApplication(BODY_BG_THEME, theme);
         setDataToLocalApplication(BODY_FZ, fontsize);
+        setDataToLocalApplication(ENTER_KEY_PREFERENCE, enterKeyPreference);
 
         onAssignAdvanceThemeBody();
     };
