@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.18] - 2021-07-03
+### Update
+- Add user setting: 'enter key preference'.
+
 ### [3.17] - 2021-07-02
 ### Update
 - Changes in chat box input: Now 'Enter' adds a new line and 'Shift+Enter' send message.
