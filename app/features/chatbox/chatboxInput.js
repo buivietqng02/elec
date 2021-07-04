@@ -77,13 +77,13 @@ define([
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
         
         if (enterKeyIsNewLine) {
-            if (e.keyCode === 13 && e.ctrlKey) {
+            if (e.keyCode === 13 && e.shiftKey) {
                 e.preventDefault();
                 removeDraft();
                 onSendMessage();
             }
         } else {
-            if (e.keyCode === 13 && !e.ctrlKey) {
+            if (e.keyCode === 13 && !e.shiftKey) {
                 e.preventDefault();
                 removeDraft();
                 onSendMessage();
