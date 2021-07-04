@@ -170,17 +170,51 @@ deploy:syd:
   dependencies:
     - build:syd
 
-switch:prod:
-  stage: switch
-  script:
+.switch-prod:
+  script: &switch-prod
     - export CURR_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'blue'; else echo 'green'; fi;)
     - export NEW_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'green'; else echo 'blue'; fi;)
     - sudo sed -i "s|nginx-$CURR_ENV.inc|nginx-$NEW_ENV.inc|g" /var/www/nginx/conf.d/default.conf
     - sudo sed -i "s|$CURR_ENV|$NEW_ENV|g" /var/www/deployment_id
     - docker exec xm-nginx-load-balancer nginx -s reload
+
+switch:ams:
+  stage: switch
   when: manual
   tags:
-    - prod
-    - nginx
+    - ams
+  script:
+    *switch-prod
+  only:
+    - master
+
+
+switch:sg:
+  stage: switch
+  when: manual
+  tags:
+    - sg
+  script:
+    *switch-prod
+  only:
+    - master
+
+switch:la:
+  stage: switch
+  when: manual
+  tags:
+    - la
+  script:
+    *switch-prod
+  only:
+    - master
+
+switch:syd:
+  stage: switch
+  when: manual
+  tags:
+    - syd
+  script:
+    *switch-prod
   only:
     - master
