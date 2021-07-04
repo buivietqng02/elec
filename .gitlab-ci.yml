@@ -187,6 +187,7 @@ switch:ams:
     *switch-prod
   only:
     - master
+  dependencies: []
 
 
 switch:sg:
@@ -198,6 +199,7 @@ switch:sg:
     *switch-prod
   only:
     - master
+  dependencies: []
 
 switch:la:
   stage: switch
@@ -208,6 +210,7 @@ switch:la:
     *switch-prod
   only:
     - master
+  dependencies: []
 
 switch:syd:
   stage: switch
@@ -218,3 +221,4 @@ switch:syd:
     *switch-prod
   only:
     - master
+  dependencies: []
