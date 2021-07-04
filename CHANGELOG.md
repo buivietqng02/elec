@@ -4,9 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
-### [3.18] - 2021-07-03
+### [3.18] - 2021-07-04
 ### Update
 - Add user setting: 'enter key preference'.
+- gitlab-ci: set 'switch' jobs for all nodes.
 
 ### [3.17] - 2021-07-02
 ### Update
