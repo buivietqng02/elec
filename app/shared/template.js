@@ -16,6 +16,59 @@ define(['shared/icon'], (ICON) => ({
             <div class="lb-item lbi-cart">
                 <i class="icon-cart"></i>
             </div>
+            <div class="lb-options-group">
+                <div class="lbog-users">
+                    <div class="lbogi-icon btn-sidebar-contacts">
+                        <i class="icon-users"></i>
+                    </div>
+                    <div class="xm-dropdown dropdown-soc">
+                        <div class="sodi-startchat">
+                            <i class="icon-comments"></i>
+                            <lang data-language="START_CHAT"></lang>
+                        </div>
+                        <div class="sodi-conference">
+                            <i class="icon-video-camera"></i>
+                            <lang data-language="START_CONFERENCE"></lang>
+                        </div>
+                        <div class="sodi-invite">
+                            <i class="icon-send"></i>
+                            <lang data-language="SEND_INVITE"></lang>
+                        </div>
+                        <div class="sodi-erpcontacrt">
+                            <i class="icon-users"></i>
+                            <lang data-language="ERP_CONTACTS"></lang>
+                        </div>
+                    </div>
+                </div>
+                <div class="lbog-options">
+                    <div class="lbogi-icon btn-sidebar-options">
+                        <i class="icon-cog"></i>
+                    </div>
+                    <div class="xm-dropdown dropdown-soo">
+                        <div class="sodi-interface">
+                            <i class="icon-users"></i>
+                            <lang data-language="USER_INTERFACE"></lang>
+                        </div>
+                        <div class="sodi-about">
+                            <i class="icon-info-circle"></i>
+                            <lang data-language="ABOUT"></lang>
+                        </div>
+                        <div class="sodi-language">
+                            <i class="icon-language"></i>
+                            <lang data-language="LANGUAGE"></lang>
+                        </div>
+                        <div class="sodi-logout">
+                            <i class="icon-info-circle"></i>
+                            <lang data-language="LOGOUT"></lang>
+                        </div>
+                    </div>
+                </div>
+                <div class="lbog-collapse">
+                    <div class="lbogi-icon btn-sidebar-collapse">
+                        <i class="icon-angle-up"></i>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="cart-packages" style="display: none">
             <div class="row">
