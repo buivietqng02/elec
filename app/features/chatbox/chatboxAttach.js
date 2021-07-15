@@ -200,8 +200,14 @@ define([
 
             $attachButton.off().click(showSlide);
             $callBtn.off().click(showPhoneModal);
-            $inputFile.off().change(() => uploadFile('fileupload'));
-            $inputImage.off().change(() => uploadFile('imageupload'));
+            $inputFile.off().change(() => {
+                offEventClickOutside();
+                uploadFile('fileupload')
+            });
+            $inputImage.off().change(() => {
+                offEventClickOutside();
+                uploadFile('imageupload')
+            });
             $dropzone.off().on('dragover', false).on('drop', onDrop);
 
             if (!initEventDoc) {

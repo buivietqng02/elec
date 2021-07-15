@@ -4,6 +4,12 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.19] - 2021-07-15
+### Update
+- Change sidebar, fix mobile tab icon
+### Fix
+- Hide attachment menu after attach a file.
+
 ### [3.18] - 2021-07-04
 ### Update
 - Add user setting: 'enter key preference'.
