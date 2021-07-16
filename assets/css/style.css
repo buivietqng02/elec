@@ -869,7 +869,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: none;
   color: #fff;
   width: 60px;
-  height: 50px;
+  height: 45px;
   background: #00CEFF;
   border-radius: 12px 0;
   text-transform: uppercase;
@@ -2496,6 +2496,7 @@ body.body_fz_18 {
 .--click-show-popup-up-img {
   max-width: 100%;
   max-height: 300px;
+  border-radius: 2px;
 }
 
 #showImageFull {

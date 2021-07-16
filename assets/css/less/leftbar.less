@@ -1,5 +1,6 @@
 #leftbar {
     display: none;
+    z-index: 999;
 }
 
 #leftbar-mobile {
@@ -15,6 +16,7 @@
     box-shadow: 0 1px 2px rgb(0 0 0 / 7%), 0 2px 4px rgb(0 0 0 / 7%), 0 4px 8px rgb(0 0 0 / 7%), 0 8px 16px rgb(0 0 0 / 7%), 0 16px 32px rgb(0 0 0 / 7%), 0 32px 64px rgb(0 0 0 / 7%);
 
     .lbm-item {
+        box-shadow: none !important;
         padding: 0;
         height: 40px;
         width: 50px;
@@ -24,6 +26,13 @@
         &.active {
             border-bottom: 1px solid;
             border-radius: 0;
+        }
+
+        .icon-cart:before {
+            background-size: 20px 20px;
+            height: 20px;
+            width: 20px;
+            margin: 0 auto;
         }
     }
 }
@@ -63,7 +72,7 @@
         .lb-item {
             position: relative;
             width: 60px;
-            height: 60px;
+            height: 62px;
             color: #fff;
             cursor: pointer;
             &:hover, &.active {
@@ -84,6 +93,41 @@
 
         .lbi-cart {
             font-size: 24px;
+        }
+
+        .lb-options-group {
+            position: absolute;
+            bottom: 0;
+            color: #fff;
+            font-size: 18px;
+            .lbogi-icon {
+                cursor: pointer;
+                width: 60px;
+                line-height: 40px;
+                text-align: center;
+                &:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                }
+            }
+
+            .lbog-collapse i {
+                display: inline-block;
+                transform: rotate(-90deg);
+            }
+
+            .lbog-collapse.indent i {
+                transform: rotate(90deg);
+            }
+
+            .lbog-users .xm-dropdown {
+                bottom: 70px;
+                left: 61px;
+            }
+
+            .lbog-options .xm-dropdown {
+                bottom: 30px;
+                left: 61px;
+            }
         }
     }
 }

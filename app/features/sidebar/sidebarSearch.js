@@ -19,6 +19,7 @@ define([
     let $optionsBtn;
     let $input;
     let $resetInputBtn;
+    let $lCollapse;
 
     const onSearch = debounce(() => {
         const value = $input.val().trim().toUpperCase();
@@ -62,8 +63,10 @@ define([
     const onExpandSidebar = () => {
         if (window.outerWidth > 767) {
             $frame.removeClass('indent');
+            $lCollapse.removeClass('indent');
         } else {
             $frame.addClass('indent');
+            $lCollapse.addClass('indent');
         }
         
         setTimeout(() => $input.focus(), 100);
@@ -78,6 +81,7 @@ define([
         onInit: () => {
             currentOptions = 1;
             $frame = $('#frame');
+            $lCollapse = $('.lbog-collapse');
             $wrapper = $('#search');
             $searchBtnCollapse = $wrapper.find('.search-toggle');
             $slide = $wrapper.find('.js-menu');
