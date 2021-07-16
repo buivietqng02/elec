@@ -9,6 +9,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 - Change sidebar, fix mobile tab icon
 ### Fix
 - Hide attachment menu after attach a file.
+- Other minor CSS fixes.
 
 ### [3.18] - 2021-07-04
 ### Update
