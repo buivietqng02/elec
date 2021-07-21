@@ -40,7 +40,9 @@ define(() => {
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             $img.src = e.target.src.replace('&small=1', '&small=0');
-            $img.style.visibility = 'visible';
+            $img.addEventListener('load', () => {
+                $img.style.visibility = 'visible';
+            }, { once: true });
         }, 500);
     };
 
