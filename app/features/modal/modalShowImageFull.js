@@ -8,6 +8,9 @@ define(() => {
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <div class="crm-loading">
+                            <div class="pulse"></div>
+                        </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -33,9 +36,11 @@ define(() => {
     const showImage = (e) => {
         $modal.modal('show');
         wzoom.maxZoomDown();
+        $img.style.visibility = 'hidden';
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             $img.src = e.target.src.replace('&small=1', '&small=0');
+            $img.style.visibility = 'visible';
         }, 500);
     };
 
@@ -49,7 +54,6 @@ define(() => {
                 $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
                 wzoom = WZoom.create('#icw-image', {
                     zoomOnClick: false,
-                    minScale: 1,
                     maxScale: 10,
                     speed: 2,
                     dragScrollableOptions: {
