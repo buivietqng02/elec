@@ -11,7 +11,8 @@
         "document": "readonly",
         "Notification": "readonly",
         "navigator": "readonly",
-        "easyrtc": "readonly"
+        "easyrtc": "readonly",
+        "WZoom": "readonly"
     },
     "rules": {
         "indent": 0,
