@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.20] - Work in progress
+### Fix
+- Fix the issue with the image viewer displaying the old image while loading the new one.
+
 ### [3.19] - 2021-07-15
 ### Update
 - Change sidebar, fix mobile tab icon
