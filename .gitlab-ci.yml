@@ -6,7 +6,7 @@ stages:
 build:dev:
   stage: build
   tags:
-    - dev-server
+    - dev
   script:
     - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
     - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
@@ -31,7 +31,7 @@ build:dev:
 deploy:dev:
   stage: deploy
   tags:
-    - dev-server
+    - dev
   script:
     - sudo rm -rf /var/www/xm.iptp.dev/html/*
     - sudo cp -r dist/* $SITE_PATH_DEV
