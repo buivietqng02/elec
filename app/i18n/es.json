@@ -19,6 +19,7 @@
     "CONFIRM_PASSWORD": "Confirma tu contraseña",
     "CONFIRM_PASSWORD_WRONG": "Las contraseñas no coinciden",
     "COPY_TO_CLIPBOARD": "Copiar al portapapeles",
+    "COPIED_TO_CLIPBOARD": "¡Copiado al portapapeles!",
     "CREATE": "Crear",
     "CROSS_MESSENGER": "Cross Messenger",
     "D": "__________________________________",

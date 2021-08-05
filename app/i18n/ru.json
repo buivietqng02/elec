@@ -19,6 +19,7 @@
     "CONFIRM_PASSWORD": "Подтвердите Пароль",
     "CONFIRM_PASSWORD_WRONG": "Пароли не совпадают",
     "COPY_TO_CLIPBOARD": "Скопировать в буфер обмена",
+    "COPIED_TO_CLIPBOARD": "Скопировано в буфер обмена",
     "CREATE": "Создавать",
     "CROSS_MESSENGER": "Cross Messenger",
     "D": "__________________________________",

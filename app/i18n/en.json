@@ -21,6 +21,7 @@
     "CONFIRM_PASSWORD_WRONG": "Password and confirm password not same",
     "CONTACTS": "Contacts",
     "COPY_TO_CLIPBOARD": "Copy to clipboard",
+    "COPIED_TO_CLIPBOARD": "Copied to clipboard!",
     "CREATE": "Create",
     "CROSS_MESSENGER": "Cross Messenger",
     "D": "__________________________________",
