@@ -1,8 +1,12 @@
 define([
+    'shared/data',
+    'shared/alert',
     'shared/functions',
     'features/chatbox/chatboxInput', 
     'features/modal/modalForwardMessage'
 ], (
+    GLOBAL,
+    ALERT,
     functions,
     chatboxInputComp, 
     modalForwardMessageComp
@@ -16,6 +20,7 @@ define([
     let $forwardBtn;
     let $editBtn;
     let $removeBtn;
+    let $copyTextBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -66,6 +71,20 @@ define([
         chatboxInputComp.onRemove(chatId, value);
     };
 
+    const onCopyText = () => {
+        const value = $message.find('.--mess').html();
+
+        const elem = document.createElement('textarea');
+        elem.value = value;
+        document.body.appendChild(elem);
+        elem.select();
+        document.execCommand('copy');
+        ALERT.show(GLOBAL.getLangJson().COPIED_TO_CLIPBOARD, 'success');
+        document.body.removeChild(elem);
+
+       offEventClickOutside();
+    };
+
     const locatePosition = ($element) => {
         const winWidth = $(window).width();
         const winHeight = $(window).height();
@@ -110,6 +129,9 @@ define([
 
         if (haveFile) {
             $editBtn.hide();
+            $copyTextBtn.hide();
+        } else {
+            $copyTextBtn.show();
         }
     };
 
@@ -128,11 +150,13 @@ define([
             $forwardBtn = $('.js-menu-messages-forward');
             $editBtn = $('.js-menu-messages-edit');
             $removeBtn = $('.js-menu-messages-remove');
+            $copyTextBtn = $('.js-menu-messages-copytext');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
             $editBtn.off().click(onEdit);
             $removeBtn.off().click(onRemove);
+            $copyTextBtn.off().click(onCopyText);
         },
 
         onShow: (e) => {

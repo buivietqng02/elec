@@ -252,6 +252,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-mail-forward"></i>
                                 <lang data-language="FORWARD"></lang>
                             </button>
+                            <button class="--fw menu__item js-menu-messages-copytext">
+                                <i class="xm xm-file-o"></i>
+                                <lang data-language="COPY_TO_CLIPBOARD"></lang>
+                            </button>
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm xm-edit"></i>
                                 <lang data-language="EDIT"></lang>
