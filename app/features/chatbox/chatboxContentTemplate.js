@@ -48,10 +48,10 @@ define(['app/constant'], (constant) => {
                     </div>
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
-                    <div class="--mess {forward}">{mess}</div>
+                    <div class="--mess {forward} {class_removed}">{mess}</div>
                     <div class="messages__bottom">
-                        <div class="--date">{date}</div>
-                        <div class="xm xm-bars --bars --menu p-cur btn-message-settings"></div>
+                        <div class="--date">{date} <span class="--edited {show_edited}">(Edited)</span></div>
+                        <div class="xm xm-bars --bars --menu p-cur btn-message-settings {hide_when_removed}"></div>
                     </div>
                 </div>
             </li>
