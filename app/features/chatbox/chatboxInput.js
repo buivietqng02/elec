@@ -35,6 +35,8 @@ define([
     let deleteState = false;
     let commentState = false;
     let messageId = 0;
+    let timeOfLastTypingEvent;
+    let timeOfLastSentTypingEvent;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -81,12 +83,16 @@ define([
                 e.preventDefault();
                 removeDraft();
                 onSendMessage();
+            } else {
+                onTypingEvent();
             }
         } else {
             if (e.keyCode === 13 && !e.shiftKey) {
                 e.preventDefault();
                 removeDraft();
                 onSendMessage();
+            } else {
+                onTypingEvent();
             }
         }
 
@@ -186,6 +192,10 @@ define([
             chatboxContentComp.onAddLocal(data);
         }
 
+        if (!deleteState) {
+            sendTypingEvent(false);
+        }
+
         if (!messagesWaitProcessingArr.length) {
             postMessage(data);
         }
@@ -198,6 +208,33 @@ define([
         commentState = false;
         $commentWrapper.hide();
     };
+
+    const onTypingEvent = () => {
+        let currentTimestamp = Date.now();
+        if (timeOfLastTypingEvent != null) {
+            // check if last typing event was more than 2.5 seconds ago
+            // OR if last typing event sent to API was more than 5 seconds ago
+            if (currentTimestamp - timeOfLastTypingEvent > 2500
+                    || currentTimestamp - timeOfLastSentTypingEvent > 5000) {
+                sendTypingEvent(true);
+            }
+        } else {
+            sendTypingEvent(true);
+        }
+        timeOfLastTypingEvent = currentTimestamp;
+    }
+
+    const sendTypingEvent = (typing) => {
+        // reset times of typing event
+        timeOfLastTypingEvent = null;
+        timeOfLastSentTypingEvent = Date.now();
+        
+        // get current room id
+        const roomId = GLOBAL.getCurrentRoomId();
+        // send typing event
+        API.post(`chats/${roomId}/typing?typing=${typing}`, null).then(() => {})
+            .catch(onErrFetch);
+    }
 
     return {
         onInit: () => {
