@@ -7,7 +7,8 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### [3.20] - Work in progress
 ### Add
 - Add option to copy the text of the message.
-- Shows when is message is edited or deleted.
+- Show when is message is edited or deleted.
+- Show when your chat partner is typing.
 ### Fix
 - Fix the issue with the image viewer displaying the old image while loading the new one.
 

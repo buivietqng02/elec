@@ -219,7 +219,7 @@ define([
         const currentRoomId = GLOBAL.getCurrentRoomId();
         const currentUserId = GLOBAL.getInfomation().id;
 
-        // filter events from partners in current room
+        // filter only events from partners in current room
         const typingEventsFromPartnersInCurrentRoom = typingEvents
             .filter(typingEvent => typingEvent.chatId === currentRoomId 
                 && typingEvent.user.id !== currentUserId);
@@ -229,9 +229,8 @@ define([
             const lastTypingEvent = typingEventsFromPartnersInCurrentRoom
                 .reduce((p, c) => (p.timestamp > c.timestamp ? p : c));
             
+            // show latest typing event on chat box top bar
             chatboxTopbarComp.onRenderTyping(lastTypingEvent);
-
-            console.log(lastTypingEvent);
         }
     };
 
