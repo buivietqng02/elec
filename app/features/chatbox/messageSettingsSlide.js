@@ -67,7 +67,10 @@ define([
         const value = $message.find('.--mess').html();
 
         offEventClickOutside();
-        $message.remove();
+
+        $message.find('.--mess').addClass('--message-removed').html('This message was removed');
+        $message.find('.btn-message-settings').hide();
+
         chatboxInputComp.onRemove(chatId, value);
     };
 
