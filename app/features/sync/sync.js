@@ -116,7 +116,7 @@ define([
             // Handle with message was deleted
             if (message.deleted) {
                 if (isCurrentRoom) {
-                    chatboxContentComp.onSyncRemove(message.id.messageId);
+                    chatboxContentComp.onSyncRemove(message);
                 }
 
                 return;

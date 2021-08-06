@@ -329,14 +329,14 @@ define([
             }
         },
 
-        onSyncRemove: (id) => {
+        onSyncRemove: (message) => {
+            const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
-            const $prevMessage = $message.prev();
-            const $prevMessageTwo = $prevMessage.prev();
-
-            $prevMessage.hasClass('not-mess-li') && $prevMessage.remove();
-            $prevMessageTwo.hasClass('not-mess-li') && $prevMessageTwo.remove();
-            $message.remove();
+            $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
+            $message.find('.--mess').removeClass('fwme');
+            $message.find('.above-of-mess').removeClass('fwme');
+            $message.find('.btn-message-settings').hide();
+            $message.find('.--edited').addClass('hidden');
         },
 
         onSyncUpdate: (message) => {
@@ -344,6 +344,7 @@ define([
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
 
             $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));       
+            $message.find('.--edited').removeClass('hidden');
         },
 
         onSearch: (searchMessageList, search) => {
