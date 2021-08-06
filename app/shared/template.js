@@ -192,6 +192,7 @@ define(['shared/icon'], (ICON) => ({
                         <div class="toolbar-name">
                             <div class="--name"></div>
                             <div class="--online"></div>
+                            <div class="--typing"></div>
                         </div>
                         <button class="btn-toggle-search-box">
                             <i class="xm xm-search"></i>

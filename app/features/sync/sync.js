@@ -215,6 +215,26 @@ define([
         GLOBAL.setRooms(roomsMove.concat(rooms));
     };
 
+    const handleTypingEvents = (typingEvents) => {
+        const currentRoomId = GLOBAL.getCurrentRoomId();
+        const currentUserId = GLOBAL.getInfomation().id;
+
+        // filter events from partners in current room
+        const typingEventsFromPartnersInCurrentRoom = typingEvents
+            .filter(typingEvent => typingEvent.chatId === currentRoomId 
+                && typingEvent.user.id !== currentUserId);
+        
+        if (typingEventsFromPartnersInCurrentRoom.length) {
+            // get the latest typing event
+            const lastTypingEvent = typingEventsFromPartnersInCurrentRoom
+                .reduce((p, c) => (p.timestamp > c.timestamp ? p : c));
+            
+            chatboxTopbarComp.onRenderTyping(lastTypingEvent);
+
+            console.log(lastTypingEvent);
+        }
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -233,6 +253,10 @@ define([
             if (res?.messages?.length) {
                 const messages = functions.sortBy(res.messages, 'msgDate');
                 handleRealTimeMessage(messages);
+            }
+
+            if (res?.userTypingEvents?.length) {
+                handleTypingEvents(res.userTypingEvents);
             }
 
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {

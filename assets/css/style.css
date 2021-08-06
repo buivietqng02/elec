@@ -540,7 +540,7 @@ body {
   margin-top: 3px;
 }
 
-.toolbar-profile .toolbar-name .--online {
+.toolbar-profile .toolbar-name .--online, .toolbar-profile .toolbar-name .--typing {
   font-size: 0.85rem;
 }
 
