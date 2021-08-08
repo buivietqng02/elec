@@ -24,12 +24,17 @@ define([
     let timeout;
     let isInit = false;
     let isBlinkTitleBrowser = false;
-    const { SESSION_ID, TOKEN, USER_ID } = constant;
+    const {
+        SESSION_ID, TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
+    } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
         timeout: 10000,
         onBackground: false
     };
+    const { 
+        getRoomById, storeRoomById
+    } = chatboxContentChatListComp;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -234,6 +239,44 @@ define([
         }
     };
 
+    /**
+     * Method to mark all messages from chat 'chatId' before 'lastReadTime' as 'read'
+     * @param {*} readChatEvents 
+     */
+    const handleUserReadChatEvents = (readChatEvents) => {
+        readChatEvents.forEach(readChatEvent => {
+            // get cached messages from the chat of the event
+            const messages = getRoomById(readChatEvent.chatId);
+        
+            // only necessary to mark messages as read if messages are cached
+            // messages that aren't cached, will be retrieved from database with 'read' information
+            if (messages != null) {
+                // if reads events are from current room, then update rendered messages
+                const isCurrentRoom = GLOBAL.getCurrentRoomId() === readChatEvent.chatId;
+                if (isCurrentRoom) {
+                    messages
+                        .filter(message => message.msgDate <= readChatEvent.lastReadTime)
+                        .forEach(message => {
+                            const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${message.id.messageId}"]`);
+                            // mark message as 'read' for all chat members
+                            $message.find('.--double-check').addClass('--read');
+                        });
+                }
+                // update cached messages
+                const newMessages = messages
+                    .map(message => {
+                        if (message.msgDate <= readChatEvent.lastReadTime) {
+                            const newItem = { ...message };
+                            newItem.readByAllPartners = true; // mark message as 'read' for all
+                            return newItem;
+                        }
+                        return message;
+                    });
+                storeRoomById(readChatEvent.chatId, newMessages);
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -256,6 +299,10 @@ define([
 
             if (res?.userTypingEvents?.length) {
                 handleTypingEvents(res.userTypingEvents);
+            }
+
+            if (res?.userReadChatEvents?.length) {
+                handleUserReadChatEvents(res.userReadChatEvents);
             }
 
             if (currentRoomId === GLOBAL.getCurrentRoomId()) {

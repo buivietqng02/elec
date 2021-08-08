@@ -271,6 +271,11 @@ define([
 
             if (getRoomById(roomInfo.id) && isInit) {
                 onGetMessageFromCache(roomInfo);
+
+                // update chat last read time
+                API.post(`chats/${roomInfo.id}/read`).then(() => {})
+                    .catch(err => console.error(err));
+
                 return;
             }
 

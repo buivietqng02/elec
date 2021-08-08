@@ -1782,6 +1782,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   text-align: left;
 }
 
+.messages__bottom .--read {
+  color: #34b7f1;
+}
+
 .messages__bottom .--edit {
   margin-right: auto;
   margin-left: 20px;
