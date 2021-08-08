@@ -18,6 +18,7 @@
     "CONFIRM_NEW_PASSWORD": "Confirma tu nueva contraseña",
     "CONFIRM_PASSWORD": "Confirma tu contraseña",
     "CONFIRM_PASSWORD_WRONG": "Las contraseñas no coinciden",
+    "COPY_TEXT": "Copiar texto",
     "COPY_TO_CLIPBOARD": "Copiar al portapapeles",
     "COPIED_TO_CLIPBOARD": "¡Copiado al portapapeles!",
     "CREATE": "Crear",
