@@ -342,6 +342,7 @@ define([
             $message.find('.above-of-mess').removeClass('fwme');
             $message.find('.btn-message-settings').hide();
             $message.find('.--edited').addClass('hidden');
+            $message.find('.--double-check').addClass('hidden');
         },
 
         onSyncUpdate: (message) => {

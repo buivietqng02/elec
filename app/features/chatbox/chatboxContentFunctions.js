@@ -201,7 +201,7 @@ define([
             data.show_edited = updated && !deleted ? '' : 'hidden';
             data.class_removed = deleted ? '--message-removed' : '';
             data.hide_when_removed = deleted ? 'hidden' : '';
-            data.hide_for_partner = data.who !== 'you' ? 'hidden' : '';
+            data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
 
             // render with case of comment
