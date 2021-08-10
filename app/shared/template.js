@@ -257,6 +257,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-file-o"></i>
                                 <lang data-language="COPY_TEXT"></lang>
                             </button>
+                            <button class="--fw menu__item js-menu-messages-info">
+                                <i class="xm xm-info-circle"></i>
+                                <lang data-language="INFO"></lang>
+                            </button>
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm xm-edit"></i>
                                 <lang data-language="EDIT"></lang>

@@ -3,13 +3,15 @@ define([
     'shared/alert',
     'shared/functions',
     'features/chatbox/chatboxInput', 
-    'features/modal/modalForwardMessage'
+    'features/modal/modalForwardMessage',
+    'features/modal/modalMessageInfo',
 ], (
     GLOBAL,
     ALERT,
     functions,
     chatboxInputComp, 
-    modalForwardMessageComp
+    modalForwardMessageComp,
+    modalMessageInfoComp
 ) => {
     const message = {};
     let $message;
@@ -89,6 +91,14 @@ define([
        offEventClickOutside();
     };
 
+    const onInfo = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
+        const messageDate = $message.find('.--date').attr('date-value');
+
+        offEventClickOutside();
+        modalMessageInfoComp.onInit(chatId, messageDate);
+    };
+
     const locatePosition = ($element) => {
         const winWidth = $(window).width();
         const winHeight = $(window).height();
@@ -155,12 +165,14 @@ define([
             $editBtn = $('.js-menu-messages-edit');
             $removeBtn = $('.js-menu-messages-remove');
             $copyTextBtn = $('.js-menu-messages-copytext');
+            $messageInfoBtn = $('.js-menu-messages-info');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
             $editBtn.off().click(onEdit);
             $removeBtn.off().click(onRemove);
             $copyTextBtn.off().click(onCopyText);
+            $messageInfoBtn.off().click(onInfo);
         },
 
         onShow: (e) => {

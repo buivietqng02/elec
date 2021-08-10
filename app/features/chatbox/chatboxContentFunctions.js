@@ -197,6 +197,7 @@ define([
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
             data.date = convertMessagetime(msgDate, GLOBAL.getLangJson(), !!search);
+            data.dateTimestamp = msgDate;
             data.forward = forwarded && !deleted ? 'fwme' : '';
             data.show_edited = updated && !deleted ? '' : 'hidden';
             data.class_removed = deleted ? '--message-removed' : '';
