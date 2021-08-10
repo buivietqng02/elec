@@ -136,9 +136,11 @@ define([
             }
             
             $removeBtn.show();
+            $messageInfoBtn.show();
         } else {
             $editBtn.hide();
             $removeBtn.hide();
+            $messageInfoBtn.hide();
         }
 
         if (haveFile) {
