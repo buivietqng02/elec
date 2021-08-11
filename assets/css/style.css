@@ -301,6 +301,11 @@ template {
   overflow-y: auto;
 }
 
+.not-live-assistance {
+  height: 450px;
+  overflow-y: auto;
+}
+
 .wrap-emojis {
   position: absolute;
   bottom: calc(100% + 1px);
@@ -2539,6 +2544,11 @@ body.body_fz_18 {
 #profileModal .modal-title,
 #createGroupModal .modal-title {
   color: #08c;
+}
+
+#profileModal .modal-body {
+  overflow-y: auto;
+  max-height: 450px;
 }
 
 .xmmc-modal .modal-dialog input,
