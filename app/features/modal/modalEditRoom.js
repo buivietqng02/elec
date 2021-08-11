@@ -74,11 +74,11 @@ define([
                             <label data-language="NAME">${langJson.NAME}</label>
                             <input data-language="ENTER_NAME" data-lang-type="placeholder" tabindex="-1" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
+                        <div class="erp-info"></div>
                         <div class="xmmcm-form-group erm-des">
                             <label data-language="DESCRIPTION">${langJson.DESCRIPTION}</label>
                             <textarea data-language="ENTER_DESCRIPTION" data-lang-type="placeholder" style="margin-bottom: 0" placeholder="${langJson.ENTER_DESCRIPTION}"></textarea>
                         </div>
-                        <div class="erp-info"></div>
                     </div>
                     <div class="modal-body modal-live-assistance hidden"></div>
                     <div class="modal-footer">
@@ -260,6 +260,16 @@ define([
                     <input class="input-freeze" tabindex="-1" value="${fullName}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
+                <div class="xmmcm-form-group erm-role">
+                    <label>${langJson.ROLE}</label>
+                    <input class="input-freeze" tabindex="-1" value="${role.name}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-groups">
+                    <label>${langJson.GROUPS}</label>
+                    <input class="input-freeze" tabindex="-1" value="${groups.map(group => group.name).join(',')}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
                 <div class="xmmcm-form-group erm-mobile">
                     <label>${langJson.MOBILE}</label>
                     <input class="input-freeze" tabindex="-1" value="${mobile}" />
@@ -273,16 +283,6 @@ define([
                 <div class="xmmcm-form-group erm-skype">
                     <label>Skype</label>
                     <input class="input-freeze" tabindex="-1" value="${skype}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
-                </div>
-                <div class="xmmcm-form-group erm-role">
-                    <label>${langJson.ROLE}</label>
-                    <input class="input-freeze" tabindex="-1" value="${role.name}" />
-                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
-                </div>
-                <div class="xmmcm-form-group erm-groups">
-                    <label>${langJson.GROUPS}</label>
-                    <input class="input-freeze" tabindex="-1" value="${groups.map(group => group.name).join(',')}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
             `);

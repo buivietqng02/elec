@@ -67,12 +67,22 @@ define([
                             <input data-language="ENTER_NAME" data-lang-type="placeholder" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
                         <div class="pmm-form-group pmm-fullname">
-                            <label data-language="FullName">Full Name</label>
+                            <label data-language="FULL_NAME">${langJson.FULL_NAME}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-role">
+                            <label data-language="ROLE">${langJson.ROLE}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-groups">
+                            <label data-language="GROUPS">${langJson.GROUPS}</label>
                             <input class="input-freeze" tabindex="-1" />
                             <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-mobile">
-                            <label data-language="Mobile">Mobile</label>
+                            <label data-language="MOBILE">${langJson.MOBILE}</label>
                             <input class="input-freeze" tabindex="-1" />
                             <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
@@ -86,17 +96,6 @@ define([
                             <input class="input-freeze" tabindex="-1" />
                             <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
-                        <div class="pmm-form-group pmm-role">
-                            <label data-language="Role">Role</label>
-                            <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
-                        </div>
-                        <div class="pmm-form-group pmm-groups">
-                            <label data-language="Groups">Groups</label>
-                            <input class="input-freeze" tabindex="-1" />
-                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary">
