@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-const version = '#XM_VERSION';
+const version = '#XM_VERSION_5';
 const urls = [
     '/',
     '/index.html',
@@ -9,7 +9,7 @@ const urls = [
     '/assets/js/easyrtc.js',
     '/assets/js/wheel-zoom.min.js',
     '/source/index.bundle.js',
-    '/source/77.bundle.js',
+    '/source/232.bundle.js',
     '/source/styles.bundle.js',
     '/source/styles.css',
     '/assets/css/xm-icon.min.css',
@@ -23,6 +23,7 @@ const urls = [
     '/assets/images/appstore-badge2.png',
     '/assets/images/favicon.ico',
     '/source/marble.png',
+    '/source/shopping-cart.svg',
     '/assets/fonts/subset-RobotoCondensed-Light.woff2',
     '/assets/fonts/subset-RobotoCondensed-Light.woff'
 ];

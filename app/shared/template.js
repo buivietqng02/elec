@@ -91,6 +91,22 @@ define(['shared/icon'], (ICON) => ({
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <div class="cp-product">
+                        <div>
+                            <img src="/assets/images/jumpo.jpeg" />
+                        </div>
+                        <div class="cpp-content clearfix">
+                            <h2>
+                                JumboIX - Internet Exchange of a kind (AS43565)
+                            </h2>
+                            <p>
+                                Building up an Internet Exchange in Latin America from the Scratch
+                            </p>
+                            <a href="https://www.iptp.net/en_US/jumboix/" target="_blank" class="btn btn-info">
+                                Preview
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

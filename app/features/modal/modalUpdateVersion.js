@@ -1,6 +1,7 @@
 define(['shared/data'], (GLOBAL) => {
     let $modal;
     let $btnRefresh;
+    let $btnCancel;
     const renderTemplate = (langJson) => `
         <div class="modal fade" id="updateVersionModal" tabindex="-1" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -26,9 +27,15 @@ define(['shared/data'], (GLOBAL) => {
 
                 $modal = $('#updateVersionModal');
                 $btnRefresh = $modal.find('.btn-outline-primary');
-
-                $btnRefresh.click(() => window.location.reload(true));
+                $btnCancel = $modal.find('.btn-outline-secondary');
             }
+
+            $btnRefresh.off().click(() => window.location.reload(true));
+            $btnCancel.off().click(() => {
+                setTimeout(() => {
+                    $modal.modal('show');
+                }, 60000);
+            });
 
             $modal.modal('show');
         }

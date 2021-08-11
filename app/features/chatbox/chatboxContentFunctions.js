@@ -56,7 +56,7 @@ define([
         } = quotedMessage;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(decodeStringBase64(message));
+        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
 
         if (file) {
             text = handleMessCointainFile(file);
