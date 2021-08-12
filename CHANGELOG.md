@@ -13,6 +13,8 @@ All changes to XM WEB CLIENT project will be documented in this file.
 - Show ERP info in user modal.
 ### Fix
 - Fix the issue with the image viewer displaying the old image while loading the new one.
+### Update
+- Call 'logout' API on logout.
 
 ### [3.19] - 2021-07-15
 ### Update
