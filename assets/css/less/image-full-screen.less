@@ -1,0 +1,108 @@
+#showImageFull {
+    .crm-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .modal-dialog {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        margin: 0;
+    }
+
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        border-radius: 0;
+    }
+
+    .modal-body {
+        height: 100%;
+    }
+
+    .embed-responsive {
+        margin-top: 40px;
+        height: calc(100% - 95px);
+        border-radius: 4px;
+    }
+
+    .close {
+        color: #fff;
+    }
+
+    .image-caption-wrap {
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            position: relative;
+            display: flex;
+            align-items: center;
+            max-width: none;
+        }
+    }
+
+    .image-bottom-options {
+        margin-top: 10px;
+        
+        > div {
+            width: 50px;
+            height: 50px;    
+            text-align: center;
+            float: right;
+            margin-left: 10px;
+            position: relative;
+            border-radius: 4px;
+            cursor: pointer;
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        i {
+            color: #fff;
+            font-size: 35px;
+            position: relative;
+            top: 6px;
+        }
+
+        .ibo-zoom-up {
+            &:before {
+                position: absolute;
+                content: '';
+                width: 8px;
+                height: 2px;
+                background: #fff;
+                left: 19px;
+                top: 22px;
+            }
+
+            &:after {
+                position: absolute;
+                content: '';
+                width: 2px;
+                height: 8px;
+                background: #fff;
+                left: 21.5px;
+                top: 18.5px;
+            }
+        }
+
+        .ibo-zoom-down {
+            &:before {
+                position: absolute;
+                content: '';
+                width: 7px;
+                height: 2px;
+                background: #fff;
+                left: 19px;
+                top: 22px;
+            }
+        }
+    }
+}

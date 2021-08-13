@@ -20,12 +20,7 @@ define([
                 return;
             }
 
-            if (messObject.deleted) {
-                rooms[id] = room.filter(mess => messObject?.id?.messageId !== mess?.id?.messageId);
-                return;
-            }
-
-            if (messObject.updated) {
+            if (messObject.updated || messObject.deleted) {
                 rooms[id] = room.map(mess => {
                     if (messObject?.id?.messageId === mess?.id?.messageId) {
                         return messObject;

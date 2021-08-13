@@ -56,7 +56,7 @@ define([
         } = quotedMessage;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(decodeStringBase64(message));
+        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
 
         if (file) {
             text = handleMessCointainFile(file);
@@ -150,7 +150,10 @@ define([
                 msgDate,
                 internal,
                 forwarded,
-                file
+                file,
+                updated,
+                deleted,
+                readByAllPartners
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -194,7 +197,13 @@ define([
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
             data.date = convertMessagetime(msgDate, GLOBAL.getLangJson(), !!search);
-            data.forward = forwarded ? 'fwme' : '';
+            data.dateTimestamp = msgDate;
+            data.forward = forwarded && !deleted ? 'fwme' : '';
+            data.show_edited = updated && !deleted ? '' : 'hidden';
+            data.class_removed = deleted ? '--message-removed' : '';
+            data.hide_when_removed = deleted ? 'hidden' : '';
+            data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
+            data.class_read_by_partners = readByAllPartners ? '--read' : '';
 
             // render with case of comment
             if (quotedMessage) {

@@ -32,6 +32,8 @@ define([
     let $name;
     let $image;
     let $timeActivity;
+    let $typing;
+    let $roomInfo;
 
     const offEventClickOutside = () => {
         $slide.hide();
@@ -120,6 +122,7 @@ define([
             $name = $('.js_info_parnter .toolbar-name .--name');
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
+            $typing = $('.js_info_parnter .toolbar-name .--typing');
 
             $groupOptionsBtn.off().click(showSlide);
             $editBtn.off().click(editGroup);
@@ -132,8 +135,10 @@ define([
 
         onRenderInfomation: (roomInfo) => {
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
+            $roomInfo = roomInfo;
             $image.off('error');
             $timeActivity.html('');
+            $typing.hide();
 
             // Check status of notification
             if (obRoomEdited[roomInfo.id]?.notification_mess === false) {
@@ -188,6 +193,28 @@ define([
                 $timeActivity.html(`<lang data-language="ONLINE">${GLOBAL.getLangJson().ONLINE}</lang>`);
             } else {
                 $timeActivity.html(`<lang data-language="LAST_SEEN">${GLOBAL.getLangJson().LAST_SEEN}</lang> ${moment(time).fromNow()}`);
+            }
+        },
+
+        onRenderTyping: (typingEvent) => {
+            if (typingEvent.typing) {
+                // show typing message
+                $timeActivity.hide();
+                if ($roomInfo.group) {
+                    $typing.html(`${typingEvent.user.name} <lang data-language="IS_TYPING">${GLOBAL.getLangJson().IS_TYPING}</lang>`);
+                } else {
+                    $typing.html(`<lang data-language="TYPING">${GLOBAL.getLangJson().TYPING}</lang>`);
+                }
+                $typing.show();
+
+                // hide it after 5 seconds
+                setTimeout(() => {
+                    $typing.hide();
+                    $timeActivity.show();
+                }, 5000);
+            } else {
+                $typing.hide();
+                $timeActivity.show();
             }
         }
     };

@@ -2,23 +2,23 @@ const { lang } = require("moment");
 
 define([
     'app/constant',
-    'shared/alert', 
-    'shared/api', 
-    'shared/data', 
+    'shared/alert',
+    'shared/api',
+    'shared/data',
     'shared/functions'
 ], (
     constant,
-    ALERT, 
-    API, 
-    GLOBAL, 
+    ALERT,
+    API,
+    GLOBAL,
     functions
 ) => {
     const { render, getAvatar, getDataToLocalApplication } = functions;
     const {
-        API_URL, 
-        TOKEN, 
-        ATTRIBUTE_CHANGE_NAME, 
-        ATTRIBUTE_CHANGE_IMAGE_GROUP 
+        API_URL,
+        TOKEN,
+        ATTRIBUTE_CHANGE_NAME,
+        ATTRIBUTE_CHANGE_IMAGE_GROUP
     } = constant;
     const token = getDataToLocalApplication(TOKEN) || '';
     let roomInfo;
@@ -74,6 +74,7 @@ define([
                             <label data-language="NAME">${langJson.NAME}</label>
                             <input data-language="ENTER_NAME" data-lang-type="placeholder" tabindex="-1" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
                         </div>
+                        <div class="erp-info"></div>
                         <div class="xmmcm-form-group erm-des">
                             <label data-language="DESCRIPTION">${langJson.DESCRIPTION}</label>
                             <textarea data-language="ENTER_DESCRIPTION" data-lang-type="placeholder" style="margin-bottom: 0" placeholder="${langJson.ENTER_DESCRIPTION}"></textarea>
@@ -119,7 +120,7 @@ define([
         API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => {
             $closeBtn.click();
             GLOBAL.setRoomInfoWasEdited(obRoomEdited);
-            
+
             if (!roomInfo.group) {
                 const name = $name.val() || roomInfo.partner.name;
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${roomInfo.partner.id}"]`).text(name);
@@ -135,11 +136,11 @@ define([
         if (!file) {
             return;
         }
-        
+
         FR.addEventListener('load', (e) => {
             $img.attr('src', e.target.result);
             $(`[${ATTRIBUTE_CHANGE_IMAGE_GROUP}="${GLOBAL.getCurrentRoomId()}"]`).attr('src', e.target.result);
-        }); 
+        });
         FR.readAsDataURL(file);
 
         fd.append('avatarfile', file);
@@ -154,8 +155,8 @@ define([
             cache: false,
             contentType: false,
             processData: false,
-            success: () => {},
-            error: () => {}
+            success: () => { },
+            error: () => { }
         });
     };
 
@@ -234,6 +235,62 @@ define([
         });
     };
 
+    const requestUserInfo = (partnerId) => {
+        API.get(`users/${partnerId}`).then(res => {
+
+            if (!res.erpInfo) {
+                $contentErpInfo.html('');
+                return;
+            }
+
+            const {
+                fullName,
+                mobile,
+                extension,
+                skype,
+                role,
+                groups
+            } = res.erpInfo;
+
+            const langJson = GLOBAL.getLangJson();
+
+            $contentErpInfo.html(`
+                <div class="xmmcm-form-group erm-fullname">
+                    <label>${langJson.FULL_NAME}</label>
+                    <input class="input-freeze" tabindex="-1" value="${fullName}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-role">
+                    <label>${langJson.ROLE}</label>
+                    <input class="input-freeze" tabindex="-1" value="${role.name}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-groups">
+                    <label>${langJson.GROUPS}</label>
+                    <input class="input-freeze" tabindex="-1" value="${groups.map(group => group.name).join(',')}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-mobile">
+                    <label>${langJson.MOBILE}</label>
+                    <input class="input-freeze" tabindex="-1" value="${mobile}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-ext">
+                    <label>Ext</label>
+                    <input class="input-freeze" tabindex="-1" value="${extension}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group erm-skype">
+                    <label>Skype</label>
+                    <input class="input-freeze" tabindex="-1" value="${skype}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+            `);
+
+            $modal.find('[data-toggle="tooltip"]').tooltip();
+        });
+    };
+
     return {
         onInit: () => {
             if (!$('#editRoomModal').length) {
@@ -241,6 +298,7 @@ define([
                 $modal = $('#editRoomModal');
                 $modalBody = $modal.find('.not-live-assistance');
                 $contentLA = $modal.find('.modal-live-assistance');
+                $contentErpInfo = $modal.find('.erp-info');
                 $img = $modal.find('.erm-image-wrapper img');
                 $userId = $modal.find('.erm-userid input');
                 $chatId = $modal.find('.erm-chatid input');
@@ -266,6 +324,7 @@ define([
             $modal.modal('show');
             $modalBody.removeClass('hidden');
             $contentLA.addClass('hidden');
+            $contentErpInfo.addClass('hidden');
 
             // Handle for live assistance. Split another part to handle simply
             if (roomInfo.group && roomInfo.isLiveAssistance) {
@@ -297,6 +356,10 @@ define([
                 $userId.val(roomInfo.partner.id);
                 $name.val(obRoomEdited[roomInfo.partner.id]?.user_name || roomInfo.partner.name);
                 $des.val(obRoomEdited[roomInfo.partner.id]?.user_des || '');
+
+                $contentErpInfo.removeClass('hidden');
+                $contentErpInfo.html(`<div class="--load-mess" style="display: block;"><div class="pulse"></div></div>`);
+                requestUserInfo(roomInfo.partner.id);
             }
         }
     };

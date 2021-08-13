@@ -1,15 +1,32 @@
 define(() => {
     let $modal;
     let $img;
+    let wzoom;
+    let $frame;
     const renderTemplate = `
         <div class="modal fade" id="showImageFull" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <div class="crm-loading">
+                            <div class="pulse"></div>
+                        </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <img />
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
+                                <img class="icw-image" id="icw-image" />
+                            </div>
+                        </div>
+                        <div class="image-bottom-options clearfix">
+                            <div class="ibo-zoom-up">
+                                <i class="icon-search"></i>
+                            </div>
+                            <div class="ibo-zoom-down">
+                                <i class="icon-search"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -18,40 +35,15 @@ define(() => {
 
     const showImage = (e) => {
         $modal.modal('show');
-        $img.attr('src', e.target.src.replace('&small=1', '&small=0'));
-        $img.removeClass('zoomout');
-        $img.removeAttr('style');
-    };
-
-    const zoomImage = () => {
-        if ($img.hasClass('zoomout')) {
-            $img.removeAttr('style');
-            $img.removeClass('zoomout');
-        } else {
-            const {
-                clientWidth,
-                clientHeight
-            } = $img.get(0);
-
-            const scale = clientWidth / clientHeight;
-            let height = 0;
-            let width = 0;
-
-            if (clientWidth > clientHeight) {
-                height = clientHeight * 1.5;
-                width = height * scale;
-            } else {
-                width = clientWidth * 1.5;
-                height = width / scale;
-            }
-
-            $img.css({
-                height: `${height}px`,
-                width: `${width}px`
-            });
-
-            $img.addClass('zoomout');
-        }
+        wzoom.maxZoomDown();
+        $img.style.visibility = 'hidden';
+        setTimeout(() => {
+            // eslint-disable-next-line prefer-destructuring
+            $img.src = e.target.src.replace('&small=1', '&small=0');
+            $img.addEventListener('load', () => {
+                $img.style.visibility = 'visible';
+            }, { once: true });
+        }, 500);
     };
 
     return {
@@ -59,9 +51,29 @@ define(() => {
             if (!$('#showImageFull').length) {
                 $('body').append(renderTemplate);
                 $modal = $('#showImageFull');
-                $img = $modal.find('img');
-                $(document).on('click', '.--click-show-popup-up-img', showImage);
-                $img.click(zoomImage);
+                $img = document.getElementById('icw-image');
+                $frame = document.getElementById('image-caption-wrap');
+                $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
+                wzoom = WZoom.create('#icw-image', {
+                    zoomOnClick: false,
+                    maxScale: 10,
+                    speed: 2,
+                    dragScrollableOptions: {
+                        onGrab: () => {
+                            $frame.style.cursor = 'grabbing';
+                        },
+                        onDrop: () => {
+                            $frame.style.cursor = 'grab';
+                        }
+                    }
+                });
+
+                $('.ibo-zoom-up').off().click(() => {
+                    wzoom.zoomUp();
+                });
+                $('.ibo-zoom-down').off().click(() => {
+                    wzoom.zoomDown();
+                });
             }
         }
     };

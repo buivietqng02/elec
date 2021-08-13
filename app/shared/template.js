@@ -91,6 +91,22 @@ define(['shared/icon'], (ICON) => ({
                     </div>
                 </div>
                 <div class="col-md-4">
+                    <div class="cp-product">
+                        <div>
+                            <img src="/assets/images/jumpo.jpeg" />
+                        </div>
+                        <div class="cpp-content clearfix">
+                            <h2>
+                                JumboIX - Internet Exchange of a kind (AS43565)
+                            </h2>
+                            <p>
+                                Building up an Internet Exchange in Latin America from the Scratch
+                            </p>
+                            <a href="https://www.iptp.net/en_US/jumboix/" target="_blank" class="btn btn-info">
+                                Preview
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,6 +208,7 @@ define(['shared/icon'], (ICON) => ({
                         <div class="toolbar-name">
                             <div class="--name"></div>
                             <div class="--online"></div>
+                            <div class="--typing"></div>
                         </div>
                         <button class="btn-toggle-search-box">
                             <i class="xm xm-search"></i>
@@ -251,6 +268,14 @@ define(['shared/icon'], (ICON) => ({
                             <button class="--fw menu__item js-menu-messages-forward">
                                 <i class="xm xm-mail-forward"></i>
                                 <lang data-language="FORWARD"></lang>
+                            </button>
+                            <button class="--fw menu__item js-menu-messages-copytext">
+                                <i class="xm xm-file-o"></i>
+                                <lang data-language="COPY_TEXT"></lang>
+                            </button>
+                            <button class="--fw menu__item js-menu-messages-info">
+                                <i class="xm xm-info-circle"></i>
+                                <lang data-language="INFO"></lang>
                             </button>
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm xm-edit"></i>

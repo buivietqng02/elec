@@ -4,6 +4,18 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.20] - 2021-08-11
+### Add
+- Add option to copy the text of the message.
+- Show when is message is edited or deleted.
+- Show when your chat partner is typing.
+- Add option to show message info.
+- Show ERP info in user modal.
+### Fix
+- Fix the issue with the image viewer displaying the old image while loading the new one.
+### Update
+- Call 'logout' API on logout.
+
 ### [3.19] - 2021-07-15
 ### Update
 - Change sidebar, fix mobile tab icon

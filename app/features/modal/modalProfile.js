@@ -23,6 +23,12 @@ define([
     let $userId;
     let $name;
     let $email;
+    let $fullName;
+    let $mobile;
+    let $extension;
+    let $skype;
+    let $role;
+    let $groups;
     let $closeBtn;
     let $inputFile;
     let $save;
@@ -59,6 +65,36 @@ define([
                         <div class="pmm-form-group pmm-name">
                             <label>${langJson.NAME}</label>
                             <input data-language="ENTER_NAME" data-lang-type="placeholder" placeholder="${langJson.ENTER_NAME}" maxlength="50" />
+                        </div>
+                        <div class="pmm-form-group pmm-fullname">
+                            <label data-language="FULL_NAME">${langJson.FULL_NAME}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-role">
+                            <label data-language="ROLE">${langJson.ROLE}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-groups">
+                            <label data-language="GROUPS">${langJson.GROUPS}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-mobile">
+                            <label data-language="MOBILE">${langJson.MOBILE}</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-extension">
+                            <label data-language="Extension">Extension</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
+                        </div>
+                        <div class="pmm-form-group pmm-skype">
+                            <label data-language="Skype">Skype</label>
+                            <input class="input-freeze" tabindex="-1" />
+                            <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -142,6 +178,19 @@ define([
                 $name = $modal.find('.pmm-form-group.pmm-name input');
                 $email = $modal.find('.pmm-form-group.pmm-email input');
                 $email.val(info.email);
+                $fullName = $modal.find('.pmm-form-group.pmm-fullname input');
+                $fullName.val(info.erpInfo?.fullName);
+                $mobile = $modal.find('.pmm-form-group.pmm-mobile input');
+                $mobile.val(info.erpInfo?.mobile);
+                $extension = $modal.find('.pmm-form-group.pmm-extension input');
+                $extension.val(info.erpInfo?.extension);
+                $skype = $modal.find('.pmm-form-group.pmm-skype input');
+                $skype.val(info.erpInfo?.skype);
+                $role = $modal.find('.pmm-form-group.pmm-role input');
+                $role.val(info.erpInfo?.role?.name);
+                $groups = $modal.find('.pmm-form-group.pmm-groups input');
+                $groups.val(info.erpInfo?.groups?.map(group => group.name).join(','));
+
                 $save = $modal.find('.btn-outline-primary');
                 $closeBtn = $modal.find('.close');
                 $inputFile = $modal.find('.pmm-image-wrapper .pmmiw-file');

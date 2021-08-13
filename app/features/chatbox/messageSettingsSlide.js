@@ -1,11 +1,17 @@
 define([
+    'shared/data',
+    'shared/alert',
     'shared/functions',
     'features/chatbox/chatboxInput', 
-    'features/modal/modalForwardMessage'
+    'features/modal/modalForwardMessage',
+    'features/modal/modalMessageInfo',
 ], (
+    GLOBAL,
+    ALERT,
     functions,
     chatboxInputComp, 
-    modalForwardMessageComp
+    modalForwardMessageComp,
+    modalMessageInfoComp
 ) => {
     const message = {};
     let $message;
@@ -16,6 +22,7 @@ define([
     let $forwardBtn;
     let $editBtn;
     let $removeBtn;
+    let $copyTextBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -62,8 +69,34 @@ define([
         const value = $message.find('.--mess').html();
 
         offEventClickOutside();
-        $message.remove();
+
+        $message.find('.--mess').addClass('--message-removed').html('This message was removed');
+        $message.find('.btn-message-settings').hide();
+        $message.find('.--double-check').addClass('hidden');
+
         chatboxInputComp.onRemove(chatId, value);
+    };
+
+    const onCopyText = () => {
+        const value = $message.find('.--mess').html();
+
+        const elem = document.createElement('textarea');
+        elem.value = value;
+        document.body.appendChild(elem);
+        elem.select();
+        document.execCommand('copy');
+        ALERT.show(GLOBAL.getLangJson().COPIED_TO_CLIPBOARD, 'success');
+        document.body.removeChild(elem);
+
+       offEventClickOutside();
+    };
+
+    const onInfo = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
+        const messageDate = $message.find('.--date').attr('date-value');
+
+        offEventClickOutside();
+        modalMessageInfoComp.onInit(chatId, messageDate);
     };
 
     const locatePosition = ($element) => {
@@ -103,13 +136,18 @@ define([
             }
             
             $removeBtn.show();
+            $messageInfoBtn.show();
         } else {
             $editBtn.hide();
             $removeBtn.hide();
+            $messageInfoBtn.hide();
         }
 
         if (haveFile) {
             $editBtn.hide();
+            $copyTextBtn.hide();
+        } else {
+            $copyTextBtn.show();
         }
     };
 
@@ -128,11 +166,15 @@ define([
             $forwardBtn = $('.js-menu-messages-forward');
             $editBtn = $('.js-menu-messages-edit');
             $removeBtn = $('.js-menu-messages-remove');
+            $copyTextBtn = $('.js-menu-messages-copytext');
+            $messageInfoBtn = $('.js-menu-messages-info');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
             $editBtn.off().click(onEdit);
             $removeBtn.off().click(onRemove);
+            $copyTextBtn.off().click(onCopyText);
+            $messageInfoBtn.off().click(onInfo);
         },
 
         onShow: (e) => {

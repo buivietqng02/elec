@@ -67,7 +67,7 @@ define([
             $url.off('click').click(() => {
                 const searchParams = new URLSearchParams(window.location.search);
                 navigator.clipboard.writeText(`${window.location.protocol}//${window.location.host}${window.location.pathname}?id=${searchParams.get('id')}`);
-                ALERT.show(GLOBAL.getLangJson().COPY_TO_CLIPBOARD, 'success');
+                ALERT.show(GLOBAL.getLangJson().COPIED_TO_CLIPBOARD, 'success');
             });
 
             $micBtn.off('click').click(() => {

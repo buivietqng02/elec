@@ -36,7 +36,7 @@ define(['shared/functions'], (functions) => {
             const $alert = $(render(template, params));
             $wrapper.prepend($alert);
 
-            setTimeout(() => $alert.remove(), 3500);
+            setTimeout(() => $alert.remove(), 2500);
         }
     };
 });
