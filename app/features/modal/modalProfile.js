@@ -78,7 +78,7 @@ define([
                         </div>
                         <div class="pmm-form-group pmm-groups">
                             <label data-language="GROUPS">${langJson.GROUPS}</label>
-                            <input class="input-freeze" tabindex="-1" />
+                            <textarea class="input-freeze" tabindex="-1" style="margin-bottom: 0"></textarea>
                             <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD"></div>
                         </div>
                         <div class="pmm-form-group pmm-mobile">
@@ -188,8 +188,8 @@ define([
                 $skype.val(info.erpInfo?.skype);
                 $role = $modal.find('.pmm-form-group.pmm-role input');
                 $role.val(info.erpInfo?.role?.name);
-                $groups = $modal.find('.pmm-form-group.pmm-groups input');
-                $groups.val(info.erpInfo?.groups?.map(group => group.name).join(','));
+                $groups = $modal.find('.pmm-form-group.pmm-groups textarea');
+                $groups.val(info.erpInfo?.groups?.map(group => group.name).join('\n'));
 
                 $save = $modal.find('.btn-outline-primary');
                 $closeBtn = $modal.find('.close');

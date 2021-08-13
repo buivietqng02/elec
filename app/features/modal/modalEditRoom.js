@@ -267,7 +267,7 @@ define([
                 </div>
                 <div class="xmmcm-form-group erm-groups">
                     <label>${langJson.GROUPS}</label>
-                    <input class="input-freeze" tabindex="-1" value="${groups.map(group => group.name).join(',')}" />
+                    <textarea class="input-freeze" tabindex="-1" style="margin-bottom: 0">${groups.map(group => group.name).join('\n')}</textarea>
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group erm-mobile">
