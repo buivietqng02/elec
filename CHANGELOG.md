@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.21] - 2021-08-13
+### Fix
+- ERP groups in user profile shows properly in a text area.
+
 ### [3.20] - 2021-08-11
 ### Add
 - Add option to copy the text of the message.
