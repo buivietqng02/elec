@@ -206,14 +206,14 @@ define([
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
 
             // render with case of comment
-            if (quotedMessage) {
+            if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
 
             data.mess = transformLinkTextToHTML(text);
 
             // render with case of file
-            if (file) {
+            if (file && !deleted) {
                 data.isFile = 'have-file';
                 data.mess = handleMessCointainFile(file);
             }
