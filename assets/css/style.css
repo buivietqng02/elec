@@ -1585,7 +1585,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #f60;
   padding: 4px 8px;
   width: max-content;
-  white-space: nowrap;
+  max-width: 75%;
   margin: 10px auto;
   border-radius: 8px;
   background-color: white;
@@ -1598,7 +1598,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #08c;
   padding: 4px 8px;
   width: max-content;
-  white-space: nowrap;
+  max-width: 75%;
   margin: 10px auto;
   border-radius: 8px;
   background-color: white;

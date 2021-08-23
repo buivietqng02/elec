@@ -24,13 +24,14 @@ define(['app/constant'], (constant) => {
         leftGroup: `
             <li class="js_li_list_mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}">
                 <div class="messages__left-chat">
-                    {who} - left chat
+                    {who}
                 </div>
             </li>
         `,
         joinGroup: `
             <li class="js_li_list_mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}">
-                <div class="messages__join-chat">{who}  - joined chat
+                <div class="messages__join-chat">
+                    {who}
                 </div>
             </li>
         `,
