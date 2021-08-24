@@ -167,15 +167,33 @@ define([
                 data.classLocal = 'js_li_mess_local';
             }
 
-            // render with case of join the room
+            // render in case of user was added to the room
             if (type === 5) {
-                data.who = text;
+                const lastComma = text.lastIndexOf(',');
+                if (lastComma > 0) {
+                    text = `${text.substring(0, lastComma)} and ${text.substring(lastComma + 1)}`;
+                }
+                data.who = `${sender.name} <b>added</b> ${text}`;
                 return render(template.joinGroup, data);
             }
 
-            // render with case of left the room
+            // render in case user left the room
+            if (type === 6) {
+                data.who = `${sender.name} <b>left</b>`;
+                return render(template.leftGroup, data);
+            }
+
+            // render in case user was removed from room
             if (type === 7) {
-                data.who = text;
+                if (sender.name === text) {
+                    data.who = `${sender.name} <b>left</b>`;
+                } else {
+                    const lastComma = text.lastIndexOf(',');
+                    if (lastComma > 0) {
+                        text = `${text.substring(0, lastComma)} and ${text.substring(lastComma + 1)}`;
+                    }
+                    data.who = `${sender.name} <b>removed</b> ${text}`;
+                }
                 return render(template.leftGroup, data);
             }
 
