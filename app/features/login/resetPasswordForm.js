@@ -19,6 +19,7 @@ define([
     let $btnRequest;
     let $formItem;
     let $errMess;
+    let $captchaWrapper;
     let $captchaImg;
 
     const requestCaptcha = () => {
@@ -119,7 +120,7 @@ define([
                 $btnRequest.hide();
                 $btnReset.show();
                 $errMess.html(`Please enter code we sent to email ${email}`);
-
+                $captchaWrapper.hide();
                 $formItem.each(i => {
                     if (i < 2) {
                         $formItem.eq(i).hide();
@@ -131,6 +132,7 @@ define([
                 $errMess.html(err?.response?.data?.details || 'Something went wrong');
                 loading = false;
                 $loadingRequest.hide();
+                requestCaptcha();
             });
         } else {
             $loadingReset.show();
@@ -161,6 +163,7 @@ define([
         $loadingReset = $btnReset.find('.--spin');
         $btnRequest = $foregetForm.find('.js-btn-send-code');
         $loadingRequest = $btnRequest.find('.--spin');
+        $captchaWrapper = $foregetForm.find('.captcha-wrapper');
         $loadingCaptche = $foregetForm.find('.captcha-wrapper .pulse');
 
         $errMess.html('');
@@ -168,6 +171,7 @@ define([
         $loadingReset.hide();
         $loadingRequest.hide();
         $btnRequest.show();
+        $captchaWrapper.show();
         $formItem.each(i => {
             const $this = $formItem.eq(i);
             $this.children().val('');
