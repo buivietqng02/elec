@@ -4,6 +4,12 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.23] - 2021-08-24
+### Add
+- Show user who add/remove members from room.
+### Update
+- Update css style of joined/left chat messages.
+
 ### [3.22] - 2021-08-14
 ### Fix
 - Fix issue that renders removed messages.
