@@ -4,6 +4,13 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.24] - 2021-08-25
+### Fix
+- Don't notify when someone left a room.
+### Update
+- Show API error message on failed login.
+- Only run sync method if 'session_id' is present.
+
 ### [3.23] - 2021-08-24
 ### Add
 - Show user who add/remove members from room.
