@@ -49,15 +49,13 @@ define([
                 setDataToLocalApplication(TOKEN, res.data.token);
                 navigate(ROUTE.index);
             }
-        }).catch(() => {
+        }).catch((err) => {
             loading = false;
             $loader.hide();
             $passwordField.val('');
             $emailField.val('');
             $emailField.focus();
-            $errMess.html(`
-                <lang data-language="INCORRECT_EMAIL_OR_PASSWORD">${GLOBAL.getLangJson().INCORRECT_EMAIL_OR_PASSWORD}</lang>
-            `);
+            $errMess.html(err?.response?.data?.details || 'Something went wrong');
         });
     };
 
@@ -102,6 +100,6 @@ define([
         $loginERPForm.hide();
         $loginForm.show();
     };
-    
+
     return ob;
 });
