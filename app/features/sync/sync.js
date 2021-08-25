@@ -137,7 +137,7 @@ define([
             }
 
             // Not update when someone left
-            if (message.type !== 7) {
+            if (message.type !== 6 && message.type !== 7) {
                 isNotMoveRoomUp = false;
             }
 
@@ -285,33 +285,35 @@ define([
         }
         data.onBackground = document.hidden;
 
-        API.get('sync', data).then(res => {
-            if (!isLogin() || !!(functions.getRouter()?.current || [])[0]?.url) {
-                return;
-            }
+        if (data[SESSION_ID]) {
+            API.get('sync', data).then(res => {
+                if (!isLogin() || !!(functions.getRouter()?.current || [])[0]?.url) {
+                    return;
+                }
 
-            onSync();
+                onSync();
 
-            if (res?.messages?.length) {
-                const messages = functions.sortBy(res.messages, 'msgDate');
-                handleRealTimeMessage(messages);
-            }
+                if (res?.messages?.length) {
+                    const messages = functions.sortBy(res.messages, 'msgDate');
+                    handleRealTimeMessage(messages);
+                }
 
-            if (res?.userTypingEvents?.length) {
-                handleTypingEvents(res.userTypingEvents);
-            }
+                if (res?.userTypingEvents?.length) {
+                    handleTypingEvents(res.userTypingEvents);
+                }
 
-            if (res?.userReadChatEvents?.length) {
-                handleUserReadChatEvents(res.userReadChatEvents);
-            }
+                if (res?.userReadChatEvents?.length) {
+                    handleUserReadChatEvents(res.userReadChatEvents);
+                }
 
-            if (currentRoomId === GLOBAL.getCurrentRoomId()) {
-                chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
-            }
-        }).catch((err) => {
-            console.log(err);
-            setTimeout(onSync, 5000);
-        });
+                if (currentRoomId === GLOBAL.getCurrentRoomId()) {
+                    chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+                }
+            }).catch((err) => {
+                console.error(err?.response?.data?.details || 'Something went wrong');
+                setTimeout(onSync, 5000);
+            });
+        }
     };
 
     return {

@@ -46,15 +46,12 @@ define([
                 navigate(ROUTE.index);
             }
         }).catch(err => {
-            console.log(err);
             loading = false;
             $loader.hide();
-            if (err?.response?.status === 401) {
-                $password.val('');
-                $username.val('');
-                $username.focus();
-                $errMess.html('Username or password is incorrect');
-            }
+            $password.val('');
+            $username.val('');
+            $username.focus();
+            $errMess.html(err?.response?.data?.details || 'Something went wrong');
         });
     };
 
