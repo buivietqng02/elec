@@ -137,7 +137,7 @@ define([
             }
 
             // Not update when someone left
-            if (message.type !== 7) {
+            if (message.type !== 6 && message.type !== 7) {
                 isNotMoveRoomUp = false;
             }
 
