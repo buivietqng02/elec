@@ -1,11 +1,15 @@
 /* eslint no-underscore-dangle: 0 */
-define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant, GLOBAL, API, ALERT) => {
+define(['app/constant', 'shared/data', 'shared/api', 'shared/alert', 'features/chatbox/chatboxContentChatList'], (constant, GLOBAL, API, ALERT, chatboxContentChatListComp) => {
     let $modal;
     let $name;
     let $btnLeave;
     let $btnCancel;
     let $caption;
     let $chatbox;
+
+    const { 
+        removeRoomById
+    } = chatboxContentChatListComp;
 
     const renderTemplate = (langJson) => `
         <div class="modal fade" id="leaveGroupModal" tabindex="-1" role="dialog">
@@ -49,6 +53,7 @@ define(['app/constant', 'shared/data', 'shared/api', 'shared/alert'], (constant,
             }
             
             const rooms = GLOBAL.getRooms().filter((room) => (room.id !== id));
+            removeRoomById(id); // remove messages from cache
 
             GLOBAL.setRooms(rooms);
             GLOBAL.setCurrentRoomId(null);
