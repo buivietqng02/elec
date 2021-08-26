@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.25] - 2021-08-26
+### Fix
+- Remove room messages from user's cache when the user left a room.
+
 ### [3.24] - 2021-08-25
 ### Fix
 - Don't notify when someone left a room.

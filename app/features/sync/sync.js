@@ -193,7 +193,8 @@ define([
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
-                    if (!(room.isLiveAssistance && messages[messages.length - 1].type === 7)) {
+                    if (messages[messages.length - 1].type !== 6 
+                        && messages[messages.length - 1].type !== 7) {
                         notificationComp.pushNotificationForMessage(messagesResponse[0]);
                     }
                 }

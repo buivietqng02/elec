@@ -4,12 +4,17 @@ define([
     GLOBAL
 ) => {
     const ob = {};
-    const rooms = {};
+    let rooms = {};
 
     ob.getRoomById = (id) => rooms[id];
 
     ob.storeRoomById = (id, value) => {
         rooms[id] = value;
+    };
+
+    ob.removeRoomById = (id) => {
+        const { [id]: _, ...newRooms } = rooms;
+        rooms = newRooms;
     };
 
     ob.handleSyncData = (messObject, id) => {
