@@ -169,11 +169,13 @@ define([
                 email,
                 ipAddress,
                 deviceType,
-                creationDate,
                 browser,
                 platform,
                 platformVersion,
                 userAgent,
+                country,
+                continent,
+                flag
             } = res.guest;
 
             const langJson = GLOBAL.getLangJson();
@@ -197,6 +199,11 @@ define([
                 <div class="xmmcm-form-group">
                     <label>${langJson.GUEST_EMAIL}</label>
                     <input class="input-freeze" tabindex="-1" value="${email || 'none'}" />
+                    <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
+                </div>
+                <div class="xmmcm-form-group">
+                    <label>${langJson.LOCATION}</label>
+                    <input class="input-freeze" tabindex="-1" value="${ ((flag ? flag + ' ' : '' ) + (country || 'none') + (continent ? ' (' + continent + ")" : '')) || 'none'}" />
                     <div class="input-only-view" data-toggle="tooltip" data-placement="top" title="${langJson.COPY_TO_CLIPBOARD}"></div>
                 </div>
                 <div class="xmmcm-form-group">
