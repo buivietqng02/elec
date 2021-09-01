@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 3
 
+### [3.26] - 2021-09-01
+### ADD
+- Show Live Assistance guest location.
+
 ### [3.25] - 2021-08-26
 ### Fix
 - Remove room messages from user's cache when the user left a room.
