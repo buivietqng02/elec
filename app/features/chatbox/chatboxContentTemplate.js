@@ -37,7 +37,38 @@ define(['app/constant'], (constant) => {
         `,
         file: `<i class="xm xm-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
-        audio: `<audio controls>source src="{src}" type="audio/mpeg">Your browser does not support the audio element.</audio>`,
+        // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
+
+        audio: `<div class="audio-content">
+                    <div class="clip">
+                        <audio class="audio-recorder" controls>
+                            <source src="{src}" type="audio/webm">
+                        </audio>
+                    </div>
+                    <div class="audio-controler">
+                        <button class="audio-playStop">
+                            <div class="audio-circular">
+                                <div class="audio-inner"></div>
+                                    <div class="audio-number">
+                                        <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
+
+                                        <div class="audio-timeIndicate">00:15</div>
+                                    </div>
+
+                                <div class="audio-circle">
+                                    <div class="audio-bar audio-left">
+                                        <div class="audio-progress"></div>
+                                    </div>
+                                    <div class="audio-bar audio-right">
+                                        <div class="audio-progress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                `,
+
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
             <li class="js_li_list_mess {who} {classLocal} messages__item {isFile}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">

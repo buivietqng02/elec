@@ -15,10 +15,10 @@ define([
 ) => {
     const ob = {};
     const {
-        render, 
-        getAvatar, 
-        convertMessagetime, 
-        humanFileSize, 
+        render,
+        getAvatar,
+        convertMessagetime,
+        humanFileSize,
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
@@ -29,7 +29,7 @@ define([
     const handleMessCointainFile = (file) => {
         const { type } = file;
         const data = {};
-
+        console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
@@ -92,7 +92,7 @@ define([
             mess.posUnread = false;
             return render(template.unread, {});
         }
-       
+
         return '';
     };
 
@@ -140,7 +140,7 @@ define([
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
-            const { 
+            const {
                 sender,
                 id,
                 type,

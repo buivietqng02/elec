@@ -315,8 +315,17 @@ define(['shared/icon'], (ICON) => ({
                                 <button class="btn__attach" data-target="#media-menu"><svg height="20px" viewBox="0 0 426.66667 426.66667" width="20px" xmlns="http://www.w3.org/2000/svg">
                                         <path d="m410.667969 229.332031h-394.667969c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h394.667969c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
                                         <path d="m213.332031 426.667969c-8.832031 0-16-7.167969-16-16v-394.667969c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v394.667969c0 8.832031-7.167969 16-16 16zm0 0" /></svg></button>
+                                
+                                <!-- Voice chat btn -->
+
+                                <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">📣</button>
+
+                                <!-- End Voice chat btn -->
+
                             </div>
                             <button type="button" class="js_close_update_mess btn__edit--close" style="display: none;"><i class="xm xm-close"></i></button>
+                            
+                            
                             <button class="js-emoji btn__emoji"><i class="xm xm-smile-o"></i></button>
                             <div class="wrap-emojis">
                                 <div class="emojis-tab-content">
@@ -337,6 +346,7 @@ define(['shared/icon'], (ICON) => ({
                                     </div>
                                 </div>
                             </div>
+
                             <div class="chatbox-progress-upload">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                                     <path fill="none" stroke-width="2" stroke-linecap="square" d="M10,1A9,9 0 1 1 1,10A9,9 0 0 1 10,1" stroke-dasharray="56.548667764616276" stroke-dashoffset="56.548667764616276" transform="rotate(0 10 10)"></path>
@@ -359,6 +369,31 @@ define(['shared/icon'], (ICON) => ({
                                     <lang data-language="PHONE"></lang>
                                 </li>
                             </div>
+
+                            <!-- Voice chat wrap -->
+                            
+                            <div id="voice-chat-wrapper">
+                                <div id="voice-statusRecording">
+                                </div>
+                                <div id="voice-statusMessage">
+                                </div>
+
+                                <div class="voices-audio-content d-flex justify-content-end">
+                                    <div class="voice-sound-clips">
+
+                                    </div>
+                                </div>
+
+                                <div class="voice-button-group" style="display:none">
+                                    <button id="record__start-stop__btn" class="btn btn-primary">
+                                        <img src="/assets/images/microphone.svg" alt="">
+                                        <div class="record__start-stop-pulse-ring"></div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- End Voice chat wrap -->
+
                         </div>
                     </div>
                 </div>
