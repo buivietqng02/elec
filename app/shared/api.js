@@ -21,13 +21,13 @@ define([
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
         'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || '',
+        Authorization: `Bearer ${(functions.getDataToLocalApplication(TOKEN) || '')}`
     });
 
     const getHeaderForm = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+        'Content-Type': 'application/x-www-form-urlencoded'
     });
 
     const toQueryString = (params = {}) => {

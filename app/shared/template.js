@@ -391,10 +391,15 @@ define(['shared/icon'], (ICON) => ({
                     <div class="or-sign-in">
                         OR LOGIN WITH
                     </div>
-                    <div>
-                        <button type="button" class="login-erp-btn">
+                    <div style="width: 100%">
+                        <div class="container-button-erp">
                             ${ICON.ERP_LOGO}
-                        </button>
+                            <button type="button" class="login-third-party erp">ERP</button>
+                        </div>
+                        <div class="container-button-google">
+                            ${ICON.GOOGLE_LOGO}
+                            <button type="button" class="login-third-party google">Google</button>
+                        </div>
                     </div>
                 </form>
 
