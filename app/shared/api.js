@@ -58,7 +58,7 @@ define([
         }
 
         if (error.response.status === 401) {
-            Logout.onLogout();
+            Logout.cleanSession();
         }
 
         if (error.response.status === 403) {
