@@ -50,7 +50,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ROUTE: {
             login: '/login',
             meeting: '/meeting',
-            index: '/'
+            index: '/',
+            oauth2: '/oauth2'
         }
     };
 

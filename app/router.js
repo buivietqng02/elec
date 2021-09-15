@@ -34,6 +34,7 @@ define([
     } = constant;
     const {
         getDataToLocalApplication,
+        setDataToLocalApplication,
         getRouter,
         navigate
     } = functions;
@@ -76,6 +77,19 @@ define([
             $wrapper.html(template.login);
             Login.onInit();
         }
+    });
+
+    getRouter().on(ROUTE.oauth2, () => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const sessionId = params.get('sessionId');
+        const userId = params.get('userId');
+
+        setDataToLocalApplication(SESSION_ID, sessionId);
+        setDataToLocalApplication(USER_ID, userId);
+        setDataToLocalApplication(TOKEN, token);
+        
+        navigate(ROUTE.index);
     });
 
     getRouter().resolve();
