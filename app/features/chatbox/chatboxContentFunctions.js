@@ -30,7 +30,6 @@ define([
         const { type } = file;
         const data = {};
         let messageTemp = '';
-        console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
@@ -41,7 +40,7 @@ define([
                 data.audioId = `audio-${file.id}`;
                 data.buttonId = `btn-${file.id}`;
                 messageTemp = render(template.audio, data);
-                // console.log(messageTemp);
+                console.log(file);
                 break;
             case 4:
                 data.src = `${API_URL}/stream?id=${file.id}`;

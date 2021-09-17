@@ -102,10 +102,8 @@ define([
         audioRecorder.forEach(item => {
             getDuration(item.src)
                 .then(result => {
-                    let idAudio = getAudioID(item.id)
-                    let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`)
-
-                    console.log(result)
+                    let idAudio = getAudioID(item.id);
+                    let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`);
                     audioTime.textContent = timeConvert(result);
                     item.setAttribute("duration", result);
                 });
