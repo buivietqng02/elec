@@ -402,7 +402,7 @@ define([
                 onGetMessageFromCache(roomInfo);
 
                 // update chat last read time
-                API.post(`chats / ${roomInfo.id} / read`).then(() => { })
+                API.post(`chats/${roomInfo.id}/read`).then(() => { })
                     .catch(err => console.error(err));
 
                 return;
@@ -491,7 +491,7 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            const $mess = $(`[data - id - local= "${data.idLocal}"]`);
+            const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
             storeRoomById(data.chatId, messages.map(mess => {
