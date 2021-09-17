@@ -32,31 +32,6 @@ define([
     let $pathCircle;
     let $progressWrapper;
 
-    // const getDuration = (url, next) => {
-    //     let audio = new Audio(url);
-    //     audio.addEventListener("durationchange", function (e) {
-    //         if (this.duration !== Infinity) {
-    //             let duration = this.duration
-    //             audio.remove();
-    //             next(duration);
-    //         };
-    //     }, false);
-    //     audio.load();
-    //     audio.currentTime = 24 * 60 * 60; //fake big time
-    // };
-
-    // const timeConvert = (time) => {
-    //     // Calculate the time left and the total duration
-    //     let currentMinutes = Math.floor(time / 60);
-    //     let currentSeconds = Math.floor(time - currentMinutes * 60);
-
-    //     // Add a zero to the single digit time values
-    //     if (currentSeconds < 10) { currentSeconds = `0${currentSeconds}`; }
-    //     if (currentMinutes < 10) { currentMinutes = `0${currentMinutes}`; }
-
-    //     return `${currentMinutes}:${currentSeconds}`;
-    // };
-
     const percentCircle = (numberPercent) => {
         let percent = numberPercent;
         if (numberPercent < 0) {
@@ -91,7 +66,7 @@ define([
     const holdRecord = () => {
         pulseRing.classList.add('active');
 
-        // Have to hold at least 0.5s to start the record
+        // Have to hold at least 1s to start the record
         holdTime = setInterval(() => {
             secondCount++;
 
@@ -112,7 +87,7 @@ define([
                     <div class="bar"></div>
                 </div>`;
             }
-        }, 500);
+        }, 1000);
     };
 
     const releaseRecord = (event) => {
@@ -263,6 +238,10 @@ define([
             isVoiceInit = false;
         }
     };
+
+    const playPauseFunc = () => {
+        console.log('click')
+    }
 
     return {
         onInit: () => {

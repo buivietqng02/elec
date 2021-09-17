@@ -81,37 +81,44 @@ img {
 	cursor: pointer;
 }
 
-.login-erp-btn {
-	background-color: #000;
-	width: 55px;
-	height: 55px;
-	border-radius: 50%;
-	border: 0;
-	position: relative;
+.login-third-party {
+	border-radius: 8px;
+	font-size: 1.3rem;
+	font-weight: 400;
+	padding: 8px 0;
+	background: #484848;
+	white-space: nowrap;
+	border: none;
+	color: #fff;
+	width: 100%;
+	height: 47px;
+	margin-bottom: 12px;
 }
 
-.login-erp-btn svg {
-	width: 55px;
-	position: relative;
-	left: -6px;
+.login-third-party:hover {
+	box-shadow: 0 0 10px;
+	cursor: pointer;
 }
 
-.login-erp-btn .st0 {
+.container-button-erp svg {
+	width: 55px;
+	height: 47px;
+	position: absolute;
+}
+
+.container-button-erp .st0 {
 	fill:#fff;
 }
-.login-erp-btn .st1 {
+
+.container-button-erp .st1 {
 	fill:#fff;
 }
 
-.login-erp-btn:hover {
-	background-color: #fff;
-}
-
-.login-erp-btn:hover .st0 {
-	fill:#000;
-}
-.login-erp-btn:hover .st1 {
-	fill:#000;
+.container-button-google svg {
+	padding: 5px 0px;
+    height: 47px;
+    position: absolute;
+    margin-left: 10px;
 }
 
 .login__btn-signup {

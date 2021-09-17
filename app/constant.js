@@ -1,5 +1,6 @@
 define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
+        BASE_URL: enviroment.length > 0 ? enviroment.substring(0, enviroment.length - 2) : '',
         API_URL: `${enviroment}/api`,
         SESSION_ID: 'sessionId',
         TOKEN: 'token',
@@ -50,7 +51,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ROUTE: {
             login: '/login',
             meeting: '/meeting',
-            index: '/'
+            index: '/',
+            oauth2: '/oauth2'
         }
     };
 

@@ -3803,9 +3803,6 @@ body.body_fz_18 {
 }
 
 /* --------voice audio main content  -----------*/
-.voices-audio-content{
-  /* position: absolute; */
-}
 
 .voice-button-group {
   position:absolute;
@@ -3911,8 +3908,19 @@ body.body_fz_18 {
 
 
 /* ----------- Audio button Listening button style * ------------/ */
-.audio-content{
+.audio-main-content{
+  max-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
   position: relative !important;
+}
+
+.clip{
+  display: none;
+  /* position: absolute; */
+  /* border: 1px solid red; */
 }
 
 .audio-controler{
@@ -3931,6 +3939,7 @@ body.body_fz_18 {
   opacity: 1;
   background: #FFFFFF;
   box-shadow: 1px 2px 3px #00000029;
+  cursor: pointer;
 }
 
 .audio-playStop::before{
@@ -3948,13 +3957,13 @@ body.body_fz_18 {
 .audio-microPic{
 width: 17px;
 height: 25px;
-top: 105px;
-left: 410px;
+margin-top: -40px;
 }
 .audio-timeIndicate{
 color: #0093FF;
 font-size: 9px;
-margin-top:5px;
+margin-top:-60px;
+
 }
 
 
@@ -3969,6 +3978,7 @@ margin-top:5px;
   top:50%;
   left:50%;
   transform: translate(-50%,-50%);
+  pointer-events:none;
 }
 .audio-circular .audio-inner{
   position: absolute;
@@ -3980,7 +3990,7 @@ margin-top:5px;
   margin: -30px 0 0 -30px;
   background: #fff;
   border-radius: 100%;
- 
+  pointer-events:none;
 }
 .audio-circular .audio-number{
   position: absolute;
@@ -3988,7 +3998,31 @@ margin-top:5px;
   left:50%;
   transform: translate(-50%, -50%);
   z-index:10;
+  max-height: 100px;
+  pointer-events:none;
 }
+
+.audio-circle{
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top:-168px;
+  pointer-events:none;
+}
+
+.audio-circle .audio-right {
+  position: absolute;
+  transform: rotate(180deg);
+  z-index:3;
+  top:0;
+}
+
+.audio-circle .audio-left {
+  position: absolute;
+  top:0;
+  pointer-events:none;
+}
+
 .audio-circular .audio-bar{
   position: absolute;
   height: 100%;
@@ -3996,35 +4030,34 @@ margin-top:5px;
   background: #fff;
   -webkit-border-radius: 100%;
   clip: rect(0px, 66px, 66px, 33px);
-
- 
+  pointer-events:none;
+  
 }
 .audio-circle .audio-bar .audio-progress{
   position: absolute;
   height: 100%;
   width: 100%;
-  -webkit-border-radius: 100%;
+  border-radius: 100%;
   clip: rect(0px, 33px, 66px, 0px);
   background: #0093FF;
+  pointer-events:none;
 }
 
 .audio-circle .audio-left .audio-progress{
   z-index:1;
-  animation: left 4s linear both;
+  animation: 0s linear both;
+  top:0;
 }
 @keyframes left{
   100%{
     transform: rotate(180deg);
   }
 }
-.audio-circle .audio-right {
-  transform: rotate(180deg);
-  z-index:3;
- 
-}
+
 .audio-circle .audio-right .audio-progress{
-  animation: right 4s linear both;
-  animation-delay:4s;
+  animation: 0s linear both;
+  animation-delay:0s;
+  top:0;
 }
 @keyframes right{
   100%{

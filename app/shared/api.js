@@ -1,13 +1,13 @@
 define([
     'shared/data',
-    'app/constant', 
+    'app/constant',
     'shared/functions',
     'shared/offlineData',
     'features/logout/logout',
     'axios'
 ], (
     GLOBAL,
-    constant, 
+    constant,
     functions,
     offlineData,
     Logout,
@@ -21,13 +21,13 @@ define([
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
         'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || '',
+        Authorization: `Bearer ${(functions.getDataToLocalApplication(TOKEN) || '')}`
     });
 
     const getHeaderForm = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+        'Content-Type': 'application/x-www-form-urlencoded'
     });
 
     const toQueryString = (params = {}) => {
@@ -58,16 +58,16 @@ define([
         }
 
         if (error.response.status === 401) {
-            Logout.onLogout();
+            Logout.cleanSession();
         }
 
         if (error.response.status === 403) {
-            
+
         }
 
         return Promise.reject(error);
     });
-    
+
     return {
         get: (endpoint = '', params = {}, headers) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
             headers: headers ? headers : getHeaderJson()

@@ -23,7 +23,8 @@ define([
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
         'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
+        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || '',
+        Authorization: `Bearer ${(functions.getDataToLocalApplication(TOKEN) || '')}`
     });
 
     const { removeDataInLocalApplication, navigate } = functions;
@@ -35,6 +36,10 @@ define([
             headers: getHeaderJson()
         }).then(() => { }).catch(err => console.error(err));
 
+        ob.cleanSession();
+    };
+
+    ob.cleanSession = () => {
         offlineData.clear();
         removeDataInLocalApplication(SESSION_ID);
         removeDataInLocalApplication(TOKEN);

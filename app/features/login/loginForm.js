@@ -13,6 +13,7 @@ define([
 ) => {
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
+        BASE_URL,
         TOKEN,
         SESSION_ID,
         USER_ID,
@@ -79,12 +80,17 @@ define([
         });
     };
 
+    const loginGoogle = () => {
+        window.location.assign(`xm/oauth2/authorize/google?redirect_uri=${BASE_URL}oauth2`);
+    };
+
     ob.onInit = () => {
         loading = false;
         $loginERPForm = $('.erp-login-form');
         $loginForm = $('.js_login__form');
         $loginForm.off('submit').on('submit', onSubmit);
-        $loginForm.find('.login-erp-btn').off('.loginERP').on('click.loginERP', loginERP);
+        $loginForm.find('.erp').off('.loginERP').on('click.loginERP', loginERP);
+        $loginForm.find('.google').off('.loginGoogle').on('click.loginGoogle', loginGoogle);
         $loginERPForm.find('.erp-cancel-btn').off('.cancelERP').on('click.cancelERP', leaveERPLoginForm);
         $emailField = $loginForm.find('[name="email"]');
         $passwordField = $loginForm.find('[name="password"]');

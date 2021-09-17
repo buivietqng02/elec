@@ -39,21 +39,21 @@ define(['app/constant'], (constant) => {
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
         // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
 
-        audio: `<div class="audio-content">
+        audio: `<div class="audio-main-content">
                     <div class="clip">
-                        <audio class="audio-recorder" controls>
-                            <source src="{src}" type="audio/webm">
+                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm">
+                          
                         </audio>
                     </div>
                     <div class="audio-controler">
-                        <button class="audio-playStop">
+                        <button id="{buttonId}" class="audio-playStop">
                             <div class="audio-circular">
                                 <div class="audio-inner"></div>
-                                    <div class="audio-number">
-                                        <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
+                                <div class="audio-number">
+                                    <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
 
-                                        <div class="audio-timeIndicate">00:15</div>
-                                    </div>
+                                    <div class="audio-timeIndicate">00:00</div>
+                                </div>
 
                                 <div class="audio-circle">
                                     <div class="audio-bar audio-left">
