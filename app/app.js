@@ -19,9 +19,11 @@ define([
     'features/chatbox/chatboxAttach',
     'features/chatbox/chatboxSearch',
     'features/chatbox/emoji',
+    'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
     'features/modal/modalUpdateVersion',
     'features/notification/notification'
+
 ], (
     API,
     GLOBAL,
@@ -43,16 +45,17 @@ define([
     chatboxAttachComp,
     chatboxSearchComp,
     emojiComp,
+    voiceChatComp,
     modalShowImageFullComp,
     modalUpdateVersionComp,
     notificationComp
 ) => {
-    const { 
+    const {
         setCookie,
-        setDataToLocalApplication, 
-        getDataToLocalApplication 
+        setDataToLocalApplication,
+        getDataToLocalApplication
     } = functions;
-    const { 
+    const {
         ATTRIBUE_SIDEBAR_ROOM,
         BODY_BG_THEME,
         BODY_FZ,
@@ -141,7 +144,7 @@ define([
         sidebarSearchComp.onInit();
         sidebarCollapseComp.onInit();
         sidebarLeftBarComp.onInit();
-        
+
         // Initialize chatbox DOM and register event
         chatboxTopbarComp.onInit();
         chatboxContentComp.onInit();
@@ -150,6 +153,8 @@ define([
         chatboxSearchComp.onInit();
         emojiComp.onInit();
 
+        // Vocie chat
+        voiceChatComp.onInit();
         // Initialize show image full modal
         modalShowImageFullComp.onInit();
 
@@ -206,8 +211,8 @@ define([
                             $activeRoom.click();
                             GLOBAL.setCurrentRoomId(id);
                         }
-        
-                        setTimeout(initInformationFromAPI, 1000); 
+
+                        setTimeout(initInformationFromAPI, 1000);
                     } else {
                         initInformationFromAPI();
                     }
@@ -226,14 +231,14 @@ define([
             document.execCommand('copy');
             ALERT.show(GLOBAL.getLangJson().COPIED_TO_CLIPBOARD, 'success');
             if (window.getSelection) {
-                if (window.getSelection().empty) { 
+                if (window.getSelection().empty) {
                     // Chrome
                     window.getSelection().empty();
-                } else if (window.getSelection().removeAllRanges) { 
+                } else if (window.getSelection().removeAllRanges) {
                     // Firefox
                     window.getSelection().removeAllRanges();
                 }
-            } else if (document.selection) { 
+            } else if (document.selection) {
                 // IE?
                 document.selection.empty();
             }
@@ -264,14 +269,13 @@ define([
                 onGetUserInfo(data[1]);
                 onInitEventComponent();
             } catch (err) {
-                console.log(err);
                 clear();
             }
         }
 
         initInformationFromAPI();
     };
-    
+
     return {
         onInit
     };

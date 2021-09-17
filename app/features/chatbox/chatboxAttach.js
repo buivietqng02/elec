@@ -1,12 +1,12 @@
 define([
-    'app/constant', 
+    'app/constant',
     'shared/data',
-    'shared/alert', 
+    'shared/alert',
     'shared/functions',
     'features/modal/modalPhoneRequest'
 ], (
-    constant, 
-    GLOBAL, 
+    constant,
+    GLOBAL,
     ALERT,
     functions,
     modalPhoneRequestComp
@@ -70,7 +70,7 @@ define([
             const current = e.loaded;
             const percentage = (current * 100) / max;
             const strokeDashoffset = percentCircle(percentage);
-            
+
             $percentProgress.html(Math.round(percentage));
             $pathCircle.attr('stroke-dashoffset', strokeDashoffset);
         }
@@ -89,6 +89,8 @@ define([
         $progressWrapper.show();
         fd.append('file', file);
         fd.append('chat_id', GLOBAL.getCurrentRoomId());
+
+        console.log(GLOBAL.getCurrentRoomId(), file)
 
         $.ajax({
             type: 'POST',
@@ -153,7 +155,7 @@ define([
     };
 
     const onDrop = e => {
-        e.preventDefault();  
+        e.preventDefault();
         e.stopPropagation();
         counter = 0;
         $dropzone.hide();
@@ -162,7 +164,7 @@ define([
             const item = e.originalEvent.dataTransfer.items[0];
             const file = item.getAsFile();
             const langJson = GLOBAL.getLangJson();
-            
+
             if (!item.type) {
                 return;
             }
@@ -183,7 +185,7 @@ define([
         modalPhoneRequestComp.onInit();
         offEventClickOutside();
     };
-    
+
     return {
         onInit: () => {
             isShow = false;
