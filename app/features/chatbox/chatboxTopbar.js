@@ -3,7 +3,8 @@ define([
     'app/constant',
     'shared/data',
     'shared/api',
-    'shared/functions', 
+    'shared/functions',
+    'shared/offlineData',
     'features/modal/modalCreateGroup',
     'features/modal/modalEditRoom',
     'features/modal/modalRemoveGroup',
@@ -11,9 +12,10 @@ define([
 ], (
     moment,
     constant,
-    GLOBAL, 
+    GLOBAL,
     API,
-    functions, 
+    functions,
+    offlineData,
     modalCreateGroupComp,
     modalEditRoomComp,
     modalRemoveGroupComp,
@@ -81,10 +83,10 @@ define([
             $textInternalBtn.html(GLOBAL.getLangJson().DISABLE_INTERNAL_MESSAGES);
             obRoomEdited[roomId].hide_mess = true;
         }
-        
+
         GLOBAL.setRoomInfoWasEdited(obRoomEdited);
         offEventClickOutside();
-        API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => {});
+        API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => { });
     };
 
     const updateNotification = () => {
@@ -102,10 +104,23 @@ define([
             $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
             obRoomEdited[roomId].notification_mess = false;
         }
-        
+
         GLOBAL.setRoomInfoWasEdited(obRoomEdited);
         offEventClickOutside();
-        API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => {});
+        API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => { });
+    };
+
+    const onRenderTimeActivity = (time) => {
+        if (!time) {
+            return;
+        }
+
+        const diffInSeconds = moment().diff(moment(time), 'seconds');
+        if (diffInSeconds <= 30) {
+            $timeActivity.html(`<lang data-language="ONLINE">${GLOBAL.getLangJson().ONLINE}</lang>`);
+        } else {
+            $timeActivity.html(`<lang data-language="LAST_SEEN">${GLOBAL.getLangJson().LAST_SEEN}</lang> ${moment(time).fromNow()}`);
+        }
     };
 
     return {
@@ -152,7 +167,7 @@ define([
             } else {
                 $textInternalBtn.html(GLOBAL.getLangJson().ENABLE_INTERNAL_MESSAGES);
             }
-            
+
             if (roomInfo.group) {
                 $image.attr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP, roomInfo.id);
                 $image.attr('src', getAvatar(roomInfo.id, true));
@@ -168,7 +183,7 @@ define([
             } else {
                 const userId = roomInfo.partner.id;
                 const userName = GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.partner.name;
-                
+
                 $image.removeAttr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP);
                 $image.attr('src', getAvatar(roomInfo.partner?.id));
                 $image.on('error', () => $image.attr('src', '/assets/images/user.jpg'));
@@ -180,20 +195,19 @@ define([
                 $leaveBtn.hide();
                 $removeBtn.hide();
                 $timeActivity.show();
+
+                offlineData.getChatById(roomInfo.id).then(chat => {
+                    if (chat) {
+                        API.get(`users/${roomInfo.partner?.id}/last-seen`).then(lastSeen => {
+                            onRenderTimeActivity(lastSeen);
+                        }).catch(err => { console.log(err); });
+                    }
+                });
             }
         },
 
         onRenderTimeActivity: (time) => {
-            if (!time) {
-                return;
-            }
-
-            const diffInSeconds = moment().diff(moment(time), 'seconds');
-            if (diffInSeconds <= 30) {
-                $timeActivity.html(`<lang data-language="ONLINE">${GLOBAL.getLangJson().ONLINE}</lang>`);
-            } else {
-                $timeActivity.html(`<lang data-language="LAST_SEEN">${GLOBAL.getLangJson().LAST_SEEN}</lang> ${moment(time).fromNow()}`);
-            }
+            onRenderTimeActivity(time);
         },
 
         onRenderTyping: (typingEvent) => {

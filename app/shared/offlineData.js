@@ -16,7 +16,7 @@ define(['idb-keyval'], (idbKeyval) => {
 
     ob.setChats = value => set(CHATS, value, store);
 
-    ob.setChatsById = (id, value) => get(CHATS).then((chats) => {
+    ob.setChatsById = (id, value) => get(CHATS, store).then((chats) => {
         let tempChats;
 
         if (!chats) {
