@@ -44,7 +44,7 @@ define([
         const sessionId = getDataToLocalApplication(SESSION_ID) || '';
         const token = getDataToLocalApplication(TOKEN) || '';
         const userId = getDataToLocalApplication(USER_ID) || '';
-        
+
         return !!(sessionId && token && userId);
     };
 
@@ -88,7 +88,6 @@ define([
         setDataToLocalApplication(SESSION_ID, sessionId);
         setDataToLocalApplication(USER_ID, userId);
         setDataToLocalApplication(TOKEN, token);
-        
         navigate(ROUTE.index);
     });
 

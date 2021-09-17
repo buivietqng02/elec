@@ -15,10 +15,10 @@ define([
 ) => {
     const ob = {};
     const {
-        render, 
-        getAvatar, 
-        convertMessagetime, 
-        humanFileSize, 
+        render,
+        getAvatar,
+        convertMessagetime,
+        humanFileSize,
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
@@ -29,23 +29,31 @@ define([
     const handleMessCointainFile = (file) => {
         const { type } = file;
         const data = {};
-
+        let messageTemp = '';
+        console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
-                return render(template.image, data);
+                messageTemp = render(template.image, data);
+                break;
             case 3:
                 data.src = `${API_URL}/audio?id=${file.id}`;
-                return render(template.audio, data);
+                data.audioId = `audio-${file.id}`;
+                data.buttonId = `btn-${file.id}`;
+                messageTemp = render(template.audio, data);
+                // console.log(messageTemp);
+                break;
             case 4:
                 data.src = `${API_URL}/stream?id=${file.id}`;
-                return render(template.video, data);
+                messageTemp = render(template.video, data);
+                break;
             default:
                 data.src = `${API_URL}/file?id=${file.id}`;
                 data.fileName = file.filename;
                 data.fileSize = humanFileSize(file.size);
-                return render(template.file, data);
+                messageTemp = render(template.file, data);
         }
+        return messageTemp;
     };
 
     const renderComment = (quotedMessage) => {
@@ -92,7 +100,7 @@ define([
             mess.posUnread = false;
             return render(template.unread, {});
         }
-       
+
         return '';
     };
 
@@ -140,7 +148,7 @@ define([
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
-            const { 
+            const {
                 sender,
                 id,
                 type,

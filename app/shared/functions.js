@@ -56,7 +56,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         if (!id) {
             return;
         }
-        
+
         return `${constant.API_URL}/${isGroup ? 'chats' : 'users'}/${id}/avatar`;
     },
 
@@ -116,7 +116,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
 
     htmlDecode: (string) => {
         const e = document.createElement('textarea');
-        
+
         e.innerHTML = string;
         // handle case of empty string
         return e.childNodes.length === 0 ? '' : e.childNodes[0].nodeValue;
@@ -163,7 +163,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     debounce(func, wait, immediate) {
         let timeout;
         return function () {
-            const context = this; 
+            const context = this;
             const args = arguments;
             const later = function () {
                 timeout = null;
@@ -180,11 +180,11 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         if (!string) {
             return '';
         }
-        
+
         const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
         const content = string.replace(regexp, url => {
             const html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
-    
+
             return html;
         });
 
@@ -195,7 +195,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         if (string.length > numOfLetter) {
             return `${string.substring(0, numOfLetter - 3)}...`;
         }
-        
+
         return string;
     },
 
@@ -269,11 +269,11 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     getFormData: ($form) => {
         const unindexedArray = $form.serializeArray();
         const indexedArray = {};
-    
+
         $.map(unindexedArray, (n) => {
             indexedArray[n.name] = n.value;
         });
-    
+
         return indexedArray;
     },
 

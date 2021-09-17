@@ -1,13 +1,13 @@
 define([
     'shared/data',
-    'app/constant', 
+    'app/constant',
     'shared/functions',
     'shared/offlineData',
     'features/logout/logout',
     'axios'
 ], (
     GLOBAL,
-    constant, 
+    constant,
     functions,
     offlineData,
     Logout,
@@ -62,12 +62,12 @@ define([
         }
 
         if (error.response.status === 403) {
-            
+
         }
 
         return Promise.reject(error);
     });
-    
+
     return {
         get: (endpoint = '', params = {}, headers) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
             headers: headers ? headers : getHeaderJson()

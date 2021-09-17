@@ -315,8 +315,17 @@ define(['shared/icon'], (ICON) => ({
                                 <button class="btn__attach" data-target="#media-menu"><svg height="20px" viewBox="0 0 426.66667 426.66667" width="20px" xmlns="http://www.w3.org/2000/svg">
                                         <path d="m410.667969 229.332031h-394.667969c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h394.667969c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
                                         <path d="m213.332031 426.667969c-8.832031 0-16-7.167969-16-16v-394.667969c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v394.667969c0 8.832031-7.167969 16-16 16zm0 0" /></svg></button>
+                                
+                                <!-- Voice chat btn -->
+
+                                <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">💬 </button>
+
+                                <!-- End Voice chat btn -->
+
                             </div>
                             <button type="button" class="js_close_update_mess btn__edit--close" style="display: none;"><i class="xm xm-close"></i></button>
+                            
+                            
                             <button class="js-emoji btn__emoji"><i class="xm xm-smile-o"></i></button>
                             <div class="wrap-emojis">
                                 <div class="emojis-tab-content">
@@ -337,6 +346,7 @@ define(['shared/icon'], (ICON) => ({
                                     </div>
                                 </div>
                             </div>
+
                             <div class="chatbox-progress-upload">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                                     <path fill="none" stroke-width="2" stroke-linecap="square" d="M10,1A9,9 0 1 1 1,10A9,9 0 0 1 10,1" stroke-dasharray="56.548667764616276" stroke-dashoffset="56.548667764616276" transform="rotate(0 10 10)"></path>
@@ -359,6 +369,31 @@ define(['shared/icon'], (ICON) => ({
                                     <lang data-language="PHONE"></lang>
                                 </li>
                             </div>
+
+                            <!-- Voice chat wrap -->
+                            
+                            <div id="voice-chat-wrapper">
+                                <div id="voice-statusRecording">
+                                </div>
+                                <div id="voice-statusMessage">
+                                </div>
+
+                                <div class="voices-audio-content d-flex justify-content-end">
+                                    <div class="voice-sound-clips">
+
+                                    </div>
+                                </div>
+
+                                <div class="voice-button-group" style="display:none">
+                                    <button id="record__start-stop__btn" class="btn btn-primary">
+                                        <img src="/assets/images/microphone.svg" alt="">
+                                        <div class="record__start-stop-pulse-ring"></div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- End Voice chat wrap -->
+
                         </div>
                     </div>
                 </div>
@@ -366,139 +401,140 @@ define(['shared/icon'], (ICON) => ({
         </div>
     `,
     login: `
-        <div class="wrap-login">
-            <div class="login js-global js-login active">
-                <div class="login__header">
-                    <img class="login__logo" src="/assets/images/icon.png" alt="Cross messenger logo">
-                    <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
-                    <div class="language-select" id="change-lang-btn">
-                        <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
-                        <span></span>
+    <div class="wrap-login">
+        <div class="login js-global js-login active">
+            <div class="login__header">
+                <img class="login__logo" src="/assets/images/icon.png" alt="Cross messenger logo">
+                <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
+                <div class="language-select" id="change-lang-btn">
+                    <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
+                    <span></span>
+                </div>
+            </div>
+
+            <form name="loginForm" class="login__form js_login__form" method="post">
+                <input data-lang-type="placeholder" data-language="EMAIL" required="Please enter a email" type="email" name="email" class="form-control" />
+                <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
+                <div class="clearfix neccessary-wrapper">
+                    <div class="mess"></div>
+                    <button type="button" data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>
+                </div>
+                <button type="submit" class="login__btn-submit js-btn-spin">
+                    <span class="--spin" style="display:none">◉</span>
+                    <lang data-language="LOGIN"></lang>
+                </button>
+                <div class="or-sign-in">
+                    OR LOGIN WITH
+                </div>
+                <div style="width: 100%">
+                    <div class="container-button-erp">
+                        ${ICON.ERP_LOGO}
+                        <button type="button" class="login-third-party erp">ERP</button>
+                    </div>
+                    <div class="container-button-google">
+                        ${ICON.GOOGLE_LOGO}
+                        <button type="button" class="login-third-party google">Google</button>
                     </div>
                 </div>
+            </form>
 
-                <form name="loginForm" class="login__form js_login__form" method="post">
-                    <input data-lang-type="placeholder" data-language="EMAIL" required="Please enter a email" type="email" name="email" class="form-control" />
-                    <input data-lang-type="placeholder" data-language="PASSWORD" required="Please enter the password" type="password" name="password" class="form-control" />
-                    <div class="clearfix neccessary-wrapper">
-                        <div class="mess"></div>
-                        <button type="button" data-language="FORGOT_PASSWORD" class="xmbtn login__btn-forgot js-btn-forget"></button>
-                    </div>
+            <form class="erp-login-form" style="display: none">
+                <img src="/assets/images/qrcode.png">
+                <input placeholder="ERP username" required="Please enter a username" type="text" name="login" class="form-control" />
+                <input placeholder="ERP Password" required="Please enter the password" type="password" name="password" class="form-control" />
+                <div class="clearfix neccessary-wrapper">
+                    <div class="mess"></div>
+                </div>
+                <div class="clearfix">
+                    <button data-language="CANCEL" class="btn btn-secondary erp-cancel-btn" type="button"></button>
                     <button type="submit" class="login__btn-submit js-btn-spin">
                         <span class="--spin" style="display:none">◉</span>
                         <lang data-language="LOGIN"></lang>
                     </button>
-                    <div class="or-sign-in">
-                        OR LOGIN WITH
-                    </div>
-                    <div style="width: 100%">
-                        <div class="container-button-erp">
-                            ${ICON.ERP_LOGO}
-                            <button type="button" class="login-third-party erp">ERP</button>
-                        </div>
-                        <div class="container-button-google">
-                            ${ICON.GOOGLE_LOGO}
-                            <button type="button" class="login-third-party google">Google</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </form>
 
-                <form class="erp-login-form" style="display: none">
-                    <img src="/assets/images/qrcode.png">
-                    <input placeholder="ERP username" required="Please enter a username" type="text" name="login" class="form-control" />
-                    <input placeholder="ERP Password" required="Please enter the password" type="password" name="password" class="form-control" />
-                    <div class="clearfix neccessary-wrapper">
-                        <div class="mess"></div>
-                    </div>
-                    <div class="clearfix">
-                        <button data-language="CANCEL" class="btn btn-secondary erp-cancel-btn" type="button"></button>
-                        <button type="submit" class="login__btn-submit js-btn-spin">
-                            <span class="--spin" style="display:none">◉</span>
-                            <lang data-language="LOGIN"></lang>
-                        </button>
-                    </div>
-                </form>
-
-                <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>    
-            </div>
-
-            <div class="sign-up form-style js-global js-signup">
-                <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
-                <form name="resetForm" class="js_register__form" method="post">
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
-                    </div>
-
-                    <div class="form__line form__line_code" style="display:none;">
-                        <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
-                    </div>
-                    <div class="clearfix neccessary-wrapper">
-                        <div class="mess"></div>
-                    </div>
-                    <div class="popup__bottom">
-                        <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
-                        <button class="btn btn--second ml-2 js-btn-spin" type="submit">
-                            <span class="--spin" style="display:none">◉</span>
-                            <lang data-language="CREATE"></lang>
-                        </button>
-                    </div>          
-                </form>
-            </div>
-
-            <div class="reset-password reset-password2 form-style js-global js-forget">
-                <h2 data-language="RESET_PASSWORD" class="popup__heading"></h2>
-                <form name="resetForm" class="js_forgot__form_code" method="post">
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
-                    </div>
-                    <div class="captcha-wrapper">
-                        <div class="pulse"></div>
-                        <img src="" class="mt-2 mb-2 rounded-lg float-left" name="captcha-img"/>
-                        <button class="btn" type="button">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/></svg>
-                        </button>
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="CAPTCHA" class="form-control form-control2" required type="text" name="captcha" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="NEW_PASSWORD" class="form-control form-control2" type="password" name="password" />
-                    </div>
-                    <div class="form__line">
-                        <input data-lang-type="placeholder" data-language="CONFIRM_NEW_PASSWORD" class="form-control form-control2" type="password" name="confirmpassword" />
-                    </div>
-                    <div class="clearfix neccessary-wrapper">
-                        <div class="mess"></div> 
-                    </div>
-                    <div class="popup__bottom">
-                        <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
-                        <button class="btn btn--second ml-2 js-btn-send-code js-btn-spin" type="submit">
-                            <span class="--spin" style="display:none">◉</span>
-                            <lang data-language="REQUEST_CODE"></lang>
-                        </button>                
-                        <button class="btn btn--second ml-2 js-btn-spin js-btn-reset-code" type="submit">
-                            <span class="--spin" style="display:none">◉</span>
-                            <lang data-language="RESET"></lang>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="download-app"></div>
+            <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>    
         </div>
-    `,
+
+        <div class="sign-up form-style js-global js-signup">
+            <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
+            <form name="resetForm" class="js_register__form" method="post">
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
+                </div>
+
+                <div class="form__line form__line_code" style="display:none;">
+                    <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
+                </div>
+                <div class="clearfix neccessary-wrapper">
+                    <div class="mess"></div>
+                </div>
+                <div class="popup__bottom">
+                    <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                    <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                        <span class="--spin" style="display:none">◉</span>
+                        <lang data-language="CREATE"></lang>
+                    </button>
+                </div>          
+            </form>
+        </div>
+
+        <div class="reset-password reset-password2 form-style js-global js-forget">
+            <h2 data-language="RESET_PASSWORD" class="popup__heading"></h2>
+            <form name="resetForm" class="js_forgot__form_code" method="post">
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+                </div>
+                <div class="captcha-wrapper">
+                    <div class="pulse"></div>
+                    <img src="" class="mt-2 mb-2 rounded-lg float-left" name="captcha-img"/>
+                    <button class="btn" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M13.5 2c-5.621 0-10.211 4.443-10.475 10h-3.025l5 6.625 5-6.625h-2.975c.257-3.351 3.06-6 6.475-6 3.584 0 6.5 2.916 6.5 6.5s-2.916 6.5-6.5 6.5c-1.863 0-3.542-.793-4.728-2.053l-2.427 3.216c1.877 1.754 4.389 2.837 7.155 2.837 5.79 0 10.5-4.71 10.5-10.5s-4.71-10.5-10.5-10.5z"/></svg>
+                    </button>
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="CAPTCHA" class="form-control form-control2" required type="text" name="captcha" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="NEW_PASSWORD" class="form-control form-control2" type="password" name="password" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="CONFIRM_NEW_PASSWORD" class="form-control form-control2" type="password" name="confirmpassword" />
+                </div>
+                <div class="clearfix neccessary-wrapper">
+                    <div class="mess"></div> 
+                </div>
+                <div class="popup__bottom">
+                    <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                    <button class="btn btn--second ml-2 js-btn-send-code js-btn-spin" type="submit">
+                        <span class="--spin" style="display:none">◉</span>
+                        <lang data-language="REQUEST_CODE"></lang>
+                    </button>                
+                    <button class="btn btn--second ml-2 js-btn-spin js-btn-reset-code" type="submit">
+                        <span class="--spin" style="display:none">◉</span>
+                        <lang data-language="RESET"></lang>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="download-app"></div>
+    </div>
+`
+    ,
     meeting: `
         <div class="meeting-video-wrapper">
             <div class="language-select" id="change-lang-btn">
