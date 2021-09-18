@@ -1,12 +1,12 @@
 define([
     'app/constant',
-    'shared/data', 
-    'shared/functions', 
+    'shared/data',
+    'shared/functions',
     'features/modal/modalProfile'
 ], (
     constant,
     GLOBAL,
-    functions, 
+    functions,
     modalProfileComp
 ) => {
     const { render, getAvatar, htmlEncode } = functions;

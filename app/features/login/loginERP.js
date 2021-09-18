@@ -13,6 +13,7 @@ define([
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
         TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
@@ -43,6 +44,7 @@ define([
                 setDataToLocalApplication(SESSION_ID, res.sessionId);
                 setDataToLocalApplication(USER_ID, res.userId);
                 setDataToLocalApplication(TOKEN, res.token);
+                setDataToLocalApplication(REFRESH_TOKEN, res.refresh_token);
                 navigate(ROUTE.index);
             }
         }).catch(err => {

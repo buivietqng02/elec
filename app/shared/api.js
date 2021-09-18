@@ -2,19 +2,19 @@ define([
     'shared/data',
     'app/constant',
     'shared/functions',
-    'shared/offlineData',
     'features/logout/logout',
     'axios'
 ], (
     GLOBAL,
     constant,
     functions,
-    offlineData,
     Logout,
     axios
 ) => {
     const {
+        BASE_URL,
         TOKEN,
+        REFRESH_TOKEN,
         API_URL,
     } = constant;
 
@@ -45,26 +45,47 @@ define([
         return `?${parts.join('&')}`;
     };
 
+    const instance = axios.create({
+        baseURL: `${BASE_URL}xm/`,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+    });
+
+    const refreshToken = () => {
+        return instance.post('oauth/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
+    };
+
     // Interceptors
     axios.interceptors.response.use((response) => {
         GLOBAL.setNetworkStatus(true);
         return response.data;
-    }, (error) => {
-        if (!error.response) {
-            GLOBAL.setNetworkStatus(false);
-            return Promise.reject(19940402);
-        } else {
+    }, async (error) => {
+        const originalConfig = error.config;
+        if (error.response) {
             GLOBAL.setNetworkStatus(true);
+            if (error.response.status === 401 && !originalConfig._retry) {
+                originalConfig._retry = true;
+                try {
+                    const response = await refreshToken();
+
+                    functions.setDataToLocalApplication(TOKEN, response.data.token);
+                    functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
+                    functions.setCookie(response.data.token, 3650);
+
+                    originalConfig.headers["Authorization"] = `Bearer ${response.data.token}`;
+
+                    return axios(originalConfig);
+                } catch (_error) {
+                    Logout.cleanSession();
+                    if (_error.response && _error.response.data) {
+                        return Promise.reject(_error.response.data);
+                    }
+                    return Promise.reject(_error);
+                }
+            }
         }
-
-        if (error.response.status === 401) {
-            Logout.cleanSession();
-        }
-
-        if (error.response.status === 403) {
-
-        }
-
+        GLOBAL.setNetworkStatus(false);
         return Promise.reject(error);
     });
 

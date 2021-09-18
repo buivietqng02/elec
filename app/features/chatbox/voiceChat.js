@@ -122,7 +122,6 @@ define([
     };
 
     const callAPI = (file) => {
-        console.log(token);
         const fd = new FormData();
         $progressWrapper.show();
         fd.append('file', file);
@@ -173,14 +172,10 @@ define([
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                console.log('getUserMedia supported.');
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
-                    console.log(stream);
                     recorder = new MediaRecorder(stream);
-
-                    console.log(recorder);
 
                     startRecordBtn.addEventListener('mousedown', holdRecord);
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
@@ -223,8 +218,6 @@ define([
     };
 
     const toggleVoiceChat = () => {
-        console.log('click');
-
         if (!isVoiceInit) {
             initRecordFunc('start');
             initVoiceChat.innerHTML = `📣`;
@@ -246,7 +239,7 @@ define([
     return {
         onInit: () => {
             console.log('voice chat');
-            console.log('playPromise')
+            console.log('New test')
             $progressWrapper = $('.chatbox-progress-upload');
             $pathCircle = $progressWrapper.find('path');
             $percentProgress = $progressWrapper.find('span');

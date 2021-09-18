@@ -29,7 +29,8 @@ define(() => {
         ticket: room.ticket,
         unreadMessages: room.unreadMessages,
         updated: room.updated,
-        sender: room.sender
+        sender: room.sender,
+        owner: room.owner
     });
 
     const refresh = () => {

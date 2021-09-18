@@ -28,6 +28,7 @@ define([
 
     const {
         TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
@@ -84,11 +85,13 @@ define([
         const token = params.get('token');
         const sessionId = params.get('sessionId');
         const userId = params.get('userId');
+        const refreshToken = params.get('refresh_token');
 
         setDataToLocalApplication(SESSION_ID, sessionId);
         setDataToLocalApplication(USER_ID, userId);
         setDataToLocalApplication(TOKEN, token);
-
+        setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
+        
         navigate(ROUTE.index);
     });
 

@@ -26,81 +26,33 @@ define([
     } = functions;
     const { API_URL } = constant;
 
-    const getDuration = (src) => {
-        return new Promise((resolve) => {
-            const audio = new Audio();
-            audio.src = src;
-            audio.load();
-            audio.addEventListener('loadedmetadata', () => {
-                resolve(audio.duration);
-            });
-        });
-    };
-
-    // const testFunc = async (data, file) => {
-    //     data.src = `${API_URL}/audio?id=${file.id}`;
-    //     data.audioId = `audio-${file.id}`;
-    //     data.buttonId = `btn-${file.id}`;
-    //     let duration = await getDuration(`${API_URL}/audio?id=${file.id}`);
-    //     data.duration = duration;
-
-    //     return data;
-    // };
-
     const handleMessCointainFile = (file) => {
         const { type } = file;
         const data = {};
-        // console.log(file);
-
-        // if (file.type === 3) {
-        //     data.src = `${API_URL}/audio?id=${file.id}`;
-        //     data.audioId = `audio-${file.id}`;
-        //     data.buttonId = `btn-${file.id}`;
-
-        //     getDuration(`${API_URL}/audio?id=${file.id}`)
-        //         .then(result => {
-        //             data.duration = result;
-        //             console.log(data);
-        //             render(template.audio, data);
-        //         }).then(() => {
-        //             console.log(data);
-        //             return render(template.audio, data);
-        //         });
-        // }
-
+        let messageTemp = '';
+        console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
-                return render(template.image, data);
+                messageTemp = render(template.image, data);
+                break;
             case 3:
                 data.src = `${API_URL}/audio?id=${file.id}`;
                 data.audioId = `audio-${file.id}`;
                 data.buttonId = `btn-${file.id}`;
-
-                // getDuration(`${API_URL}/audio?id=${file.id}`)
-                //     .then(result => {
-                //         data.duration = result;
-                //         console.log(data);
-                //         render(template.audio, data);
-                //     }).then(() => {
-                //         console.log(data);
-                //         return render(template.audio, data);
-                //     });
-                // testFunc(data, file).then((result) => {
-                //     console.log(result);
-                //     return render(template.audio, result);
-                // });
-                return render(template.audio, data);
-            // break;
+                messageTemp = render(template.audio, data);
+                break;
             case 4:
                 data.src = `${API_URL}/stream?id=${file.id}`;
-                return render(template.video, data);
+                messageTemp = render(template.video, data);
+                break;
             default:
                 data.src = `${API_URL}/file?id=${file.id}`;
                 data.fileName = file.filename;
                 data.fileSize = humanFileSize(file.size);
-                return render(template.file, data);
+                messageTemp = render(template.file, data);
         }
+        return messageTemp;
     };
 
     const renderComment = (quotedMessage) => {

@@ -15,6 +15,7 @@ define([
     const {
         BASE_URL,
         TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
@@ -48,6 +49,7 @@ define([
                 setDataToLocalApplication(SESSION_ID, res.data.sessionId);
                 setDataToLocalApplication(USER_ID, res.data.userId);
                 setDataToLocalApplication(TOKEN, res.data.token);
+                setDataToLocalApplication(REFRESH_TOKEN, res.data.refresh_token);
                 navigate(ROUTE.index);
             }
         }).catch((err) => {

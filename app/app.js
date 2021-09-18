@@ -192,7 +192,6 @@ define([
         // Get information about chat list and current user
         // Get information about the chat list what user changed (name, description).
         Promise.all([API.get('chats'), API.get(`users/${userId}`), API.get('users/preferences')]).then(data => {
-            console.log("initInformationFromAPI", data);
             onAssignDataToStore(data);
             onGetPrefrences(data[2]);
             onGetRoomList(data[0]);
@@ -270,7 +269,6 @@ define([
                 onGetUserInfo(data[1]);
                 onInitEventComponent();
             } catch (err) {
-                console.log(err);
                 clear();
             }
         }
