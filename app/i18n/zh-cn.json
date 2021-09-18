@@ -34,6 +34,7 @@
     "ENTER_DESCRIPTION": "输入描述",
     "ENTER_EMAIL_ADDRESS": "输入电子邮件地址及发送邀请",
     "INTEGRATE_ERP_CONTACTS": "您要从ERP导入联系人吗？",
+    "ENTER_CHANNEL_NAME": "为您的频道输入名称",
     "ENTER_GROUP_NAME": "输入群组名称",
     "ENTER_NAME": "输入名称",
     "ERP_CONTACTS": "ERP 联系人",

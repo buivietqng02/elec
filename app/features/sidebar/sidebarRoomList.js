@@ -51,7 +51,7 @@ define([
         }
 
         // Hide chat input if this room is xm channel
-        if (roomInfo?.channel) {
+        if (roomInfo?.channel && !roomInfo?.owner) {
             $('.messages-input-wrap').hide();
         } else {
             $('.messages-input-wrap').show();
