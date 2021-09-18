@@ -65,10 +65,10 @@ define([
     const getDuration = (src) => {
         return new Promise(function (resolve) {
             let audio = new Audio();
+            audio.src = src;
             audio.addEventListener("loadedmetadata", () => {
                 resolve(audio.duration);
             });
-            audio.src = src;
         });
     }
 
@@ -99,17 +99,17 @@ define([
         let playPauseBtn = document.querySelectorAll('.audio-playStop');
         let audioRecorder = document.querySelectorAll('.audio-recorder');
 
-        audioRecorder.forEach(item => {
-            getDuration(item.src)
-                .then(result => {
-                    let idAudio = getAudioID(item.id)
-                    let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`)
+        // audioRecorder.forEach(item => {
+        //     getDuration(item.src)
+        //         .then(result => {
+        //             let idAudio = getAudioID(item.id)
+        //             let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`)
 
-                    console.log(result)
-                    audioTime.textContent = timeConvert(result);
-                    item.setAttribute("duration", result);
-                });
-        })
+        //             console.log(result)
+        //             audioTime.textContent = timeConvert(result);
+        //             item.setAttribute("duration", result);
+        //         });
+        // })
 
         playPauseBtn.forEach(item => {
             item.setAttribute("isPlaying", false);
@@ -149,24 +149,32 @@ define([
                         } else {
                             e.target.setAttribute("isPlaying", true)
 
-                            audioRecorderItem.play()
-                            audioMicroPic.src = `/assets/images/microphoneListening.svg`
+                            let playPromise = audioRecorderItem.play()
+                            if (playPromise !== undefined) {
+                                playPromise.then(() => {
+                                    console.log('playPromise')
+                                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
 
-                            console.log(audioRecorderItem.getAttribute('duration'))
-                            countDownTimmer = setInterval(() => {
-                                audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
-                            }, 1000)
+                                    console.log(audioRecorderItem.getAttribute('duration'))
+                                    countDownTimmer = setInterval(() => {
+                                        audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
+                                    }, 1000)
 
-                            console.log(audioProgress[0].style.animationPlayState)
-                            audioProgress[0].style.animationName = "left";
-                            audioProgress[1].style.animationName = "right";
+                                    console.log(audioProgress[0].style.animationPlayState)
+                                    audioProgress[0].style.animationName = "left";
+                                    audioProgress[1].style.animationName = "right";
 
-                            audioProgress[0].style.animationPlayState = "running";
-                            audioProgress[1].style.animationPlayState = "running";
+                                    audioProgress[0].style.animationPlayState = "running";
+                                    audioProgress[1].style.animationPlayState = "running";
 
-                            audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                            audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                            audioProgress[1].style.animationDelay = `${durationAudio / 2}s`
+                                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`
+
+                                }).catch(error => {
+                                    console.log(error)
+                                })
+                            }
 
                         }
 
@@ -404,7 +412,7 @@ define([
                 onGetMessageFromCache(roomInfo);
 
                 // update chat last read time
-                API.post(`chats / ${roomInfo.id} / read`).then(() => { })
+                API.post(`chats/${roomInfo.id}/read`).then(() => { })
                     .catch(err => console.error(err));
 
                 return;
@@ -461,6 +469,7 @@ define([
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
                     $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+                    audioPlayStopFunc()
                 }
             }
         },
@@ -490,10 +499,11 @@ define([
             $messageList.html(messagesHtml);
             $wrapper.scrollTop($wrapper.get(0).scrollHeight);
             $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+            audioPlayStopFunc()
         },
 
         onFinishPostMessage: (data) => {
-            const $mess = $(`[data - id - local= "${data.idLocal}"]`);
+            const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
             storeRoomById(data.chatId, messages.map(mess => {
@@ -563,6 +573,7 @@ define([
                 $messageList.append(messagesHtml);
                 $wrapper.scrollTop(wrapperHtml.scrollHeight);
                 $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+                audioPlayStopFunc()
             }
         },
     };

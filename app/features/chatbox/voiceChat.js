@@ -246,6 +246,7 @@ define([
     return {
         onInit: () => {
             console.log('voice chat');
+            console.log('playPromise')
             $progressWrapper = $('.chatbox-progress-upload');
             $pathCircle = $progressWrapper.find('path');
             $percentProgress = $progressWrapper.find('span');
