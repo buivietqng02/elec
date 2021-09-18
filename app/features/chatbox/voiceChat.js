@@ -198,8 +198,10 @@ define([
                             // postData(blob).then(response => {
                             //     console.log(response);
                             // });
-                            blob.filename = 'Testabc';
+                            blob.name = 'Testabc';
                             callAPI(blob)
+
+                            console.log(blob);
                             // ==================================
                             chunks = [];
                         }
