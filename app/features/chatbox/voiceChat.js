@@ -191,7 +191,7 @@ define([
 
                     recorder.onstop = e => {
                         if (recorder.state === 'inactive' && secondCount >= 2) {
-                            const blob = new Blob(chunks, { 'type': 'audio/webm' });
+                            const blob = new Blob(chunks, { 'type': 'audio/webm', 'filename': 'Testabc' });
 
                             console.log(blob);
                             //  ===  call API ====
