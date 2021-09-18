@@ -1,12 +1,10 @@
 /* eslint no-underscore-dangle: 0 */
 define([
-    'app/constant',
     'shared/data',
     'shared/api',
     'shared/alert',
     'features/sidebar/sidebarService'
 ], (
-    constant,
     GLOBAL,
     API,
     ALERT,
@@ -60,7 +58,7 @@ define([
                 $btnCancel.click();
                 return;
             }
-            
+
             const rooms = GLOBAL.getRooms().filter((room) => (room.id !== id));
 
             GLOBAL.setRooms(rooms);
@@ -74,6 +72,7 @@ define([
 
     return {
         onInit: () => {
+            $('body').append(renderTemplate(GLOBAL.getLangJson()));
             if ($('#removeGroupModal').length) {
                 $('body').append(renderTemplate(GLOBAL.getLangJson()));
 

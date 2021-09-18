@@ -175,11 +175,34 @@ define([
                 $name.text(roomInfo.subject);
                 $name.removeAttr(constant.ATTRIBUTE_CHANGE_NAME);
                 $name.attr(constant.ATTRIBUTE_CHANGE_GROUP_NAME, roomInfo.id);
-                $editBtn.show();
-                $internalBtn.show();
-                $leaveBtn.show();
-                $removeBtn.show();
                 $timeActivity.hide();
+                if (roomInfo.isLiveAssistance) {
+                    $editBtn.show();
+                    $leaveBtn.show();
+                    $notificationBtn.show();
+                    $internalBtn.show();
+                    $removeBtn.hide();
+                } else if (roomInfo.channel) {
+                    if (roomInfo.owner) {
+                        $editBtn.show();
+                        $leaveBtn.hide();
+                        $notificationBtn.show();
+                        $internalBtn.hide();
+                        $removeBtn.show();
+                    } else {
+                        $editBtn.hide();
+                        $leaveBtn.show();
+                        $notificationBtn.show();
+                        $internalBtn.hide();
+                        $removeBtn.hide();
+                    }
+                } else {
+                    $editBtn.show();
+                    $leaveBtn.show();
+                    $notificationBtn.show();
+                    $internalBtn.hide();
+                    $removeBtn.show();
+                }
             } else {
                 const userId = roomInfo.partner.id;
                 const userName = GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.partner.name;
@@ -194,6 +217,7 @@ define([
                 $internalBtn.hide();
                 $leaveBtn.hide();
                 $removeBtn.hide();
+                $notificationBtn.show();
                 $timeActivity.show();
 
                 offlineData.getChatById(roomInfo.id).then(chat => {

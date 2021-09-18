@@ -30,6 +30,10 @@ define(['shared/icon'], (ICON) => ({
                             <i class="icon-video-camera"></i>
                             <lang data-language="START_CONFERENCE"></lang>
                         </div>
+                        <div class="sodi-channel">
+                            <i class="icon-info-circle"></i>
+                            <lang data-language="CREATE_CHANNEL"></lang>
+                        </div>
                         <div class="sodi-invite">
                             <i class="icon-send"></i>
                             <lang data-language="SEND_INVITE"></lang>
@@ -154,6 +158,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="icon-video-camera"></i>
                                <lang data-language="START_CONFERENCE"></lang>
                             </div>
+                            <div class="sodi-channel">
+                                <i class="icon-info-circle"></i>
+                                <lang data-language="CREATE_CHANNEL"></lang>
+                            </div>
                             <div class="sodi-invite">
                                 <i class="icon-send"></i>
                                 <lang data-language="SEND_INVITE"></lang>
@@ -217,7 +225,7 @@ define(['shared/icon'], (ICON) => ({
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
                             <button class="--edit-group menu__item">
                                 <i class="xm xm-edit"></i>
-                                <lang data-language="EDIT_GROUP"></lang>
+                                <lang data-language="EDIT"></lang>
                             </button>
                             <button class="--internal menu__item">
                                 <i class="xm xm-comments"></i>

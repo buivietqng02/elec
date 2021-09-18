@@ -3033,7 +3033,8 @@ body.body_fz_18 {
 }
 
 #im-email-input,
-#sem-url-input {
+#sem-url-input,
+#ccm-name-input {
   width: 100%;
   border: 0;
   border-bottom: 1px solid rgba(0,0,0,0.12);
@@ -3044,12 +3045,14 @@ body.body_fz_18 {
 }
 
 #im-email-input:focus,
-#sem-url-input:focus {
+#sem-url-input:focus,
+#ccm-name-input:focus {
   border-bottom: 1px solid rgb(63,81,181);
 }
 
 #im-email-input.error,
-#sem-url-input.error {
+#sem-url-input.error,
+#ccm-name-input:focus {
   border-bottom: 1px solid rgb(221,44,0) !important;
 }
 

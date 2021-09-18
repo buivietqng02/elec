@@ -4,6 +4,7 @@ define([
     'shared/functions',
     'features/modal/modalUserInterface',
     'features/modal/modalInvite',
+    'features/modal/modalCreateChannel',
     'features/modal/modalSendErp',
     'features/modal/modalVersion',
     'features/modal/modalCreateGroup',
@@ -15,6 +16,7 @@ define([
     functions,
     modalUserInterfaceComp,
     modalInviteComp,
+    modalCreateChannelComp,
     modalSendErpComp,
     modalVersionComp,
     modalCreateGroupComp,
@@ -27,7 +29,8 @@ define([
     let $contactsBtn;
     let $groupChatBtn; 
     let $changeLanguageBtn; 
-    let $startConferenceBtn; 
+    let $startConferenceBtn;
+    let $createChannelBtn; 
     let $userInterFaceBtn;
     let $sendInviteBtn;
     let $erpContactBtn;
@@ -118,6 +121,14 @@ define([
         offEventClickOutside();
     };
 
+    const showModalCreateChannel = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        modalCreateChannelComp.onInit();
+        offEventClickOutside();
+    };
+
     const showModalERPContact = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -143,6 +154,7 @@ define([
             $contactsBtn = $('.btn-sidebar-contacts');
             $groupChatBtn = $slideContacts.find('.sodi-startchat');
             $startConferenceBtn = $slideContacts.find('.sodi-conference');
+            $createChannelBtn = $slideContacts.find('.sodi-channel');
             $sendInviteBtn = $slideContacts.find('.sodi-invite');
             $erpContactBtn = $slideContacts.find('.sodi-erpcontacrt');
             $changeLanguageBtn = $slideOptions.find('.sodi-language');
@@ -156,6 +168,7 @@ define([
             $groupChatBtn.off().click(showModalCreateGroup);
             $userInterFaceBtn.off().click(showModalUserInterFace);
             $startConferenceBtn.off().click(showMeetingPage);
+            $createChannelBtn.off().click(showModalCreateChannel);
             $sendInviteBtn.off().click(showModalSendInvite);
             $erpContactBtn.off().click(showModalERPContact);
             $aboutBtn.off().click(showModalAbout);
