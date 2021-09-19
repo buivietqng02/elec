@@ -26,6 +26,16 @@ define([
     } = functions;
     const { API_URL } = constant;
 
+    const timeConvert = (time) => {
+        // Calculate the time left and the total duration
+        let currentMinutes = Math.floor(time / 60);
+        let currentSeconds = Math.floor(time - currentMinutes * 60);
+        // Add a zero to the single digit time values
+        if (currentSeconds < 10) { currentSeconds = `0${currentSeconds}`; }
+        if (currentMinutes < 10) { currentMinutes = `0${currentMinutes}`; }
+        return `${currentMinutes}:${currentSeconds}`;
+    };
+
     const handleMessCointainFile = (file) => {
         const { type } = file;
         const data = {};
@@ -39,6 +49,8 @@ define([
                 data.src = `${API_URL}/audio?id=${file.id}`;
                 data.audioId = `audio-${file.id}`;
                 data.buttonId = `btn-${file.id}`;
+                data.duration = file.filename;
+                data.durationTime = timeConvert(parseFloat(file.filename));
                 messageTemp = render(template.audio, data);
                 console.log(file);
                 break;

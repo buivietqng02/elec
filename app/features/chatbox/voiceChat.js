@@ -32,6 +32,17 @@ define([
     let $pathCircle;
     let $progressWrapper;
 
+
+    const getDuration = (src) => {
+        return new Promise(function (resolve) {
+            let audio = new Audio();
+            audio.addEventListener("loadedmetadata", () => {
+                resolve(audio.duration);
+            });
+            audio.src = src;
+        });
+    }
+
     const percentCircle = (numberPercent) => {
         let percent = numberPercent;
         if (numberPercent < 0) {
@@ -121,10 +132,10 @@ define([
         }
     };
 
-    const callAPI = (file) => {
+    const callAPI = (file, namefile) => {
         const fd = new FormData();
         $progressWrapper.show();
-        fd.append('file', file, 'testnamefile');
+        fd.append('file', file, namefile);
         fd.append('chat_id', GLOBAL.getCurrentRoomId());
         console.log(fd)
         $.ajax({
@@ -192,17 +203,29 @@ define([
                     recorder.onstop = e => {
                         if (recorder.state === 'inactive' && secondCount >= 1) {
                             const blob = new Blob(chunks, { 'type': 'audio/webm' });
-                            blob.name = 'audiofiletest'
-                            blob.lastModified = new Date();
-                            console.log(blob);
                             //  ===  call API ====
                             // postData(blob).then(response => {
                             //     console.log(response);
                             // });
-
-                            callAPI(blob)
-                            // ==================================
                             chunks = [];
+
+                            // Get audio duration of the files
+                            let reader = new FileReader();
+                            reader.onload = function (event) {
+                                let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                                // Asynchronously decode audio file data contained in an ArrayBuffer.
+                                audioContext.decodeAudioData(event.target.result, function (buffer) {
+                                    let duration = buffer.duration;
+                                    console.log("Duration test: " + duration + " seconds");
+                                    callAPI(blob, duration)
+                                });
+                            };
+                            // In case that the file couldn't be read
+                            reader.onerror = function (event) {
+                                console.error("An error ocurred reading the file: ", event);
+                            };
+                            // Read file as an ArrayBuffer
+                            reader.readAsArrayBuffer(blob);
                         }
                     };
                 } catch (err) {

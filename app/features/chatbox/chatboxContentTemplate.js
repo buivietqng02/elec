@@ -41,7 +41,7 @@ define(['app/constant'], (constant) => {
 
         audio: `<div class="audio-main-content">
                     <div class="clip">
-                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm">
+                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm" duration="{duration}">
                           
                         </audio>
                     </div>
@@ -52,7 +52,7 @@ define(['app/constant'], (constant) => {
                                 <div class="audio-number">
                                     <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
 
-                                    <div class="audio-timeIndicate">00:00</div>
+                                    <div class="audio-timeIndicate">"{durationTime}"</div>
                                 </div>
 
                                 <div class="audio-circle">

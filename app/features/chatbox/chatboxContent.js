@@ -99,15 +99,15 @@ define([
         let playPauseBtn = document.querySelectorAll('.audio-playStop');
         let audioRecorder = document.querySelectorAll('.audio-recorder');
 
-        audioRecorder.forEach(item => {
-            getDuration(item.src)
-                .then(result => {
-                    let idAudio = getAudioID(item.id);
-                    let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`);
-                    audioTime.textContent = timeConvert(result);
-                    item.setAttribute("duration", result);
-                });
-        })
+        // audioRecorder.forEach(item => {
+        //     getDuration(item.src)
+        //         .then(result => {
+        //             let idAudio = getAudioID(item.id);
+        //             let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`);
+        //             audioTime.textContent = timeConvert(result);
+        //             item.setAttribute("duration", result);
+        //         });
+        // })
 
         playPauseBtn.forEach(item => {
             item.setAttribute("isPlaying", false);
