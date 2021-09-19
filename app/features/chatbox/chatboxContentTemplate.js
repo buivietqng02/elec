@@ -41,7 +41,7 @@ define(['app/constant'], (constant) => {
 
         audio: `<div class="audio-main-content">
                     <div class="clip">
-                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm" duration="{duration}">
+                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm" duration="{duration}" preload="auto">
                           
                         </audio>
                     </div>

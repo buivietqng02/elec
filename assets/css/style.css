@@ -3778,7 +3778,13 @@ body.body_fz_18 {
   width: 40px;
   border:none;
   background-color: slateblue;
+  border-radius: 5px;
+}
 
+.btn__voice-chat-picture{
+  width: 15px;
+  padding:0;
+  margin:0;
 }
 
 /* -------------Recording button style --------------- */
@@ -3809,7 +3815,7 @@ body.body_fz_18 {
 
 .voice-button-group {
   position:absolute;
-  bottom:25px;
+  bottom:45px;
   left: 50%;
   transform: translateX(-50%);
   /* display: none; */
@@ -3866,6 +3872,15 @@ body.body_fz_18 {
     -webkit-transform: scale(1.2, 1.2);
     opacity: 0;
   }
+}
+
+.btn-voice-chat-description{
+  font-size: 18px;
+  display: none;
+  position:absolute;
+  bottom:10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* ----------- Waving Recording style * -------------/ */

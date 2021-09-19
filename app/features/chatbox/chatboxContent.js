@@ -103,7 +103,7 @@ define([
             item.setAttribute("isPlaying", false);
 
             item.addEventListener('click', (e) => {
-                console.log('click', item)
+                console.log('click test', item)
 
                 audioRecorder.forEach(audioRecorderItem => {
                     if (getAudioID(e.target.id) === getAudioID(audioRecorderItem.id)) {
@@ -134,28 +134,37 @@ define([
                             audioProgress[0].style.animationPlayState = "paused";
                             audioProgress[1].style.animationPlayState = "paused";
 
-                        } else {
-                            e.target.setAttribute("isPlaying", true)
+                        }
 
-                            audioRecorderItem.play()
-                            audioMicroPic.src = `/assets/images/microphoneListening.svg`
+                        if (isPlaying === 'false') {
+                            let playPromise = audioRecorderItem.play()
+                            if (playPromise !== undefined) {
+                                playPromise.then(() => {
+                                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
 
-                            console.log(audioRecorderItem.getAttribute('duration'))
-                            countDownTimmer = setInterval(() => {
-                                audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
-                            }, 1000)
+                                    console.log(audioRecorderItem.getAttribute('duration'))
+                                    countDownTimmer = setInterval(() => {
+                                        audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
+                                    }, 1000)
 
-                            console.log(audioProgress[0].style.animationPlayState)
-                            audioProgress[0].style.animationName = "left";
-                            audioProgress[1].style.animationName = "right";
+                                    audioProgress[0].style.animationName = "left";
+                                    audioProgress[1].style.animationName = "right";
 
-                            audioProgress[0].style.animationPlayState = "running";
-                            audioProgress[1].style.animationPlayState = "running";
+                                    audioProgress[0].style.animationPlayState = "running";
+                                    audioProgress[1].style.animationPlayState = "running";
 
-                            audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                            audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                            audioProgress[1].style.animationDelay = `${durationAudio / 2}s`
+                                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
 
+                                    e.target.setAttribute("isPlaying", true)
+                                })
+                                    .catch(error => {
+                                        console.log(error)
+                                        // Auto-play was prevented
+                                        // Show paused UI.
+                                    });
+                            }
                         }
 
                         audioRecorderItem.addEventListener('ended', () => {

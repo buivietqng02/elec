@@ -326,8 +326,9 @@ define(['shared/icon'], (ICON) => ({
                                 
                                 <!-- Voice chat btn -->
 
-                                <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">💬 </button>
-
+                                <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">
+                                    <img class="btn__voice-chat-picture" src="/assets/images/microphone.svg" alt="">
+                                </button>
                                 <!-- End Voice chat btn -->
 
                             </div>
@@ -398,6 +399,7 @@ define(['shared/icon'], (ICON) => ({
                                         <div class="record__start-stop-pulse-ring"></div>
                                     </button>
                                 </div>
+                                <div class="btn-voice-chat-description">Hold to speak</div>
                             </div>
 
                             <!-- End Voice chat wrap -->

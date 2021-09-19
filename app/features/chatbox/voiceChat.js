@@ -16,6 +16,7 @@ define([
     let isVoiceInit = false;
     let initVoiceChat;
     let initVoiceButton;
+    let btnVoiceChatPic;
     let stream = null;
     let chunks = [];
     let recorder;
@@ -26,22 +27,26 @@ define([
     let notiMessage;
     let startRecordBtn;
 
-    let secondCount = 0;
+    let secondCount;
     let holdTime;
     let $percentProgress;
     let $pathCircle;
     let $progressWrapper;
 
+    let inputTextChat;
+    let btnEmoji;
 
-    const getDuration = (src) => {
-        return new Promise(function (resolve) {
-            let audio = new Audio();
-            audio.addEventListener("loadedmetadata", () => {
-                resolve(audio.duration);
-            });
-            audio.src = src;
-        });
-    }
+    let btnVoiceChatDescription;
+
+    // const getDuration = (src) => {
+    //     return new Promise(function (resolve) {
+    //         let audio = new Audio();
+    //         audio.addEventListener("loadedmetadata", () => {
+    //             resolve(audio.duration);
+    //         });
+    //         audio.src = src;
+    //     });
+    // }
 
     const percentCircle = (numberPercent) => {
         let percent = numberPercent;
@@ -76,10 +81,12 @@ define([
 
     const holdRecord = () => {
         pulseRing.classList.add('active');
-
+        secondCount = 0;
         // Have to hold at least 1s to start the record
         holdTime = setInterval(() => {
             secondCount++;
+
+            btnVoiceChatDescription.innerHTML = 'Release button to send'
 
             if (recorder.state === 'inactive' && secondCount >= 1) {
                 recorder.start();
@@ -110,6 +117,8 @@ define([
         if (event === 'mouseup') {
             notiStatus.innerHTML = '';
 
+            btnVoiceChatDescription.innerHTML = 'Hold to speak'
+
             if (secondCount < 2) {
                 console.log('Too short message');
 
@@ -123,6 +132,7 @@ define([
 
         if (event === 'mouseleave') {
             notiStatus.innerHTML = '';
+            btnVoiceChatDescription.innerHTML = 'Hold to speak'
         }
 
         // If the record less than 1 second will not display 
@@ -186,7 +196,7 @@ define([
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
-                    recorder = new MediaRecorder(stream, { mimeType: "audio/webm; codecs=Opus" });
+                    recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
 
                     startRecordBtn.addEventListener('mousedown', holdRecord);
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
@@ -244,21 +254,22 @@ define([
     const toggleVoiceChat = () => {
         if (!isVoiceInit) {
             initRecordFunc('start');
-            initVoiceChat.innerHTML = `📣`;
+            btnVoiceChatPic.src = "/assets/images/keyboard.png";
             initVoiceButton.style.display = 'block';
+            btnVoiceChatDescription.style.display = 'block';
+            inputTextChat.style.display = 'none';
+            btnEmoji.style.display = 'none';
             isVoiceInit = true;
         } else {
-            initVoiceChat.innerHTML = `💬`;
+            btnVoiceChatPic.src = "/assets/images/microphone.svg";
             initVoiceButton.style.display = 'none';
-
+            btnVoiceChatDescription.style.display = 'none';
+            inputTextChat.style.display = 'block';
+            btnEmoji.style.display = 'block';
             initRecordFunc('stop');
             isVoiceInit = false;
         }
     };
-
-    const playPauseFunc = () => {
-        console.log('click')
-    }
 
     return {
         onInit: () => {
@@ -275,6 +286,12 @@ define([
             notiStatus = document.querySelector('#voice-statusRecording');
             notiMessage = document.querySelector('#voice-statusMessage');
             startRecordBtn = document.querySelector('#record__start-stop__btn');
+
+            inputTextChat = document.querySelector('.messages__input');
+            btnEmoji = document.querySelector('.btn__emoji')
+
+            btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description')
+            btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture')
 
             initVoiceChat.addEventListener('click', toggleVoiceChat);
         }
