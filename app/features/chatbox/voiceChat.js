@@ -124,9 +124,9 @@ define([
     const callAPI = (file) => {
         const fd = new FormData();
         $progressWrapper.show();
-        fd.append('file', file);
+        fd.append('file', file, 'testnamefile');
         fd.append('chat_id', GLOBAL.getCurrentRoomId());
-
+        console.log(fd)
         $.ajax({
             type: 'POST',
             url: `${API_URL}/audioupload`,
@@ -175,7 +175,7 @@ define([
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
-                    recorder = new MediaRecorder(stream);
+                    recorder = new MediaRecorder(stream, { mimeType: "audio/webm; codecs=Opus" });
 
                     startRecordBtn.addEventListener('mousedown', holdRecord);
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
@@ -186,22 +186,21 @@ define([
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
-                        console.log("chunks", chunks, chunks.length);
+                        console.log(e.data);
                     };
 
                     recorder.onstop = e => {
-                        if (recorder.state === 'inactive' && secondCount >= 2) {
-                            const blob = new Blob(chunks, { 'type': 'audio/webm', 'filename': 'Testabc' });
-
+                        if (recorder.state === 'inactive' && secondCount >= 1) {
+                            const blob = new Blob(chunks, { 'type': 'audio/webm' });
+                            blob.name = 'audiofiletest'
+                            myBlob.lastModified = new Date();
                             console.log(blob);
                             //  ===  call API ====
                             // postData(blob).then(response => {
                             //     console.log(response);
                             // });
-                            blob.name = 'Testabc';
-                            callAPI(blob)
 
-                            console.log(blob);
+                            callAPI(blob)
                             // ==================================
                             chunks = [];
                         }

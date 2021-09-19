@@ -148,6 +148,7 @@ define([
 
     const uploadFile = (endpoint) => {
         if (endpoint === 'fileupload') {
+            console.log($inputFile.get(0).files);
             callAPI(endpoint, $inputFile.get(0).files[0]);
         } else {
             checkFile($inputImage.get(0).files[0], true);
