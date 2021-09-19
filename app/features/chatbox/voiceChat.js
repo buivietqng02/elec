@@ -193,7 +193,7 @@ define([
                         if (recorder.state === 'inactive' && secondCount >= 1) {
                             const blob = new Blob(chunks, { 'type': 'audio/webm' });
                             blob.name = 'audiofiletest'
-                            myBlob.lastModified = new Date();
+                            blob.lastModified = new Date();
                             console.log(blob);
                             //  ===  call API ====
                             // postData(blob).then(response => {
