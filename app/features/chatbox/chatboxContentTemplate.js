@@ -52,7 +52,7 @@ define(['app/constant'], (constant) => {
                                 <div class="audio-number">
                                     <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
 
-                                    <div class="audio-timeIndicate">"{durationTime}"</div>
+                                    <div class="audio-timeIndicate">{durationTime}</div>
                                 </div>
 
                                 <div class="audio-circle">

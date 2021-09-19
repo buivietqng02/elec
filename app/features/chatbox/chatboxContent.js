@@ -62,16 +62,6 @@ define([
     let $unreadScroll;
 
     // ========== Audio test ==============
-    const getDuration = (src) => {
-        return new Promise(function (resolve) {
-            let audio = new Audio();
-            audio.addEventListener("loadedmetadata", () => {
-                resolve(audio.duration);
-            });
-            audio.src = src;
-        });
-    }
-
 
     const timeConvert = (time) => {
         // Calculate the time left and the total duration
@@ -318,6 +308,8 @@ define([
         }
 
         $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+
+        // Audio
         audioPlayStopFunc()
 
         $loadingOfNew.hide();
@@ -454,6 +446,9 @@ define([
 
                 // Render new message
                 $messageList.append(messagesHtml);
+
+                // Audio
+                audioPlayStopFunc();
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
