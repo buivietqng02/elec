@@ -528,13 +528,17 @@ define([
                 $messageList.append(messagesHtml);
 
                 // Audio
-                const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
-                newAudioRecorder.setAttribute("isPlaying", false);
-                newAudioRecorder.addEventListener('click', () => {
-                    console.log('click');
-                    addEventListenerToAudioRecorder(mess.file.id);
-                })
-                // addEventListenerToAudioRecorder(mess.file.id);
+                if (mess.file?.id) {
+                    const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
+                    if (newAudioRecorder) {
+                        newAudioRecorder.setAttribute("isPlaying", false);
+                        newAudioRecorder.addEventListener('click', () => {
+                            console.log('click');
+                            addEventListenerToAudioRecorder(mess.file.id);
+                        })
+                        // addEventListenerToAudioRecorder(mess.file.id);
+                    }
+                }
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
