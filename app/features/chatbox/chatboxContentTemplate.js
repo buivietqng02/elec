@@ -41,8 +41,12 @@ define(['app/constant'], (constant) => {
 
         audio: `<div class="audio-main-content">
                     <div class="clip">
-                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm" duration="{duration}" preload="auto">
-                          
+                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" duration="{duration}" preload="auto">
+                            <source src="{src}" type="audio/webm">
+                            <source src="{src}" type="audio/mpeg">
+                            <source src="{src}" type="audio/mp4">
+                            <source src="{src}" type="audio/m4a">
+                            Your browser does not support the audio element.
                         </audio>
                     </div>
                     <div class="audio-controler">

@@ -85,19 +85,88 @@ define([
         }
     }
 
+    const addEventListenerToAudioRecorder = (id) => {
+        const audio = document.querySelector(`#audio-${id}`);
+        const playStopBtn = document.querySelector(`#btn-${id}`);
+        console.log(audio)
+        console.log(playStopBtn)
+
+        let countDownTimmer;
+        let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
+        let isPlaying = playStopBtn.getAttribute('isPlaying');
+        let audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
+        let audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
+
+
+        let audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+
+        if (!audioProgress || audioProgress.length === 0) {
+            audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
+            audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
+
+            audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+        }
+
+        let durationAudio = parseFloat(audio.getAttribute('duration'));
+
+        if (isPlaying === 'true') {
+            playStopBtn.setAttribute("isPlaying", false);
+            audio.pause()
+            audioMicroPic.src = `/assets/images/microphone.svg`
+            clearInterval(countDownTimmer)
+
+            audioProgress[0].style.animationPlayState = "paused";
+            audioProgress[1].style.animationPlayState = "paused";
+
+        }
+
+        if (isPlaying === 'false') {
+            let playPromise = audio.play()
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
+
+                    console.log(audio.getAttribute('duration'))
+                    countDownTimmer = setInterval(() => {
+                        audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
+                    }, 1000)
+
+                    audioProgress[0].style.animationName = "left";
+                    audioProgress[1].style.animationName = "right";
+
+                    audioProgress[0].style.animationPlayState = "running";
+                    audioProgress[1].style.animationPlayState = "running";
+
+                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
+
+                    playStopBtn.setAttribute("isPlaying", true)
+                })
+                    .catch(error => {
+                        console.log(error)
+                        // Auto-play was prevented
+                        // Show paused UI.
+                    });
+            }
+        }
+
+        audio.addEventListener('ended', () => {
+            audioMicroPic.src = `/assets/images/microphone.svg`;
+            playStopBtn.setAttribute("isPlaying", false)
+            clearInterval(countDownTimmer)
+
+            audioTime.textContent = timeConvert(durationAudio)
+
+            audioBar[0].innerHTML = ``;
+            audioBar[1].innerHTML = ``;
+        })
+
+    }
+
     const audioPlayStopFunc = () => {
         let playPauseBtn = document.querySelectorAll('.audio-playStop');
         let audioRecorder = document.querySelectorAll('.audio-recorder');
-
-        // audioRecorder.forEach(item => {
-        //     getDuration(item.src)
-        //         .then(result => {
-        //             let idAudio = getAudioID(item.id);
-        //             let audioTime = document.querySelector(`#btn-${idAudio} .audio-timeIndicate`);
-        //             audioTime.textContent = timeConvert(result);
-        //             item.setAttribute("duration", result);
-        //         });
-        // })
 
         playPauseBtn.forEach(item => {
             item.setAttribute("isPlaying", false);
@@ -106,77 +175,80 @@ define([
                 console.log('click test', item)
 
                 audioRecorder.forEach(audioRecorderItem => {
-                    if (getAudioID(e.target.id) === getAudioID(audioRecorderItem.id)) {
-                        let countDownTimmer;
-                        let audioMicroPic = document.querySelector(`#${item.id} .audio-microPic`);
-                        let isPlaying = e.target.getAttribute('isPlaying');
-                        let audioTime = document.querySelector(`#${e.target.id} .audio-timeIndicate`);
-                        let audioBar = document.querySelectorAll(`#${e.target.id} .audio-bar`);
+                    if (getAudioID(item.id) === getAudioID(audioRecorderItem.id)) {
+
+                        addEventListenerToAudioRecorder(getAudioID(item.id));
+
+                        // let countDownTimmer;
+                        // let audioMicroPic = document.querySelector(`#${item.id} .audio-microPic`);
+                        // let isPlaying = e.target.getAttribute('isPlaying');
+                        // let audioTime = document.querySelector(`#${e.target.id} .audio-timeIndicate`);
+                        // let audioBar = document.querySelectorAll(`#${e.target.id} .audio-bar`);
 
 
-                        let audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
+                        // let audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
 
-                        if (!audioProgress || audioProgress.length === 0) {
-                            audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
-                            audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
+                        // if (!audioProgress || audioProgress.length === 0) {
+                        //     audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
+                        //     audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
 
-                            audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
-                        }
+                        //     audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
+                        // }
 
-                        let durationAudio = parseFloat(audioRecorderItem.getAttribute('duration'));
+                        // let durationAudio = parseFloat(audioRecorderItem.getAttribute('duration'));
 
-                        if (isPlaying === 'true') {
-                            e.target.setAttribute("isPlaying", false);
-                            audioRecorderItem.pause()
-                            audioMicroPic.src = `/assets/images/microphone.svg`
-                            clearInterval(countDownTimmer)
+                        // if (isPlaying === 'true') {
+                        //     e.target.setAttribute("isPlaying", false);
+                        //     audioRecorderItem.pause()
+                        //     audioMicroPic.src = `/assets/images/microphone.svg`
+                        //     clearInterval(countDownTimmer)
 
-                            audioProgress[0].style.animationPlayState = "paused";
-                            audioProgress[1].style.animationPlayState = "paused";
+                        //     audioProgress[0].style.animationPlayState = "paused";
+                        //     audioProgress[1].style.animationPlayState = "paused";
 
-                        }
+                        // }
 
-                        if (isPlaying === 'false') {
-                            let playPromise = audioRecorderItem.play()
-                            if (playPromise !== undefined) {
-                                playPromise.then(() => {
-                                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
+                        // if (isPlaying === 'false') {
+                        //     let playPromise = audioRecorderItem.play()
+                        //     if (playPromise !== undefined) {
+                        //         playPromise.then(() => {
+                        //             audioMicroPic.src = `/assets/images/microphoneListening.svg`
 
-                                    console.log(audioRecorderItem.getAttribute('duration'))
-                                    countDownTimmer = setInterval(() => {
-                                        audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
-                                    }, 1000)
+                        //             console.log(audioRecorderItem.getAttribute('duration'))
+                        //             countDownTimmer = setInterval(() => {
+                        //                 audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
+                        //             }, 1000)
 
-                                    audioProgress[0].style.animationName = "left";
-                                    audioProgress[1].style.animationName = "right";
+                        //             audioProgress[0].style.animationName = "left";
+                        //             audioProgress[1].style.animationName = "right";
 
-                                    audioProgress[0].style.animationPlayState = "running";
-                                    audioProgress[1].style.animationPlayState = "running";
+                        //             audioProgress[0].style.animationPlayState = "running";
+                        //             audioProgress[1].style.animationPlayState = "running";
 
-                                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
+                        //             audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                        //             audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                        //             audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
 
-                                    e.target.setAttribute("isPlaying", true)
-                                })
-                                    .catch(error => {
-                                        console.log(error)
-                                        // Auto-play was prevented
-                                        // Show paused UI.
-                                    });
-                            }
-                        }
+                        //             e.target.setAttribute("isPlaying", true)
+                        //         })
+                        //             .catch(error => {
+                        //                 console.log(error)
+                        //                 // Auto-play was prevented
+                        //                 // Show paused UI.
+                        //             });
+                        //     }
+                        // }
 
-                        audioRecorderItem.addEventListener('ended', () => {
-                            audioMicroPic.src = `/assets/images/microphone.svg`;
-                            e.target.setAttribute("isPlaying", false)
-                            clearInterval(countDownTimmer)
+                        // audioRecorderItem.addEventListener('ended', () => {
+                        //     audioMicroPic.src = `/assets/images/microphone.svg`;
+                        //     e.target.setAttribute("isPlaying", false)
+                        //     clearInterval(countDownTimmer)
 
-                            audioTime.textContent = timeConvert(durationAudio)
+                        //     audioTime.textContent = timeConvert(durationAudio)
 
-                            audioBar[0].innerHTML = ``;
-                            audioBar[1].innerHTML = ``;
-                        })
+                        //     audioBar[0].innerHTML = ``;
+                        //     audioBar[1].innerHTML = ``;
+                        // })
                     }
                 })
             })
@@ -436,7 +508,6 @@ define([
             }
 
             let messages = getRoomById(id);
-
             // up unread message when scrollbar does not set at bottom 
             if (
                 $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 &&
@@ -457,7 +528,13 @@ define([
                 $messageList.append(messagesHtml);
 
                 // Audio
-                audioPlayStopFunc();
+                const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
+                newAudioRecorder.setAttribute("isPlaying", false);
+                newAudioRecorder.addEventListener('click', () => {
+                    console.log('click');
+                    addEventListenerToAudioRecorder(mess.file.id);
+                })
+                // addEventListenerToAudioRecorder(mess.file.id);
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {

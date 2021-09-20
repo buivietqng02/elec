@@ -191,13 +191,23 @@ define([
 
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
+            let mimeTypeBrowser = 'audio/webm';
+            if (navigator.userAgent.includes('Safari')) {
+                mimeTypeBrowser = 'audio/mp4'
+            } else {
+                mimeTypeBrowser = 'audio/webm'
+            }
+
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
-                    recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+                    recorder = new MediaRecorder(stream, { mimeType: mimeTypeBrowser });
 
-                    startRecordBtn.addEventListener('mousedown', holdRecord);
+                    startRecordBtn.addEventListener('mousedown', () => {
+                        console.log("holding");
+                        holdRecord();
+                    });
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
                     startRecordBtn.addEventListener('mouseleave', () => releaseRecord('mouseleave'));
 
@@ -211,7 +221,7 @@ define([
 
                     recorder.onstop = e => {
                         if (recorder.state === 'inactive' && secondCount >= 1) {
-                            const blob = new Blob(chunks, { 'type': 'audio/webm' });
+                            const blob = new Blob(chunks, { 'type': mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
                             //     console.log(response);

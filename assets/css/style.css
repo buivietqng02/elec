@@ -4028,6 +4028,37 @@ margin-top:-60px;
   pointer-events:none;
 }
 
+/* Style for Google Chrome */
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  .audio-circle{
+    top: -168px;
+  }  
+}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .audio-circle{
+      top: -120px;
+    }
+  }
+
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  .audio-circle{
+    top: -120px;
+  }
+}}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm){ 
+@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+  .audio-circle{
+    top: -120px;
+  }
+}}
+
 .audio-circle .audio-right {
   position: absolute;
   transform: rotate(180deg);

@@ -52,7 +52,7 @@ define([
                 data.duration = file.filename;
                 data.durationTime = timeConvert(parseFloat(file.filename));
                 messageTemp = render(template.audio, data);
-                console.log(file);
+                // console.log(file);
                 break;
             case 4:
                 data.src = `${API_URL}/stream?id=${file.id}`;
