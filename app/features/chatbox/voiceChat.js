@@ -192,7 +192,7 @@ define([
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
             let mimeTypeBrowser = 'audio/webm';
-            if (navigator.userAgent.includes('Safari')) {
+            if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
                 mimeTypeBrowser = 'audio/mp4'
             } else {
                 mimeTypeBrowser = 'audio/webm'
