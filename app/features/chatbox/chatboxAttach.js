@@ -11,8 +11,7 @@ define([
     functions,
     modalPhoneRequestComp
 ) => {
-    const { API_URL, TOKEN } = constant;
-    const token = functions.getDataToLocalApplication(TOKEN) || '';
+    const { API_URL, ACCESS_TOKEN } = constant;
     let $attachButton;
     let $inputFile;
     let $inputImage;
@@ -90,14 +89,12 @@ define([
         fd.append('file', file);
         fd.append('chat_id', GLOBAL.getCurrentRoomId());
 
-        console.log(GLOBAL.getCurrentRoomId(), file)
-
         $.ajax({
             type: 'POST',
             url: `${API_URL}/${endpoint}`,
             data: fd,
             headers: {
-                'X-Authorization-Token': token
+                Authorization: `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`
             },
             xhr() {
                 const myXhr = $.ajaxSettings.xhr();

@@ -13,9 +13,8 @@ define([
 ) => {
     const { getAvatar, getDataToLocalApplication } = functions;
     const {
-        API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
+        API_URL, ACCESS_TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
     } = constant;
-    const token = getDataToLocalApplication(TOKEN) || '';
 
     let isProcessing;
     let $modal;
@@ -154,7 +153,7 @@ define([
             url: `${API_URL}/uploadavatar`,
             data: fd,
             headers: {
-                'X-Authorization-Token': token
+                Authorization: `Bearer ${(getDataToLocalApplication(ACCESS_TOKEN) || '')}`
             },
             cache: false,
             contentType: false,

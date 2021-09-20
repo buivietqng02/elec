@@ -57,13 +57,14 @@ define([
     } = functions;
     const {
         ATTRIBUE_SIDEBAR_ROOM,
+        BASE_URL,
         BODY_BG_THEME,
         BODY_FZ,
         ENTER_KEY_PREFERENCE,
         THEMES,
         FONTSIZES,
         ENTER_KEY_PREFERENCES,
-        TOKEN,
+        ACCESS_TOKEN,
         USER_ID
     } = constant;
     const { setGeneral, getGeneral, clear } = offlineData;
@@ -135,7 +136,7 @@ define([
     const onGetUserInfo = (obj) => GLOBAL.setInfomation(obj);
 
     const onInitEventComponent = () => {
-        setCookie(getDataToLocalApplication(TOKEN), 3650);
+        setCookie(getDataToLocalApplication(ACCESS_TOKEN), 3650);
 
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
@@ -165,7 +166,13 @@ define([
         notificationComp.onInit();
     };
 
-    const onGetVersion = () => API.get('version').then(res => GLOBAL.setVersion(res));
+    const onGetVersion = () => {
+        $.ajax({
+            type: 'GET',
+            url: `${BASE_URL}/version`,
+            success: (res) => { GLOBAL.setVersion(res) }
+        });
+    };
 
     const onGetPrefrences = (res) => {
         const theme = res?.body_bg_theme || THEMES[0].name;

@@ -10,8 +10,7 @@ define([
     ALERT,
     functions
 ) => {
-    const { API_URL, TOKEN } = constant;
-    const token = functions.getDataToLocalApplication(TOKEN) || '';
+    const { API_URL, ACCESS_TOKEN } = constant;
 
     let isVoiceInit = false;
     let initVoiceChat;
@@ -132,7 +131,7 @@ define([
             url: `${API_URL}/audioupload`,
             data: fd,
             headers: {
-                'X-Authorization-Token': token
+                Authorization: `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`
             },
             xhr() {
                 const myXhr = $.ajaxSettings.xhr();
@@ -160,7 +159,7 @@ define([
     //     const response = await fetch(`${API_URL}/audioupload`, {
     //         method: 'POST',
     //         headers: {
-    //             'X-Authorization-Token': token
+    //             Authorization: `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`
     //         },
     //         body: fd
 
