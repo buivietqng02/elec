@@ -88,7 +88,7 @@ define([
             }
         }
         GLOBAL.setNetworkStatus(false);
-        return Promise.reject(error);
+        return Promise.reject(19940402);
     });
 
     return {
