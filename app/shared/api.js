@@ -13,7 +13,7 @@ define([
 ) => {
     const {
         BASE_URL,
-        TOKEN,
+        ACCESS_TOKEN,
         REFRESH_TOKEN,
         API_URL,
     } = constant;
@@ -21,13 +21,6 @@ define([
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
         'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || '',
-        Authorization: `Bearer ${(functions.getDataToLocalApplication(TOKEN) || '')}`
-    });
-
-    const getHeaderForm = () => ({
-        'Accept-Language': GLOBAL.getLanguage(),
-        'Content-Type': 'application/x-www-form-urlencoded'
     });
 
     const toQueryString = (params = {}) => {
@@ -46,17 +39,26 @@ define([
     };
 
     const instance = axios.create({
-        baseURL: `${BASE_URL}xm/`,
+        baseURL: `${BASE_URL}`,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
     });
 
     const refreshToken = () => {
-        return instance.post('oauth/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
+        return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
     };
 
     // Interceptors
+    axios.interceptors.request.use((request) => {
+        if (request.url.includes('xm/api/'))
+        request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
+        return request;
+    },
+    (error) => {
+        return Promise.reject(error);
+    });
+
     axios.interceptors.response.use((response) => {
         GLOBAL.setNetworkStatus(true);
         return response.data;
@@ -64,16 +66,16 @@ define([
         const originalConfig = error.config;
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
-            if (error.response.status === 401 && !originalConfig._retry) {
+            if (error.response.status === 401 && !error.config.url.includes('/auth/') && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
                     const response = await refreshToken();
 
-                    functions.setDataToLocalApplication(TOKEN, response.data.token);
+                    functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
                     functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
-                    functions.setCookie(response.data.token, 3650);
+                    functions.setCookie(response.data.access_token, 3650);
 
-                    originalConfig.headers["Authorization"] = `Bearer ${response.data.token}`;
+                    originalConfig.headers['Authorization'] = `Bearer ${response.data.token}`;
 
                     return axios(originalConfig);
                 } catch (_error) {
@@ -104,10 +106,6 @@ define([
 
         delete: (endpoint = '', headers) => axios.delete(`${API_URL}/${endpoint}`, {
             headers: headers ? headers : getHeaderJson()
-        }),
-
-        postForm: (endpoint = '', formData, headers) => axios.post(`${API_URL}/${endpoint}`, formData, {
-            headers: headers ? headers : getHeaderForm()
         })
     };
 });

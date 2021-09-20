@@ -23,7 +23,6 @@ define([
         ENTER_KEY_PREFERENCES
     } = constant;
 
-    const token = getDataToLocalApplication(constant.TOKEN) || '';
     let $input;
     let $wrapperMessages;
     let $btnSend;

@@ -1,18 +1,17 @@
 define([
-    'shared/api',
+    'axios',
     'shared/functions',
-    'shared/data',
     'app/constant'
 ], (
-    API,
+    axios,
     functions,
-    GLOBAL,
     constant
 ) => {
     const ob = {};
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
-        TOKEN,
+        BASE_URL,
+        ACCESS_TOKEN,
         REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
@@ -39,11 +38,11 @@ define([
         $loader.show();
         const { password, login } = getFormData($loginForm);
 
-        API.postForm('erp/login', `password=${password}&login=${login}&token=${token}`).then(res => {
-            if (res?.token && res?.sessionId && res?.userId) {
+        axios.post(`${BASE_URL}/auth/login-erp`, `password=${password}&login=${login}&token=${token}`).then(res => {
+            if (res) {
                 setDataToLocalApplication(SESSION_ID, res.sessionId);
                 setDataToLocalApplication(USER_ID, res.userId);
-                setDataToLocalApplication(TOKEN, res.token);
+                setDataToLocalApplication(ACCESS_TOKEN, res.access_token);
                 setDataToLocalApplication(REFRESH_TOKEN, res.refresh_token);
                 navigate(ROUTE.index);
             }
@@ -72,6 +71,6 @@ define([
         $username.val('');
         $username.focus();
     };
-    
+
     return ob;
 });

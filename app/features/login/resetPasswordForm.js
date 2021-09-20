@@ -1,11 +1,14 @@
 define([
-    'shared/api',
-    'shared/functions'
+    'axios',
+    'shared/functions',
+    'app/constant'
 ], (
-    API,
-    functions
+    axios,
+    functions,
+    constant
 ) => {
     const { getFormData } = functions;
+    const { BASE_URL } = constant;
     const ob = {};
     let captchaId = null;
     let loading = false;
@@ -30,13 +33,13 @@ define([
         $captchaImg.hide();
         $loadingCaptche.show();
         loadingCaptcha = true;
-        API.get('captcha').then(res => {
+        axios.get(`${BASE_URL}/captcha`).then((res) => {
             loadingCaptcha = false;
             $loadingCaptche.hide();
             $captchaImg.show();
             captchaId = res.captchaId;
             $captchaImg.attr('src', `data:image/jpeg;base64,${res.captchaImage}`);
-        }).catch((err) => {
+        }).catch(err => {
             $errMess.html(err?.response?.data?.details || 'Something went wrong');
             loadingCaptcha = false;
         });
@@ -97,7 +100,7 @@ define([
         }
 
         const params = getFormData($foregetForm);
-        const { 
+        const {
             email,
             captcha,
             code,
@@ -113,7 +116,7 @@ define([
 
         if (stage === 1) {
             $loadingRequest.show();
-            API.postForm('requestcode', `email=${email}&captchaId=${captchaId}&captcha=${captcha}`).then(() => {
+            axios.post(`${BASE_URL}/password/code`, `email=${email}&captchaId=${captchaId}&captcha=${captcha}`).then(() => {
                 stage = 2;
                 loading = false;
                 $loadingRequest.hide();
@@ -136,7 +139,7 @@ define([
             });
         } else {
             $loadingReset.show();
-            API.postForm('reset', `email=${email}&code=${code}&password=${password}`).then(() => {
+            axios.post(`${BASE_URL}/password/reset`, `email=${email}&code=${code}&password=${password}`).then(() => {
                 $loadingReset.hide();
                 $errMess.html('Your password has been changed successfully.');
                 setTimeout(() => {
@@ -182,11 +185,11 @@ define([
                 $formItem.eq(i).hide();
             }
         });
-        
+
         requestCaptcha();
         $foregetForm.off('submit').on('submit', onSubmit);
         $foregetForm.find('.captcha-wrapper .btn').off('click').click(requestCaptcha);
     };
-    
+
     return ob;
 });

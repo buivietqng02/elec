@@ -25,7 +25,7 @@ define([
     let isInit = false;
     let isBlinkTitleBrowser = false;
     const {
-        SESSION_ID, TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
+        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
     } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
@@ -38,7 +38,7 @@ define([
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
-        const token = functions.getDataToLocalApplication(TOKEN) || '';
+        const token = functions.getDataToLocalApplication(ACCESS_TOKEN) || '';
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
         
         return !!(sessionId && token && userId);

@@ -16,11 +16,10 @@ define([
     const { render, getAvatar, getDataToLocalApplication } = functions;
     const {
         API_URL,
-        TOKEN,
+        ACCESS_TOKEN,
         ATTRIBUTE_CHANGE_NAME,
         ATTRIBUTE_CHANGE_IMAGE_GROUP
     } = constant;
-    const token = getDataToLocalApplication(TOKEN) || '';
     let roomInfo;
     let isProcessing;
     let $modal;
@@ -150,7 +149,7 @@ define([
             url: `${API_URL}/uploadgroupavatar`,
             data: fd,
             headers: {
-                'X-Authorization-Token': token
+                Authorization: `Bearer ${(getDataToLocalApplication(ACCESS_TOKEN) || '')}`
             },
             cache: false,
             contentType: false,
