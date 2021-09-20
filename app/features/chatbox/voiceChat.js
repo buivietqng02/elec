@@ -256,7 +256,7 @@ define([
         }
 
         if (comment === 'stop') {
-            stream.getTracks().forEach(function (track) { track.stop() });
+            if (stream) stream.getTracks().forEach(function (track) { track.stop() });
         }
     };
 
