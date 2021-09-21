@@ -220,7 +220,7 @@ define([
                     };
 
                     recorder.onstop = e => {
-                        if (recorder.state === 'inactive' && secondCount >= 1) {
+                        if (recorder.state === 'inactive' && secondCount >= 2) {
                             const blob = new Blob(chunks, { 'type': mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
