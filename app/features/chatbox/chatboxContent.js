@@ -88,6 +88,7 @@ define([
     const addEventListenerToAudioRecorder = (id) => {
         const audio = document.querySelector(`#audio-${id}`);
         const playStopBtn = document.querySelector(`#btn-${id}`);
+
         console.log(audio)
         console.log(playStopBtn)
 
@@ -119,6 +120,7 @@ define([
             audioProgress[1].style.animationPlayState = "paused";
 
         }
+
 
         if (isPlaying === 'false') {
             let playPromise = audio.play()
@@ -174,78 +176,6 @@ define([
 
                 addEventListenerToAudioRecorder(getAudioID(item.id));
 
-                // let countDownTimmer;
-                // let audioMicroPic = document.querySelector(`#${item.id} .audio-microPic`);
-                // let isPlaying = e.target.getAttribute('isPlaying');
-                // let audioTime = document.querySelector(`#${e.target.id} .audio-timeIndicate`);
-                // let audioBar = document.querySelectorAll(`#${e.target.id} .audio-bar`);
-
-
-                // let audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
-
-                // if (!audioProgress || audioProgress.length === 0) {
-                //     audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
-                //     audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
-
-                //     audioProgress = document.querySelectorAll(`#${e.target.id} .audio-progress`);
-                // }
-
-                // let durationAudio = parseFloat(audioRecorderItem.getAttribute('duration'));
-
-                // if (isPlaying === 'true') {
-                //     e.target.setAttribute("isPlaying", false);
-                //     audioRecorderItem.pause()
-                //     audioMicroPic.src = `/assets/images/microphone.svg`
-                //     clearInterval(countDownTimmer)
-
-                //     audioProgress[0].style.animationPlayState = "paused";
-                //     audioProgress[1].style.animationPlayState = "paused";
-
-                // }
-
-                // if (isPlaying === 'false') {
-                //     let playPromise = audioRecorderItem.play()
-                //     if (playPromise !== undefined) {
-                //         playPromise.then(() => {
-                //             audioMicroPic.src = `/assets/images/microphoneListening.svg`
-
-                //             console.log(audioRecorderItem.getAttribute('duration'))
-                //             countDownTimmer = setInterval(() => {
-                //                 audioTime.textContent = timeConvert(durationAudio - audioRecorderItem.currentTime)
-                //             }, 1000)
-
-                //             audioProgress[0].style.animationName = "left";
-                //             audioProgress[1].style.animationName = "right";
-
-                //             audioProgress[0].style.animationPlayState = "running";
-                //             audioProgress[1].style.animationPlayState = "running";
-
-                //             audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                //             audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                //             audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
-
-                //             e.target.setAttribute("isPlaying", true)
-                //         })
-                //             .catch(error => {
-                //                 console.log(error)
-                //                 // Auto-play was prevented
-                //                 // Show paused UI.
-                //             });
-                //     }
-                // }
-
-                // audioRecorderItem.addEventListener('ended', () => {
-                //     audioMicroPic.src = `/assets/images/microphone.svg`;
-                //     e.target.setAttribute("isPlaying", false)
-                //     clearInterval(countDownTimmer)
-
-                //     audioTime.textContent = timeConvert(durationAudio)
-
-                //     audioBar[0].innerHTML = ``;
-                //     audioBar[1].innerHTML = ``;
-                // })
-                // }
-                // })
             })
         })
     }
@@ -340,6 +270,15 @@ define([
             storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+
+            // Audio vocie mess addeventlistener when scroll top
+            moreMessages.forEach(message => {
+                let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
+                scrollUpAudioRecorder.setAttribute("isPlaying", false);
+                scrollUpAudioRecorder.addEventListener('click', () => {
+                    addEventListenerToAudioRecorder(message.file.id)
+                })
+            })
 
             setTimeout(() => {
                 processing = false;
@@ -522,7 +461,7 @@ define([
                 // Render new message
                 $messageList.append(messagesHtml);
 
-                // Audio
+                // Audio when send new voice mess
                 if (mess.file?.id) {
                     const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
                     if (newAudioRecorder) {

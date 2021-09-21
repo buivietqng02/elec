@@ -110,8 +110,7 @@ define([
     const releaseRecord = (event) => {
         pulseRing.classList.remove('active');
 
-        // console.log(recorder.state, secondCount)
-        clearInterval(holdTime);
+        console.log(recorder.state, secondCount);
 
         if (event === 'mouseup') {
             notiStatus.innerHTML = '';
@@ -133,7 +132,7 @@ define([
             notiStatus.innerHTML = '';
             btnVoiceChatDescription.innerHTML = 'Hold to speak';
         }
-
+        clearInterval(holdTime);
         // If the record less than 1 second will not display 
         if (recorder.state === 'recording') {
             setTimeout(() => {
@@ -152,7 +151,7 @@ define([
             formData,
             {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': file.type
                 },
                 onUploadProgress: (progressEvent) => progressUpload(progressEvent)
             })
@@ -163,12 +162,12 @@ define([
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
             let mimeTypeBrowser = 'audio/webm';
+
             if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
                 mimeTypeBrowser = 'audio/mp4';
             } else {
                 mimeTypeBrowser = 'audio/webm';
             }
-
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
@@ -180,7 +179,7 @@ define([
                     startRecordBtn.addEventListener('mouseleave', () => releaseRecord('mouseleave'));
 
                     startRecordBtn.addEventListener('touchstart', holdRecord);
-                    startRecordBtn.addEventListener('touchend', releaseRecord);
+                    startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
