@@ -89,9 +89,8 @@ define([
         const formData = new window.FormData();
         $progressWrapper.show();
         formData.append('file', file);
-        formData.append('chat_id', GLOBAL.getCurrentRoomId());
-
-        axios.post(`${API_URL}/${endpoint}`,
+    
+        axios.post(`${API_URL}/chats/${GLOBAL.getCurrentRoomId()}/${endpoint}`,
             formData,
             {
                 headers: {
@@ -111,17 +110,17 @@ define([
         }
 
         if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(file.type)) {
-            callAPI('imageupload', file);
+            callAPI('image', file);
             return;
         }
 
         if ((/(mp4)$/i).test(file.type)) {
-            callAPI('videoupload', file);
+            callAPI('video', file);
             return;
         }
 
         if ((/audio/i).test(file.type)) {
-            callAPI('audioupload', file);
+            callAPI('audio', file);
             return;
         }
 
@@ -130,11 +129,11 @@ define([
             return;
         }
 
-        callAPI('fileupload', file);
+        callAPI('file', file);
     };
 
     const uploadFile = (endpoint) => {
-        if (endpoint === 'fileupload') {
+        if (endpoint === 'file') {
             callAPI(endpoint, $inputFile.get(0).files[0]);
         } else {
             checkFile($inputImage.get(0).files[0], true);
@@ -189,11 +188,11 @@ define([
             $callBtn.off().click(showPhoneModal);
             $inputFile.off().change(() => {
                 offEventClickOutside();
-                uploadFile('fileupload');
+                uploadFile('file');
             });
             $inputImage.off().change(() => {
                 offEventClickOutside();
-                uploadFile('imageupload');
+                uploadFile('image');
             });
             $dropzone.off().on('dragover', false).on('drop', onDrop);
 
