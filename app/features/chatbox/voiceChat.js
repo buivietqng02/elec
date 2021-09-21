@@ -87,7 +87,7 @@ define([
 
             btnVoiceChatDescription.innerHTML = 'Release button to send';
 
-            if (recorder.state === 'inactive' && secondCount >= 1) {
+            if (recorder.state === 'inactive' && secondCount >= 0) {
                 recorder.start();
                 startRecordBtn.style.background = 'red';
                 notiStatus.innerHTML = `
@@ -136,8 +136,10 @@ define([
 
         // If the record less than 1 second will not display 
         if (recorder.state === 'recording') {
-            recorder.stop();
-            startRecordBtn.style.background = '';
+            setTimeout(() => {
+                recorder.stop();
+                startRecordBtn.style.background = '';
+            }, 1000);
         }
     };
 
@@ -173,10 +175,7 @@ define([
                 try {
                     recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
 
-                    startRecordBtn.addEventListener('mousedown', () => {
-                        console.log('holding');
-                        holdRecord();
-                    });
+                    startRecordBtn.addEventListener('mousedown', holdRecord);
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
                     startRecordBtn.addEventListener('mouseleave', () => releaseRecord('mouseleave'));
 
@@ -189,7 +188,8 @@ define([
                     };
 
                     recorder.onstop = () => {
-                        if (recorder.state === 'inactive' && secondCount >= 1) {
+                        console.log(secondCount);
+                        if (recorder.state === 'inactive' && secondCount >= 2) {
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
