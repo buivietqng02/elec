@@ -8,6 +8,7 @@ define([
     'features/chatbox/chatboxAttach',
     'features/chatbox/chatboxSearch',
     'features/modal/modalAcceptInvitation'
+
 ], (
     constant,
     GLOBAL,
@@ -57,9 +58,18 @@ define([
             $('.messages-input-wrap').show();
         }
 
+        // Hide chat input if using voice message
+        const initVoiceChat = document.querySelector('#init-voiceChat');
+        const isUssingVoiceMess = initVoiceChat.getAttribute('isUsingVoiceMess');
+        if (isUssingVoiceMess === 'true') {
+            document.querySelector('.messages__input').classList.add('de-active');
+        } else {
+            document.querySelector('.messages__input').classList.remove('de-active');
+        }
+
         // Handle draft
         chatboxInputComp.onHandleDraft(lastRoomId, roomId);
-        
+
         // Update new room
         GLOBAL.setCurrentRoomId(roomId);
         // Hide background what express the active state of the room

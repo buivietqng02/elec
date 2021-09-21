@@ -1820,6 +1820,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   padding: 0.5rem 1rem 0.5rem 3rem;
   resize: none;
 }
+.messages__input.de-active{
+  height: 43px;
+  display: none !important;
+}
 
 .messages-input-wrap {
   position: relative;
@@ -3777,8 +3781,9 @@ body.body_fz_18 {
  .btn__voice-chat{
   width: 40px;
   border:none;
-  background-color: slateblue;
+  background-color: transparent;
   border-radius: 5px;
+  height: 50px;
 }
 
 .btn__voice-chat-picture{

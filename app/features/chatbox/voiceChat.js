@@ -236,17 +236,20 @@ define([
             btnVoiceChatPic.src = '/assets/images/keyboard.png';
             initVoiceButton.style.display = 'block';
             btnVoiceChatDescription.style.display = 'block';
-            inputTextChat.style.display = 'none';
+            inputTextChat.classList.add('de-active');
             btnEmoji.style.display = 'none';
             isVoiceInit = true;
+            initVoiceChat.setAttribute('isUsingVoiceMess', true);
         } else {
             btnVoiceChatPic.src = '/assets/images/microphone.svg';
             initVoiceButton.style.display = 'none';
             btnVoiceChatDescription.style.display = 'none';
-            inputTextChat.style.display = 'block';
+            inputTextChat.classList.remove('de-active');
+            inputTextChat.style.height = '43px';
             btnEmoji.style.display = 'block';
             initRecordFunc('stop');
             isVoiceInit = false;
+            initVoiceChat.setAttribute('isUsingVoiceMess', false);
         }
     };
 
