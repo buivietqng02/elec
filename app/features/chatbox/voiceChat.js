@@ -1,16 +1,16 @@
 define([
+    'axios',
     'app/constant',
     'shared/data',
     'shared/alert',
     'shared/functions',
     'features/modal/modalPhoneRequest'
 ], (
+    axios,
     constant,
-    GLOBAL,
-    ALERT,
-    functions
+    GLOBAL
 ) => {
-    const { API_URL, ACCESS_TOKEN } = constant;
+    const { API_URL } = constant;
 
     let isVoiceInit = false;
     let initVoiceChat;
@@ -83,9 +83,9 @@ define([
         secondCount = 0;
         // Have to hold at least 1s to start the record
         holdTime = setInterval(() => {
-            secondCount++;
+            secondCount += 1;
 
-            btnVoiceChatDescription.innerHTML = 'Release button to send'
+            btnVoiceChatDescription.innerHTML = 'Release button to send';
 
             if (recorder.state === 'inactive' && secondCount >= 1) {
                 recorder.start();
@@ -116,12 +116,12 @@ define([
         if (event === 'mouseup') {
             notiStatus.innerHTML = '';
 
-            btnVoiceChatDescription.innerHTML = 'Hold to speak'
+            btnVoiceChatDescription.innerHTML = 'Hold to speak';
 
             if (secondCount < 2) {
                 console.log('Too short message');
 
-                notiMessage.innerHTML = `<p class="voice-statusMessage__details">Too short message 💬 </p>`;
+                notiMessage.innerHTML = '<p class="voice-statusMessage__details">Too short message 💬 </p>';
 
                 setTimeout(() => {
                     notiMessage.innerHTML = '';
@@ -131,7 +131,7 @@ define([
 
         if (event === 'mouseleave') {
             notiStatus.innerHTML = '';
-            btnVoiceChatDescription.innerHTML = 'Hold to speak'
+            btnVoiceChatDescription.innerHTML = 'Hold to speak';
         }
 
         // If the record less than 1 second will not display 
@@ -142,70 +142,39 @@ define([
     };
 
     const callAPI = (file, namefile) => {
-        const fd = new FormData();
+        const formData = new window.FormData();
         $progressWrapper.show();
-        fd.append('file', file, namefile);
-        fd.append('chat_id', GLOBAL.getCurrentRoomId());
-        console.log(fd)
-        $.ajax({
-            type: 'POST',
-            url: `${API_URL}/audioupload`,
-            data: fd,
-            headers: {
-                Authorization: `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`
-            },
-            xhr() {
-                const myXhr = $.ajaxSettings.xhr();
+        formData.append('file', file, namefile);
 
-                if (myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', progressUpload, false);
-                }
-
-                return myXhr;
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: hideProcess,
-            error: hideProcess
-        });
+        axios.post(`${API_URL}/chats/${GLOBAL.getCurrentRoomId()}/audio`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => progressUpload(progressEvent)
+            })
+            .then(() => hideProcess())
+            .catch(() => hideProcess());
     };
-
-    // async function postData(file) {
-    //     // Default options are marked with *
-    //     const fd = new FormData();
-    //     fd.append('file', file);
-    //     fd.append('chat_id', GLOBAL.getCurrentRoomId());
-
-    //     const response = await fetch(`${API_URL}/audioupload`, {
-    //         method: 'POST',
-    //         headers: {
-    //             Authorization: `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`
-    //         },
-    //         body: fd
-
-    //     });
-
-    //     return response.json(); // parses JSON response into native JavaScript objects
-    // }
 
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
             let mimeTypeBrowser = 'audio/webm';
             if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-                mimeTypeBrowser = 'audio/mp4'
+                mimeTypeBrowser = 'audio/mp4';
             } else {
-                mimeTypeBrowser = 'audio/webm'
+                mimeTypeBrowser = 'audio/webm';
             }
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
-                    recorder = new MediaRecorder(stream, { mimeType: mimeTypeBrowser });
+                    recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
 
                     startRecordBtn.addEventListener('mousedown', () => {
-                        console.log("holding");
+                        console.log('holding');
                         holdRecord();
                     });
                     startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
@@ -219,9 +188,9 @@ define([
                         console.log(e.data);
                     };
 
-                    recorder.onstop = e => {
+                    recorder.onstop = () => {
                         if (recorder.state === 'inactive' && secondCount >= 1) {
-                            const blob = new Blob(chunks, { 'type': mimeTypeBrowser });
+                            const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
                             //     console.log(response);
@@ -229,26 +198,28 @@ define([
                             chunks = [];
 
                             // Get audio duration of the files
-                            let reader = new FileReader();
-                            reader.onload = function (event) {
-                                let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                                // Asynchronously decode audio file data contained in an ArrayBuffer.
-                                audioContext.decodeAudioData(event.target.result, function (buffer) {
-                                    let duration = buffer.duration;
-                                    console.log("Duration test: " + duration + " seconds");
-                                    callAPI(blob, duration)
+                            const reader = new window.FileReader();
+                            reader.onload = (event) => {
+                                const audioContext = new (window.AudioContext
+                                    || window.webkitAudioContext)();
+                                // Asynchronously decode audio file data contained
+                                // in an ArrayBuffer.
+                                audioContext.decodeAudioData(event.target.result, (buffer) => {
+                                    const { duration } = buffer;
+                                    console.log('Duration test: ', duration, ' seconds');
+                                    callAPI(blob, duration);
                                 });
                             };
                             // In case that the file couldn't be read
-                            reader.onerror = function (event) {
-                                console.error("An error ocurred reading the file: ", event);
+                            reader.onerror = (event) => {
+                                console.error('An error ocurred reading the file: ', event);
                             };
                             // Read file as an ArrayBuffer
                             reader.readAsArrayBuffer(blob);
                         }
                     };
                 } catch (err) {
-                    console.log('The following error occurred: ' + err);
+                    console.log('The following error occurred: ', err);
                 }
             } else {
                 console.log('getUserMedia not supported on your browser!');
@@ -256,21 +227,21 @@ define([
         }
 
         if (comment === 'stop') {
-            if (stream) stream.getTracks().forEach(function (track) { track.stop() });
+            if (stream) stream.getTracks().forEach((track) => { track.stop(); });
         }
     };
 
     const toggleVoiceChat = () => {
         if (!isVoiceInit) {
             initRecordFunc('start');
-            btnVoiceChatPic.src = "/assets/images/keyboard.png";
+            btnVoiceChatPic.src = '/assets/images/keyboard.png';
             initVoiceButton.style.display = 'block';
             btnVoiceChatDescription.style.display = 'block';
             inputTextChat.style.display = 'none';
             btnEmoji.style.display = 'none';
             isVoiceInit = true;
         } else {
-            btnVoiceChatPic.src = "/assets/images/microphone.svg";
+            btnVoiceChatPic.src = '/assets/images/microphone.svg';
             initVoiceButton.style.display = 'none';
             btnVoiceChatDescription.style.display = 'none';
             inputTextChat.style.display = 'block';
@@ -297,12 +268,12 @@ define([
             startRecordBtn = document.querySelector('#record__start-stop__btn');
 
             inputTextChat = document.querySelector('.messages__input');
-            btnEmoji = document.querySelector('.btn__emoji')
+            btnEmoji = document.querySelector('.btn__emoji');
 
-            btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description')
-            btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture')
+            btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description');
+            btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture');
 
             initVoiceChat.addEventListener('click', toggleVoiceChat);
         }
     };
-})
+});
