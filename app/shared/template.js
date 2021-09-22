@@ -411,7 +411,7 @@ define(['shared/icon'], (ICON) => ({
                                         <div class="record__start-stop-pulse-ring"></div>
                                     </button>
                                 </div>
-                                <div class="btn-voice-chat-description">Hold to speak</div>
+                                <div class="btn-voice-chat-description"><lang data-language="HOLD_TO_SPEAK"></lang></div>
                             </div>
 
                             <!-- End Voice chat wrap -->
