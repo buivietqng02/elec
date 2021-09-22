@@ -37,6 +37,11 @@ define([
 
     let btnVoiceChatDescription;
 
+    let cancelRecord;
+    let mouseMoved = false;
+    let flagMouseUp;
+    let isCanceled = false;
+
     // const getDuration = (src) => {
     //     return new Promise(function (resolve) {
     //         let audio = new Audio();
@@ -85,8 +90,10 @@ define([
         holdTime = setInterval(() => {
             secondCount += 1;
 
-            btnVoiceChatDescription.innerHTML = 'Release button to send';
+            btnVoiceChatDescription.innerHTML = '<button class="cancel-voice-record">❌</button><div>Release button to send</div';
             btnVoiceChatDescription.style.bottom = '160px';
+
+            cancelRecord = document.querySelector('.cancel-voice-record');
 
             if (recorder.state === 'inactive' && secondCount >= 0) {
                 recorder.start();
@@ -145,6 +152,24 @@ define([
         }
     };
 
+    const getMousePosition = (e) => {
+        const clientRect = cancelRecord.getBoundingClientRect();
+        const clientX1 = clientRect.left;
+        const clientX2 = clientRect.right;
+        const clientY1 = clientRect.top;
+        const clientY2 = clientRect.bottom;
+
+        console.log(e.clientX, e.clientY);
+        console.log(clientX1, clientX2, clientY1, clientY2);
+        const checkClientX = e.clientX >= clientX1 && e.clientX <= clientX2;
+        const checkClientY = e.clientY >= clientY1 && e.clientY <= clientY2;
+        if (checkClientX && checkClientY) {
+            mouseMoved = true;
+        } else {
+            mouseMoved = false;
+        }
+    };
+
     const callAPI = (file, namefile) => {
         const formData = new window.FormData();
         $progressWrapper.show();
@@ -162,6 +187,27 @@ define([
             .catch(() => hideProcess());
     };
 
+    const setMouseUPEvent = () => {
+        console.log('mouseup');
+        if (mouseMoved && flagMouseUp) {
+            flagMouseUp = true;
+            // cancelRecord.style.backgroundColor = 'red';
+            isCanceled = true;
+
+            setTimeout(() => {
+                window.removeEventListener('mousemove', getMousePosition);
+                window.removeEventListener('mouseup', setMouseUPEvent);
+            }, 500);
+        } else {
+            flagMouseUp = false;
+            cancelRecord.style.backgroundColor = 'white';
+            window.removeEventListener('mousemove', getMousePosition);
+            isCanceled = false;
+            window.removeEventListener('mouseup', setMouseUPEvent);
+        }
+        releaseRecord('mouseup');
+    };
+
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
             let mimeTypeBrowser = 'audio/webm';
@@ -177,9 +223,16 @@ define([
                 try {
                     recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
 
-                    startRecordBtn.addEventListener('mousedown', holdRecord);
-                    startRecordBtn.addEventListener('mouseup', () => releaseRecord('mouseup'));
-                    startRecordBtn.addEventListener('mouseleave', () => releaseRecord('mouseleave'));
+                    startRecordBtn.addEventListener('mousedown', () => {
+                        holdRecord();
+                        flagMouseUp = true;
+                        window.addEventListener('mousemove', getMousePosition);
+                        window.addEventListener('mouseup', setMouseUPEvent);
+                    });
+
+                    // test cancel voice chat ==========
+
+                    // end test cancel voice chat ========
 
                     startRecordBtn.addEventListener('touchstart', holdRecord);
                     startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
@@ -191,7 +244,13 @@ define([
 
                     recorder.onstop = () => {
                         console.log(secondCount);
-                        if (recorder.state === 'inactive' && secondCount >= 2) {
+
+                        if (isCanceled) {
+                            chunks = [];
+                            return;
+                        }
+
+                        if (recorder.state === 'inactive' && secondCount >= 2 && !isCanceled) {
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
@@ -208,7 +267,8 @@ define([
                                 // in an ArrayBuffer.
                                 audioContext.decodeAudioData(event.target.result, (buffer) => {
                                     const { duration } = buffer;
-                                    console.log('Duration test: ', duration, ' seconds');
+
+                                    // Call API
                                     callAPI(blob, duration);
                                 });
                             };

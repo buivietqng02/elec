@@ -3740,6 +3740,15 @@ body.body_fz_18 {
     left:0;
     z-index: 99;
   }
+
+  .btn-voice-chat-description{
+    transition: none;
+    -webkit-transition-property: none;
+    -moz-transition-property: none;
+    -o-transition-property: none;
+    transition-property: none;
+    z-index: 1;
+  }
    /* End Voice chat for mobile */
 }
 
@@ -3919,7 +3928,18 @@ body.body_fz_18 {
   transform: translateX(-50%);
   transition: all 0.5s;
   z-index: -1;
+}
 
+.btn-voice-chat-description .cancel-voice-record{
+  position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* margin-right: 100px; */
+    right:200px;
+    top:120px;
+    border: none;
+    background-color: gray;
 }
 
 /* ----------- Waving Recording style * -------------/ */
