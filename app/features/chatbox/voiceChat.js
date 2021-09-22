@@ -23,7 +23,7 @@ define([
     let pulseRing;
 
     let notiStatus;
-    let notiMessage;
+    // let notiMessage;
     let startRecordBtn;
 
     let secondCount;
@@ -127,10 +127,6 @@ define([
 
             if (secondCount < 2) {
                 console.log('Too short message');
-                // notiMessage.innerHTML = '<p class="voice-statusMessage__details">Too short message 💬 </p>';
-                // setTimeout(() => {
-                //     notiMessage.innerHTML = '';
-                // }, 3000);
             }
         }
 
@@ -325,7 +321,7 @@ define([
             pulseRing = document.querySelector('.record__start-stop-pulse-ring');
 
             notiStatus = document.querySelector('#voice-statusRecording');
-            notiMessage = document.querySelector('#voice-statusMessage');
+            // notiMessage = document.querySelector('#voice-statusMessage');
             startRecordBtn = document.querySelector('#record__start-stop__btn');
 
             inputTextChat = document.querySelector('.messages__input');
