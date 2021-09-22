@@ -164,6 +164,25 @@ define([
         }
     };
 
+    const touchPosition = (e) => {
+        const clientRect = cancelRecord.getBoundingClientRect();
+        const clientX1 = clientRect.left;
+        const clientX2 = clientRect.right;
+        const clientY1 = clientRect.top;
+        const clientY2 = clientRect.bottom;
+        const checkTouchX = e.touches[0].clientX >= clientX1 && e.touches[0].clientX <= clientX2;
+        const checkTouchY = e.touches[0].clientY >= clientY1 && e.touches[0].clientY <= clientY2;
+        if (checkTouchX && checkTouchY) {
+            console.log('on cancel position');
+            cancelRecord.style.backgroundColor = '#FE8F8F';
+            mouseMoved = true;
+        } else {
+            console.log('on send position');
+            cancelRecord.style.backgroundColor = '#9D9D9D';
+            mouseMoved = false;
+        }
+    };
+
     const callAPI = (file, namefile) => {
         const formData = new window.FormData();
         $progressWrapper.show();
@@ -191,7 +210,7 @@ define([
         releaseRecord('mouseup');
         window.removeEventListener('mousemove', getMousePosition);
         window.removeEventListener('mouseup', setMouseUPEvent);
-        window.removeEventListener('touchmove', getMousePosition);
+        window.removeEventListener('touchmove', touchPosition);
         window.removeEventListener('touchend', setMouseUPEvent);
     };
 
@@ -223,7 +242,7 @@ define([
                     startRecordBtn.addEventListener('touchstart', () => {
                         holdRecord();
                         mouseMoved = false;
-                        window.addEventListener('touchmove', getMousePosition);
+                        window.addEventListener('touchmove', touchPosition);
                         window.addEventListener('touchend', setMouseUPEvent);
                     });
                     // startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
@@ -237,12 +256,12 @@ define([
                     recorder.onstop = () => {
                         console.log(secondCount);
 
-                        if (isCanceled || secondCount < 1) {
+                        if (isCanceled || secondCount < 2) {
                             chunks = [];
                             return;
                         }
 
-                        if (recorder.state === 'inactive' && secondCount >= 1 && !isCanceled) {
+                        if (recorder.state === 'inactive' && secondCount >= 2 && !isCanceled) {
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
