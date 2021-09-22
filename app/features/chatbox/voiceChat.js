@@ -37,9 +37,9 @@ define([
 
     let btnVoiceChatDescription;
 
-    let cancelRecord;
-    let mouseMoved;
-    let isCanceled = false;
+    // let cancelRecord;
+    // let mouseMoved;
+    // let isCanceled = false;
 
     // const getDuration = (src) => {
     //     return new Promise(function (resolve) {
@@ -90,10 +90,10 @@ define([
             secondCount += 1;
         }, 1000);
 
-        btnVoiceChatDescription.innerHTML = '<button class="cancel-voice-record">❌</button><div>Release button to send</div';
+        btnVoiceChatDescription.innerHTML = `<div><lang data-language="RELEASE_TO_SEND">${GLOBAL.getLangJson().RELEASE_TO_SEND}</lang></div>`;
         btnVoiceChatDescription.style.bottom = '160px';
 
-        cancelRecord = document.querySelector('.cancel-voice-record');
+        // cancelRecord = document.querySelector('.cancel-voice-record');
 
         if (recorder.state === 'inactive') {
             recorder.start();
@@ -116,13 +116,12 @@ define([
 
     const releaseRecord = (event) => {
         pulseRing.classList.remove('active');
-
-        console.log(recorder.state, secondCount);
+        // console.log(recorder.state, secondCount);
 
         if (event === 'mouseup') {
             notiStatus.innerHTML = '';
             notiStatus.textContent = '';
-            btnVoiceChatDescription.innerHTML = 'Hold to speak';
+            btnVoiceChatDescription.innerHTML = `<div><lang data-language="HOLD_TO_SPEAK">${GLOBAL.getLangJson().HOLD_TO_SPEAK}</lang></div>`;
             btnVoiceChatDescription.style.bottom = '10px';
 
             if (secondCount < 2) {
@@ -132,7 +131,7 @@ define([
 
         if (event === 'mouseleave') {
             notiStatus.innerHTML = '';
-            btnVoiceChatDescription.innerHTML = 'Hold to speak';
+            btnVoiceChatDescription.innerHTML = `<div><lang data-language="HOLD_TO_SPEAK">${GLOBAL.getLangJson().HOLD_TO_SPEAK}</lang></div>`;
             btnVoiceChatDescription.style.bottom = '10px';
         }
         clearInterval(holdTime);
@@ -145,43 +144,43 @@ define([
         }
     };
 
-    const getMousePosition = (e) => {
-        const clientRect = cancelRecord.getBoundingClientRect();
-        const clientX1 = clientRect.left;
-        const clientX2 = clientRect.right;
-        const clientY1 = clientRect.top;
-        const clientY2 = clientRect.bottom;
-        const checkClientX = e.clientX >= clientX1 && e.clientX <= clientX2;
-        const checkClientY = e.clientY >= clientY1 && e.clientY <= clientY2;
-        if (checkClientX && checkClientY) {
-            console.log('on cancel position');
-            cancelRecord.style.backgroundColor = '#FE8F8F';
-            mouseMoved = true;
-        } else {
-            console.log('on send position');
-            cancelRecord.style.backgroundColor = '#9D9D9D';
-            mouseMoved = false;
-        }
-    };
+    // const getMousePosition = (e) => {
+    //     const clientRect = cancelRecord.getBoundingClientRect();
+    //     const clientX1 = clientRect.left;
+    //     const clientX2 = clientRect.right;
+    //     const clientY1 = clientRect.top;
+    //     const clientY2 = clientRect.bottom;
+    //     const checkClientX = e.clientX >= clientX1 && e.clientX <= clientX2;
+    //     const checkClientY = e.clientY >= clientY1 && e.clientY <= clientY2;
+    //     if (checkClientX && checkClientY) {
+    //         console.log('on cancel position');
+    //         cancelRecord.style.backgroundColor = '#FE8F8F';
+    //         mouseMoved = true;
+    //     } else {
+    //         console.log('on send position');
+    //         cancelRecord.style.backgroundColor = '#9D9D9D';
+    //         mouseMoved = false;
+    //     }
+    // };
 
-    const touchPosition = (e) => {
-        const clientRect = cancelRecord.getBoundingClientRect();
-        const clientX1 = clientRect.left;
-        const clientX2 = clientRect.right;
-        const clientY1 = clientRect.top;
-        const clientY2 = clientRect.bottom;
-        const checkTouchX = e.touches[0].clientX >= clientX1 && e.touches[0].clientX <= clientX2;
-        const checkTouchY = e.touches[0].clientY >= clientY1 && e.touches[0].clientY <= clientY2;
-        if (checkTouchX && checkTouchY) {
-            console.log('on cancel position');
-            cancelRecord.style.backgroundColor = '#FE8F8F';
-            mouseMoved = true;
-        } else {
-            console.log('on send position');
-            cancelRecord.style.backgroundColor = '#9D9D9D';
-            mouseMoved = false;
-        }
-    };
+    // const touchPosition = (e) => {
+    //     const clientRect = cancelRecord.getBoundingClientRect();
+    //     const clientX1 = clientRect.left;
+    //     const clientX2 = clientRect.right;
+    //     const clientY1 = clientRect.top;
+    //     const clientY2 = clientRect.bottom;
+    //     const checkTouchX = e.touches[0].clientX >= clientX1 && e.touches[0].clientX <= clientX2;
+    //     const checkTouchY = e.touches[0].clientY >= clientY1 && e.touches[0].clientY <= clientY2;
+    //     if (checkTouchX && checkTouchY) {
+    //         console.log('on cancel position');
+    //         cancelRecord.style.backgroundColor = '#FE8F8F';
+    //         mouseMoved = true;
+    //     } else {
+    //         console.log('on send position');
+    //         cancelRecord.style.backgroundColor = '#9D9D9D';
+    //         mouseMoved = false;
+    //     }
+    // };
 
     const callAPI = (file, namefile) => {
         const formData = new window.FormData();
@@ -201,16 +200,16 @@ define([
     };
 
     const setMouseUPEvent = () => {
-        console.log('mouseup');
-        if (mouseMoved) {
-            isCanceled = true;
-        } else {
-            isCanceled = false;
-        }
+        // console.log('mouseup');
+        // if (mouseMoved) {
+        //     isCanceled = true;
+        // } else {
+        //     isCanceled = false;
+        // }
         releaseRecord('mouseup');
-        window.removeEventListener('mousemove', getMousePosition);
+        // window.removeEventListener('mousemove', getMousePosition);
         window.removeEventListener('mouseup', setMouseUPEvent);
-        window.removeEventListener('touchmove', touchPosition);
+        // window.removeEventListener('touchmove', touchPosition);
         window.removeEventListener('touchend', setMouseUPEvent);
     };
 
@@ -232,17 +231,16 @@ define([
                     // Click event for pc
                     startRecordBtn.addEventListener('mousedown', () => {
                         holdRecord();
-                        mouseMoved = false;
-                        window.addEventListener('mousemove', getMousePosition);
+                        // mouseMoved = false;
+                        // window.addEventListener('mousemove', getMousePosition);
                         window.addEventListener('mouseup', setMouseUPEvent);
-                        console.log('MOUSEDOWN');
                     });
 
                     // Touch event for mobile
                     startRecordBtn.addEventListener('touchstart', () => {
                         holdRecord();
-                        mouseMoved = false;
-                        window.addEventListener('touchmove', touchPosition);
+                        // mouseMoved = false;
+                        // window.addEventListener('touchmove', touchPosition);
                         window.addEventListener('touchend', setMouseUPEvent);
                     });
                     // startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
@@ -250,18 +248,23 @@ define([
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
-                        console.log(e.data);
+                        // console.log(e.data);
                     };
 
                     recorder.onstop = () => {
-                        console.log(secondCount);
+                        // console.log(secondCount);
+                        // if (isCanceled || secondCount < 2) {
+                        //     chunks = [];
+                        //     return;
+                        // }
 
-                        if (isCanceled || secondCount < 2) {
+                        if (secondCount < 2) {
                             chunks = [];
                             return;
                         }
 
-                        if (recorder.state === 'inactive' && secondCount >= 2 && !isCanceled) {
+                        if (recorder.state === 'inactive' && secondCount >= 2) {
+                            // Remove && !isCanceled
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
@@ -329,7 +332,7 @@ define([
 
     return {
         onInit: () => {
-            console.log('voice chat');
+            // console.log('voice chat');
             $progressWrapper = $('.chatbox-progress-upload');
             $pathCircle = $progressWrapper.find('path');
             $percentProgress = $progressWrapper.find('span');

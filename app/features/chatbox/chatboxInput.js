@@ -60,12 +60,12 @@ define([
             if ($input.val().replace(/[\s\n]/g, '')) {
                 $btnSend.show();
                 // $btnAttach.hide();
-                initVoiceMessageBtn.style.display = 'none';
+                $initVoiceMessageBtn.hide();
             } else {
                 removeDraft();
                 $btnSend.hide();
                 // $btnAttach.show();
-                initVoiceMessageBtn.style.display = 'block';
+                $initVoiceMessageBtn.show();
             }
 
             input.style.cssText = '';
@@ -247,7 +247,7 @@ define([
             $commentWrapper = $('.mess-comment-box');
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
-            initVoiceMessageBtn = document.querySelector('#init-voiceChat')
+            $initVoiceMessageBtn = $('#init-voiceChat')
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;

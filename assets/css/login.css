@@ -511,6 +511,10 @@ img {
 }
 
 @media (max-width: 767px) {
+	/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
 	.thirdparty-login-btn.erp svg {
 		left: -15px;
 	}
@@ -519,5 +523,20 @@ img {
 		position: relative;
 		left: -4px;
 	}
+}}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm){ 
+@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+	.thirdparty-login-btn.erp svg {
+		left: -15px;
+	}
+	
+	.thirdparty-login-btn.google svg {
+		position: relative;
+		left: -4px;
+	}
+}}
+	
 }
 
