@@ -124,9 +124,9 @@ define([
             btnVoiceChatDescription.innerHTML = `<div><lang data-language="HOLD_TO_SPEAK">${GLOBAL.getLangJson().HOLD_TO_SPEAK}</lang></div>`;
             btnVoiceChatDescription.style.bottom = '10px';
 
-            if (secondCount < 2) {
-                console.log('Too short message');
-            }
+            // if (secondCount < 2) {
+            //     console.log('Too short message');
+            // }
         }
 
         if (event === 'mouseleave') {
@@ -257,13 +257,13 @@ define([
                         //     chunks = [];
                         //     return;
                         // }
+                        console.log(secondCount);
+                        // if (secondCount < 1) {
+                        //     chunks = [];
+                        //     return;
+                        // }
 
-                        if (secondCount < 2) {
-                            chunks = [];
-                            return;
-                        }
-
-                        if (recorder.state === 'inactive' && secondCount >= 2) {
+                        if (recorder.state === 'inactive') {
                             // Remove && !isCanceled
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====

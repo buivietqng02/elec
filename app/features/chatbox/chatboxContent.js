@@ -89,9 +89,6 @@ define([
         const audio = document.querySelector(`#audio-${id}`);
         const playStopBtn = document.querySelector(`#btn-${id}`);
 
-        console.log(audio)
-        console.log(playStopBtn)
-
         let countDownTimmer;
         let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
         let isPlaying = playStopBtn.getAttribute('isPlaying');
@@ -172,8 +169,6 @@ define([
             item.setAttribute("isPlaying", false);
 
             item.addEventListener('click', (e) => {
-                console.log('click test', item)
-
                 addEventListenerToAudioRecorder(getAudioID(item.id));
 
             })
@@ -481,7 +476,6 @@ define([
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
                     $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
-                    console.log("test scroll")
                 }
             }
         },
