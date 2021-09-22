@@ -38,7 +38,7 @@ define([
     let btnVoiceChatDescription;
 
     let cancelRecord;
-    let mouseMoved = false;
+    let mouseMoved;
     let flagMouseUp;
     let isCanceled = false;
 
@@ -190,22 +190,18 @@ define([
     const setMouseUPEvent = () => {
         console.log('mouseup');
         if (mouseMoved && flagMouseUp) {
-            flagMouseUp = true;
+            // flagMouseUp = true;
             // cancelRecord.style.backgroundColor = 'red';
             isCanceled = true;
-
-            setTimeout(() => {
-                window.removeEventListener('mousemove', getMousePosition);
-                window.removeEventListener('mouseup', setMouseUPEvent);
-            }, 500);
         } else {
-            flagMouseUp = false;
-            cancelRecord.style.backgroundColor = 'white';
-            window.removeEventListener('mousemove', getMousePosition);
+            // flagMouseUp = false;
+            // cancelRecord.style.backgroundColor = 'white';
             isCanceled = false;
-            window.removeEventListener('mouseup', setMouseUPEvent);
         }
+        window.removeEventListener('mousemove', getMousePosition);
+        window.removeEventListener('mouseup', setMouseUPEvent);
         releaseRecord('mouseup');
+        flagMouseUp = false;
     };
 
     const initRecordFunc = async (comment) => {
@@ -226,6 +222,7 @@ define([
                     startRecordBtn.addEventListener('mousedown', () => {
                         holdRecord();
                         flagMouseUp = true;
+                        mouseMoved = false;
                         window.addEventListener('mousemove', getMousePosition);
                         window.addEventListener('mouseup', setMouseUPEvent);
                     });
