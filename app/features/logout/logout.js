@@ -14,7 +14,8 @@ define([
     const ob = {};
     const {
         SESSION_ID,
-        TOKEN,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN,
         USER_ID,
         ROUTE,
         API_URL
@@ -22,9 +23,7 @@ define([
 
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
-        'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || '',
-        Authorization: `Bearer ${(functions.getDataToLocalApplication(TOKEN) || '')}`
+        'Content-Type': 'application/json'
     });
 
     const { removeDataInLocalApplication, navigate } = functions;
@@ -34,16 +33,18 @@ define([
 
         axios.post(`${API_URL}/logout?sessionId=${sessionId}`, null, {
             headers: getHeaderJson()
-        }).then(() => { }).catch(err => console.error(err));
-
-        ob.cleanSession();
+        }).then(() => { ob.cleanSession(); }).catch(err => { 
+            console.error(err);
+            ob.cleanSession();
+        });
     };
 
     ob.cleanSession = () => {
         offlineData.clear();
         removeDataInLocalApplication(SESSION_ID);
-        removeDataInLocalApplication(TOKEN);
+        removeDataInLocalApplication(ACCESS_TOKEN);
         removeDataInLocalApplication(USER_ID);
+        removeDataInLocalApplication(REFRESH_TOKEN);
         navigate(ROUTE.login);
     };
 

@@ -41,8 +41,12 @@ define(['app/constant'], (constant) => {
 
         audio: `<div class="audio-main-content">
                     <div class="clip">
-                        <audio id="{audioId}" class="audio-recorder" controls src="{src}" type="audio/webm">
-                          
+                        <audio id="{audioId}" class="audio-recorder" duration="{duration}">
+                            <source src="{src}" type="audio/webm">
+                            <source src="{src}" type="audio/mpeg">
+                            <source src="{src}" type="audio/mp4">
+                            <source src="{src}" type="audio/m4a">
+                            Your browser does not support the audio element.
                         </audio>
                     </div>
                     <div class="audio-controler">
@@ -52,7 +56,7 @@ define(['app/constant'], (constant) => {
                                 <div class="audio-number">
                                     <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
 
-                                    <div class="audio-timeIndicate">00:00</div>
+                                    <div class="audio-timeIndicate">{durationTime}</div>
                                 </div>
 
                                 <div class="audio-circle">

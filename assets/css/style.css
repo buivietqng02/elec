@@ -309,7 +309,7 @@ template {
 .wrap-emojis {
   position: absolute;
   bottom: calc(100% + 1px);
-  left: 1px;
+  left: 162px;
   width: 100%;
   max-width: 316px;
   background: #fff;
@@ -887,6 +887,13 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .btn__attach {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 3px;
+  font-size: 1.5rem;
+  padding: 0;
+
   height: 50px;
   width: 45px;
   font-size: 1.5rem;
@@ -919,7 +926,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: block;
   position: absolute;
   bottom: 7px;
-  left: 13px;
+  left: 45px;
   border: 0;
   background: none;
   font-size: 1.5rem;
@@ -928,7 +935,8 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .btn__emoji i {
   position: relative;
-  top: 3px;
+  top: -20px;
+  left: -16px;
 }
 
 .btn__option {
@@ -1016,7 +1024,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 #media-menu {
-  right: 10px;
+  left: 10px;
   top: auto;
   bottom: 50px;
 }
@@ -1819,6 +1827,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   height: 43px;
   padding: 0.5rem 1rem 0.5rem 3rem;
   resize: none;
+}
+.messages__input.de-active{
+  height: 43px;
+  display: none !important;
 }
 
 .messages-input-wrap {
@@ -3542,9 +3554,9 @@ body.body_fz_18 {
   }
 
   .btn__emoji {
-    font-size: 1rem;
+    /* font-size: 1rem;
     left: 4px;
-    top: 4px;
+    top: 4px; */
   }
 
   .btn__send, .btn__send:hover {
@@ -3555,10 +3567,10 @@ body.body_fz_18 {
     width: 30px;
   }
 
-  .btn__attach {
+  /* .btn__attach {
     font-size: 1rem;
     width: 45px;
-  }
+  } */
 
   .--load-mess {
     left: 50%;
@@ -3712,6 +3724,36 @@ body.body_fz_18 {
   .mess-search-box.open {
     height: 82px;
   }
+
+  /* Voice chat for mobile */
+  .btn__voice-chat{
+    margin-right: 5px !important;
+  }
+  .btn__voice-chat-picture{
+    width: 25px;
+  }
+
+  .btn__attach{
+    left:-2px;
+  }
+  .wrap-emojis{
+    left:0;
+    z-index: 99;
+  }
+
+  .btn-voice-chat-description{
+    transition: none;
+    -webkit-transition-property: none;
+    -moz-transition-property: none;
+    -o-transition-property: none;
+    transition-property: none;
+    z-index: 2 !important;
+  }
+
+  .btn-voice-chat-description .cancel-voice-record{
+      right:250px;
+  }
+   /* End Voice chat for mobile */
 }
 
 @media screen and (max-width:575px) {
@@ -3775,10 +3817,18 @@ body.body_fz_18 {
  /* ============= voice chat ============ */
  /* Init voice chat */
  .btn__voice-chat{
-  width: 40px;
+  /* width: 40px; */
   border:none;
-  background-color: slateblue;
+  background-color: transparent;
+  border-radius: 5px;
+  height: 50px;
+  margin-right: 15px;
+}
 
+.btn__voice-chat-picture{
+  width: 20px;
+  padding:0;
+  margin:0;
 }
 
 /* -------------Recording button style --------------- */
@@ -3809,7 +3859,7 @@ body.body_fz_18 {
 
 .voice-button-group {
   position:absolute;
-  bottom:25px;
+  bottom:45px;
   left: 50%;
   transform: translateX(-50%);
   /* display: none; */
@@ -3831,15 +3881,20 @@ body.body_fz_18 {
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
+  /* -ms-touch-action: manipulation;
+  touch-action: manipulation; */
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   background-image: none;
-  z-index: 9999;
+  z-index: 99 !important;
+}
+
+#record__start-stop__btn img{
+  touch-action: none;
+  pointer-events: none;
 }
 
 .record__start-stop-pulse-ring.active{
@@ -3866,6 +3921,36 @@ body.body_fz_18 {
     -webkit-transform: scale(1.2, 1.2);
     opacity: 0;
   }
+}
+
+.btn-voice-chat-description{
+  font-size: 18px;
+  display: none;
+  position:absolute;
+  bottom:10px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s;
+  z-index: -1;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn-voice-chat-description .cancel-voice-record{
+  position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* margin-right: 100px; */
+    right:200px;
+    top:120px;
+    border: none;
+    background-color: #9D9D9D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ----------- Waving Recording style * -------------/ */
@@ -4012,6 +4097,37 @@ margin-top:-60px;
   top:-168px;
   pointer-events:none;
 }
+
+/* Style for Google Chrome */
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  .audio-circle{
+    top: -168px;
+  }  
+}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .audio-circle{
+      top: -120px;
+    }
+  }
+
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  .audio-circle{
+    top: -120px;
+  }
+}}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm){ 
+@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+  .audio-circle{
+    top: -120px;
+  }
+}}
 
 .audio-circle .audio-right {
   position: absolute;

@@ -1,20 +1,18 @@
 define([
-    'shared/api',
+    'axios',
     'shared/functions',
-    'shared/data',
     'app/constant',
     'features/login/loginERP'
 ], (
-    API,
+    axios,
     functions,
-    GLOBAL,
     constant,
     loginERPComp
 ) => {
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
         BASE_URL,
-        TOKEN,
+        ACCESS_TOKEN,
         REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
@@ -44,12 +42,12 @@ define([
         $errMess.html('');
         $loader.show();
 
-        API.postForm('login', `password=${password}&email=${email}`).then(res => {
-            if (res?.data) {
-                setDataToLocalApplication(SESSION_ID, res.data.sessionId);
-                setDataToLocalApplication(USER_ID, res.data.userId);
-                setDataToLocalApplication(TOKEN, res.data.token);
-                setDataToLocalApplication(REFRESH_TOKEN, res.data.refresh_token);
+        axios.post(`${BASE_URL}/auth/login`, `password=${password}&email=${email}`).then(res => {
+            if (res) {
+                setDataToLocalApplication(SESSION_ID, res.sessionId);
+                setDataToLocalApplication(USER_ID, res.userId);
+                setDataToLocalApplication(ACCESS_TOKEN, res.access_token);
+                setDataToLocalApplication(REFRESH_TOKEN, res.refresh_token);
                 navigate(ROUTE.index);
             }
         }).catch((err) => {
@@ -70,7 +68,7 @@ define([
         loading = true;
         $loaderErp.show();
 
-        API.get('erp/token').then(token => {
+        axios.get(`${BASE_URL}/erp/token`).then(token => {
             loading = false;
             $loginForm.hide();
             $loaderErp.hide();
@@ -83,7 +81,8 @@ define([
     };
 
     const loginGoogle = () => {
-        window.location.assign(`xm/oauth2/authorize/google?redirect_uri=${BASE_URL}oauth2`);
+        const redirectUri = `${window.location.protocol}//${window.location.host}`;
+        window.location.assign(`xm/oauth2/authorize/google?redirect_uri=${redirectUri}/oauth2`);
     };
 
     ob.onInit = () => {

@@ -57,13 +57,14 @@ define([
     } = functions;
     const {
         ATTRIBUE_SIDEBAR_ROOM,
+        BASE_URL,
         BODY_BG_THEME,
         BODY_FZ,
         ENTER_KEY_PREFERENCE,
         THEMES,
         FONTSIZES,
         ENTER_KEY_PREFERENCES,
-        TOKEN,
+        ACCESS_TOKEN,
         USER_ID
     } = constant;
     const { setGeneral, getGeneral, clear } = offlineData;
@@ -135,7 +136,7 @@ define([
     const onGetUserInfo = (obj) => GLOBAL.setInfomation(obj);
 
     const onInitEventComponent = () => {
-        setCookie(getDataToLocalApplication(TOKEN), 3650);
+        setCookie(getDataToLocalApplication(ACCESS_TOKEN), 3650);
 
         // Initialize sidebar DOM and register event
         sidebarProfileComp.onInit();
@@ -165,7 +166,13 @@ define([
         notificationComp.onInit();
     };
 
-    const onGetVersion = () => API.get('version').then(res => GLOBAL.setVersion(res));
+    const onGetVersion = () => {
+        $.ajax({
+            type: 'GET',
+            url: `${BASE_URL}/version`,
+            success: (res) => { GLOBAL.setVersion(res) }
+        });
+    };
 
     const onGetPrefrences = (res) => {
         const theme = res?.body_bg_theme || THEMES[0].name;
@@ -184,7 +191,47 @@ define([
         onAssignAdvanceThemeBody();
     };
 
+    const parseJwt = (token) => {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
+    };
+
+    const isJwtExpired = (token) => {
+        if (typeof(token) !== 'string' || !token) throw new Error('Invalid token provided');
+      
+        let isJwtExpired = false;
+        const { exp } = parseJwt(token);
+        const currentTime = new Date().getTime() / 1000;
+      
+        if (currentTime > exp) isJwtExpired = true;
+      
+        return isJwtExpired;
+      }
+
     const initInformationFromAPI = () => {
+        const isTokenExpired = isJwtExpired(getDataToLocalApplication(ACCESS_TOKEN));
+
+        if (isTokenExpired) {
+            console.log('token expired');
+            API.get('users/preferences').then((res) => {
+                initAPI();
+                return;
+            }).catch((err) => {
+                console.log(err);
+                return;
+            });
+            return;
+        }
+
+        initAPI();
+    };
+
+    const initAPI = () => {
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
 
         // Get server version
@@ -219,7 +266,7 @@ define([
                 }, 2500);
             }
         });
-    };
+    }
 
     const onInitGeneralEvents = () => {
         // copy input value
@@ -267,7 +314,7 @@ define([
                 onGetPrefrences(data[2]);
                 onGetRoomList(data[0]);
                 onGetUserInfo(data[1]);
-                onInitEventComponent();
+                // onInitEventComponent();
             } catch (err) {
                 clear();
             }
