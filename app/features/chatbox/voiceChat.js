@@ -39,7 +39,6 @@ define([
 
     let cancelRecord;
     let mouseMoved;
-    let flagMouseUp;
     let isCanceled = false;
 
     // const getDuration = (src) => {
@@ -89,30 +88,30 @@ define([
         // Have to hold at least 1s to start the record
         holdTime = setInterval(() => {
             secondCount += 1;
-
-            btnVoiceChatDescription.innerHTML = '<button class="cancel-voice-record">❌</button><div>Release button to send</div';
-            btnVoiceChatDescription.style.bottom = '160px';
-
-            cancelRecord = document.querySelector('.cancel-voice-record');
-
-            if (recorder.state === 'inactive' && secondCount >= 0) {
-                recorder.start();
-                startRecordBtn.style.background = 'red';
-                notiStatus.innerHTML = `
-                <div id="bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>`;
-            }
         }, 1000);
+
+        btnVoiceChatDescription.innerHTML = '<button class="cancel-voice-record">❌</button><div>Release button to send</div';
+        btnVoiceChatDescription.style.bottom = '160px';
+
+        cancelRecord = document.querySelector('.cancel-voice-record');
+
+        if (recorder.state === 'inactive') {
+            recorder.start();
+            startRecordBtn.style.background = 'red';
+            notiStatus.innerHTML = `
+            <div id="bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>`;
+        }
     };
 
     const releaseRecord = (event) => {
@@ -122,18 +121,16 @@ define([
 
         if (event === 'mouseup') {
             notiStatus.innerHTML = '';
-
+            notiStatus.textContent = '';
             btnVoiceChatDescription.innerHTML = 'Hold to speak';
             btnVoiceChatDescription.style.bottom = '10px';
 
             if (secondCount < 2) {
                 console.log('Too short message');
-
-                notiMessage.innerHTML = '<p class="voice-statusMessage__details">Too short message 💬 </p>';
-
-                setTimeout(() => {
-                    notiMessage.innerHTML = '';
-                }, 3000);
+                // notiMessage.innerHTML = '<p class="voice-statusMessage__details">Too short message 💬 </p>';
+                // setTimeout(() => {
+                //     notiMessage.innerHTML = '';
+                // }, 3000);
             }
         }
 
@@ -158,14 +155,15 @@ define([
         const clientX2 = clientRect.right;
         const clientY1 = clientRect.top;
         const clientY2 = clientRect.bottom;
-
-        console.log(e.clientX, e.clientY);
-        console.log(clientX1, clientX2, clientY1, clientY2);
         const checkClientX = e.clientX >= clientX1 && e.clientX <= clientX2;
         const checkClientY = e.clientY >= clientY1 && e.clientY <= clientY2;
         if (checkClientX && checkClientY) {
+            console.log('on cancel position');
+            cancelRecord.style.backgroundColor = '#FE8F8F';
             mouseMoved = true;
         } else {
+            console.log('on send position');
+            cancelRecord.style.backgroundColor = '#9D9D9D';
             mouseMoved = false;
         }
     };
@@ -189,19 +187,16 @@ define([
 
     const setMouseUPEvent = () => {
         console.log('mouseup');
-        if (mouseMoved && flagMouseUp) {
-            // flagMouseUp = true;
-            // cancelRecord.style.backgroundColor = 'red';
+        if (mouseMoved) {
             isCanceled = true;
         } else {
-            // flagMouseUp = false;
-            // cancelRecord.style.backgroundColor = 'white';
             isCanceled = false;
         }
+        releaseRecord('mouseup');
         window.removeEventListener('mousemove', getMousePosition);
         window.removeEventListener('mouseup', setMouseUPEvent);
-        releaseRecord('mouseup');
-        flagMouseUp = false;
+        window.removeEventListener('touchmove', getMousePosition);
+        window.removeEventListener('touchend', setMouseUPEvent);
     };
 
     const initRecordFunc = async (comment) => {
@@ -219,20 +214,24 @@ define([
                 try {
                     recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
 
+                    // Click event for pc
                     startRecordBtn.addEventListener('mousedown', () => {
                         holdRecord();
-                        flagMouseUp = true;
                         mouseMoved = false;
                         window.addEventListener('mousemove', getMousePosition);
                         window.addEventListener('mouseup', setMouseUPEvent);
+                        console.log('MOUSEDOWN');
                     });
 
-                    // test cancel voice chat ==========
-
-                    // end test cancel voice chat ========
-
-                    startRecordBtn.addEventListener('touchstart', holdRecord);
-                    startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
+                    // Touch event for mobile
+                    startRecordBtn.addEventListener('touchstart', () => {
+                        holdRecord();
+                        mouseMoved = false;
+                        window.addEventListener('touchmove', getMousePosition);
+                        window.addEventListener('touchend', setMouseUPEvent);
+                    });
+                    // startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
+                    // Touch event
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
@@ -242,12 +241,12 @@ define([
                     recorder.onstop = () => {
                         console.log(secondCount);
 
-                        if (isCanceled) {
+                        if (isCanceled || secondCount < 1) {
                             chunks = [];
                             return;
                         }
 
-                        if (recorder.state === 'inactive' && secondCount >= 2 && !isCanceled) {
+                        if (recorder.state === 'inactive' && secondCount >= 1 && !isCanceled) {
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
                             // postData(blob).then(response => {
