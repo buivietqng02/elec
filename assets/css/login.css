@@ -509,3 +509,15 @@ img {
 		display: none;
 	}
 }
+
+@media (max-width: 767px) {
+	.thirdparty-login-btn.erp svg {
+		left: -15px;
+	}
+	
+	.thirdparty-login-btn.google svg {
+		position: relative;
+		left: -4px;
+	}
+}
+
