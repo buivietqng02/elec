@@ -3730,7 +3730,7 @@ body.body_fz_18 {
     margin-right: 5px !important;
   }
   .btn__voice-chat-picture{
-    width: 30px !important;
+    width: 25px;
   }
 
   .btn__attach{
@@ -3804,7 +3804,7 @@ body.body_fz_18 {
  /* ============= voice chat ============ */
  /* Init voice chat */
  .btn__voice-chat{
-  width: 40px;
+  /* width: 40px; */
   border:none;
   background-color: transparent;
   border-radius: 5px;
@@ -3876,7 +3876,12 @@ body.body_fz_18 {
   -ms-user-select: none;
   user-select: none;
   background-image: none;
-  z-index: 9999;
+  z-index: 99 !important;
+}
+
+#record__start-stop__btn img{
+  touch-action: none;
+  pointer-events: none;
 }
 
 .record__start-stop-pulse-ring.active{
@@ -3912,6 +3917,9 @@ body.body_fz_18 {
   bottom:10px;
   left: 50%;
   transform: translateX(-50%);
+  transition: all 0.5s;
+  z-index: -1;
+
 }
 
 /* ----------- Waving Recording style * -------------/ */

@@ -465,6 +465,9 @@ define([
                 if (mess.file?.id) {
                     const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
                     if (newAudioRecorder) {
+                        // Scroll to bottom when new voice message sent
+                        onScrollToBottom()
+
                         newAudioRecorder.setAttribute("isPlaying", false);
                         newAudioRecorder.addEventListener('click', () => {
                             console.log('click');
@@ -478,6 +481,7 @@ define([
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
                     $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+                    console.log("test scroll")
                 }
             }
         },

@@ -86,6 +86,7 @@ define([
             secondCount += 1;
 
             btnVoiceChatDescription.innerHTML = 'Release button to send';
+            btnVoiceChatDescription.style.bottom = '160px';
 
             if (recorder.state === 'inactive' && secondCount >= 0) {
                 recorder.start();
@@ -116,6 +117,7 @@ define([
             notiStatus.innerHTML = '';
 
             btnVoiceChatDescription.innerHTML = 'Hold to speak';
+            btnVoiceChatDescription.style.bottom = '10px';
 
             if (secondCount < 2) {
                 console.log('Too short message');
@@ -131,6 +133,7 @@ define([
         if (event === 'mouseleave') {
             notiStatus.innerHTML = '';
             btnVoiceChatDescription.innerHTML = 'Hold to speak';
+            btnVoiceChatDescription.style.bottom = '10px';
         }
         clearInterval(holdTime);
         // If the record less than 1 second will not display 
