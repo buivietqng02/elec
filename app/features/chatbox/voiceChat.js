@@ -33,7 +33,7 @@ define([
     let $progressWrapper;
 
     let inputTextChat;
-    let btnEmoji;
+    let attachBtn;
 
     let btnVoiceChatDescription;
 
@@ -237,7 +237,7 @@ define([
             initVoiceButton.style.display = 'block';
             btnVoiceChatDescription.style.display = 'block';
             inputTextChat.classList.add('de-active');
-            btnEmoji.style.display = 'none';
+            attachBtn.style.display = 'none';
             isVoiceInit = true;
             initVoiceChat.setAttribute('isUsingVoiceMess', true);
         } else {
@@ -246,7 +246,7 @@ define([
             btnVoiceChatDescription.style.display = 'none';
             inputTextChat.classList.remove('de-active');
             inputTextChat.style.height = '43px';
-            btnEmoji.style.display = 'block';
+            attachBtn.style.display = 'block';
             initRecordFunc('stop');
             isVoiceInit = false;
             initVoiceChat.setAttribute('isUsingVoiceMess', false);
@@ -270,7 +270,7 @@ define([
             startRecordBtn = document.querySelector('#record__start-stop__btn');
 
             inputTextChat = document.querySelector('.messages__input');
-            btnEmoji = document.querySelector('.btn__emoji');
+            attachBtn = document.querySelector('.btn__attach');
 
             btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description');
             btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture');

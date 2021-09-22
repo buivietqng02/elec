@@ -890,7 +890,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: block;
   position: absolute;
   bottom: 0px;
-  left: 5px;
+  left: 3px;
   font-size: 1.5rem;
   padding: 0;
 
@@ -3724,6 +3724,23 @@ body.body_fz_18 {
   .mess-search-box.open {
     height: 82px;
   }
+
+  /* Voice chat for mobile */
+  .btn__voice-chat{
+    margin-right: 5px !important;
+  }
+  .btn__voice-chat-picture{
+    width: 30px !important;
+  }
+
+  .btn__attach{
+    left:-2px;
+  }
+  .wrap-emojis{
+    left:0;
+    z-index: 99;
+  }
+   /* End Voice chat for mobile */
 }
 
 @media screen and (max-width:575px) {
