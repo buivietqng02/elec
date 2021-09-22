@@ -318,11 +318,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-close mess-fw-box-close" role="button" tabindex="0"></i>
                             </div>
                             <textarea class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..."></textarea>
+
+                            <!-- Voice & send group button --> 
                             <div class="input-wrap-group-btn">
                                 <button class="btn__send js_send_mess"><i class="xm xm-paper-plane xm-fw"></i></button>
-                                <button class="btn__attach" data-target="#media-menu"><svg height="20px" viewBox="0 0 426.66667 426.66667" width="20px" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m410.667969 229.332031h-394.667969c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h394.667969c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
-                                        <path d="m213.332031 426.667969c-8.832031 0-16-7.167969-16-16v-394.667969c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v394.667969c0 8.832031-7.167969 16-16 16zm0 0" /></svg></button>
                                 
                                 <!-- Voice chat btn -->
 
@@ -332,10 +331,16 @@ define(['shared/icon'], (ICON) => ({
                                 <!-- End Voice chat btn -->
 
                             </div>
+                            <!-- End Voice & send group button --> 
+
                             <button type="button" class="js_close_update_mess btn__edit--close" style="display: none;"><i class="xm xm-close"></i></button>
                             
-                            
-                            <button class="js-emoji btn__emoji"><i class="xm xm-smile-o"></i></button>
+                            <!-- Attached button --> 
+                            <button class="btn__attach" data-target="#media-menu"><svg height="20px" viewBox="0 0 426.66667 426.66667" width="20px" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m410.667969 229.332031h-394.667969c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h394.667969c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                                        <path d="m213.332031 426.667969c-8.832031 0-16-7.167969-16-16v-394.667969c0-8.832031 7.167969-16 16-16s16 7.167969 16 16v394.667969c0 8.832031-7.167969 16-16 16zm0 0" /></svg></button>
+                            <!-- End Attached button --> 
+
                             <div class="wrap-emojis">
                                 <div class="emojis-tab-content">
                                     <div class="wrap-emoji active wrap-emojis-calc">
@@ -363,6 +368,13 @@ define(['shared/icon'], (ICON) => ({
                                 <lang data-language="UPLOADING"></lang>... (<span>0</span>%)
                             </div>
                             <div id="media-menu" class="menu js-dismiss-menu">
+                               
+                                <!-- Emoji button -->
+                                <label class="js-up-file menu__item" data-dismiss=".menu">
+                                    <button class="js-emoji btn__emoji"><i class="xm xm-smile-o"></i></button>
+                                </label>
+                                <!-- End Emoji button -->
+
                                 <label class="js-up-file menu__item" data-trigger=".--input-up-file" data-dismiss=".menu">
                                     <i class="xm xm-file-o xm-fw"></i>
                                     <lang data-language="UP_FILE"></lang>

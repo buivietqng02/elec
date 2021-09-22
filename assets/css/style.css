@@ -309,7 +309,7 @@ template {
 .wrap-emojis {
   position: absolute;
   bottom: calc(100% + 1px);
-  left: 1px;
+  left: 162px;
   width: 100%;
   max-width: 316px;
   background: #fff;
@@ -887,6 +887,13 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .btn__attach {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 5px;
+  font-size: 1.5rem;
+  padding: 0;
+
   height: 50px;
   width: 45px;
   font-size: 1.5rem;
@@ -919,7 +926,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: block;
   position: absolute;
   bottom: 7px;
-  left: 13px;
+  left: 45px;
   border: 0;
   background: none;
   font-size: 1.5rem;
@@ -928,7 +935,8 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .btn__emoji i {
   position: relative;
-  top: 3px;
+  top: -20px;
+  left: -16px;
 }
 
 .btn__option {
@@ -1016,7 +1024,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 #media-menu {
-  right: 10px;
+  left: 10px;
   top: auto;
   bottom: 50px;
 }
@@ -3546,9 +3554,9 @@ body.body_fz_18 {
   }
 
   .btn__emoji {
-    font-size: 1rem;
+    /* font-size: 1rem;
     left: 4px;
-    top: 4px;
+    top: 4px; */
   }
 
   .btn__send, .btn__send:hover {
@@ -3559,10 +3567,10 @@ body.body_fz_18 {
     width: 30px;
   }
 
-  .btn__attach {
+  /* .btn__attach {
     font-size: 1rem;
     width: 45px;
-  }
+  } */
 
   .--load-mess {
     left: 50%;
@@ -3784,10 +3792,11 @@ body.body_fz_18 {
   background-color: transparent;
   border-radius: 5px;
   height: 50px;
+  margin-right: 15px;
 }
 
 .btn__voice-chat-picture{
-  width: 15px;
+  width: 20px;
   padding:0;
   margin:0;
 }
