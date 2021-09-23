@@ -215,6 +215,16 @@ define([
 
     const initRecordFunc = async (comment) => {
         if (comment === 'start') {
+            // Touch event for mobile
+            startRecordBtn.addEventListener('touchstart', () => {
+                holdRecord();
+                // mouseMoved = false;
+                // window.addEventListener('touchmove', touchPosition);
+                // window.addEventListener('touchend', setMouseUPEvent);
+            });
+            startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
+            // Touch event
+
             let mimeTypeBrowser = 'audio/webm';
 
             if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
@@ -237,14 +247,13 @@ define([
                     });
 
                     // Touch event for mobile
-                    startRecordBtn.addEventListener('touchstart', () => {
-                        holdRecord();
-                        // mouseMoved = false;
-                        // window.addEventListener('touchmove', touchPosition);
-                        window.addEventListener('touchend', setMouseUPEvent);
-                    });
-                    // startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
-                    // Touch event
+                    // startRecordBtn.addEventListener('touchstart', () => {
+                    //     holdRecord();
+                    //     startRecordBtn.style.background = 'yellow';
+                    //     // mouseMoved = false;
+                    //     // window.addEventListener('touchmove', touchPosition);
+                    //     // window.addEventListener('touchend', setMouseUPEvent);
+                    // });
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);

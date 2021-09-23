@@ -465,7 +465,7 @@ define([
 
                         newAudioRecorder.setAttribute("isPlaying", false);
                         newAudioRecorder.addEventListener('click', () => {
-                            console.log('click');
+                            // console.log('click');
                             addEventListenerToAudioRecorder(mess.file.id);
                         })
                         // addEventListenerToAudioRecorder(mess.file.id);
