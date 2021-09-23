@@ -2,6 +2,25 @@
 
 All changes to XM WEB CLIENT project will be documented in this file.
 
+## Version 4
+
+### [4.0] - 2021-09-23
+### Add
+- Now users can send voice messages.
+- It is possible to login with your Google account.
+- Users can create their own channels.
+- Add new route /oauth2 to handle OAuth2 authentication.
+- Show last seen when open a cached chat.
+### Update
+- All XHR request are made with Axios.
+- Add 'Authorization' header with Axios interceptor.
+- Handle refresh of expired tokens.
+- Allow to create groups with one member.
+### Fix
+- Fix error when store chats as offlineData.
+- Fix an error when remove group.
+- Show correct chat options by type of chat.
+
 ## Version 3
 
 ### [3.26] - 2021-09-01
