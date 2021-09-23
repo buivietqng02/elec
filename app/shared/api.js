@@ -1,33 +1,26 @@
 define([
     'shared/data',
-    'app/constant', 
+    'app/constant',
     'shared/functions',
-    'shared/offlineData',
     'features/logout/logout',
     'axios'
 ], (
     GLOBAL,
-    constant, 
+    constant,
     functions,
-    offlineData,
     Logout,
     axios
 ) => {
     const {
-        TOKEN,
+        BASE_URL,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN,
         API_URL,
     } = constant;
 
     const getHeaderJson = () => ({
         'Accept-Language': GLOBAL.getLanguage(),
         'Content-Type': 'application/json',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
-    });
-
-    const getHeaderForm = () => ({
-        'Accept-Language': GLOBAL.getLanguage(),
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-Authorization-Token': functions.getDataToLocalApplication(TOKEN) || ''
     });
 
     const toQueryString = (params = {}) => {
@@ -45,29 +38,60 @@ define([
         return `?${parts.join('&')}`;
     };
 
+    const instance = axios.create({
+        baseURL: `${BASE_URL}`,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+    });
+
+    const refreshToken = () => {
+        return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
+    };
+
     // Interceptors
+    axios.interceptors.request.use((request) => {
+        if (request.url.includes('xm/api/'))
+        request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
+        return request;
+    },
+    (error) => {
+        return Promise.reject(error);
+    });
+
     axios.interceptors.response.use((response) => {
         GLOBAL.setNetworkStatus(true);
         return response.data;
-    }, (error) => {
-        if (!error.response) {
-            GLOBAL.setNetworkStatus(false);
-            return Promise.reject(19940402);
-        } else {
+    }, async (error) => {
+        const originalConfig = error.config;
+        if (error.response) {
             GLOBAL.setNetworkStatus(true);
-        }
+            if (error.response.status === 401 && !error.config.url.includes('/auth/') && !originalConfig._retry) {
+                originalConfig._retry = true;
+                try {
+                    const response = await refreshToken();
 
-        if (error.response.status === 401) {
-            Logout.onLogout();
-        }
+                    functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
+                    functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
+                    functions.setCookie(response.data.access_token, 3650);
 
-        if (error.response.status === 403) {
-            
-        }
+                    originalConfig.headers['Authorization'] = `Bearer ${response.data.token}`;
 
-        return Promise.reject(error);
+                    return axios(originalConfig);
+                } catch (_error) {
+                    Logout.cleanSession();
+                    if (_error.response && _error.response.data) {
+                        return Promise.reject(_error.response.data);
+                    }
+                    return Promise.reject(_error);
+                }
+            }
+            return Promise.reject(error);
+        }
+        GLOBAL.setNetworkStatus(false);
+        return Promise.reject(19940402);
     });
-    
+
     return {
         get: (endpoint = '', params = {}, headers) => axios.get(`${API_URL}/${endpoint}${toQueryString(params)}`, {
             headers: headers ? headers : getHeaderJson()
@@ -83,10 +107,6 @@ define([
 
         delete: (endpoint = '', headers) => axios.delete(`${API_URL}/${endpoint}`, {
             headers: headers ? headers : getHeaderJson()
-        }),
-
-        postForm: (endpoint = '', formData, headers) => axios.post(`${API_URL}/${endpoint}`, formData, {
-            headers: headers ? headers : getHeaderForm()
         })
     };
 });

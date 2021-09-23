@@ -1,8 +1,10 @@
 define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
+        BASE_URL: `${enviroment}`,
         API_URL: `${enviroment}/api`,
         SESSION_ID: 'sessionId',
-        TOKEN: 'token',
+        ACCESS_TOKEN: 'access_token',
+        REFRESH_TOKEN: 'refresh_token',
         USER_ID: 'userId',
         BODY_BG_THEME: 'body_bg_theme',
         BODY_FZ: 'body_fz',
@@ -50,7 +52,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ROUTE: {
             login: '/login',
             meeting: '/meeting',
-            index: '/'
+            index: '/',
+            oauth2: '/oauth2'
         }
     };
 

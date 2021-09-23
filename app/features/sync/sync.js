@@ -8,7 +8,8 @@ define([
     'features/chatbox/chatboxContentChatList',
     'features/chatbox/chatboxTopbar',
     'features/notification/notification',
-    'features/modal/modalPhoneRequest'
+    'features/modal/modalPhoneRequest',
+    'features/logout/logout'
 ], (
     constant,
     API,
@@ -19,13 +20,14 @@ define([
     chatboxContentChatListComp,
     chatboxTopbarComp,
     notificationComp,
-    modalPhoneRequest
+    modalPhoneRequest,
+    logout
 ) => {
     let timeout;
     let isInit = false;
     let isBlinkTitleBrowser = false;
     const {
-        SESSION_ID, TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
+        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
     } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
@@ -35,10 +37,13 @@ define([
     const { 
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
+    const {
+        cleanSession
+    } = logout;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
-        const token = functions.getDataToLocalApplication(TOKEN) || '';
+        const token = functions.getDataToLocalApplication(ACCESS_TOKEN) || '';
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
         
         return !!(sessionId && token && userId);
@@ -288,7 +293,12 @@ define([
 
         if (data[SESSION_ID]) {
             API.get('sync', data).then(res => {
-                if (!isLogin() || !!(functions.getRouter()?.current || [])[0]?.url) {
+                if (!isLogin()) {
+                    console.log('You were logged out because the access token was not found.');
+                    cleanSession();
+                }
+
+                if ((functions.getRouter()?.current || [])[0]?.url) {
                     return;
                 }
 

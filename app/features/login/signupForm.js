@@ -1,15 +1,17 @@
 define([
-    'shared/api',
+    'axios',
     'shared/functions',
     'app/constant'
 ], (
-    API,
+    axios,
     functions,
     constant
 ) => {
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
-        TOKEN,
+        BASE_URL,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
@@ -98,11 +100,12 @@ define([
         $loader.show();
 
         if (stage === 2) {
-            API.post('register', params).then((res) => {
-                if (res?.data) {
-                    setDataToLocalApplication(SESSION_ID, res.data.sessionId);
-                    setDataToLocalApplication(USER_ID, res.data.userId);
-                    setDataToLocalApplication(TOKEN, res.data.token);
+            axios.post(`${BASE_URL}/signup`, params).then((res) => {
+                if (res) {
+                    setDataToLocalApplication(SESSION_ID, res.sessionId);
+                    setDataToLocalApplication(USER_ID, res.userId);
+                    setDataToLocalApplication(ACCESS_TOKEN, res.access_token);
+                    setDataToLocalApplication(REFRESH_TOKEN, res.refresh_token);
                     navigate(ROUTE.index);
                 }
             }).catch(err => {
@@ -114,7 +117,7 @@ define([
             return;
         }
 
-        API.postForm('validateemail', `password=${password}&email=${email}&name=${name}&password2=${password2}`).then(() => {
+        axios.post(`${BASE_URL}/signup/validate-email`, `password=${password}&email=${email}&name=${name}&password2=${password2}`).then(() => {
             stage = 2;
             loading = false;
             $loader.hide();
@@ -141,7 +144,7 @@ define([
         $errMess = $registerForm.find('.mess');
         $loader = $registerForm.find('.js-btn-spin .--spin');
         $formItem = $registerForm.find('.form__line');
-        
+
         $errMess.html('');
         $loader.hide();
         $formItem.each(i => {
@@ -155,6 +158,6 @@ define([
             }
         });
     };
-    
+
     return ob;
 });

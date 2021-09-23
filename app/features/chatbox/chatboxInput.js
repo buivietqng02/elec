@@ -1,33 +1,33 @@
 define([
-    'app/constant', 
-    'shared/functions', 
-    'shared/api', 
+    'app/constant',
+    'shared/functions',
+    'shared/api',
     'shared/data'
 ], (
-    constant, 
-    functions, 
-    API, 
+    constant,
+    functions,
+    API,
     GLOBAL
 ) => {
-    const { 
-        htmlDecode, 
-        htmlEncode, 
-        stripTags, 
+    const {
+        htmlDecode,
+        htmlEncode,
+        stripTags,
         decodeStringBase64,
-        encodeStringBase64, 
-        transformLinkTextToHTML, 
-        getDataToLocalApplication 
+        encodeStringBase64,
+        transformLinkTextToHTML,
+        getDataToLocalApplication
     } = functions;
 
     const {
         ENTER_KEY_PREFERENCES
     } = constant;
 
-    const token = getDataToLocalApplication(constant.TOKEN) || '';
     let $input;
     let $wrapperMessages;
     let $btnSend;
     let $btnAttach;
+    let initVoiceMessageBtn;
     let $commentWrapper;
     let $commentBox;
     let $btnCloseCommentBox;
@@ -55,19 +55,21 @@ define([
         const input = $input.get(0);
         const wrapperMessages = $wrapperMessages.get(0);
         const isBottom = wrapperMessages.scrollTop + wrapperMessages.clientHeight >= wrapperMessages.scrollHeight;
-        
+
         setTimeout(() => {
             if ($input.val().replace(/[\s\n]/g, '')) {
                 $btnSend.show();
-                $btnAttach.hide();
+                // $btnAttach.hide();
+                $initVoiceMessageBtn.hide();
             } else {
                 removeDraft();
                 $btnSend.hide();
-                $btnAttach.show();
+                // $btnAttach.show();
+                $initVoiceMessageBtn.show();
             }
 
             input.style.cssText = '';
-    
+
             const height = Math.min(window.outerHeight / 5, input.scrollHeight);
             input.style.cssText = `height: ${height}px`;
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
@@ -77,7 +79,7 @@ define([
 
     const onKeydown = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
-        
+
         if (enterKeyIsNewLine) {
             if (e.keyCode === 13 && e.shiftKey) {
                 e.preventDefault();
@@ -135,7 +137,7 @@ define([
                     postMessage(messagesWaitProcessingArr[0]);
                 }
             }).catch(onErrFetch);
-            
+
             return;
         }
 
@@ -215,7 +217,7 @@ define([
             // check if last typing event was more than 2.5 seconds ago
             // OR if last typing event sent to API was more than 5 seconds ago
             if (currentTimestamp - timeOfLastTypingEvent > 2500
-                    || currentTimestamp - timeOfLastSentTypingEvent > 5000) {
+                || currentTimestamp - timeOfLastSentTypingEvent > 5000) {
                 sendTypingEvent(true);
             }
         } else {
@@ -228,11 +230,11 @@ define([
         // reset times of typing event
         timeOfLastTypingEvent = null;
         timeOfLastSentTypingEvent = Date.now();
-        
+
         // get current room id
         const roomId = GLOBAL.getCurrentRoomId();
         // send typing event
-        API.post(`chats/${roomId}/typing?typing=${typing}`, null).then(() => {})
+        API.post(`chats/${roomId}/typing?typing=${typing}`, null).then(() => { })
             .catch(onErrFetch);
     }
 
@@ -245,6 +247,7 @@ define([
             $commentWrapper = $('.mess-comment-box');
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
+            $initVoiceMessageBtn = $('#init-voiceChat')
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;

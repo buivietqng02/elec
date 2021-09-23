@@ -27,13 +27,15 @@ define([
     jsrender($);
 
     const {
-        TOKEN,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
     } = constant;
     const {
         getDataToLocalApplication,
+        setDataToLocalApplication,
         getRouter,
         navigate
     } = functions;
@@ -41,9 +43,9 @@ define([
 
     const isLogin = () => {
         const sessionId = getDataToLocalApplication(SESSION_ID) || '';
-        const token = getDataToLocalApplication(TOKEN) || '';
+        const token = getDataToLocalApplication(ACCESS_TOKEN) || '';
         const userId = getDataToLocalApplication(USER_ID) || '';
-        
+
         return !!(sessionId && token && userId);
     };
 
@@ -76,6 +78,21 @@ define([
             $wrapper.html(template.login);
             Login.onInit();
         }
+    });
+
+    getRouter().on(ROUTE.oauth2, () => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('access_token');
+        const sessionId = params.get('sessionId');
+        const userId = params.get('userId');
+        const refreshToken = params.get('refresh_token');
+
+        setDataToLocalApplication(SESSION_ID, sessionId);
+        setDataToLocalApplication(USER_ID, userId);
+        setDataToLocalApplication(ACCESS_TOKEN, token);
+        setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
+        
+        navigate(ROUTE.index);
     });
 
     getRouter().resolve();

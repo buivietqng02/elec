@@ -15,10 +15,10 @@ define([
 ) => {
     const ob = {};
     const {
-        render, 
-        getAvatar, 
-        convertMessagetime, 
-        humanFileSize, 
+        render,
+        getAvatar,
+        convertMessagetime,
+        humanFileSize,
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
@@ -26,26 +26,45 @@ define([
     } = functions;
     const { API_URL } = constant;
 
+    const timeConvert = (time) => {
+        // Calculate the time left and the total duration
+        let currentMinutes = Math.floor(time / 60);
+        let currentSeconds = Math.floor(time - currentMinutes * 60);
+        // Add a zero to the single digit time values
+        if (currentSeconds < 10) { currentSeconds = `0${currentSeconds}`; }
+        if (currentMinutes < 10) { currentMinutes = `0${currentMinutes}`; }
+        return `${currentMinutes}:${currentSeconds}`;
+    };
+
     const handleMessCointainFile = (file) => {
         const { type } = file;
         const data = {};
-
+        let messageTemp = '';
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
-                return render(template.image, data);
+                messageTemp = render(template.image, data);
+                break;
             case 3:
                 data.src = `${API_URL}/audio?id=${file.id}`;
-                return render(template.audio, data);
+                data.audioId = `audio-${file.id}`;
+                data.buttonId = `btn-${file.id}`;
+                data.duration = file.filename;
+                data.durationTime = timeConvert(parseFloat(file.filename));
+                messageTemp = render(template.audio, data);
+                // console.log(file);
+                break;
             case 4:
                 data.src = `${API_URL}/stream?id=${file.id}`;
-                return render(template.video, data);
+                messageTemp = render(template.video, data);
+                break;
             default:
                 data.src = `${API_URL}/file?id=${file.id}`;
                 data.fileName = file.filename;
                 data.fileSize = humanFileSize(file.size);
-                return render(template.file, data);
+                messageTemp = render(template.file, data);
         }
+        return messageTemp;
     };
 
     const renderComment = (quotedMessage) => {
@@ -92,7 +111,7 @@ define([
             mess.posUnread = false;
             return render(template.unread, {});
         }
-       
+
         return '';
     };
 
@@ -140,7 +159,7 @@ define([
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
-            const { 
+            const {
                 sender,
                 id,
                 type,

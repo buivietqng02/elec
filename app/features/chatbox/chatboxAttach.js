@@ -1,18 +1,19 @@
 define([
-    'app/constant', 
+    'axios',
+    'app/constant',
     'shared/data',
-    'shared/alert', 
+    'shared/alert',
     'shared/functions',
     'features/modal/modalPhoneRequest'
 ], (
-    constant, 
-    GLOBAL, 
+    axios,
+    constant,
+    GLOBAL,
     ALERT,
     functions,
     modalPhoneRequestComp
 ) => {
-    const { API_URL, TOKEN } = constant;
-    const token = functions.getDataToLocalApplication(TOKEN) || '';
+    const { API_URL } = constant;
     let $attachButton;
     let $inputFile;
     let $inputImage;
@@ -70,7 +71,7 @@ define([
             const current = e.loaded;
             const percentage = (current * 100) / max;
             const strokeDashoffset = percentCircle(percentage);
-            
+
             $percentProgress.html(Math.round(percentage));
             $pathCircle.attr('stroke-dashoffset', strokeDashoffset);
         }
@@ -85,33 +86,20 @@ define([
     };
 
     const callAPI = (endpoint, file) => {
-        const fd = new FormData();
+        const formData = new window.FormData();
         $progressWrapper.show();
-        fd.append('file', file);
-        fd.append('chat_id', GLOBAL.getCurrentRoomId());
-
-        $.ajax({
-            type: 'POST',
-            url: `${API_URL}/${endpoint}`,
-            data: fd,
-            headers: {
-                'X-Authorization-Token': token
-            },
-            xhr() {
-                const myXhr = $.ajaxSettings.xhr();
-
-                if (myXhr.upload) {
-                    myXhr.upload.addEventListener('progress', progressUpload, false);
-                }
-
-                return myXhr;
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: hideProcess,
-            error: hideProcess
-        });
+        formData.append('file', file);
+    
+        axios.post(`${API_URL}/chats/${GLOBAL.getCurrentRoomId()}/${endpoint}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                onUploadProgress: (progressEvent) => progressUpload(progressEvent)
+            })
+            .then(() => hideProcess())
+            .catch(() => hideProcess());
     };
 
     const checkFile = (file, isMedia) => {
@@ -122,17 +110,17 @@ define([
         }
 
         if ((/(gif|jpe?g|tiff?|png|webp|bmp)$/i).test(file.type)) {
-            callAPI('imageupload', file);
+            callAPI('image', file);
             return;
         }
 
         if ((/(mp4)$/i).test(file.type)) {
-            callAPI('videoupload', file);
+            callAPI('video', file);
             return;
         }
 
         if ((/audio/i).test(file.type)) {
-            callAPI('audioupload', file);
+            callAPI('audio', file);
             return;
         }
 
@@ -141,11 +129,11 @@ define([
             return;
         }
 
-        callAPI('fileupload', file);
+        callAPI('file', file);
     };
 
     const uploadFile = (endpoint) => {
-        if (endpoint === 'fileupload') {
+        if (endpoint === 'file') {
             callAPI(endpoint, $inputFile.get(0).files[0]);
         } else {
             checkFile($inputImage.get(0).files[0], true);
@@ -153,7 +141,7 @@ define([
     };
 
     const onDrop = e => {
-        e.preventDefault();  
+        e.preventDefault();
         e.stopPropagation();
         counter = 0;
         $dropzone.hide();
@@ -162,7 +150,7 @@ define([
             const item = e.originalEvent.dataTransfer.items[0];
             const file = item.getAsFile();
             const langJson = GLOBAL.getLangJson();
-            
+
             if (!item.type) {
                 return;
             }
@@ -175,15 +163,13 @@ define([
                 onOk: () => checkFile(file)
             });
         }
-
-        return false
     };
 
     const showPhoneModal = () => {
         modalPhoneRequestComp.onInit();
         offEventClickOutside();
     };
-    
+
     return {
         onInit: () => {
             isShow = false;
@@ -202,11 +188,11 @@ define([
             $callBtn.off().click(showPhoneModal);
             $inputFile.off().change(() => {
                 offEventClickOutside();
-                uploadFile('fileupload')
+                uploadFile('file');
             });
             $inputImage.off().change(() => {
                 offEventClickOutside();
-                uploadFile('imageupload')
+                uploadFile('image');
             });
             $dropzone.off().on('dragover', false).on('drop', onDrop);
 
@@ -226,19 +212,19 @@ define([
                         $dropzone.hide();
                     }
                 }, false);
-                document.addEventListener('drop', e => {
+                document.addEventListener('drop', () => {
                     counter = 0;
                     $dropzone.hide();
                 });
-                document.onpaste = (e) => {
-                    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
-                    for (index in items) {
-                        const item = items[index];
+                document.onpaste = (event) => {
+                    const { items } = (event.clipboardData || event.originalEvent.clipboardData);
+                    Object.keys(items).forEach((key) => {
+                        const item = items[key];
                         if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
                             const file = item.getAsFile();
                             checkFile(file);
                         }
-                    }
+                    });
                 };
             }
         },

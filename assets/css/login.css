@@ -81,37 +81,47 @@ img {
 	cursor: pointer;
 }
 
-.login-erp-btn {
-	background-color: #000;
+
+.thirdparty-login-btn-container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.thirdparty-login-btn {
+	background-color: #484848;
 	width: 55px;
 	height: 55px;
 	border-radius: 50%;
 	border: 0;
 	position: relative;
+	margin: 0 1rem;
 }
 
-.login-erp-btn svg {
+.thirdparty-login-btn:hover {
+	box-shadow: 0 0 10px;
+	cursor: pointer;
+}
+
+.thirdparty-login-btn.erp svg {
 	width: 55px;
+	height: 47px;
 	position: relative;
-	left: -6px;
+	left: -3.5px;
 }
 
-.login-erp-btn .st0 {
+.thirdparty-login-btn.google svg {
+	position: relative;
+	left: 1px;
+}
+
+.thirdparty-login-btn.erp .st0 {
 	fill:#fff;
 }
-.login-erp-btn .st1 {
+
+.thirdparty-login-btn.erp .st1 {
 	fill:#fff;
-}
-
-.login-erp-btn:hover {
-	background-color: #fff;
-}
-
-.login-erp-btn:hover .st0 {
-	fill:#000;
-}
-.login-erp-btn:hover .st1 {
-	fill:#000;
 }
 
 .login__btn-signup {
@@ -499,3 +509,34 @@ img {
 		display: none;
 	}
 }
+
+@media (max-width: 767px) {
+	/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+	.thirdparty-login-btn.erp svg {
+		left: -15px;
+	}
+	
+	.thirdparty-login-btn.google svg {
+		position: relative;
+		left: -4px;
+	}
+}}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm){ 
+@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+	.thirdparty-login-btn.erp svg {
+		left: -15px;
+	}
+	
+	.thirdparty-login-btn.google svg {
+		position: relative;
+		left: -4px;
+	}
+}}
+	
+}
+

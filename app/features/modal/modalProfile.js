@@ -1,10 +1,12 @@
 define([
+    'axios',
     'app/constant',
     'shared/alert',
     'shared/api',
     'shared/data',
     'shared/functions'
 ], (
+    axios,
     constant,
     ALERT,
     API,
@@ -13,9 +15,8 @@ define([
 ) => {
     const { getAvatar, getDataToLocalApplication } = functions;
     const {
-        API_URL, TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
+        API_URL, ACCESS_TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
     } = constant;
-    const token = getDataToLocalApplication(TOKEN) || '';
 
     let isProcessing;
     let $modal;
@@ -135,7 +136,7 @@ define([
 
     const uploadFile = () => {
         const file = $inputFile.get(0).files[0];
-        const fd = new FormData();
+        const formData = new FormData();
         const FR = new FileReader();
 
         if (!file) {
@@ -148,20 +149,17 @@ define([
         });
         FR.readAsDataURL(file);
 
-        fd.append('avatarfile', file);
-        $.ajax({
-            type: 'POST',
-            url: `${API_URL}/uploadavatar`,
-            data: fd,
-            headers: {
-                'X-Authorization-Token': token
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: () => { },
-            error: () => { }
-        });
+        formData.append('file', file);
+
+        axios.post(`${API_URL}/users/avatar`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(() => { })
+            .catch(() => { });
     };
 
     return {

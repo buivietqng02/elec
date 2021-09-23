@@ -103,11 +103,6 @@ define([
             return false;
         }
 
-        if (!createGroupService.getSelectedUserList().length) {
-            ALERT.show('Please select at least one member.');
-            return false;
-        }
-
         return true;
     };
 

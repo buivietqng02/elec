@@ -11,8 +11,8 @@ define([
     'features/chatbox/messageSettingsSlide'
 ], (
     constant,
-    API, 
-    GLOBAL, 
+    API,
+    GLOBAL,
     functions,
     offlineData,
     chatboxContentChatListComp,
@@ -23,9 +23,10 @@ define([
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
-    const { 
-        ATTRIBUTE_SIDEBAR_ROOM, 
-        ATTRIBUTE_MESSAGE_ID 
+
+    const {
+        ATTRIBUTE_SIDEBAR_ROOM,
+        ATTRIBUTE_MESSAGE_ID
     } = constant;
     const {
         transformLinkTextToHTML,
@@ -37,14 +38,14 @@ define([
         getChatById,
         setChatsById
     } = offlineData;
-    const { 
+    const {
         renderMessage,
         renderUnread,
         renderRangeDate,
         onErrNetWork,
         onHandleRoomWasDeleted
     } = contentFunc;
-    const { 
+    const {
         getRoomById,
         storeRoomById
     } = chatboxContentChatListComp;
@@ -60,6 +61,122 @@ define([
     let $loadingOfNew;
     let $unreadScroll;
 
+    // ========== Audio test ==============
+
+    const timeConvert = (time) => {
+        // Calculate the time left and the total duration
+        let currentMinutes = Math.floor(time / 60);
+        let currentSeconds = Math.floor(time - currentMinutes * 60);
+
+        // Add a zero to the single digit time values
+        if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
+        if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
+
+        return `${currentMinutes}:${currentSeconds}`
+    }
+
+    const getAudioID = (string) => {
+        if (string.includes("audio-")) {
+            return string.substring(6, string.length)
+        }
+
+        if (string.includes("btn-")) {
+            return string.substring(4, string.length)
+        }
+    }
+
+    const addEventListenerToAudioRecorder = (id) => {
+        const audio = document.querySelector(`#audio-${id}`);
+        const playStopBtn = document.querySelector(`#btn-${id}`);
+
+        let countDownTimmer;
+        let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
+        let isPlaying = playStopBtn.getAttribute('isPlaying');
+        let audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
+        let audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
+
+
+        let audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+
+        if (!audioProgress || audioProgress.length === 0) {
+            audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
+            audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
+
+            audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+        }
+
+        let durationAudio = parseFloat(audio.getAttribute('duration'));
+
+        if (isPlaying === 'true') {
+            playStopBtn.setAttribute("isPlaying", false);
+            audio.pause()
+            audioMicroPic.src = `/assets/images/microphone.svg`
+            clearInterval(countDownTimmer)
+
+            audioProgress[0].style.animationPlayState = "paused";
+            audioProgress[1].style.animationPlayState = "paused";
+
+        }
+
+
+        if (isPlaying === 'false') {
+            let playPromise = audio.play()
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
+
+                    console.log(audio.getAttribute('duration'))
+                    countDownTimmer = setInterval(() => {
+                        audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
+                    }, 1000)
+
+                    audioProgress[0].style.animationName = "left";
+                    audioProgress[1].style.animationName = "right";
+
+                    audioProgress[0].style.animationPlayState = "running";
+                    audioProgress[1].style.animationPlayState = "running";
+
+                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
+
+                    playStopBtn.setAttribute("isPlaying", true)
+                })
+                    .catch(error => {
+                        console.log(error)
+                        // Auto-play was prevented
+                        // Show paused UI.
+                    });
+            }
+        }
+
+        audio.addEventListener('ended', () => {
+            audioMicroPic.src = `/assets/images/microphone.svg`;
+            playStopBtn.setAttribute("isPlaying", false)
+            clearInterval(countDownTimmer)
+
+            audioTime.textContent = timeConvert(durationAudio)
+
+            audioBar[0].innerHTML = ``;
+            audioBar[1].innerHTML = ``;
+        })
+
+    }
+
+    const audioPlayStopFunc = () => {
+        let playPauseBtn = document.querySelectorAll('.audio-playStop');
+        playPauseBtn.forEach(item => {
+            item.setAttribute("isPlaying", false);
+
+            item.addEventListener('click', (e) => {
+                addEventListenerToAudioRecorder(getAudioID(item.id));
+
+            })
+        })
+    }
+
+    // ============== Audio test ==============
+
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
@@ -74,7 +191,7 @@ define([
         // condition 1: When the request is being processed, this action will skip, prevent user spam
         // condition 2: If message number gets from API have length small than 20, this action will skip
         // condition 3: When scroll to near bottom, get more messages
-        const isToPosition = isMobile ?  $wrapper.scrollTop() > 1 : $wrapper.scrollTop() > 700
+        const isToPosition = isMobile ? $wrapper.scrollTop() > 1 : $wrapper.scrollTop() > 700
         if (processing || isTouchLastMess || isToPosition || isSearchMode) {
             return;
         }
@@ -96,7 +213,7 @@ define([
         if (roomInfo.unreadMessages !== 0) {
             const rooms = GLOBAL.getRooms();
             const positionRoom = rooms.findIndex(room => room.id === roomInfo.id);
-            $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomInfo.id}"]`).find('.badge').html('');
+            $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
 
             if (positionRoom !== -1) {
                 roomInfo.unreadMessages = 0;
@@ -107,7 +224,7 @@ define([
     };
 
     const handleScrollToUnreadMessage = (idMess) => {
-        const $messageUnread = $(`[${ATTRIBUTE_MESSAGE_ID}="${idMess}"]`);
+        const $messageUnread = $(`[${ATTRIBUTE_MESSAGE_ID} = "${idMess}"]`);
 
         if (!$messageUnread.length) {
             return;
@@ -148,6 +265,16 @@ define([
             storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+
+            // Audio vocie mess addeventlistener when scroll top
+            moreMessages.forEach(message => {
+                let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
+                scrollUpAudioRecorder.setAttribute("isPlaying", false);
+                scrollUpAudioRecorder.addEventListener('click', () => {
+                    addEventListenerToAudioRecorder(message.file.id)
+                })
+            })
+
             setTimeout(() => {
                 processing = false;
             }, 50);
@@ -170,7 +297,7 @@ define([
             const index = messages.length - roomInfo.unreadMessages;
 
             if (messages[index]) {
-                messages[index].posUnread = true; 
+                messages[index].posUnread = true;
                 idUnread = messages[index].id.messageId;
             } else {
                 isShowUnread = false;
@@ -191,8 +318,12 @@ define([
         }
 
         $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+
+        // Audio
+        audioPlayStopFunc()
+
         $loadingOfNew.hide();
-        
+
         setTimeout(() => {
             updateRoomInfo(roomInfo);
             processing = false;
@@ -210,7 +341,7 @@ define([
             if (res.status === 2) {
                 onHandleRoomWasDeleted();
             }
-            
+
             return;
         }
 
@@ -244,7 +375,7 @@ define([
         isSearchMode = false;
         isTouchLastMess = false;
     };
-    
+
     return {
         onInit: () => {
             lastOffset = 0;
@@ -273,7 +404,7 @@ define([
                 onGetMessageFromCache(roomInfo);
 
                 // update chat last read time
-                API.post(`chats/${roomInfo.id}/read`).then(() => {})
+                API.post(`chats/${roomInfo.id}/read`).then(() => { })
                     .catch(err => console.error(err));
 
                 return;
@@ -292,7 +423,7 @@ define([
                 let messagesHtml = messagesChat.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
                 $messageList.html(messagesHtml);
                 $loadingOfNew.hide();
-                $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomInfo.id}"]`).find('.badge').html('');
+                $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
                 $wrapper.scrollTop($wrapper[0].scrollHeight);
             }
         },
@@ -301,15 +432,14 @@ define([
             const mess = messList[0];
             let id = GLOBAL.getCurrentRoomId();
             // Prevent duplicate message
-            if ($(`[${ATTRIBUTE_MESSAGE_ID}="${mess?.id?.messageId}"]`).length) {
+            if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
                 return false;
             }
-            
-            let messages = getRoomById(id);
 
+            let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
-                $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 && 
+                $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 &&
                 GLOBAL.getInfomation().id !== mess.sender.id &&
                 !isSearchMode
             ) {
@@ -326,6 +456,22 @@ define([
                 // Render new message
                 $messageList.append(messagesHtml);
 
+                // Audio when send new voice mess
+                if (mess.file?.id) {
+                    const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
+                    if (newAudioRecorder) {
+                        // Scroll to bottom when new voice message sent
+                        onScrollToBottom()
+
+                        newAudioRecorder.setAttribute("isPlaying", false);
+                        newAudioRecorder.addEventListener('click', () => {
+                            console.log('click');
+                            addEventListenerToAudioRecorder(mess.file.id);
+                        })
+                        // addEventListenerToAudioRecorder(mess.file.id);
+                    }
+                }
+
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
@@ -336,7 +482,7 @@ define([
 
         onSyncRemove: (message) => {
             const id = message.id.messageId;
-            const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+            const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
             $message.find('.--mess').removeClass('fwme');
             $message.find('.above-of-mess').removeClass('fwme');
@@ -347,9 +493,9 @@ define([
 
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
-            const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+            const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
 
-            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));       
+            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));
             $message.find('.--edited').removeClass('hidden');
         },
 
@@ -387,7 +533,7 @@ define([
 
         onAddLocal: async (data) => {
             const rid = data.chatId;
-            const info =  GLOBAL.getInfomation();
+            const info = GLOBAL.getInfomation();
             const wrapperHtml = $wrapper.get(0);
             let messages = getRoomById(rid);
             let messagesHtml = '';

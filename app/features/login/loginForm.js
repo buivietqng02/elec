@@ -1,19 +1,19 @@
 define([
-    'shared/api',
+    'axios',
     'shared/functions',
-    'shared/data',
     'app/constant',
     'features/login/loginERP'
 ], (
-    API,
+    axios,
     functions,
-    GLOBAL,
     constant,
     loginERPComp
 ) => {
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
-        TOKEN,
+        BASE_URL,
+        ACCESS_TOKEN,
+        REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
         ROUTE
@@ -42,11 +42,12 @@ define([
         $errMess.html('');
         $loader.show();
 
-        API.postForm('login', `password=${password}&email=${email}`).then(res => {
-            if (res?.data) {
-                setDataToLocalApplication(SESSION_ID, res.data.sessionId);
-                setDataToLocalApplication(USER_ID, res.data.userId);
-                setDataToLocalApplication(TOKEN, res.data.token);
+        axios.post(`${BASE_URL}/auth/login`, `password=${password}&email=${email}`).then(res => {
+            if (res) {
+                setDataToLocalApplication(SESSION_ID, res.sessionId);
+                setDataToLocalApplication(USER_ID, res.userId);
+                setDataToLocalApplication(ACCESS_TOKEN, res.access_token);
+                setDataToLocalApplication(REFRESH_TOKEN, res.refresh_token);
                 navigate(ROUTE.index);
             }
         }).catch((err) => {
@@ -67,7 +68,7 @@ define([
         loading = true;
         $loaderErp.show();
 
-        API.get('erp/token').then(token => {
+        axios.get(`${BASE_URL}/erp/token`).then(token => {
             loading = false;
             $loginForm.hide();
             $loaderErp.hide();
@@ -79,12 +80,18 @@ define([
         });
     };
 
+    const loginGoogle = () => {
+        const redirectUri = `${window.location.protocol}//${window.location.host}`;
+        window.location.assign(`xm/oauth2/authorize/google?redirect_uri=${redirectUri}/oauth2`);
+    };
+
     ob.onInit = () => {
         loading = false;
         $loginERPForm = $('.erp-login-form');
         $loginForm = $('.js_login__form');
         $loginForm.off('submit').on('submit', onSubmit);
-        $loginForm.find('.login-erp-btn').off('.loginERP').on('click.loginERP', loginERP);
+        $loginForm.find('.erp').off('.loginERP').on('click.loginERP', loginERP);
+        $loginForm.find('.google').off('.loginGoogle').on('click.loginGoogle', loginGoogle);
         $loginERPForm.find('.erp-cancel-btn').off('.cancelERP').on('click.cancelERP', leaveERPLoginForm);
         $emailField = $loginForm.find('[name="email"]');
         $passwordField = $loginForm.find('[name="password"]');
