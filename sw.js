@@ -65,10 +65,8 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
     var request = event.request;
-    console.log('outside', request.url);
     if (request.method != 'GET' ||
         (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2")))) {
-        console.log(request.url);
         return;
     }
 
