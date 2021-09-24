@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.1] - 2021-09-24
+### Fix
+- Fixes an issue on scrolling up to see the chat history.
+
 ### [4.0] - 2021-09-23
 ### Add
 - Now users can send voice messages.
