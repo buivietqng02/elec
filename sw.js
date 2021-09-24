@@ -36,10 +36,10 @@ self.addEventListener('install', function (event) {
             .then(function (cache) {
                 cache.addAll(urls);
             }
-        )
+            )
     );
 });
-  
+
 self.addEventListener('activate', function (event) {
     event.waitUntil(caches.keys().then(function (keys) {
         return Promise.all(keys.filter(function (key) {
@@ -62,11 +62,13 @@ self.addEventListener('activate', function (event) {
 //         })
 //     );
 // });
-  
-self.addEventListener('fetch', function(event) {
-    var request = event.request;
 
-    if (request.method != 'GET' || (request.method == 'GET' && request.url.includes("xm/api/sync"))) return;
+self.addEventListener('fetch', function (event) {
+    var request = event.request;
+    if (request.method != 'GET' ||
+        (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2")))) {
+        return;
+    }
 
     if (request.url.includes("xm/api")) {
         var finalResponse = fetch(request).then(function (response) {
@@ -84,7 +86,7 @@ function fromCache(request) {
         .then(response => {
             return response || fetch(request);
         }
-    )
+        )
 }
 
 function update(request) {
@@ -98,7 +100,7 @@ function cacheRequest(request, response) {
     if (response.type === "error" || response.type === "opaque" || response.status != 200 || request.method != 'GET') {
         return Promise.resolve();
     }
-  
+
     return caches
         .open(version)
         .then(cache => cache.put(request, response.clone()));
@@ -107,23 +109,23 @@ function cacheRequest(request, response) {
 function refresh(response) {
     return self.clients.matchAll().then((clients) => {
         clients.forEach((client) => {
-        const message = {
-            type: 'refresh',
-            url: response.url,
-            eTag: response.headers.get('ETag')
-        };
-        client.postMessage(JSON.stringify(message));
+            const message = {
+                type: 'refresh',
+                url: response.url,
+                eTag: response.headers.get('ETag')
+            };
+            client.postMessage(JSON.stringify(message));
         });
     });
 }
-  
+
 const requestNotificationPermission = async () => {
     const permission = await Notification.requestPermission();
     // value of permission can be 'granted', 'default', 'denied'
     // granted: user has accepted the request
     // default: user has dismissed the notification permission popup by clicking on x
     // denied: user has denied the request.
-    if (permission !== 'granted'){
+    if (permission !== 'granted') {
         throw new Error('Permission not granted for Notification');
     }
 }
