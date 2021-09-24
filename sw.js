@@ -65,8 +65,11 @@ self.addEventListener('activate', function (event) {
   
 self.addEventListener('fetch', function(event) {
     var request = event.request;
-
-    if (request.method != 'GET' || (request.method == 'GET' && request.url.includes("xm/api/sync"))) return;
+    console.log('outside', request.url);
+    if (request.method != 'GET' || (request.method == 'GET' && request.url.includes("xm/api/sync"))) {
+        console.log(request.url);
+        return;  
+    }
 
     if (request.url.includes("xm/api")) {
         var finalResponse = fetch(request).then(function (response) {

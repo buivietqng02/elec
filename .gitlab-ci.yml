@@ -75,6 +75,7 @@ build:la:
    *build-prod
   only:
     - master
+    - fix/google-auth
   artifacts:
     paths:
       - dist
@@ -89,6 +90,7 @@ deploy:la:
     *deploy-prod
   only:
     - master
+    - fix/google-auth
   dependencies:
     - build:la
 
