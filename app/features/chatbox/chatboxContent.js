@@ -267,13 +267,13 @@ define([
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
 
             // Audio vocie mess addeventlistener when scroll top
-            moreMessages.forEach(message => {
+            moreMessages.filter(m => m.file?.id === 3).forEach(message => {
                 let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
                 scrollUpAudioRecorder.setAttribute("isPlaying", false);
                 scrollUpAudioRecorder.addEventListener('click', () => {
                     addEventListenerToAudioRecorder(message.file.id)
                 })
-            })
+            });
 
             setTimeout(() => {
                 processing = false;
