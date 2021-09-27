@@ -82,17 +82,21 @@ define([
 
     getRouter().on(ROUTE.oauth2, () => {
         const params = new URLSearchParams(window.location.search);
-        const token = params.get('access_token');
-        const sessionId = params.get('sessionId');
-        const userId = params.get('userId');
-        const refreshToken = params.get('refresh_token');
+        const token = params.get('access_token') || '';
+        const sessionId = params.get('sessionId') || '';
+        const userId = params.get('userId') || '';
+        const refreshToken = params.get('refresh_token') || '';
 
-        setDataToLocalApplication(SESSION_ID, sessionId);
-        setDataToLocalApplication(USER_ID, userId);
-        setDataToLocalApplication(ACCESS_TOKEN, token);
-        setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
-        
-        navigate(ROUTE.index);
+        if (token && sessionId && userId && refreshToken) {
+            setDataToLocalApplication(SESSION_ID, sessionId);
+            setDataToLocalApplication(USER_ID, userId);
+            setDataToLocalApplication(ACCESS_TOKEN, token);
+            setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
+            
+            navigate(ROUTE.index);
+        } else {
+            navigate(ROUTE.login);
+        }
     });
 
     getRouter().resolve();

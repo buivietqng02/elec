@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.2] - 2021-09-24
+### Fix
+- Exclude 'xm/oauth2' requests from sw.js fetch to fix and issue with Google OAuth2.
+
 ### [4.1] - 2021-09-24
 ### Fix
 - Fixes an issue on scrolling up to see the chat history.
