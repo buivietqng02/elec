@@ -125,7 +125,7 @@ define([
                 playPromise.then(() => {
                     audioMicroPic.src = `/assets/images/microphoneListening.svg`
 
-                    console.log(audio.getAttribute('duration'))
+                    // console.log(audio.getAttribute('duration'))
                     countDownTimmer = setInterval(() => {
                         audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
                     }, 1000)

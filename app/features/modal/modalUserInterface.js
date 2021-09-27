@@ -1,23 +1,23 @@
 define([
-    'shared/api', 
-    'shared/data', 
-    'shared/functions', 
+    'shared/api',
+    'shared/data',
+    'shared/functions',
     'app/constant'
 ], (
-    API, 
-    GLOBAL, 
-    functions, 
+    API,
+    GLOBAL,
+    functions,
     constant
 ) => {
-    const { 
-        render, 
-        setDataToLocalApplication 
+    const {
+        render,
+        setDataToLocalApplication
     } = functions;
     const {
-        BODY_BG_THEME, 
-        BODY_FZ, 
+        BODY_BG_THEME,
+        BODY_FZ,
         ENTER_KEY_PREFERENCE,
-        THEMES, 
+        THEMES,
         FONTSIZES,
         ENTER_KEY_PREFERENCES
     } = constant;
@@ -28,6 +28,8 @@ define([
     let $themes;
     let $fontsizes;
     let $saveBtn;
+    let btnVoiceChatDescription;
+    let initVoiceChat;
     const themeTemplate = '<div class="uimw-theme-item" data-uimw-theme="{name}" style="background: {color}"></div>';
     const fontTemplate = '<div class="uimw-font-item" data-uimw-font="{size}" style="font-size: {size}">Aa</div>';
     const enterKeyTemplate = '<input class="uimw-enter-item-input" type="radio" data-uimw-enter-key="{value}" name="enterKey" id="{value}"></input><label class="uimw-enter-item-label" for="{value}">{name}</label>';
@@ -76,6 +78,14 @@ define([
         $themes.removeClass('active');
         $this.addClass('active');
         theme = $this.data().uimwTheme;
+
+        if (theme === 'body_theme_black') {
+            initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
+            btnVoiceChatDescription.style.color = '#fff';
+        } else {
+            initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
+            btnVoiceChatDescription.style.color = '#111';
+        }
     };
 
     const onChangeFontsize = (e) => {
@@ -103,9 +113,9 @@ define([
         setDataToLocalApplication(BODY_FZ, fontsize);
         setDataToLocalApplication(ENTER_KEY_PREFERENCE, enterKeyPreference);
 
-        API.put('users/preferences', { body_bg_theme: theme, body_fz: fontsize, enter_key_preference: enterKeyPreference }).then(() => {});
+        API.put('users/preferences', { body_bg_theme: theme, body_fz: fontsize, enter_key_preference: enterKeyPreference }).then(() => { });
     };
-    
+
     return {
         onInit: () => {
             if (!$('#userInterfaceModal').length) {
@@ -120,6 +130,10 @@ define([
                 $fontsizes = $('[data-uimw-font]');
                 $enterKeyPreferences = $('[data-uimw-enter-key]');
                 $saveBtn = $modal.find('.btn-outline-primary');
+
+                initVoiceChat = document.querySelector('#init-voiceChat');
+                btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description');
+
                 $themes.click(onChangeTheme);
                 $fontsizes.click(onChangeFontsize);
                 $enterKeyPreferences.click(onChangeEnterKeyPreference);

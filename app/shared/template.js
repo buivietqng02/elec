@@ -326,7 +326,7 @@ define(['shared/icon'], (ICON) => ({
                                 <!-- Voice chat btn -->
 
                                 <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">
-                                    <img class="btn__voice-chat-picture" src="/assets/images/microphone.svg" alt="">
+                                    <i class="micro-vc"></i>
                                 </button>
                                 <!-- End Voice chat btn -->
 
