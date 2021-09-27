@@ -30,6 +30,7 @@ define([
     let $saveBtn;
     let btnVoiceChatDescription;
     let initVoiceChat;
+    let isVMInited;
     const themeTemplate = '<div class="uimw-theme-item" data-uimw-theme="{name}" style="background: {color}"></div>';
     const fontTemplate = '<div class="uimw-font-item" data-uimw-font="{size}" style="font-size: {size}">Aa</div>';
     const enterKeyTemplate = '<input class="uimw-enter-item-input" type="radio" data-uimw-enter-key="{value}" name="enterKey" id="{value}"></input><label class="uimw-enter-item-label" for="{value}">{name}</label>';
@@ -78,14 +79,6 @@ define([
         $themes.removeClass('active');
         $this.addClass('active');
         theme = $this.data().uimwTheme;
-
-        if (theme === 'body_theme_black') {
-            initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
-            btnVoiceChatDescription.style.color = '#fff';
-        } else {
-            initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
-            btnVoiceChatDescription.style.color = '#111';
-        }
     };
 
     const onChangeFontsize = (e) => {
@@ -112,6 +105,17 @@ define([
         setDataToLocalApplication(BODY_BG_THEME, theme);
         setDataToLocalApplication(BODY_FZ, fontsize);
         setDataToLocalApplication(ENTER_KEY_PREFERENCE, enterKeyPreference);
+
+        isVMInited = initVoiceChat.getAttribute('isusingvoicemess');
+        if (isVMInited === 'true') {
+            if (theme === 'body_theme_black') {
+                initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
+                btnVoiceChatDescription.style.color = '#80C9FF';
+            } else {
+                initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
+                btnVoiceChatDescription.style.color = '#111';
+            }
+        }
 
         API.put('users/preferences', { body_bg_theme: theme, body_fz: fontsize, enter_key_preference: enterKeyPreference }).then(() => { });
     };

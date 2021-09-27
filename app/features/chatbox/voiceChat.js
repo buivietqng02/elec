@@ -309,7 +309,7 @@ define([
             initRecordFunc('start');
             if (GLOBAL.getBodyBgTheme() === 'body_theme_black') {
                 initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
-                btnVoiceChatDescription.style.color = '#fff';
+                btnVoiceChatDescription.style.color = '#80C9FF';
             } else {
                 initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
                 btnVoiceChatDescription.style.color = '#111';
