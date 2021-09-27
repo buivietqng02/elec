@@ -3748,6 +3748,7 @@ body.body_fz_18 {
     -o-transition-property: none;
     transition-property: none;
     z-index: 2 !important;
+    text-align: center;
   }
 
   .btn-voice-chat-description .cancel-voice-record{
@@ -3903,7 +3904,7 @@ body.body_fz_18 {
 .record__start-stop-pulse-ring{
   width: 90px;
   height: 90px;
-  border: 5px solid red;
+  border: 5px solid #0093FF;
   border-radius: 50%;
   position: absolute;
   top: -5px;
@@ -3931,11 +3932,12 @@ body.body_fz_18 {
   left: 50%;
   transform: translateX(-50%);
   transition: all 0.5s;
-  z-index: -1;
+  z-index: 2;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  text-align: center;
 }
 
 .btn-voice-chat-description .cancel-voice-record{
@@ -3963,7 +3965,7 @@ body.body_fz_18 {
 }
 
 .bar {
-  background: #52467b;
+  background: #0093FF;
   bottom: 1px;
   height: 3px;
   width: 10px;
