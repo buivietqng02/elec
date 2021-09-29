@@ -15,7 +15,7 @@ define([
     let isVoiceInit = false;
     let initVoiceChat;
     let initVoiceButton;
-    let btnVoiceChatPic;
+    // let btnVoiceChatPic;
     let stream = null;
     let chunks = [];
     let recorder;
@@ -94,10 +94,9 @@ define([
         btnVoiceChatDescription.style.bottom = '160px';
 
         // cancelRecord = document.querySelector('.cancel-voice-record');
-
         if (recorder.state === 'inactive') {
             recorder.start();
-            startRecordBtn.style.background = 'red';
+            startRecordBtn.style.background = 'white';
             notiStatus.innerHTML = `
             <div id="bars">
                 <div class="bar"></div>
@@ -222,12 +221,12 @@ define([
             } else {
                 mimeTypeBrowser = 'audio/webm';
             }
+
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
                 try {
                     recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
-
                     // Click event for pc
                     startRecordBtn.addEventListener('mousedown', () => {
                         holdRecord();
@@ -241,10 +240,8 @@ define([
                         holdRecord();
                         // mouseMoved = false;
                         // window.addEventListener('touchmove', touchPosition);
-                        window.addEventListener('touchend', setMouseUPEvent);
                     });
-                    // startRecordBtn.addEventListener('touchend', () => releaseRecord('mouseup'));
-                    // Touch event
+                    startRecordBtn.addEventListener('touchend', setMouseUPEvent);
 
                     recorder.ondataavailable = e => {
                         chunks.push(e.data);
@@ -310,7 +307,14 @@ define([
     const toggleVoiceChat = () => {
         if (!isVoiceInit) {
             initRecordFunc('start');
-            btnVoiceChatPic.src = '/assets/images/keyboard.png';
+            if (GLOBAL.getBodyBgTheme() === 'body_theme_black') {
+                initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
+                btnVoiceChatDescription.style.color = '#80C9FF';
+            } else {
+                initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
+                btnVoiceChatDescription.style.color = '#111';
+            }
+
             initVoiceButton.style.display = 'block';
             btnVoiceChatDescription.style.display = 'block';
             inputTextChat.classList.add('de-active');
@@ -318,13 +322,13 @@ define([
             isVoiceInit = true;
             initVoiceChat.setAttribute('isUsingVoiceMess', true);
         } else {
-            btnVoiceChatPic.src = '/assets/images/microphone.svg';
+            initRecordFunc('stop');
+            initVoiceChat.innerHTML = '<i class="micro-vc"></i>';
             initVoiceButton.style.display = 'none';
             btnVoiceChatDescription.style.display = 'none';
             inputTextChat.classList.remove('de-active');
             inputTextChat.style.height = '43px';
             attachBtn.style.display = 'block';
-            initRecordFunc('stop');
             isVoiceInit = false;
             initVoiceChat.setAttribute('isUsingVoiceMess', false);
         }
@@ -350,7 +354,7 @@ define([
             attachBtn = document.querySelector('.btn__attach');
 
             btnVoiceChatDescription = document.querySelector('.btn-voice-chat-description');
-            btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture');
+            // btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture');
 
             initVoiceChat.addEventListener('click', toggleVoiceChat);
         }

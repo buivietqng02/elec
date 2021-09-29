@@ -4,6 +4,13 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.3] - 2021-09-29
+### Update
+- Update UI of voice messages recording.
+- Improve response to user on Integrate ERP contacts.
+### Fix
+- It is now possible to forward messages to your own channels.
+
 ### [4.2] - 2021-09-24
 ### Fix
 - Exclude 'xm/oauth2' requests from sw.js fetch to fix and issue with Google OAuth2.
