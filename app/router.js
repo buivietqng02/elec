@@ -5,7 +5,8 @@ define([
     'app/app',
     'app/login',
     'app/meeting',
-    'shared/template'
+    'shared/template',
+    'shared/registerSW'
 ], (
     constant,
     functions,
@@ -13,7 +14,8 @@ define([
     App,
     Login,
     Meeting,
-    template
+    template,
+    registerSW
 ) => {
     require('bootstrap/js/dist/modal');
     require('bootstrap/js/dist/tooltip');
@@ -25,6 +27,10 @@ define([
     require('assets/css/style.css');
     require('assets/css/index.less');
     jsrender($);
+    
+    if (process.env.NODE_ENV === 'production') {
+        registerSW.onInit();
+    }
 
     const {
         ACCESS_TOKEN,
