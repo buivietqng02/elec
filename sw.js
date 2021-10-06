@@ -29,14 +29,12 @@ const urls = [
 ];
 
 self.addEventListener('install', function (event) {
-    self.skipWaiting();
-
     event.waitUntil(
         caches.open(version)
             .then(function (cache) {
                 cache.addAll(urls);
             }
-            )
+        )
     );
 });
 
@@ -80,13 +78,19 @@ self.addEventListener('fetch', function (event) {
     }
 });
 
+self.addEventListener('message', function (event) {
+    if (event.data.action === 'skipWaiting') {
+        self.skipWaiting();
+    }
+});
+
 function fromCache(request) {
     return caches.open(version)
         .then(cache => cache.match(request, { ignoreSearch: true }))
         .then(response => {
             return response || fetch(request);
         }
-        )
+    )
 }
 
 function update(request) {
