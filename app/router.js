@@ -6,7 +6,8 @@ define([
     'app/login',
     'app/meeting',
     'shared/template',
-    'shared/registerSW'
+    'shared/registerSW',
+    'features/login/signupForm'
 ], (
     constant,
     functions,
@@ -15,7 +16,8 @@ define([
     Login,
     Meeting,
     template,
-    registerSW
+    registerSW,
+    signupFormComp
 ) => {
     require('bootstrap/js/dist/modal');
     require('bootstrap/js/dist/tooltip');
@@ -83,6 +85,20 @@ define([
             initAgain();
             $wrapper.html(template.login);
             Login.onInit();
+        }
+    });
+
+    getRouter().on(ROUTE.signup, () => {
+        if (isLogin()) {
+            navigate(ROUTE.index);
+        } else {
+            const params = new URLSearchParams(window.location.search);
+            const inviteKey = params.get('invite_key') || '';
+            const email = params.get('email') || '';
+
+            initAgain();
+            $wrapper.html(template.signup);
+            signupFormComp.onInit(inviteKey, email);
         }
     });
 

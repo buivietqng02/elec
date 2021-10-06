@@ -53,7 +53,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             login: '/login',
             meeting: '/meeting',
             index: '/',
-            oauth2: '/oauth2'
+            oauth2: '/oauth2',
+            signup: '/signup'
         }
     };
 
