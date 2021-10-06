@@ -4,6 +4,12 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.4] - 2021-10-06
+### Add
+- Add new route 'signup'.
+### Fix
+- Fix issue: handle 'invite_key' when a invited user register a new account.
+
 ### [4.3] - 2021-09-29
 ### Update
 - Update UI of voice messages recording.
