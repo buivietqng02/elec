@@ -9,7 +9,8 @@ define([
     'features/chatbox/chatboxTopbar',
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
-    'features/logout/logout'
+    'features/logout/logout',
+    'shared/alert'
 ], (
     constant,
     API,
@@ -21,7 +22,8 @@ define([
     chatboxTopbarComp,
     notificationComp,
     modalPhoneRequest,
-    logout
+    logout,
+    ALERT
 ) => {
     let timeout;
     let isInit = false;
@@ -283,6 +285,22 @@ define([
         });
     };
 
+    /**
+     * Method to add new invite to chat list
+     * @param {*} newInviteEvents 
+     */
+    const handleNewInviteEvents = (newInviteEvents) => {
+        newInviteEvents.forEach(newInviteEvent => {
+            const { chat } = newInviteEvent;
+            GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chat), ...GLOBAL.getRooms()]);
+            sidebarService.newRoomUp(chat);
+            // send alert if user is invitation receiver
+            if (!chat.sender) {
+                ALERT.show(`${chat.partner.name} has sent you an invitation`, 'success');
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -315,6 +333,10 @@ define([
 
                 if (res?.userReadChatEvents?.length) {
                     handleUserReadChatEvents(res.userReadChatEvents);
+                }
+
+                if (res?.newInviteEvents?.length) {
+                    handleNewInviteEvents(res.newInviteEvents);
                 }
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
