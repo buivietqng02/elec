@@ -37,6 +37,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ATTRIBUTE_SIDEBAR_ROOM: 'data-room-id',
         ATTRIBUTE_MESSAGE_ID: 'data-chat-id',
         ATTRIBUTE_LANGUAGE: 'data-language',
+        ATTRIBUTE_INVITE_ID: 'data-invite-id',
         WEBRTC_URL: webrtc,
         LANGUAGE_KEY: 'lang',
         LANGUAGES: {
