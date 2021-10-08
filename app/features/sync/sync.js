@@ -301,6 +301,34 @@ define([
         });
     };
 
+    /**
+     * Method to mark as accepted an invite
+     * @param {*} acceptInviteEvents 
+     */
+    const handleAcceptInviteEvents = (acceptInviteEvents) => {
+        acceptInviteEvents.forEach(acceptInviteEvent => {
+            const { chat } = acceptInviteEvent;
+            const { partner } = chat;
+            const chatItemHtml = $(`[${constant.ATTRIBUTE_INVITE_ID}="${partner.id}"]`);
+            chatItemHtml.removeClass('p_disabled');
+            chatItemHtml.find('.preview').text('');
+            chatItemHtml.attr(constant.ATTRIBUTE_SIDEBAR_ROOM, chat.id);
+            chatItemHtml.removeAttr(constant.ATTRIBUTE_INVITE_ID);
+
+            GLOBAL.setRooms(GLOBAL.getRooms().map(room => {
+                const tempRoom = { ...room };
+                if (room.partner?.email === partner.email) {
+                    tempRoom.id = chat.id;
+                }
+                return tempRoom;
+            }));
+
+            if (chat.sender) {
+                ALERT.show(`${chat.partner.name} has accepted your invitation`, 'success');
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -337,6 +365,10 @@ define([
 
                 if (res?.newInviteEvents?.length) {
                     handleNewInviteEvents(res.newInviteEvents);
+                }
+
+                if (res?.acceptInviteEvents?.length) {
+                    handleAcceptInviteEvents(res.acceptInviteEvents);
                 }
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
