@@ -33,8 +33,7 @@ define([
 
         axios.post(`${API_URL}/logout?sessionId=${sessionId}`, null, {
             headers: getHeaderJson()
-        }).then(() => { ob.cleanSession(); }).catch(err => { 
-            console.error(err);
+        }).then(() => ob.cleanSession()).catch(() => {
             ob.cleanSession();
         });
     };
