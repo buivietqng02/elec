@@ -75,8 +75,6 @@ define([
                     functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
                     functions.setCookie(response.data.access_token, 3650);
 
-                    originalConfig.headers['Authorization'] = `Bearer ${response.data.token}`;
-
                     return axios(originalConfig);
                 } catch (_error) {
                     Logout.cleanSession();
