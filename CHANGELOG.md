@@ -9,6 +9,8 @@ All changes to XM WEB CLIENT project will be documented in this file.
 - Add new route 'signup'.
 - Handle send and accept invitations on sync method.
 - Add image slider on chats.
+### Update
+- Handle errors properly on sync.js and on request interceptor.
 ### Fix
 - Fix issue: handle 'invite_key' when a invited user register a new account.
 

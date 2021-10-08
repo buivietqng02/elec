@@ -9,7 +9,6 @@ define([
     'features/chatbox/chatboxTopbar',
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
-    'features/logout/logout',
     'shared/alert',
     'features/modal/modalLogout'
 ], (
@@ -23,7 +22,6 @@ define([
     chatboxTopbarComp,
     notificationComp,
     modalPhoneRequest,
-    logout,
     ALERT,
     modalLogout
 ) => {
@@ -41,9 +39,6 @@ define([
     const { 
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
-    const {
-        cleanSession
-    } = logout;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -342,8 +337,7 @@ define([
         if (data[SESSION_ID]) {
             API.get('sync', data).then(res => {
                 if (!isLogin()) {
-                    console.log('You were logged out because the access token was not found.');
-                    cleanSession();
+                    return;
                 }
 
                 if ((functions.getRouter()?.current || [])[0]?.url) {
@@ -377,13 +371,15 @@ define([
                     chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
                 }
             }).catch((err) => {
-                console.error(err?.response?.data?.details || 'Something went wrong');
-                if (err.response?.status !== 404) {
-                    setTimeout(onSync, 5000);
-                } else {
-                    // API returns 404 if session_id is not found
-                    // Logout because onSync() won't work anymore without a valid session_id
-                    modalLogout.onInit(err?.response?.data?.details);
+                if (err.message !== 'Error refreshing token') {
+                    if (err.response?.status === 404) {
+                        // API returns 404 if session_id is not found
+                        // Logout because onSync() won't work anymore without a valid session_id
+                        modalLogout.onInit(err?.response?.data?.details);
+                    } else {
+                        console.error(err.response.data?.details || 'Something went wrong');
+                        setTimeout(onSync, 5000);
+                    }
                 }
             });
         }
