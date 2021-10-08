@@ -10,7 +10,8 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
     'features/logout/logout',
-    'shared/alert'
+    'shared/alert',
+    'features/modal/modalLogout'
 ], (
     constant,
     API,
@@ -23,7 +24,8 @@ define([
     notificationComp,
     modalPhoneRequest,
     logout,
-    ALERT
+    ALERT,
+    modalLogout
 ) => {
     let timeout;
     let isInit = false;
@@ -376,7 +378,13 @@ define([
                 }
             }).catch((err) => {
                 console.error(err?.response?.data?.details || 'Something went wrong');
-                setTimeout(onSync, 5000);
+                if (err.response?.status !== 404) {
+                    setTimeout(onSync, 5000);
+                } else {
+                    // API returns 404 if session_id is not found
+                    // Logout because onSync() won't work anymore without a valid session_id
+                    modalLogout.onInit(err?.response?.data?.details);
+                }
             });
         }
     };
