@@ -20,6 +20,7 @@ define([
         ATTRIBUTE_CHANGE_IMAGE_GROUP,
         ATTRIBUTE_CHANGE_GROUP_NAME,
         ATTRIBUTE_CHANGE_NAME,
+        ATTRIBUTE_INVITE_ID
     } = constant;
     const ob = {};
     const offset = contactHeight < 600 ? 10 : Math.ceil(contactHeight/60);
@@ -28,7 +29,7 @@ define([
     let search = '';
     let filter = 1;
     const template = `
-        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup}>
+        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
             <img ${ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
             <div class="badge badge-orange">{unread}</div>
             <div class="p-pl-10 meta">
@@ -193,6 +194,7 @@ define([
         data = {
             id: id,
             isGroup: group ? 'data-is-group="true"' : 'data-is-group="false"',
+            inviteId: id ? '' : `${ATTRIBUTE_INVITE_ID}="${partner?.id}"`,
             status,
             live,
             unread: numUnRead,

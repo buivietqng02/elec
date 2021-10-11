@@ -27,7 +27,7 @@ define([
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
-        const { roomId } = $this.data();
+        const roomId = $this.attr('data-room-id');
         let roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
                 return true;

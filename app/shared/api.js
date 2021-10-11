@@ -2,14 +2,14 @@ define([
     'shared/data',
     'app/constant',
     'shared/functions',
-    'features/logout/logout',
-    'axios'
+    'axios',
+    'features/modal/modalLogout'
 ], (
     GLOBAL,
     constant,
     functions,
-    Logout,
-    axios
+    axios,
+    modalLogout
 ) => {
     const {
         BASE_URL,
@@ -66,7 +66,7 @@ define([
         const originalConfig = error.config;
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
-            if (error.response.status === 401 && !error.config.url.includes('/auth/') && !originalConfig._retry) {
+            if (error.response.status === 401 && !error.config.url.includes('/auth/') && !error.config.url.includes('/logout') && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
                     const response = await refreshToken();
@@ -75,13 +75,11 @@ define([
                     functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
                     functions.setCookie(response.data.access_token, 3650);
 
-                    originalConfig.headers['Authorization'] = `Bearer ${response.data.token}`;
-
                     return axios(originalConfig);
                 } catch (_error) {
-                    Logout.cleanSession();
-                    if (_error.response && _error.response.data) {
-                        return Promise.reject(_error.response.data);
+                    if (error.response) {
+                        modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
+                        return Promise.reject(new Error('Error refreshing token'));
                     }
                     return Promise.reject(_error);
                 }

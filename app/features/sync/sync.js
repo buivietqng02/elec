@@ -9,7 +9,8 @@ define([
     'features/chatbox/chatboxTopbar',
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
-    'features/logout/logout'
+    'shared/alert',
+    'features/modal/modalLogout'
 ], (
     constant,
     API,
@@ -21,7 +22,8 @@ define([
     chatboxTopbarComp,
     notificationComp,
     modalPhoneRequest,
-    logout
+    ALERT,
+    modalLogout
 ) => {
     let timeout;
     let isInit = false;
@@ -37,9 +39,6 @@ define([
     const { 
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
-    const {
-        cleanSession
-    } = logout;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -283,6 +282,50 @@ define([
         });
     };
 
+    /**
+     * Method to add new invite to chat list
+     * @param {*} newInviteEvents 
+     */
+    const handleNewInviteEvents = (newInviteEvents) => {
+        newInviteEvents.forEach(newInviteEvent => {
+            const { chat } = newInviteEvent;
+            GLOBAL.setRooms([GLOBAL.setRoomWithAdapter(chat), ...GLOBAL.getRooms()]);
+            sidebarService.newRoomUp(chat);
+            // send alert if user is invitation receiver
+            if (!chat.sender) {
+                ALERT.show(`${chat.partner.name} has sent you an invitation`, 'success');
+            }
+        });
+    };
+
+    /**
+     * Method to mark as accepted an invite
+     * @param {*} acceptInviteEvents 
+     */
+    const handleAcceptInviteEvents = (acceptInviteEvents) => {
+        acceptInviteEvents.forEach(acceptInviteEvent => {
+            const { chat } = acceptInviteEvent;
+            const { partner } = chat;
+            const chatItemHtml = $(`[${constant.ATTRIBUTE_INVITE_ID}="${partner.id}"]`);
+            chatItemHtml.removeClass('p_disabled');
+            chatItemHtml.find('.preview').text('');
+            chatItemHtml.attr(constant.ATTRIBUTE_SIDEBAR_ROOM, chat.id);
+            chatItemHtml.removeAttr(constant.ATTRIBUTE_INVITE_ID);
+
+            GLOBAL.setRooms(GLOBAL.getRooms().map(room => {
+                const tempRoom = { ...room };
+                if (room.partner?.email === partner.email) {
+                    tempRoom.id = chat.id;
+                }
+                return tempRoom;
+            }));
+
+            if (chat.sender) {
+                ALERT.show(`${chat.partner.name} has accepted your invitation`, 'success');
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -294,8 +337,7 @@ define([
         if (data[SESSION_ID]) {
             API.get('sync', data).then(res => {
                 if (!isLogin()) {
-                    console.log('You were logged out because the access token was not found.');
-                    cleanSession();
+                    return;
                 }
 
                 if ((functions.getRouter()?.current || [])[0]?.url) {
@@ -317,12 +359,28 @@ define([
                     handleUserReadChatEvents(res.userReadChatEvents);
                 }
 
+                if (res?.newInviteEvents?.length) {
+                    handleNewInviteEvents(res.newInviteEvents);
+                }
+
+                if (res?.acceptInviteEvents?.length) {
+                    handleAcceptInviteEvents(res.acceptInviteEvents);
+                }
+
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                     chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
                 }
             }).catch((err) => {
-                console.error(err?.response?.data?.details || 'Something went wrong');
-                setTimeout(onSync, 5000);
+                if (err.message !== 'Error refreshing token') {
+                    if (err.response?.status === 404) {
+                        // API returns 404 if session_id is not found
+                        // Logout because onSync() won't work anymore without a valid session_id
+                        modalLogout.onInit(err?.response?.data?.details);
+                    } else {
+                        console.error(err.response.data?.details || 'Something went wrong');
+                        setTimeout(onSync, 5000);
+                    }
+                }
             });
         }
     };

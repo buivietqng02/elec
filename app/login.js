@@ -1,14 +1,16 @@
 define([
     'features/language/language',
+    'app/constant',
+    'shared/functions',
     'features/modal/modalChangeLanguage',
     'features/login/loginForm',
-    'features/login/signupForm',
     'features/login/resetPasswordForm'
 ], (
     languageComp,
+    constant,
+    functions,
     modalChangeLanguageComp,
     loginFormComp,
-    signupFormComp,
     resetPasswordFormComp
 ) => {
     const ob = {};
@@ -41,19 +43,12 @@ define([
         $('[data-toggle="tooltip"]').tooltip();
         $('#change-lang-btn').click(modalChangeLanguageComp.onInit);
         $('.login__btn-signup').off().click(() => {
-            $('.js-login').removeClass('active');
-            $('.js-signup').addClass('active');
-            signupFormComp.onInit();
+            functions.navigate(constant.ROUTE.signup);
         });
         $('.login__btn-forgot').off().click(() => {
             $('.js-login').removeClass('active');
             $('.js-forget').addClass('active');
             resetPasswordFormComp.onInit();
-        });
-        $('.js-signup .js-btn-cancel').off().click(() => {
-            $('.js-login').addClass('active');
-            $('.js-signup').removeClass('active');
-            loginFormComp.onInit();
         });
         $('.js-forget .js-btn-cancel').off().click(() => {
             $('.js-login').addClass('active');

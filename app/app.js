@@ -21,7 +21,6 @@ define([
     'features/chatbox/emoji',
     'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
-    'features/modal/modalUpdateVersion',
     'features/notification/notification'
 
 ], (
@@ -47,7 +46,6 @@ define([
     emojiComp,
     voiceChatComp,
     modalShowImageFullComp,
-    modalUpdateVersionComp,
     notificationComp
 ) => {
     const {
@@ -104,20 +102,6 @@ define([
 
     const onAssignDataToStore = (data) => {
         setGeneral(data);
-    };
-
-    const onRegisterSW = () => {
-        if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                modalUpdateVersionComp.onInit();
-            });
-
-            navigator.serviceWorker.register('sw.js').then(reg => {
-                setInterval(() => {
-                    reg.update();
-                }, 90000);
-            });
-        }
     };
 
     const onAssignAdvanceThemeBody = () => {
@@ -192,9 +176,9 @@ define([
     };
 
     const parseJwt = (token) => {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
     
@@ -202,16 +186,20 @@ define([
     };
 
     const isJwtExpired = (token) => {
-        if (typeof(token) !== 'string' || !token) throw new Error('Invalid token provided');
+        if (typeof(token) !== 'string' || !token) {
+            throw new Error('Invalid token provided');
+        }
       
         let isJwtExpired = false;
         const { exp } = parseJwt(token);
         const currentTime = new Date().getTime() / 1000;
       
-        if (currentTime > exp) isJwtExpired = true;
+        if (currentTime > exp) {
+            isJwtExpired = true;
+        }
       
         return isJwtExpired;
-      }
+    }
 
     const initInformationFromAPI = () => {
         const isTokenExpired = isJwtExpired(getDataToLocalApplication(ACCESS_TOKEN));
@@ -299,7 +287,6 @@ define([
         $notiBoard.addClass('run');
         languageComp.onInit();
         syncComp.onInitAgain();
-        onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
