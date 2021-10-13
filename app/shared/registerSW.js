@@ -12,8 +12,7 @@ define([], () => {
     
         refreshing = true;
         try {
-            newWorker.postMessage({ action: 'skipWaiting' });
-            window.location.reload();
+            window.location.reload(true);
         } catch {
             console.log('something went wrong');
             window.location.reload();
