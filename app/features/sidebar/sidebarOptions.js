@@ -110,8 +110,9 @@ define([
 
     const showMeetingPage = () => {
         offEventClickOutside();
-        const id = `f${(+new Date).toString(16)}`.toUpperCase();
-        window.open(constant.ROUTE.meeting+'/'+id, '_blank').focus();
+        const id = `f${(+new Date()).toString(16)}`.toUpperCase();
+        const url = `${constant.ROUTE.meeting}/${id}`;
+        window.open(url, '_blank').focus();
     };
 
     const showModalSendInvite = (e) => {
