@@ -115,8 +115,6 @@ define([
         API.get('conference').then((res) => {
             const id = (+new Date()).toString(16).toUpperCase();
             const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
-            console.log(url)
-            console.log(res)
             window.open(url, '_blank').focus();
         }).catch((err) => {
             console.log(err);
