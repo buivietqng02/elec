@@ -377,7 +377,7 @@ define([
                         // Logout because onSync() won't work anymore without a valid session_id
                         modalLogout.onInit(err?.response?.data?.details);
                     } else {
-                        console.error(err.response.data?.details || 'Something went wrong');
+                        console.error(err.response?.data?.details || 'Something went wrong');
                         setTimeout(onSync, 5000);
                     }
                 }

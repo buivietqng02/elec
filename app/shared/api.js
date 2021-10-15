@@ -51,13 +51,15 @@ define([
 
     // Interceptors
     axios.interceptors.request.use((request) => {
-        if (request.url.includes('xm/api/'))
-        request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
+        if (request.url.includes('xm/api/')) {
+            request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
+            request.headers['Accept-Language'] = GLOBAL.getLanguage();
+        }
         return request;
     },
-    (error) => {
-        return Promise.reject(error);
-    });
+        (error) => {
+            return Promise.reject(error);
+        });
 
     axios.interceptors.response.use((response) => {
         GLOBAL.setNetworkStatus(true);
