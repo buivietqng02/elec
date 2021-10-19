@@ -202,24 +202,6 @@ define([
     }
 
     const initInformationFromAPI = () => {
-        const isTokenExpired = isJwtExpired(getDataToLocalApplication(ACCESS_TOKEN));
-
-        if (isTokenExpired) {
-            console.log('token expired');
-            API.get('users/preferences').then((res) => {
-                initAPI();
-                return;
-            }).catch((err) => {
-                console.log(err);
-                return;
-            });
-            return;
-        }
-
-        initAPI();
-    };
-
-    const initAPI = () => {
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
 
         // Get server version
