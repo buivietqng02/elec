@@ -85,29 +85,39 @@ define([
             if (error.config.url.includes('/auth/') || error.config.url.includes('/logout')) {
                 isRefreshing = false;
                 return Promise.reject(error);
-            } else if (error.response.status === 401) {
+            } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
-                    if (!isRefreshing) {
+                    if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
 
+                        // refresh the token in API and wait for response
                         const response = await refreshToken();
 
+                        // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
                         functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
                         functions.setCookie(response.data.access_token, 3650);
 
+                        // and send the response data to the subject
+                        // (data will be multicasted to observers subscribed to this subject)
                         refreshTokenSubject.next(response.data);
 
+                        // refreshing process is finished
                         isRefreshing = false;
 
+                        // retry the failed request
                         return axios(originalConfig);
-                    } else {
+                    } else { // there is a refreshing process in progress:
+                        // don't refresh token, instead suscribe to the 
+                        // refresh token subject and wait for a response
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null
                             take(1), // take the first value
                             switchMap((data) => Rx.of(data)))
                             .subscribe(() => originalConfig);
+
+                        // retry the failed request 
                         return axios(req);
                     }
                 } catch (_error) {
