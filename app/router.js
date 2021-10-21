@@ -78,7 +78,7 @@ define([
         // initAgain();
         // $wrapper.html(template.meeting);
         // Meeting.onInit();
-        if(!isLogin()){
+        if(!isLogin()) {
             navigate(ROUTE.login);
         } else {
             API.get('conference').then((res) => {
