@@ -4,6 +4,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.6] - 2021-10-21
+### Update
+- Update route /meeting.
+- Add comments to refresh token code.
+
 ### [4.5] - 2021-10-15
 ### Update
 - Improvements to XM meetings.

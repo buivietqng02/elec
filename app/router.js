@@ -2,6 +2,7 @@ define([
     'app/constant',
     'shared/functions',
     'shared/data',
+    'shared/api',
     'app/app',
     'app/login',
     'app/meeting',
@@ -12,6 +13,7 @@ define([
     constant,
     functions,
     GLOBAL,
+    API,
     App,
     Login,
     Meeting,
@@ -73,9 +75,20 @@ define([
     });
 
     getRouter().on(ROUTE.meeting, () => {
-        initAgain();
-        $wrapper.html(template.meeting);
-        Meeting.onInit();
+        // initAgain();
+        // $wrapper.html(template.meeting);
+        // Meeting.onInit();
+        if (!isLogin()) {
+            navigate(ROUTE.login);
+        } else {
+            API.get('conference').then((res) => {
+                const id = (+new Date()).toString(16).toUpperCase();
+                const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+                window.location.replace(url);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     });
 
     getRouter().on(ROUTE.login, () => {
