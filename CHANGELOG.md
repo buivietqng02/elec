@@ -4,6 +4,14 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.5] - 2021-10-15
+### Update
+- Improvements to XM meetings.
+- Add 'Accept-Language' header to API requets on interceptor.
+- Improve user upload avatar function.
+### Fix
+- Fix issue on sync method.
+
 ### [4.4] - 2021-10-06
 ### Add
 - Add new route 'signup'.

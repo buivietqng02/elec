@@ -5,13 +5,15 @@ define([
     'features/chatbox/chatboxInput', 
     'features/modal/modalForwardMessage',
     'features/modal/modalMessageInfo',
+    'features/modal/modalRemoveMessage'
 ], (
     GLOBAL,
     ALERT,
     functions,
     chatboxInputComp, 
     modalForwardMessageComp,
-    modalMessageInfoComp
+    modalMessageInfoComp,
+    modalRemoveMessage
 ) => {
     const message = {};
     let $message;
@@ -65,16 +67,8 @@ define([
     };
 
     const onRemove = () => {
-        const { chatId } = $message.data();
-        const value = $message.find('.--mess').html();
-
         offEventClickOutside();
-
-        $message.find('.--mess').addClass('--message-removed').html('This message was removed');
-        $message.find('.btn-message-settings').hide();
-        $message.find('.--double-check').addClass('hidden');
-
-        chatboxInputComp.onRemove(chatId, value);
+        modalRemoveMessage.onInit($message);
     };
 
     const onCopyText = () => {

@@ -3030,7 +3030,8 @@ body.body_fz_18 {
 
 #acceptInvitationModal .modal-dialog,
 #inviteModal .modal-dialog,
-#sendErpModal .modal-dialog {
+#sendErpModal .modal-dialog,
+#removeMessageModal .modal-dialog {
   width: 320px;
   max-width: calc(100% - 16px);
 }
