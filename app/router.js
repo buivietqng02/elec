@@ -78,13 +78,17 @@ define([
         // initAgain();
         // $wrapper.html(template.meeting);
         // Meeting.onInit();
-        API.get('conference').then((res) => {
-            const id = (+new Date()).toString(16).toUpperCase();
-            const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
-            window.location.replace(url);
-        }).catch((err) => {
-            console.log(err);
-        });
+        if(!isLogin()){
+            navigate(ROUTE.login);
+        } else {
+            API.get('conference').then((res) => {
+                const id = (+new Date()).toString(16).toUpperCase();
+                const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+                window.location.replace(url);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     });
 
     getRouter().on(ROUTE.login, () => {
