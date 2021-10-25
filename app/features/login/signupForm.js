@@ -1,11 +1,15 @@
 define([
     'axios',
     'shared/functions',
-    'app/constant'
+    'app/constant',
+    'features/language/language',
+    'features/modal/modalChangeLanguage'
 ], (
     axios,
     functions,
-    constant
+    constant,
+    languageComp,
+    modalChangeLanguageComp
 ) => {
     const { setDataToLocalApplication, navigate, getFormData } = functions;
     const {
@@ -22,6 +26,9 @@ define([
     let $formItem;
     let loading = false;
     let stage = 1;
+    let inviteKey;
+    let invitedEmail;
+    let $emailInput;
     const ob = {};
 
     const validate = (params) => {
@@ -100,7 +107,7 @@ define([
         $loader.show();
 
         if (stage === 2) {
-            axios.post(`${BASE_URL}/signup`, params).then((res) => {
+            axios.post(`${BASE_URL}/signup${inviteKey ? `?invite=${inviteKey}` : ''}`, params).then((res) => {
                 if (res) {
                     setDataToLocalApplication(SESSION_ID, res.sessionId);
                     setDataToLocalApplication(USER_ID, res.userId);
@@ -136,7 +143,12 @@ define([
         });
     };
 
-    ob.onInit = () => {
+    ob.onInit = (inviteKeyParam, emailParam) => {
+        inviteKey = inviteKeyParam;
+        invitedEmail = emailParam;
+        languageComp.onInit();
+        $('.xm-page-loading').hide();
+        $('#change-lang-btn').click(modalChangeLanguageComp.onInit);
         loading = false;
         stage = 1;
         $registerForm = $('.js_register__form');
@@ -144,6 +156,11 @@ define([
         $errMess = $registerForm.find('.mess');
         $loader = $registerForm.find('.js-btn-spin .--spin');
         $formItem = $registerForm.find('.form__line');
+        $emailInput = $registerForm.find("[name='email']");
+
+        $('.js-signup .js-btn-cancel').off().click(() => {
+            navigate(ROUTE.login);
+        });
 
         $errMess.html('');
         $loader.hide();
@@ -157,6 +174,13 @@ define([
                 $formItem.eq(i).hide();
             }
         });
+
+        if (invitedEmail) {
+            $emailInput.val(invitedEmail);
+            $emailInput.prop('readonly', true);
+        } else {
+            $emailInput.prop('readonly', false);
+        }
     };
 
     return ob;

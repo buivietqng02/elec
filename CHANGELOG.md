@@ -4,6 +4,44 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.6] - 2021-10-21
+### Update
+- Update route /meeting.
+- Add comments to refresh token code.
+
+### [4.5] - 2021-10-15
+### Update
+- Improvements to XM meetings.
+- Add 'Accept-Language' header to API requets on interceptor.
+- Improve user upload avatar function.
+### Fix
+- Fix issue on sync method.
+
+### [4.4] - 2021-10-06
+### Add
+- Add new route 'signup'.
+- Handle send and accept invitations on sync method.
+- Add image slider on chats.
+### Update
+- Handle errors properly on sync.js and on request interceptor.
+### Fix
+- Fix issue: handle 'invite_key' when a invited user register a new account.
+
+### [4.3] - 2021-09-29
+### Update
+- Update UI of voice messages recording.
+- Improve response to user on Integrate ERP contacts.
+### Fix
+- It is now possible to forward messages to your own channels.
+
+### [4.2] - 2021-09-24
+### Fix
+- Exclude 'xm/oauth2' requests from sw.js fetch to fix and issue with Google OAuth2.
+
+### [4.1] - 2021-09-24
+### Fix
+- Fixes an issue on scrolling up to see the chat history.
+
 ### [4.0] - 2021-09-23
 ### Add
 - Now users can send voice messages.

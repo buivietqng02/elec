@@ -13,9 +13,9 @@ define([
     GLOBAL,
     functions
 ) => {
-    const { getAvatar, getDataToLocalApplication } = functions;
+    const { getAvatar } = functions;
     const {
-        API_URL, ACCESS_TOKEN, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
+        API_URL, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
     } = constant;
 
     let isProcessing;
@@ -143,9 +143,9 @@ define([
             return;
         }
 
+        let encodedImage;
         FR.addEventListener('load', (e) => {
-            $img.attr('src', e.target.result);
-            $(`[${ATTRIBUTE_CHANGE_IMAGE}="${GLOBAL.getInfomation().id}"]`).attr('src', e.target.result);
+            encodedImage = e.target.result;
         });
         FR.readAsDataURL(file);
 
@@ -158,8 +158,13 @@ define([
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            .then(() => { })
-            .catch(() => { });
+            .then(() => {
+                $img.attr('src', encodedImage);
+                $(`[${ATTRIBUTE_CHANGE_IMAGE}="${GLOBAL.getInfomation().id}"]`).attr('src', encodedImage);
+            })
+            .catch((err) => {
+                ALERT.show(err.response?.data?.details || 'Something went wrong.');
+            });
     };
 
     return {

@@ -50,12 +50,10 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
         }
 
         $btnCancel.click();
-        API.post(`contacts/invite?email=${value}`).then((res) => {
-            if (res.status === 400) {
-                ALERT.show(res.details);
-            }
+        API.post(`contacts/invite?email=${value}`).then(() => {
+            ALERT.show('Invitation sent', 'success');
         }).catch((e) => {
-            ALERT.show(e);
+            ALERT.show(e.response?.data?.details || e);
         });
     };
 
