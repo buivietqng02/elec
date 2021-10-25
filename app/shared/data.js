@@ -51,7 +51,7 @@ define(() => {
         langJson = {};
         roomDraft = {};
     };
-    
+
     return {
         getInfomation: () => infomation,
         setInfomation: (value) => {
@@ -142,7 +142,7 @@ define(() => {
         setRoomDraft: (value) => {
             roomDraft = value;
         },
-        
+
         refresh
     };
 });

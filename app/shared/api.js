@@ -52,25 +52,26 @@ define([
     // Interceptors
     axios.interceptors.request.use((request) => {
         if (request.url.includes('xm/api/'))
-        request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
+            request.headers['Authorization'] = `Bearer ${(functions.getDataToLocalApplication(ACCESS_TOKEN) || '')}`;
         return request;
     },
-    (error) => {
-        return Promise.reject(error);
-    });
+        (error) => {
+            return Promise.reject(error);
+        });
 
     axios.interceptors.response.use((response) => {
         GLOBAL.setNetworkStatus(true);
         return response.data;
     }, async (error) => {
         const originalConfig = error.config;
+        console.log(originalConfig);
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
             if (error.response.status === 401 && !error.config.url.includes('/auth/') && !originalConfig._retry) {
                 originalConfig._retry = true;
                 try {
                     const response = await refreshToken();
-
+                    console.log(response);
                     functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
                     functions.setDataToLocalApplication(REFRESH_TOKEN, response.data.refresh_token);
                     functions.setCookie(response.data.access_token, 3650);

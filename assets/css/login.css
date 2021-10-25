@@ -116,6 +116,11 @@ img {
 	left: 1px;
 }
 
+.thirdparty-login-btn.lagblaster div {
+	font-size: 10px;
+	color: white;
+}
+
 .thirdparty-login-btn.erp .st0 {
 	fill:#fff;
 }
@@ -498,6 +503,40 @@ img {
 	width: 48%;
 	float: right;
 }
+
+/* Lagblaster Login Form */
+.lagblaster-login-form {
+	width: 100%;
+    margin-top: 3.5rem;
+    position: relative;
+}
+
+.lagblaster-login-form img {
+	width: 150px;
+    height: 150px;
+    position: absolute;
+    left: -180px;
+    top: 0;
+}
+
+.lagblaster-login-form  .lagblaster-cancel-btn {
+	width: 48%;
+    float: left;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding: 8px 0;
+    white-space: nowrap;
+    border: none;
+    color: #fff;
+    height: 47px;
+}
+
+.lagblaster-login-form .login__btn-submit {
+	width: 48%;
+	float: right;
+}
+/* End Lagblaster Login Form */ 
 
 @media screen and (max-width: 5768px) {
     .erp-login-form {
