@@ -38,7 +38,8 @@ img {
 	align-items: center;
 	width: 100%;
 	margin-top: auto;
-	position: relative
+	position: relative;
+	color: #fff;
 }
 
 .login__logo {
@@ -114,6 +115,11 @@ img {
 .thirdparty-login-btn.google svg {
 	position: relative;
 	left: 1px;
+}
+
+.thirdparty-login-btn.lagblaster div {
+	font-size: 10px;
+	color: white;
 }
 
 .thirdparty-login-btn.erp .st0 {
@@ -194,7 +200,7 @@ img {
 
 .wrap-login .popup__heading {
 	margin-bottom: 2rem;
-	margin-top: 0;
+	margin-top: 2rem;
 	color: #fff
 }
 
@@ -499,6 +505,40 @@ img {
 	float: right;
 }
 
+/* Lagblaster Login Form */
+.lagblaster-login-form {
+	width: 100%;
+    margin-top: 3.5rem;
+    position: relative;
+}
+
+.lagblaster-login-form img {
+	width: 150px;
+    height: 150px;
+    position: absolute;
+    left: -180px;
+    top: 0;
+}
+
+.lagblaster-login-form  .lagblaster-cancel-btn {
+	width: 48%;
+    float: left;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    padding: 8px 0;
+    white-space: nowrap;
+    border: none;
+    color: #fff;
+    height: 47px;
+}
+
+.lagblaster-login-form .login__btn-submit {
+	width: 48%;
+	float: right;
+}
+/* End Lagblaster Login Form */ 
+
 @media screen and (max-width: 5768px) {
     .erp-login-form {
 		margin-left: 0;
@@ -511,6 +551,10 @@ img {
 }
 
 @media (max-width: 767px) {
+	/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
 	.thirdparty-login-btn.erp svg {
 		left: -15px;
 	}
@@ -519,5 +563,20 @@ img {
 		position: relative;
 		left: -4px;
 	}
+}}
+
+/* Safari 10.1 */
+@media not all and (min-resolution:.001dpcm){ 
+@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
+	.thirdparty-login-btn.erp svg {
+		left: -15px;
+	}
+	
+	.thirdparty-login-btn.google svg {
+		position: relative;
+		left: -4px;
+	}
+}}
+	
 }
 

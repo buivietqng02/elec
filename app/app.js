@@ -13,6 +13,7 @@ define([
     'features/sidebar/sidebarCollapse',
     'features/sidebar/sidebarOptions',
     'features/sidebar/sidebarLeftBar',
+    'features/sidebar/sidebarLagBlaster',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
@@ -21,7 +22,6 @@ define([
     'features/chatbox/emoji',
     'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
-    'features/modal/modalUpdateVersion',
     'features/notification/notification'
 
 ], (
@@ -39,6 +39,7 @@ define([
     sidebarCollapseComp,
     sidebarOptionsComp,
     sidebarLeftBarComp,
+    sidebarLagBlasterComp,
     chatboxTopbarComp,
     chatboxContentComp,
     chatboxInputComp,
@@ -47,7 +48,6 @@ define([
     emojiComp,
     voiceChatComp,
     modalShowImageFullComp,
-    modalUpdateVersionComp,
     notificationComp
 ) => {
     const {
@@ -106,20 +106,6 @@ define([
         setGeneral(data);
     };
 
-    const onRegisterSW = () => {
-        if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                modalUpdateVersionComp.onInit();
-            });
-
-            navigator.serviceWorker.register('sw.js').then(reg => {
-                setInterval(() => {
-                    reg.update();
-                }, 90000);
-            });
-        }
-    };
-
     const onAssignAdvanceThemeBody = () => {
         const body = $('body');
         const bodyBg = getDataToLocalApplication(BODY_BG_THEME) || THEMES[0].name;
@@ -135,7 +121,7 @@ define([
 
     const onGetUserInfo = (obj) => GLOBAL.setInfomation(obj);
 
-    const onInitEventComponent = () => {
+    const onInitEventComponent = (route) => {
         setCookie(getDataToLocalApplication(ACCESS_TOKEN), 3650);
 
         // Initialize sidebar DOM and register event
@@ -144,7 +130,10 @@ define([
         sidebarOptionsComp.onInit();
         sidebarSearchComp.onInit();
         sidebarCollapseComp.onInit();
-        sidebarLeftBarComp.onInit();
+        sidebarLeftBarComp.onInit(route);
+
+        // Lag Blaster Intergrate
+        sidebarLagBlasterComp.onInit();
 
         // Initialize chatbox DOM and register event
         chatboxTopbarComp.onInit();
@@ -154,7 +143,7 @@ define([
         chatboxSearchComp.onInit();
         emojiComp.onInit();
 
-        // Vocie chat
+        // Voice message
         voiceChatComp.onInit();
         // Initialize show image full modal
         modalShowImageFullComp.onInit();
@@ -192,34 +181,34 @@ define([
     };
 
     const parseJwt = (token) => {
-        var base64Url = token.split('.')[1];
-        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-    
+
         return JSON.parse(jsonPayload);
     };
 
     const isJwtExpired = (token) => {
-        if (typeof(token) !== 'string' || !token) throw new Error('Invalid token provided');
-      
+        if (typeof (token) !== 'string' || !token) throw new Error('Invalid token provided');
+
         let isJwtExpired = false;
         const { exp } = parseJwt(token);
         const currentTime = new Date().getTime() / 1000;
-      
-        if (currentTime > exp) isJwtExpired = true;
-      
-        return isJwtExpired;
-      }
 
-    const initInformationFromAPI = () => {
+        if (currentTime > exp) isJwtExpired = true;
+
+        return isJwtExpired;
+    }
+
+    const initInformationFromAPI = (route) => {
         const isTokenExpired = isJwtExpired(getDataToLocalApplication(ACCESS_TOKEN));
 
         if (isTokenExpired) {
             console.log('token expired');
             API.get('users/preferences').then((res) => {
-                initAPI();
+                initAPI(route);
                 return;
             }).catch((err) => {
                 console.log(err);
@@ -228,10 +217,10 @@ define([
             return;
         }
 
-        initAPI();
+        initAPI(route);
     };
 
-    const initAPI = () => {
+    const initAPI = (route) => {
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
 
         // Get server version
@@ -239,11 +228,12 @@ define([
         // Get information about chat list and current user
         // Get information about the chat list what user changed (name, description).
         Promise.all([API.get('chats'), API.get(`users/${userId}`), API.get('users/preferences')]).then(data => {
+            // console.log(data);
             onAssignDataToStore(data);
             onGetPrefrences(data[2]);
             onGetRoomList(data[0]);
             onGetUserInfo(data[1]);
-            onInitEventComponent();
+            onInitEventComponent(route);
             $notiBoard.removeClass('run');
             // onSetUpWebSocket(data[0].data.user.id);
         }).catch((err) => {
@@ -259,9 +249,9 @@ define([
                             GLOBAL.setCurrentRoomId(id);
                         }
 
-                        setTimeout(initInformationFromAPI, 1000);
+                        setTimeout(() => initInformationFromAPI(route), 1000);
                     } else {
-                        initInformationFromAPI();
+                        initInformationFromAPI(route);
                     }
                 }, 2500);
             }
@@ -292,14 +282,13 @@ define([
         });
     };
 
-    const onInit = async () => {
+    const onInit = async (route) => {
         isRunFristTime = false;
         $('.xm-page-loading').hide();
         $notiBoard = $('.notify-update-info');
         $notiBoard.addClass('run');
         languageComp.onInit();
         syncComp.onInitAgain();
-        onRegisterSW();
         onInitGeneralEvents();
         onAssignAdvanceThemeBody();
 
@@ -314,13 +303,13 @@ define([
                 onGetPrefrences(data[2]);
                 onGetRoomList(data[0]);
                 onGetUserInfo(data[1]);
-                // onInitEventComponent();
+                // onInitEventComponent(route);
             } catch (err) {
                 clear();
             }
         }
 
-        initInformationFromAPI();
+        initInformationFromAPI(route);
     };
 
     return {

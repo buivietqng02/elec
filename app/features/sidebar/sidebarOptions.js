@@ -2,6 +2,7 @@ define([
     'app/constant',
     'shared/offlineData',
     'shared/functions',
+    'shared/api',
     'features/modal/modalUserInterface',
     'features/modal/modalInvite',
     'features/modal/modalCreateChannel',
@@ -14,6 +15,7 @@ define([
     constant,
     offlineData,
     functions,
+    API,
     modalUserInterfaceComp,
     modalInviteComp,
     modalCreateChannelComp,
@@ -25,16 +27,16 @@ define([
 ) => {
     let $slideOptions;
     let $slideContacts;
-    let $optionsBtn; 
+    let $optionsBtn;
     let $contactsBtn;
-    let $groupChatBtn; 
-    let $changeLanguageBtn; 
+    let $groupChatBtn;
+    let $changeLanguageBtn;
     let $startConferenceBtn;
-    let $createChannelBtn; 
+    let $createChannelBtn;
     let $userInterFaceBtn;
     let $sendInviteBtn;
     let $erpContactBtn;
-    let $aboutBtn; 
+    let $aboutBtn;
     let $logoutBtn;
     let isShowOptions = false;
     let isShowContacts = false;
@@ -87,7 +89,7 @@ define([
     const showModalChangeLanguage = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         offEventClickOutside();
         modalChangeLanguageComp.onInit();
     };
@@ -110,7 +112,13 @@ define([
 
     const showMeetingPage = () => {
         offEventClickOutside();
-        window.open(constant.ROUTE.meeting, '_blank').focus();
+        API.get('conference').then((res) => {
+            const id = (+new Date()).toString(16).toUpperCase();
+            const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+            window.open(url, '_blank').focus();
+        }).catch((err) => {
+            console.log(err);
+        });
     };
 
     const showModalSendInvite = (e) => {

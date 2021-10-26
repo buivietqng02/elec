@@ -35,16 +35,8 @@ define(['app/constant', 'shared/data', 'shared/api'], (constant, GLOBAL, API) =>
         isProcessing = true;
 
         API.post(`contacts/${userId}/accept`).then(() => {
-            API.get('chats').then((res) => {
-                const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
-                GLOBAL.setRoomsWithAdapter(res);
-                sidebarRoomListComp.onInit();
-                $btnCancel.click(); 
-            }).catch((err) => {
-                console.log(err);
-                isProcessing = false;
-                $btnAccept.prop('disabled', false);
-            });
+            isProcessing = false;
+            $btnCancel.click();
         }).catch(() => {
             isProcessing = false;
             $btnAccept.prop('disabled', false);
@@ -59,8 +51,6 @@ define(['app/constant', 'shared/data', 'shared/api'], (constant, GLOBAL, API) =>
             }
 
             userId = element.find(`[${constant.ATTRIBUTE_CHANGE_NAME}]`).data().useridName;
-            const urlAvatar = element.find('.avatar').prop('src');
-            const position = urlAvatar.indexOf('users');
 
             $('#acceptInvitationModal').remove && $('#acceptInvitationModal').remove();
             $('body').append(renderTemplate(element.find('.contact__name span').text(), GLOBAL.getLangJson()));

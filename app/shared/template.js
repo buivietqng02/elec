@@ -1,6 +1,13 @@
 define(['shared/icon'], (ICON) => ({
     main: `
         <div id="leftbar-mobile">
+            <div class="lbmi-welcome">
+                <div class="lb-welcome__avatar"></div>
+                <div class="lb-welcome-wc__name">Hi <span class="lb-welcome__name"></span></div>
+            </div>
+            <button class="btn lbm-item lbmi-lagblaster">
+                <i class="icon-lb"></i>
+            </button>
             <button class="btn lbm-item lbmi-chats">
                 <i class="icon-comments"></i>
             </button>
@@ -8,14 +15,24 @@ define(['shared/icon'], (ICON) => ({
                 <i class="icon-cart"></i>
             </button>
         </div>
+
         <div id="leftbar">
             <div class="lb-cuser-avatar"></div>
+
+            <!-- Lag Blaster Button --> 
+            <div class="lb-item lbi-lagblaster">
+                <i class="icon-lb"></i>
+            </div>
+            <!-- End Lag Blaster Button --> 
+
             <div class="lb-item lbi-chats">
                 <i class="icon-comments"></i>
             </div>
+
             <div class="lb-item lbi-cart">
                 <i class="icon-cart"></i>
             </div>
+
             <div class="lb-options-group">
                 <div class="lbog-users">
                     <div class="lbogi-icon btn-sidebar-contacts">
@@ -74,8 +91,135 @@ define(['shared/icon'], (ICON) => ({
                 </div>
             </div>
         </div>
+        
+        <!-- LagBlaster content --> 
+
+        <div id="lagblaster-content">
+            <div class="lb-tab-content" id="lb-tabContent">
+                <div class="lb-content show" id="lb-home-content" role="tabpanel"> 
+                    <div id="lb-home-balance" class="lb-home-content__item">
+                        <div class="lb-home-content__item__wrap text-center">
+                            <div class="">
+                                <div class="lb-home-content__item__text">Available balance</div>
+                                <div class="lb-home-content__item__amount">2,000,000 đ</div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="lb-home-content__item__wrap__addMoney">
+                                    <i class="icon-add"></i>
+                                    <div class="lb-home-content__item__desc">Add money</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div id="lb-home-package" class="lb-home-content__item">
+                        <div class="lb-home-content__item__wrap">
+                            <div class="row lb-home-package-item">
+                                <div class="col">
+                                    <div>Current package</div>                             
+                                </div>
+                                <div class="col">
+                                    <b>Alpha: 48$/ month</b>
+                                </div>
+                            </div>
+
+                            <div class="row lb-home-package-item">
+                                <div class="col">
+                                    Subscription status
+                                </div>
+                                <div class="col">
+                                    <div class="lb-home-content__item__desc active-status">
+                                        <div class="active-icon mr-2"></div>
+                                        <span>Active</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row lb-home-package-item">
+                                <div class="col">
+                                    Connection status
+                                </div>
+                                <div class="col">
+                                    <div class="lb-home-content__item__desc deactive-status">
+                                        <div class="active-icon mr-2"></div>
+                                        <span>Disconnected</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row"> 
+                                <div class="col">
+                                    <div>Subscription due</div>
+                                </div>
+                                <div class="col"><b>01/04/2022 00:00</b></div>
+                            </div>
+                                
+                        </div>      
+                    </div>
+
+                    <div id="lb-home-btnList" class="lb-home-content__item">
+                        <div class="row">
+                            <div id="lb-home-btnList-changePlan" class="col lb-home-btnList-item">
+                                <div><i class="icon-change"></i></div>  
+                                Change Plan
+                            </div>
+                            <div id="lb-home-btnList-renew" class="col lb-home-btnList-item">
+                                <div><i class="icon-renew"></i></div>
+                                Renew
+                            </div>
+                            <div id="lb-home-btnList-addMoney" class="col lb-home-btnList-item">
+                                <div><i class="icon-add"></i></div>
+                                Add money
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="lb-content fade" id="lb-user-content" role="tabpanel">
+                    lorem absdhasdhad 2
+                </div>
+
+                <div class="lb-content fade" id="lb-payment-content" role="tabpanel">
+                    lorem absdhasdhad 3
+                </div>
+            </div>
+
+            <ul class="nav nav-pills mb-3" id="lb-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="lb-tab-item nav-link active" id="lb-home-tab">
+                        <div class="lb-icon">
+                            <i id="lb-home-icon" class="icon-home2-active"></i>
+                        </div>
+                        <div class="lb-icon-desc">Home</div> 
+                    </button>
+                </li>
+               
+                <li class="nav-item" role="presentation">
+                    <button class="lb-tab-item nav-link" id="lb-payment-tab">
+                        <div class="lb-icon">
+                            <i id="lb-payment-icon" class="icon-payment"></i>
+                        </div>
+                        <div class="lb-icon-desc">Trans History</div>
+                    </button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                    <button class="lb-tab-item nav-link" id="lb-user-tab">
+                        <div class="lb-icon"><i id="lb-user-icon" class="icon-user2"></i></div>
+                        <div class="lb-icon-desc">User</div>
+                    </button>
+                </li>
+            </ul>
+           
+        </div>
+
+        <!-- Lag Blater end content -->
         <div id="cart-packages" style="display: none">
-            <div class="row">
+            <div id="cart-packages-wrapper" class="row">
                 <div class="col-md-4">
                     <div class="cp-product">
                         <div>
@@ -84,13 +228,21 @@ define(['shared/icon'], (ICON) => ({
                         <div class="cpp-content clearfix">
                             <h2>
                                 LagBlaster
-                            </h2>
+                            </h2>   
                             <p>
                                 An innovative Gaming Network for Vietnam especially enabling console users.
                             </p>
+                           
                             <a href="https://lagblaster.org/" target="_blank" class="btn btn-info">
                                 Preview
                             </a>
+                            <!--
+                            <button id="lb-order-btn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#lagBlasterModal">
+                                Order now
+                            </button>
+                            <div class="lb-order__loading spinner-border text-primary" role="status">
+                            </div>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -326,7 +478,7 @@ define(['shared/icon'], (ICON) => ({
                                 <!-- Voice chat btn -->
 
                                 <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">
-                                    <img class="btn__voice-chat-picture" src="/assets/images/microphone.svg" alt="">
+                                    <i class="micro-vc"></i>
                                 </button>
                                 <!-- End Voice chat btn -->
 
@@ -411,7 +563,7 @@ define(['shared/icon'], (ICON) => ({
                                         <div class="record__start-stop-pulse-ring"></div>
                                     </button>
                                 </div>
-                                <div class="btn-voice-chat-description">Hold to speak</div>
+                                <div class="btn-voice-chat-description"><lang data-language="HOLD_TO_SPEAK"></lang></div>
                             </div>
 
                             <!-- End Voice chat wrap -->
@@ -451,6 +603,11 @@ define(['shared/icon'], (ICON) => ({
                 <div class="thirdparty-login-btn-container">
                     <button type="button" class="thirdparty-login-btn erp">${ICON.ERP_LOGO}</button>
                     <button type="button" class="thirdparty-login-btn google">${ICON.GOOGLE_LOGO}</button>
+
+                    <button type="button" class="thirdparty-login-btn lagblaster">
+                        ${ICON.LAGBLASTER_LOGO}
+                        <div>LagBlaster</div>
+                    </button>
                 </div>
             </form>
 
@@ -470,39 +627,24 @@ define(['shared/icon'], (ICON) => ({
                 </div>
             </form>
 
-            <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>    
-        </div>
-
-        <div class="sign-up form-style js-global js-signup">
-            <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
-            <form name="resetForm" class="js_register__form" method="post">
-                <div class="form__line">
-                    <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
-                </div>
-                <div class="form__line">
-                    <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
-                </div>
-                <div class="form__line">
-                    <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
-                </div>
-                <div class="form__line">
-                    <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
-                </div>
-
-                <div class="form__line form__line_code" style="display:none;">
-                    <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
-                </div>
+            <!-- Lagblaster login form -->
+            <form class="lagblaster-login-form" style="display: none">
+                <input placeholder="LagBlaster username" required="Please enter a username" type="text" name="login" class="form-control" />
+                <input placeholder="LagBlaster Password" required="Please enter the password" type="password" name="password" class="form-control" />
                 <div class="clearfix neccessary-wrapper">
                     <div class="mess"></div>
                 </div>
-                <div class="popup__bottom">
-                    <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
-                    <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                <div class="clearfix">
+                    <button data-language="CANCEL" class="btn btn-secondary lagblaster-cancel-btn" type="button"></button>
+                    <button type="submit" class="login__btn-submit js-btn-spin">
                         <span class="--spin" style="display:none">◉</span>
-                        <lang data-language="CREATE"></lang>
+                        <lang data-language="LOGIN"></lang>
                     </button>
-                </div>          
+                </div>
             </form>
+            <!-- End LB login form -->
+
+            <button data-language="SIGN_UP" class="xmbtn login__btn-signup js-btn-signup"></button>    
         </div>
 
         <div class="reset-password reset-password2 form-style js-global js-forget">
@@ -549,8 +691,51 @@ define(['shared/icon'], (ICON) => ({
 
         <div class="download-app"></div>
     </div>
-`
-    ,
+    `,
+    signup: `
+    <div class="wrap-login">
+        <div class="sign-up form-style js-global js-signup active">
+            <div class="login__header">
+                <img class="login__logo" src="/assets/images/icon.png" alt="Cross messenger logo">
+                <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
+                <div class="language-select" id="change-lang-btn">
+                    <svg height="14px" viewBox="0 0 480 480" width="14px" xmlns="http://www.w3.org/2000/svg"><path d="m240 0c-132.546875 0-240 107.453125-240 240s107.453125 240 240 240 240-107.453125 240-240c-.148438-132.484375-107.515625-239.851562-240-240zm207.566406 324.078125-68.253906 11.777344c7.8125-28.652344 12.03125-58.164063 12.558594-87.855469h71.929687c-.902343 26.117188-6.398437 51.871094-16.234375 76.078125zm-431.367187-76.078125h71.929687c.527344 29.691406 4.746094 59.203125 12.558594 87.855469l-68.253906-11.777344c-9.835938-24.207031-15.332032-49.960937-16.234375-76.078125zm16.234375-92.078125 68.253906-11.777344c-7.8125 28.652344-12.03125 58.164063-12.558594 87.855469h-71.929687c.902343-26.117188 6.398437-51.871094 16.234375-76.078125zm215.566406-27.472656c28.746094.367187 57.421875 2.984375 85.761719 7.832031l28.238281 4.871094c8.675781 29.523437 13.34375 60.078125 13.878906 90.847656h-127.878906zm88.488281-7.9375c-29.238281-4.996094-58.828125-7.695313-88.488281-8.0625v-96c45.863281 4.40625 85.703125 46.398437 108.28125 107.511719zm-104.488281-8.0625c-29.660156.367187-59.242188 3.066406-88.480469 8.0625l-19.800781 3.425781c22.578125-61.128906 62.417969-103.136719 108.28125-107.523438zm-85.753906 23.832031c28.335937-4.847656 57.007812-7.464844 85.753906-7.832031v103.550781h-127.878906c.535156-30.769531 5.203125-61.324219 13.878906-90.847656zm-42.125 111.71875h127.878906v103.550781c-28.746094-.367187-57.421875-2.984375-85.761719-7.832031l-28.238281-4.871094c-8.675781-29.523437-13.34375-60.078125-13.878906-90.847656zm39.390625 111.488281c29.238281 5.003907 58.824219 7.714844 88.488281 8.105469v96c-45.863281-4.410156-85.703125-46.402344-108.28125-107.515625zm104.488281 8.105469c29.660156-.390625 59.242188-3.101562 88.480469-8.105469l19.800781-3.425781c-22.578125 61.128906-62.417969 103.136719-108.28125 107.523438zm85.753906-23.875c-28.335937 4.847656-57.007812 7.464844-85.753906 7.832031v-103.550781h127.878906c-.535156 30.769531-5.203125 61.324219-13.878906 90.847656zm58.117188-111.71875c-.527344-29.691406-4.746094-59.203125-12.558594-87.855469l68.253906 11.777344c9.835938 24.207031 15.332032 49.960937 16.234375 76.078125zm47.601562-93.710938-65.425781-11.289062c-11.761719-38.371094-33.765625-72.808594-63.648437-99.601562 55.878906 18.648437 102.21875 58.457031 129.074218 110.890624zm-269.871094-110.890624c-29.882812 26.792968-51.886718 61.230468-63.648437 99.601562l-65.425781 11.289062c26.855468-52.433593 73.195312-92.242187 129.074218-110.890624zm-129.074218 314.3125 65.425781 11.289062c11.761719 38.371094 33.765625 72.808594 63.648437 99.601562-55.878906-18.648437-102.21875-58.457031-129.074218-110.890624zm269.871094 110.890624c29.882812-26.792968 51.886718-61.230468 63.648437-99.601562l65.425781-11.289062c-26.855468 52.433593-73.195312 92.242187-129.074218 110.890624zm0 0"/></svg>
+                    <span></span>
+                </div>
+            </div>
+
+            <h2 data-language="REGISTER_NEW_ACCOUNT" class="popup__heading"></h2>
+            <form name="resetForm" class="js_register__form" method="post">
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="NAME" class="form-control form-control2" required type="text" name="name" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="EMAIL" class="form-control form-control2" required type="email" name="email" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="PASSWORD" class="form-control form-control2" required type="password" placeholder="Password" name="password" />
+                </div>
+                <div class="form__line">
+                    <input data-lang-type="placeholder" data-language="CONFIRM_PASSWORD" class="form-control form-control2" required type="password" name="password2" />
+                </div>
+
+                <div class="form__line form__line_code" style="display:none;">
+                    <input data-lang-type="placeholder" data-language="CODE" class="form-control form-control2" type="text" name="code" />
+                </div>
+                <div class="clearfix neccessary-wrapper">
+                    <div class="mess"></div>
+                </div>
+                <div class="popup__bottom">
+                    <button data-language="CANCEL" class="btn btn--second js-btn-cancel" type="button"></button>
+                    <button class="btn btn--second ml-2 js-btn-spin" type="submit">
+                        <span class="--spin" style="display:none">◉</span>
+                        <lang data-language="CREATE"></lang>
+                    </button>
+                </div>          
+            </form>
+        </div>
+    </div>
+    `,
     meeting: `
         <div class="meeting-video-wrapper">
             <div class="language-select" id="change-lang-btn">

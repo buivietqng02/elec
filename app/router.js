@@ -2,18 +2,24 @@ define([
     'app/constant',
     'shared/functions',
     'shared/data',
+    'shared/api',
     'app/app',
     'app/login',
     'app/meeting',
-    'shared/template'
+    'shared/template',
+    'shared/registerSW',
+    'features/login/signupForm'
 ], (
     constant,
     functions,
     GLOBAL,
+    API,
     App,
     Login,
     Meeting,
-    template
+    template,
+    registerSW,
+    signupFormComp
 ) => {
     require('bootstrap/js/dist/modal');
     require('bootstrap/js/dist/tooltip');
@@ -25,6 +31,10 @@ define([
     require('assets/css/style.css');
     require('assets/css/index.less');
     jsrender($);
+
+    if (process.env.NODE_ENV === 'production') {
+        registerSW.onInit();
+    }
 
     const {
         ACCESS_TOKEN,
@@ -39,6 +49,7 @@ define([
         getRouter,
         navigate
     } = functions;
+
     const $wrapper = $('#xm-app');
 
     const isLogin = () => {
@@ -60,14 +71,33 @@ define([
         } else {
             initAgain();
             $wrapper.html(template.main);
-            App.onInit();
+            App.onInit(ROUTE.index);
         }
     });
 
-    getRouter().on(ROUTE.meeting, () => {
+    // Route for lag blaster
+    getRouter().on(ROUTE.lagblaster, () => {
+        // If login with LB credentail =>
         initAgain();
-        $wrapper.html(template.meeting);
-        Meeting.onInit();
+        $wrapper.html(template.main);
+        App.onInit(ROUTE.lagblaster);
+    });
+
+    getRouter().on(ROUTE.meeting, () => {
+        // initAgain();
+        // $wrapper.html(template.meeting);
+        // Meeting.onInit();
+        if (!isLogin()) {
+            navigate(ROUTE.login);
+        } else {
+            API.get('conference').then((res) => {
+                const id = (+new Date()).toString(16).toUpperCase();
+                const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+                window.location.replace(url);
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     });
 
     getRouter().on(ROUTE.login, () => {
@@ -80,19 +110,37 @@ define([
         }
     });
 
+    getRouter().on(ROUTE.signup, () => {
+        if (isLogin()) {
+            navigate(ROUTE.index);
+        } else {
+            const params = new URLSearchParams(window.location.search);
+            const inviteKey = params.get('invite_key') || '';
+            const email = params.get('email') || '';
+
+            initAgain();
+            $wrapper.html(template.signup);
+            signupFormComp.onInit(inviteKey, email);
+        }
+    });
+
     getRouter().on(ROUTE.oauth2, () => {
         const params = new URLSearchParams(window.location.search);
-        const token = params.get('access_token');
-        const sessionId = params.get('sessionId');
-        const userId = params.get('userId');
-        const refreshToken = params.get('refresh_token');
+        const token = params.get('access_token') || '';
+        const sessionId = params.get('sessionId') || '';
+        const userId = params.get('userId') || '';
+        const refreshToken = params.get('refresh_token') || '';
 
-        setDataToLocalApplication(SESSION_ID, sessionId);
-        setDataToLocalApplication(USER_ID, userId);
-        setDataToLocalApplication(ACCESS_TOKEN, token);
-        setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
-        
-        navigate(ROUTE.index);
+        if (token && sessionId && userId && refreshToken) {
+            setDataToLocalApplication(SESSION_ID, sessionId);
+            setDataToLocalApplication(USER_ID, userId);
+            setDataToLocalApplication(ACCESS_TOKEN, token);
+            setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
+
+            navigate(ROUTE.index);
+        } else {
+            navigate(ROUTE.login);
+        }
     });
 
     getRouter().resolve();

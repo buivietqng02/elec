@@ -89,9 +89,6 @@ define([
         const audio = document.querySelector(`#audio-${id}`);
         const playStopBtn = document.querySelector(`#btn-${id}`);
 
-        console.log(audio)
-        console.log(playStopBtn)
-
         let countDownTimmer;
         let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
         let isPlaying = playStopBtn.getAttribute('isPlaying');
@@ -128,7 +125,7 @@ define([
                 playPromise.then(() => {
                     audioMicroPic.src = `/assets/images/microphoneListening.svg`
 
-                    console.log(audio.getAttribute('duration'))
+                    // console.log(audio.getAttribute('duration'))
                     countDownTimmer = setInterval(() => {
                         audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
                     }, 1000)
@@ -172,8 +169,6 @@ define([
             item.setAttribute("isPlaying", false);
 
             item.addEventListener('click', (e) => {
-                console.log('click test', item)
-
                 addEventListenerToAudioRecorder(getAudioID(item.id));
 
             })
@@ -272,13 +267,13 @@ define([
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
 
             // Audio vocie mess addeventlistener when scroll top
-            moreMessages.forEach(message => {
+            moreMessages.filter(m => m.file?.id === 3).forEach(message => {
                 let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
                 scrollUpAudioRecorder.setAttribute("isPlaying", false);
                 scrollUpAudioRecorder.addEventListener('click', () => {
                     addEventListenerToAudioRecorder(message.file.id)
                 })
-            })
+            });
 
             setTimeout(() => {
                 processing = false;
@@ -470,7 +465,7 @@ define([
 
                         newAudioRecorder.setAttribute("isPlaying", false);
                         newAudioRecorder.addEventListener('click', () => {
-                            console.log('click');
+                            // console.log('click');
                             addEventListenerToAudioRecorder(mess.file.id);
                         })
                         // addEventListenerToAudioRecorder(mess.file.id);
@@ -481,7 +476,6 @@ define([
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
                     $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
-                    console.log("test scroll")
                 }
             }
         },

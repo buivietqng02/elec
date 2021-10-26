@@ -2,6 +2,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
         BASE_URL: `${enviroment}`,
         API_URL: `${enviroment}/api`,
+        LAGBLASTER_API_BASE: 'https://lagblaster.org/wp-admin/admin-ajax.php?',
+        IS_REGISTERED_LB: 'is_registered_lagblaster',
         SESSION_ID: 'sessionId',
         ACCESS_TOKEN: 'access_token',
         REFRESH_TOKEN: 'refresh_token',
@@ -37,6 +39,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ATTRIBUTE_SIDEBAR_ROOM: 'data-room-id',
         ATTRIBUTE_MESSAGE_ID: 'data-chat-id',
         ATTRIBUTE_LANGUAGE: 'data-language',
+        ATTRIBUTE_INVITE_ID: 'data-invite-id',
         WEBRTC_URL: webrtc,
         LANGUAGE_KEY: 'lang',
         LANGUAGES: {
@@ -53,7 +56,10 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             login: '/login',
             meeting: '/meeting',
             index: '/',
-            oauth2: '/oauth2'
+            oauth2: '/oauth2',
+            lagblaster: '/lagblaster',
+            cart: '/cart',
+            signup: '/signup'
         }
     };
 

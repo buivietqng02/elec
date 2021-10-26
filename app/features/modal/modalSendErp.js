@@ -26,10 +26,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
     const onSend = () => {
         $btnCancel.click();
         API.post('integrateERP').then((res) => {
-            if (res.status === 2) {
-                ALERT.show(res.message);
-                return;
-            }
+            ALERT.show(res.message, 'success');
 
             API.get('chats').then((resTwo) => {
                 const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
@@ -38,8 +35,7 @@ define(['shared/data', 'shared/api', 'shared/alert'], (GLOBAL, API, ALERT) => {
                 $btnCancel.click();
             });
         }).catch((e) => {
-            console.error(e);
-            ALERT.show(e);
+            ALERT.show(e?.response?.data?.details || 'Something went wrong');
         });
     };
 

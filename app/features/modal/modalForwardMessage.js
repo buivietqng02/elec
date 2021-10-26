@@ -40,8 +40,8 @@ define(['shared/api', 'shared/data', 'shared/functions'], (API, GLOBAL, function
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = room.group ? room.subject : (obRoomEdited[room.partner?.id]?.user_name || room.partner?.name);
 
-        // only forward to rooms with id, name and it is not channel
-        if (!room.id || !name || room.channel) {
+        // only forward to rooms with id, name and it is not own channel
+        if (!room.id || !name || (room.channel && !room.owner)) {
             return '';
         }
 
