@@ -35,9 +35,8 @@ define([
 
         if (type === 'lbIcons') {
             elements.forEach(item => {
-                let itemClassName = item.className;
-                if (itemClassName.includes('active')) {
-                    itemClassName = item.className.substring(0, item.className.length - 7);
+                if (item.className.includes('active')) {
+                    item.className = item.className.substring(0, item.className.length - 7);
                 }
             });
         }

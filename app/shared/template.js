@@ -219,7 +219,7 @@ define(['shared/icon'], (ICON) => ({
 
         <!-- Lag Blater end content -->
         <div id="cart-packages" style="display: none">
-            <div id="test" class="row">
+            <div id="cart-packages-wrapper" class="row">
                 <div class="col-md-4">
                     <div class="cp-product">
                         <div>
