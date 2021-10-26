@@ -36,6 +36,7 @@ define([
         if (type === 'lbIcons') {
             elements.forEach(item => {
                 if (item.className.includes('active')) {
+                    // eslint-disable-next-line no-param-reassign
                     item.className = item.className.substring(0, item.className.length - 7);
                 }
             });
