@@ -36,7 +36,7 @@ define([
         timeout: 10000,
         onBackground: false
     };
-    const { 
+    const {
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
 
@@ -44,7 +44,7 @@ define([
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
         const token = functions.getDataToLocalApplication(ACCESS_TOKEN) || '';
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
-        
+
         return !!(sessionId && token && userId);
     };
 
@@ -197,7 +197,7 @@ define([
                 // Handle push notification
                 if (!isPushNotification) {
                     isPushNotification = true;
-                    if (messages[messages.length - 1].type !== 6 
+                    if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
                         notificationComp.pushNotificationForMessage(messagesResponse[0]);
                     }
@@ -231,14 +231,14 @@ define([
 
         // filter only events from partners in current room
         const typingEventsFromPartnersInCurrentRoom = typingEvents
-            .filter(typingEvent => typingEvent.chatId === currentRoomId 
+            .filter(typingEvent => typingEvent.chatId === currentRoomId
                 && typingEvent.user.id !== currentUserId);
-        
+
         if (typingEventsFromPartnersInCurrentRoom.length) {
             // get the latest typing event
             const lastTypingEvent = typingEventsFromPartnersInCurrentRoom
                 .reduce((p, c) => (p.timestamp > c.timestamp ? p : c));
-            
+
             // show latest typing event on chat box top bar
             chatboxTopbarComp.onRenderTyping(lastTypingEvent);
         }
@@ -252,7 +252,7 @@ define([
         readChatEvents.forEach(readChatEvent => {
             // get cached messages from the chat of the event
             const messages = getRoomById(readChatEvent.chatId);
-        
+
             // only necessary to mark messages as read if messages are cached
             // messages that aren't cached, will be retrieved from database with 'read' information
             if (messages != null) {

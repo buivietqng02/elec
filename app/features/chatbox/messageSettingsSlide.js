@@ -2,7 +2,7 @@ define([
     'shared/data',
     'shared/alert',
     'shared/functions',
-    'features/chatbox/chatboxInput', 
+    'features/chatbox/chatboxInput',
     'features/modal/modalForwardMessage',
     'features/modal/modalMessageInfo',
     'features/modal/modalRemoveMessage'
@@ -10,7 +10,7 @@ define([
     GLOBAL,
     ALERT,
     functions,
-    chatboxInputComp, 
+    chatboxInputComp,
     modalForwardMessageComp,
     modalMessageInfoComp,
     modalRemoveMessage
@@ -82,7 +82,7 @@ define([
         ALERT.show(GLOBAL.getLangJson().COPIED_TO_CLIPBOARD, 'success');
         document.body.removeChild(elem);
 
-       offEventClickOutside();
+        offEventClickOutside();
     };
 
     const onInfo = () => {
@@ -104,7 +104,6 @@ define([
         if (slideHiehgt + top + 100 > winHeight) {
             top = elementPos.top - slideHiehgt - 20;
         }
-        
         $slide.css({
             display: 'block',
             top: `${top}px`,
@@ -128,7 +127,7 @@ define([
             } else {
                 $editBtn.show();
             }
-            
+
             $removeBtn.show();
             $messageInfoBtn.show();
         } else {

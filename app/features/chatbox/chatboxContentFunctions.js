@@ -40,7 +40,7 @@ define([
         const { type } = file;
         const data = {};
         let messageTemp = '';
-        console.log(file);
+        // console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
