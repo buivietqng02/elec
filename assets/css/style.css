@@ -1759,6 +1759,23 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   margin-top: -20px;
 }
 
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  
+.comment-box-inline .audio-circle {
+  top: -95px;
+}
+}}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .comment-box-inline .audio-circle {
+    top: -96px;
+  }
+}
+
 .messages__item .--content {
   background: #fff;
   color: #000;
@@ -2561,6 +2578,22 @@ body.body_fz_18 {
 
 .mess-comment-box .mess-fw-box .audio-timeIndicate{
   margin-top: -45px;
+}
+
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+    .mess-comment-box .mess-fw-box .audio-circle{
+      top: -90px;
+    }
+}}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .mess-comment-box .mess-fw-box .audio-circle{
+    top: -90px;
+  }
 }
 
 .chatbox-progress-upload {

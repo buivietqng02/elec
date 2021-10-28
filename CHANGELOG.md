@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.7] - 2021-10-28
+### Update
+- Fix remove last message.
+- Add scroll to origin message.
+- Fix bugs delete section ID after conference
+- Make scrollable for market content
+- Intergrate Lagblaster into XM (In progress)
+- Improve some css layout
+
 ### [4.6] - 2021-10-21
 ### Update
 - Update route /meeting.

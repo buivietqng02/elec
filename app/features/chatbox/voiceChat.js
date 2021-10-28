@@ -225,8 +225,6 @@ define([
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 
-                startRecordBtn.style.background = 'green';
-
                 try {
                     recorder = new window.MediaRecorder(stream, { mimeType: mimeTypeBrowser });
                     // Click event for pc

@@ -187,9 +187,12 @@ define([
                 if (result.loadedResult[i].id.messageId === id) {
                     notFounded = false;
                     let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
-                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
 
-                    originMessageEle.classList.add('activeScrollTo');
+                    setTimeout(() => {
+                        originMessageEle.classList.add('activeScrollTo');
+                        originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }, 600)
+
                     setTimeout(() => {
                         originMessageEle.classList.remove('activeScrollTo');
                     }, 3000)
