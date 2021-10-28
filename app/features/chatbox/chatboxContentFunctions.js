@@ -82,7 +82,7 @@ define([
             text = handleMessCointainFile(file);
         }
 
-        return `<div class="comment-box-inline" style="margin-left: 0;">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {

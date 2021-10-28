@@ -61,7 +61,7 @@ define([
     let $loadingOfNew;
     let $unreadScroll;
 
-    // ========== Audio test ==============
+    // ========== Start Voice message ==============
 
     const timeConvert = (time) => {
         // Calculate the time left and the total duration
@@ -175,7 +175,65 @@ define([
         })
     }
 
-    // ============== Audio test ==============
+    // ============== End voice message ==============
+
+    // ======== Start Scroll to origin position ===========
+    const findOriginMess = (id) => {
+        let notFounded = true;
+        $wrapper.animate({ scrollTop: 0 }, 100);
+        onGetMoreMessageByScrolling().then(result => {
+
+            for (let i = 0; i < result.loadedResult.length; i++) {
+                if (result.loadedResult[i].id.messageId === id) {
+                    notFounded = false;
+                    let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+                    originMessageEle.classList.add('activeScrollTo');
+                    setTimeout(() => {
+                        originMessageEle.classList.remove('activeScrollTo');
+                    }, 3000)
+
+                    break;
+
+                }
+            }
+
+            if (notFounded) {
+                findOriginMess(id)
+            }
+        })
+    }
+
+    const handleScrollToOriginId = (element) => {
+        const quotedOriginalMess = element.getAttribute('quoted-original-id');
+        let originId = quotedOriginalMess.split('-')
+        let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${originId[1]}"]`);
+
+        if (originMessageEle) {
+            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            originMessageEle.classList.add('activeScrollTo');
+
+            setTimeout(() => {
+                originMessageEle.classList.remove('activeScrollTo');
+            }, 3000)
+
+
+        } else {
+            findOriginMess(originId[1]);
+        }
+    }
+
+    const addEventToAllScrollToOriginl = () => {
+        let quotedMessage = document.querySelectorAll('.comment-box-inline');
+        quotedMessage.forEach(item => {
+            item.addEventListener('click', (e) => {
+                handleScrollToOriginId(item);
+            })
+        })
+    }
+
+    // ======== End Scroll to origin position ===========
 
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
@@ -237,14 +295,16 @@ define([
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
 
-    const onGetMoreMessageByScrolling = () => {
+    const onGetMoreMessageByScrolling = async () => {
+        let isLoadedMoreResult = { isLoadedMore: false, loadedResult: [] };
+
         const params = {
             chatId: GLOBAL.getCurrentRoomId(),
             offset: lastOffset
         };
         processing = true;
 
-        API.get('messages', params).then(res => {
+        isLoadedMoreResult = await API.get('messages', params).then(res => {
             if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
                 processing = false;
                 return;
@@ -275,10 +335,26 @@ define([
                 })
             });
 
+            // Scroll to origin message when scroll more
+            moreMessages.forEach(item => {
+                const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
+                const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
+                if (quotedMessageItem) {
+                    quotedMessageItem.addEventListener('click', () => {
+                        handleScrollToOriginId(quotedMessageItem);
+                    })
+                }
+            })
+            // End scroll to origin message when scroll more
+
             setTimeout(() => {
                 processing = false;
             }, 50);
+
+            return { isLoadedMore: true, loadedResult: [...moreMessages] };
         });
+
+        return isLoadedMoreResult;
     };
 
     const handleDataFromGetMess = (messages, roomInfo) => {
@@ -321,6 +397,9 @@ define([
 
         // Audio
         audioPlayStopFunc()
+
+        // Scroll to orginal message
+        addEventToAllScrollToOriginl();
 
         $loadingOfNew.hide();
 
@@ -529,6 +608,12 @@ define([
 
             $mess.attr(ATTRIBUTE_MESSAGE_ID, data.messageId);
             $mess.removeClass('js_li_mess_local');
+
+            $mess.find('.comment-box-inline').on('click', (e) => {
+                let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
+                console.log(originId[1]);
+                handleScrollToOriginId(e.currentTarget);
+            })
         },
 
         onAddLocal: async (data) => {
