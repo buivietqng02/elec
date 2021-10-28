@@ -551,6 +551,15 @@ define([
                     }
                 }
 
+                // Scroll to origin message
+                console.log(mess);
+                const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
+                $messItem.find('.comment-box-inline').on('click', (e) => {
+                    let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
+                    console.log(originId[1]);
+                    handleScrollToOriginId(e.currentTarget);
+                })
+
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
