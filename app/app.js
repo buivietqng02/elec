@@ -180,47 +180,7 @@ define([
         onAssignAdvanceThemeBody();
     };
 
-    const parseJwt = (token) => {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    };
-
-    const isJwtExpired = (token) => {
-        if (typeof (token) !== 'string' || !token) throw new Error('Invalid token provided');
-
-        let isJwtExpired = false;
-        const { exp } = parseJwt(token);
-        const currentTime = new Date().getTime() / 1000;
-
-        if (currentTime > exp) isJwtExpired = true;
-
-        return isJwtExpired;
-    }
-
     const initInformationFromAPI = (route) => {
-        const isTokenExpired = isJwtExpired(getDataToLocalApplication(ACCESS_TOKEN));
-
-        if (isTokenExpired) {
-            console.log('token expired');
-            API.get('users/preferences').then((res) => {
-                initAPI(route);
-                return;
-            }).catch((err) => {
-                console.log(err);
-                return;
-            });
-            return;
-        }
-
-        initAPI(route);
-    };
-
-    const initAPI = (route) => {
         const userId = functions.getDataToLocalApplication(USER_ID) || '';
 
         // Get server version
