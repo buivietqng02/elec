@@ -80,6 +80,7 @@ define([
         return response.data;
     }, async (error) => {
         const originalConfig = error.config;
+        console.log(originalConfig);
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
             if (error.config.url.includes('/auth/') || error.config.url.includes('/logout')) {

@@ -27,16 +27,16 @@ define([
 ) => {
     let $slideOptions;
     let $slideContacts;
-    let $optionsBtn; 
+    let $optionsBtn;
     let $contactsBtn;
-    let $groupChatBtn; 
-    let $changeLanguageBtn; 
+    let $groupChatBtn;
+    let $changeLanguageBtn;
     let $startConferenceBtn;
-    let $createChannelBtn; 
+    let $createChannelBtn;
     let $userInterFaceBtn;
     let $sendInviteBtn;
     let $erpContactBtn;
-    let $aboutBtn; 
+    let $aboutBtn;
     let $logoutBtn;
     let isShowOptions = false;
     let isShowContacts = false;
@@ -89,7 +89,7 @@ define([
     const showModalChangeLanguage = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         offEventClickOutside();
         modalChangeLanguageComp.onInit();
     };

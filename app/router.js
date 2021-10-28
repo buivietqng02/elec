@@ -31,7 +31,7 @@ define([
     require('assets/css/style.css');
     require('assets/css/index.less');
     jsrender($);
-    
+
     if (process.env.NODE_ENV === 'production') {
         registerSW.onInit();
     }
@@ -49,6 +49,7 @@ define([
         getRouter,
         navigate
     } = functions;
+
     const $wrapper = $('#xm-app');
 
     const isLogin = () => {
@@ -70,8 +71,16 @@ define([
         } else {
             initAgain();
             $wrapper.html(template.main);
-            App.onInit();
+            App.onInit(ROUTE.index);
         }
+    });
+
+    // Route for lag blaster
+    getRouter().on(ROUTE.lagblaster, () => {
+        // If login with LB credentail =>
+        initAgain();
+        $wrapper.html(template.main);
+        App.onInit(ROUTE.lagblaster);
     });
 
     getRouter().on(ROUTE.meeting, () => {
@@ -127,7 +136,7 @@ define([
             setDataToLocalApplication(USER_ID, userId);
             setDataToLocalApplication(ACCESS_TOKEN, token);
             setDataToLocalApplication(REFRESH_TOKEN, refreshToken);
-            
+
             navigate(ROUTE.index);
         } else {
             navigate(ROUTE.login);

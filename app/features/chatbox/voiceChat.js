@@ -296,6 +296,7 @@ define([
                 }
             } else {
                 console.log('getUserMedia not supported on your browser!');
+                startRecordBtn.style.background = 'yellow';
             }
         }
 

@@ -1,0 +1,176 @@
+#lagblaster-content{
+    display: none;
+    width: 100%;
+    padding-left: 60px;
+    // padding-right: 15px;
+    overflow: hidden !important;
+    
+    #lb-tabContent{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(240, 240, 240, 0.945);
+        overflow-y: auto;
+        overflow-x: hidden;
+        
+        .lb-content{
+            width: 100%;
+            .lb-home-content__item{
+                display: flex;
+                justify-content: center;
+
+                .lb-home-content__item__wrap{
+                    padding: 16px;                   
+                    border-radius: 10px;
+                    width: 450px;
+                    margin-bottom: 18px;
+
+                    .icon-add::before{
+                        margin-left: 50%;
+                        transform: translateX(-50%);
+                    }
+                }
+            }
+
+            #lb-home-balance .lb-home-content__item__wrap{
+                color: white;
+                background-color: #34568B;
+                width: 100%;
+                margin-top: 0px;
+                border-radius: 0px;
+
+                .lb-home-content__item__text{
+                    color: #2ecc40;
+                }
+
+                .lb-home-content__item__amount{
+                    font-size: 26px;
+                    padding: 5px;
+                }
+                .lb-home-content__item__desc{
+                    font-size: 14px;
+                    opacity: 0.8;
+                }
+
+                .lb-home-content__item__wrap__addMoney{
+                    display: inline-block;
+                    cursor: pointer;
+                    color:white;
+                }
+            }
+
+            #lb-home-package .lb-home-content__item__wrap{
+                background-color:white;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                margin-top: 10px;
+                .lb-home-package-item{
+                    padding: 10px 2px;
+                }
+            }
+
+            #lb-home-btnList .lb-home-btnList-item{
+                font-size: 12px;
+                text-align: center;
+                margin: 10px 14px;
+                width: 100px;
+               
+                div{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 10px;
+                    margin-left: 50%;
+                    margin-bottom: 10px;
+                    transform: translateX(-50%);
+                    cursor: pointer;
+                    transition: all 0.5s;
+                    &:hover{
+                        background-color: #113a7c2f;
+                    }
+                }
+            }
+            
+        }
+
+    }
+
+    #lb-tab{
+        position: fixed;
+        bottom:0;
+        margin-bottom: 0px !important;
+        width: 100%;
+        border-top:1px rgba(139, 139, 139, 0.514) solid;
+        background-color: rgba(231, 228, 228, 0.966);
+        padding: 0;
+        display: flex;
+        justify-content: space-evenly;
+
+        .lb-tab-item{
+            background: unset;
+            border: none;
+
+            .lb-icon{
+                display: flex;
+                justify-content: center;
+            }
+            .lb-icon-desc{
+                font-size:13px;
+            }
+        }
+
+        .active{
+            color: #0093FF;
+        }
+    }
+}
+
+.active-status {
+    color: rgb(2, 94, 2);
+    .active-icon{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        border: 1px solid #0fa;
+        background-color: #0fa;
+    }
+}
+
+.deactive-status {
+    color: rgb(128, 0, 0);
+    .active-icon{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+        border: 1px solid #ff4d7a;
+        background-color: #ff4d7a;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #lagblaster-content {
+        padding-left: 0px;
+
+        #lb-tabContent{
+            top: 40px;
+            .lb-content{
+
+                .lb-home-content__item{
+                    .lb-home-content__item__wrap{
+                        width: 350px;
+                    }                    
+                }
+            }
+    
+        }
+
+        #lb-tab{
+            left: 0;
+            justify-content: space-around;
+        }
+    }  
+}

@@ -1670,6 +1670,12 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 .messages__item {
   margin: 1rem 0;
   padding: 0 1rem;
+  transition: all 2s;
+}
+
+.messages__item.activeScrollTo {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: rgba(0, 119, 255, 0.678) ;
 }
 
 .messages__item.you {
@@ -1729,6 +1735,45 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   margin: 5px 0 10px 0;color: #666;
   font-size: 0.8em;
   font-style: italic;
+  cursor:pointer;
+  transition: box-shadow 0.5s;
+}
+
+.comment-box-inline:hover{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.comment-box-inline .audio-main-content{
+    top: 0px;
+}
+
+.comment-box-inline .audio-circle {
+  top: -133px;
+}
+
+.comment-box-inline .audio-timeIndicate {
+  margin-top: -40px;
+}
+
+.comment-box-inline .audio-microPic {
+  margin-top: -20px;
+}
+
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+  
+.comment-box-inline .audio-circle {
+  top: -95px;
+}
+}}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .comment-box-inline .audio-circle {
+    top: -96px;
+  }
 }
 
 .messages__item .--content {
@@ -2521,6 +2566,34 @@ body.body_fz_18 {
 
 .mess-comment-box .comment-box-inline {
   display: inline-block;
+}
+
+.mess-comment-box .mess-fw-box .audio-circle{
+  top: -126px;
+}
+
+.mess-comment-box .mess-fw-box .audio-microPic{
+  margin-top: -30px;
+}
+
+.mess-comment-box .mess-fw-box .audio-timeIndicate{
+  margin-top: -45px;
+}
+
+/* Style for Safari */
+/* Safari 11+ */
+@media not all and (min-resolution:.001dpcm)
+{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+    .mess-comment-box .mess-fw-box .audio-circle{
+      top: -90px;
+    }
+}}
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .mess-comment-box .mess-fw-box .audio-circle{
+    top: -90px;
+  }
 }
 
 .chatbox-progress-upload {

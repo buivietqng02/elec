@@ -2,6 +2,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
         BASE_URL: `${enviroment}`,
         API_URL: `${enviroment}/api`,
+        LAGBLASTER_API_BASE: 'https://lagblaster.org/wp-admin/admin-ajax.php?',
+        IS_REGISTERED_LB: 'is_registered_lagblaster',
         SESSION_ID: 'sessionId',
         ACCESS_TOKEN: 'access_token',
         REFRESH_TOKEN: 'refresh_token',
@@ -55,6 +57,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             meeting: '/meeting',
             index: '/',
             oauth2: '/oauth2',
+            lagblaster: '/lagblaster',
+            cart: '/cart',
             signup: '/signup'
         }
     };

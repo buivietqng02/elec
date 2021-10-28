@@ -23,7 +23,7 @@ define([
         ATTRIBUTE_INVITE_ID
     } = constant;
     const ob = {};
-    const offset = contactHeight < 600 ? 10 : Math.ceil(contactHeight/60);
+    const offset = contactHeight < 600 ? 10 : Math.ceil(contactHeight / 60);
     let range = [0, offset];
     let process = false;
     let search = '';
@@ -45,7 +45,7 @@ define([
     const getWrapper = () => $('#sidebar_room_list');
 
     const getRoomsHtml = (rooms, range) => rooms.slice(range[0], range[1]).map(ob.renderRoom);
-    
+
     const getRooms = () => {
         let rooms = GLOBAL.getRooms();
 
@@ -130,7 +130,7 @@ define([
             if ($scroll.scrollTop() + $scroll.height() < $scroll[0].scrollHeight - 100 || process) {
                 return;
             }
-    
+
             range = [range[1], range[1] + offset];
             ob.appendRoom();
         });
@@ -212,10 +212,9 @@ define([
 
     ob.getRooms = () => {
         range = [0, offset];
-        
+
         getWrapper().html(getRoomsHtml(getRooms(), range));
     };
-    
     ob.appendRoom = () => {
         process = true;
         getWrapper().append(getRoomsHtml(getRooms(), range));

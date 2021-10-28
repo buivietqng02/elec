@@ -40,6 +40,7 @@ define([
         const { type } = file;
         const data = {};
         let messageTemp = '';
+        // console.log(file);
         switch (type) {
             case 2:
                 data.src = `${API_URL}/image?id=${file.id}&small=1`;
@@ -81,7 +82,7 @@ define([
             text = handleMessCointainFile(file);
         }
 
-        return `<div class="comment-box-inline" style="margin-left: 0;">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {
