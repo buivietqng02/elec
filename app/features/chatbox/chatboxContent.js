@@ -554,6 +554,17 @@ define([
                 $unreadScroll.show();
             }
 
+            // Render new quotedMessage
+            if (mess.quotedMessage) {
+                messages.some(item => {
+                    if (mess.quotedMessage.id.messageId === item.id.messageId) {
+                        mess.quotedMessage.file = item.file
+                        return true;
+                    }
+                })
+            }
+
+
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
@@ -579,13 +590,17 @@ define([
                 }
 
                 // Scroll to origin message
-                console.log(mess);
+
                 const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
                 $messItem.find('.comment-box-inline').on('click', (e) => {
                     let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
                     console.log(originId[1]);
                     handleScrollToOriginId(e.currentTarget);
                 })
+
+                // Render quotedMessage
+                console.log(mess);
+                console.log(messages);
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
