@@ -9,7 +9,7 @@ define([], () => {
         if (refreshing) {
             return;
         }
-    
+
         refreshing = true;
         try {
             window.location.reload(true);
@@ -24,19 +24,19 @@ define([], () => {
             newWorker.postMessage({ action: 'skipWaiting' });
         } catch {
             console.log('something went wrong');
-            window.location.reload(); 
+            window.location.reload();
         }
     };
 
     const showUpdateBar = (force) => {
         console.log(force);
-    
+
         if (isUpdate) {
             return;
         }
-    
+
         isUpdate = true;
-    
+
         const popup = `
             <style>
                 #snackbar {
@@ -69,13 +69,13 @@ define([], () => {
         `;
         const $body = $('body');
         $body.append(popup);
-        
+
         setTimeout(() => {
             const $reloadBtn = $('#reload');
             const $snackbar = $('#snackbar');
 
             $snackbar.addClass('show');
-            
+
             if (force) {
                 $reloadBtn.off('click').click(reloadPage);
             } else {
@@ -108,7 +108,7 @@ define([], () => {
                         }
                     });
                 });
-    
+
                 setInterval(() => {
                     if (!(versions || []).length) {
                         window.self.caches.keys().then((keys) => {
@@ -123,7 +123,7 @@ define([], () => {
                             if (versions.length > 1 && !isUpdate) {
                                 showUpdateBar(true);
                             }
-    
+
                             if (versions.length === 1 && keys.length === 1) {
                                 if (versions[0] !== keys[0] && !isUpdate) {
                                     showUpdateBar(true);
@@ -131,7 +131,7 @@ define([], () => {
                             }
                         }, 4000);
                     });
-                    
+
                     reg.update();
                 }, 30000);
             }, (err) => {

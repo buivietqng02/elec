@@ -236,6 +236,22 @@ define([
         })
     }
 
+    // render file for quotedMessage
+    const getFileForQuoteMessage = (messagesArray) => {
+        let newArray = messagesArray.map((item, index) => {
+            if (item.quotedMessage) {
+                messagesArray.map(ite => {
+                    if (item.quotedMessage.id.messageId === ite.id.messageId) {
+                        return item.quotedMessage.file = ite.file
+                    }
+
+                })
+
+            }
+            return item;
+        })
+        return newArray;
+    }
     // ======== End Scroll to origin position ===========
 
     const onWrapperScroll = (event) => {
@@ -384,6 +400,10 @@ define([
         }
 
         lastOffset = messages[0]?.sequence;
+
+        // Update file property for quotedMessage
+        getFileForQuoteMessage(messages);
+
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
         ).join('');

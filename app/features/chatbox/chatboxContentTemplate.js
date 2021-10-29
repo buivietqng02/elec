@@ -36,7 +36,10 @@ define(['app/constant'], (constant) => {
             </li>
         `,
         file: `<i class="xm xm-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+        quotedFile: `<i class="xm xm-download"></i> <b>{fileName}</b> {fileSize}`,
+
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
+        quotedImage: '<img class="p-cur" src="{src}">',
         // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
 
         audio: `<div class="audio-main-content">
@@ -72,6 +75,34 @@ define(['app/constant'], (constant) => {
                     </div>
                 </div>
                 `,
+        quotedAudio: `<div class="audio-main-content">
+        <div class="clip">
+            <audio class="audio-recorder">
+            </audio>
+        </div>
+            <div class="audio-controler">
+                <button class="audio-playStop">
+                    <div class="audio-circular">
+                        <div class="audio-inner"></div>
+                        <div class="audio-number">
+                            <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
+
+                            <div class="audio-timeIndicate">{durationTime}</div>
+                        </div>
+
+                        <div class="audio-circle">
+                            <div class="audio-bar audio-left">
+                                <div class="audio-progress"></div>
+                            </div>
+                            <div class="audio-bar audio-right">
+                                <div class="audio-progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        `,
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
