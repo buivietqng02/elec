@@ -60,6 +60,7 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
+    let lastUndeletedMessageId = '';
 
     // ========== Start Voice message ==============
 
@@ -254,6 +255,17 @@ define([
     }
     // ======== End Scroll to origin position ===========
 
+    // Update lastUndeletedMessageId when reload
+    const updateLastUndeletedMessageIdWhenReload = (messages) => {
+        let listMessages = [...messages]
+        listMessages.reverse().some(item => {
+            if (!item.deleted) {
+                lastUndeletedMessageId = item.id.messageId;
+                return true;
+            }
+        })
+    }
+
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
@@ -405,6 +417,9 @@ define([
 
         lastOffset = messages[0]?.sequence;
 
+        // Update lastUndeletedMessageId when reload
+        updateLastUndeletedMessageIdWhenReload(messages);
+
         // Update file property for quotedMessage
         getFileForQuoteMessage(messages);
 
@@ -536,6 +551,10 @@ define([
 
         onSync: (messList = []) => {
             const mess = messList[0];
+
+            // Update lastUndeletedMessageId when post new message
+            lastUndeletedMessageId = mess.id.messageId;
+
             let id = GLOBAL.getCurrentRoomId();
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
@@ -564,7 +583,6 @@ define([
                 })
             }
 
-
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
@@ -590,17 +608,11 @@ define([
                 }
 
                 // Scroll to origin message
-
                 const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
                 $messItem.find('.comment-box-inline').on('click', (e) => {
-                    let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                    console.log(originId[1]);
+                    // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
                     handleScrollToOriginId(e.currentTarget);
                 })
-
-                // Render quotedMessage
-                console.log(mess);
-                console.log(messages);
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
@@ -611,7 +623,12 @@ define([
         },
 
         onSyncRemove: (message) => {
+
             const id = message.id.messageId;
+            const roomId = message.id.chatId;
+
+            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
+
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
             $message.find('.--mess').removeClass('fwme');
@@ -619,6 +636,11 @@ define([
             $message.find('.btn-message-settings').hide();
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
+
+            // Remove last message from sidebar
+            if (message.id.messageId === lastUndeletedMessageId) {
+                sidebarItem[0].querySelector('.preview').textContent = 'This message was removed';
+            }
         },
 
         onSyncUpdate: (message) => {
