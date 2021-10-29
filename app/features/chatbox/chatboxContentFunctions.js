@@ -68,31 +68,31 @@ define([
         return messageTemp;
     };
 
-    const handleQuotedMessFile = (file) => {
-        const { type } = file;
-        const data = {};
-        let messageTemp = '';
-        // console.log(file);
-        switch (type) {
-            case 2:
-                data.src = `${API_URL}/image?id=${file.id}&small=1`;
-                messageTemp = render(template.quotedImage, data);
-                break;
-            case 3:
-                data.durationTime = timeConvert(parseFloat(file.filename));
-                messageTemp = render(template.quotedAudio, data);
-                break;
-            case 4:
-                data.src = `${API_URL}/stream?id=${file.id}`;
-                messageTemp = render(template.video, data);
-                break;
-            default:
-                data.fileName = file.filename;
-                data.fileSize = humanFileSize(file.size);
-                messageTemp = render(template.quotedFile, data);
-        }
-        return messageTemp;
-    };
+    // const handleQuotedMessFile = (file) => {
+    //     const { type } = file;
+    //     const data = {};
+    //     let messageTemp = '';
+    //     // console.log(file);
+    //     switch (type) {
+    //         case 2:
+    //             data.src = `${API_URL}/image?id=${file.id}&small=1`;
+    //             messageTemp = render(template.quotedImage, data);
+    //             break;
+    //         case 3:
+    //             data.durationTime = timeConvert(parseFloat(file.filename));
+    //             messageTemp = render(template.quotedAudio, data);
+    //             break;
+    //         case 4:
+    //             data.src = `${API_URL}/stream?id=${file.id}`;
+    //             messageTemp = render(template.video, data);
+    //             break;
+    //         default:
+    //             data.fileName = file.filename;
+    //             data.fileSize = humanFileSize(file.size);
+    //             messageTemp = render(template.quotedFile, data);
+    //     }
+    //     return messageTemp;
+    // };
 
     const renderComment = (quotedMessage) => {
         const {
@@ -106,7 +106,7 @@ define([
         let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
 
         if (file) {
-            text = handleQuotedMessFile(file);
+            text = handleMessCointainFile(file);
         }
 
         // console.log(text);

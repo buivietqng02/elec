@@ -238,21 +238,21 @@ define([
     }
 
     // render file for quotedMessage
-    const getFileForQuoteMessage = (messagesArray) => {
-        let newArray = messagesArray.map((item, index) => {
-            if (item.quotedMessage) {
-                messagesArray.map(ite => {
-                    if (item.quotedMessage.id.messageId === ite.id.messageId) {
-                        return item.quotedMessage.file = ite.file
-                    }
+    // const getFileForQuoteMessage = (messagesArray) => {
+    //     let newArray = messagesArray.map((item, index) => {
+    //         if (item.quotedMessage) {
+    //             messagesArray.map(ite => {
+    //                 if (item.quotedMessage.id.messageId === ite.id.messageId) {
+    //                     return item.quotedMessage.file = ite.file
+    //                 }
 
-                })
+    //             })
 
-            }
-            return item;
-        })
-        return newArray;
-    }
+    //         }
+    //         return item;
+    //     })
+    //     return newArray;
+    // }
     // ======== End Scroll to origin position ===========
 
     // Update lastUndeletedMessageId when reload
@@ -353,7 +353,7 @@ define([
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
 
             // Render quotedMessage for files and images
-            getFileForQuoteMessage(moreMessages)
+            // getFileForQuoteMessage(moreMessages)
 
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
@@ -421,7 +421,7 @@ define([
         updateLastUndeletedMessageIdWhenReload(messages);
 
         // Update file property for quotedMessage
-        getFileForQuoteMessage(messages);
+        // getFileForQuoteMessage(messages);
 
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
@@ -574,14 +574,14 @@ define([
             }
 
             // Render new quotedMessage
-            if (mess.quotedMessage) {
-                messages.some(item => {
-                    if (mess.quotedMessage.id.messageId === item.id.messageId) {
-                        mess.quotedMessage.file = item.file
-                        return true;
-                    }
-                })
-            }
+            // if (mess.quotedMessage) {
+            //     messages.some(item => {
+            //         if (mess.quotedMessage.id.messageId === item.id.messageId) {
+            //             mess.quotedMessage.file = item.file
+            //             return true;
+            //         }
+            //     })
+            // }
 
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
@@ -683,8 +683,8 @@ define([
             $mess.removeClass('js_li_mess_local');
 
             $mess.find('.comment-box-inline').on('click', (e) => {
-                let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                console.log(originId[1]);
+                // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
+                // console.log(originId[1]);
                 handleScrollToOriginId(e.currentTarget);
             })
         },
