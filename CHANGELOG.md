@@ -4,6 +4,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.8] - 2021-10-29
+### Fix
+- Update sidebar last message when remove last message on chat.
+- Hide LagBlaster authentication button.
+
 ### [4.7] - 2021-10-28
 ### Update
 - Fix remove last message.
