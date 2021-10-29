@@ -117,6 +117,9 @@ img {
 	left: 1px;
 }
 
+.thirdparty-login-btn.lagblaster{
+	display: none;
+}
 .thirdparty-login-btn.lagblaster div {
 	font-size: 10px;
 	color: white;

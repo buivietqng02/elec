@@ -60,6 +60,7 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
+    let lastUndeletedMessageId = '';
 
     // ========== Start Voice message ==============
 
@@ -236,7 +237,34 @@ define([
         })
     }
 
+    // render file for quotedMessage
+    // const getFileForQuoteMessage = (messagesArray) => {
+    //     let newArray = messagesArray.map((item, index) => {
+    //         if (item.quotedMessage) {
+    //             messagesArray.map(ite => {
+    //                 if (item.quotedMessage.id.messageId === ite.id.messageId) {
+    //                     return item.quotedMessage.file = ite.file
+    //                 }
+
+    //             })
+
+    //         }
+    //         return item;
+    //     })
+    //     return newArray;
+    // }
     // ======== End Scroll to origin position ===========
+
+    // Update lastUndeletedMessageId when reload
+    const updateLastUndeletedMessageIdWhenReload = (messages) => {
+        let listMessages = [...messages]
+        listMessages.reverse().some(item => {
+            if (!item.deleted) {
+                lastUndeletedMessageId = item.id.messageId;
+                return true;
+            }
+        })
+    }
 
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
@@ -323,6 +351,10 @@ define([
             }
 
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
+
+            // Render quotedMessage for files and images
+            // getFileForQuoteMessage(moreMessages)
+
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
             storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
@@ -384,6 +416,13 @@ define([
         }
 
         lastOffset = messages[0]?.sequence;
+
+        // Update lastUndeletedMessageId when reload
+        updateLastUndeletedMessageIdWhenReload(messages);
+
+        // Update file property for quotedMessage
+        // getFileForQuoteMessage(messages);
+
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
         ).join('');
@@ -512,6 +551,10 @@ define([
 
         onSync: (messList = []) => {
             const mess = messList[0];
+
+            // Update lastUndeletedMessageId when post new message
+            lastUndeletedMessageId = mess.id.messageId;
+
             let id = GLOBAL.getCurrentRoomId();
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
@@ -529,6 +572,16 @@ define([
                 $unreadScroll.text(unreadScrollNum);
                 $unreadScroll.show();
             }
+
+            // Render new quotedMessage
+            // if (mess.quotedMessage) {
+            //     messages.some(item => {
+            //         if (mess.quotedMessage.id.messageId === item.id.messageId) {
+            //             mess.quotedMessage.file = item.file
+            //             return true;
+            //         }
+            //     })
+            // }
 
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
@@ -555,11 +608,9 @@ define([
                 }
 
                 // Scroll to origin message
-                console.log(mess);
                 const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
                 $messItem.find('.comment-box-inline').on('click', (e) => {
-                    let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                    console.log(originId[1]);
+                    // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
                     handleScrollToOriginId(e.currentTarget);
                 })
 
@@ -572,7 +623,12 @@ define([
         },
 
         onSyncRemove: (message) => {
+
             const id = message.id.messageId;
+            const roomId = message.id.chatId;
+
+            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
+
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
             $message.find('.--mess').removeClass('fwme');
@@ -580,6 +636,11 @@ define([
             $message.find('.btn-message-settings').hide();
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
+
+            // Remove last message from sidebar
+            if (message.id.messageId === lastUndeletedMessageId) {
+                sidebarItem[0].querySelector('.preview').textContent = 'This message was removed';
+            }
         },
 
         onSyncUpdate: (message) => {
@@ -622,8 +683,8 @@ define([
             $mess.removeClass('js_li_mess_local');
 
             $mess.find('.comment-box-inline').on('click', (e) => {
-                let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                console.log(originId[1]);
+                // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
+                // console.log(originId[1]);
                 handleScrollToOriginId(e.currentTarget);
             })
         },
