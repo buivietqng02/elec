@@ -339,6 +339,10 @@ define([
             }
 
             moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
+
+            // Render quotedMessage for files and images
+            getFileForQuoteMessage(moreMessages)
+
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
             storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
