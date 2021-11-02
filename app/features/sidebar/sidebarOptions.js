@@ -31,7 +31,7 @@ define([
     let $contactsBtn;
     let $groupChatBtn;
     let $changeLanguageBtn;
-    let $startConferenceBtn;
+    // let $startConferenceBtn;
     let $createChannelBtn;
     let $userInterFaceBtn;
     let $sendInviteBtn;
@@ -110,16 +110,17 @@ define([
         modalUserInterfaceComp.onInit();
     };
 
-    const showMeetingPage = () => {
-        offEventClickOutside();
-        API.get('conference').then((res) => {
-            const id = (+new Date()).toString(16).toUpperCase();
-            const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
-            window.open(url, '_blank').focus();
-        }).catch((err) => {
-            console.log(err);
-        });
-    };
+    // const showMeetingPage = () => {
+    //     offEventClickOutside();
+    //     API.get('conference').then((res) => {
+    //         console.log(res);
+    //         const id = (+new Date()).toString(16).toUpperCase();
+    //         const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+    //         window.open(url, '_blank').focus();
+    //     }).catch((err) => {
+    //         console.log(err);
+    //     });
+    // };
 
     const showModalSendInvite = (e) => {
         e.preventDefault();
@@ -161,7 +162,7 @@ define([
             $optionsBtn = $('.btn-sidebar-options');
             $contactsBtn = $('.btn-sidebar-contacts');
             $groupChatBtn = $slideContacts.find('.sodi-startchat');
-            $startConferenceBtn = $slideContacts.find('.sodi-conference');
+            // $startConferenceBtn = $slideContacts.find('.sodi-conference');
             $createChannelBtn = $slideContacts.find('.sodi-channel');
             $sendInviteBtn = $slideContacts.find('.sodi-invite');
             $erpContactBtn = $slideContacts.find('.sodi-erpcontacrt');
@@ -175,7 +176,7 @@ define([
             $changeLanguageBtn.off().click(showModalChangeLanguage);
             $groupChatBtn.off().click(showModalCreateGroup);
             $userInterFaceBtn.off().click(showModalUserInterFace);
-            $startConferenceBtn.off().click(showMeetingPage);
+            // $startConferenceBtn.off().click(showMeetingPage);
             $createChannelBtn.off().click(showModalCreateChannel);
             $sendInviteBtn.off().click(showModalSendInvite);
             $erpContactBtn.off().click(showModalERPContact);

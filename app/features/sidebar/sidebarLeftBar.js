@@ -25,6 +25,10 @@ define([
     let nameInfo;
     let $lbmiWelcome;
 
+    let $conferenceItem;
+    let $conferenceMobileItem;
+    let $conferenceContent;
+
     const {
         ROUTE
     } = constant;
@@ -46,12 +50,15 @@ define([
         $chatsMobileItem.addClass(className);
         $cartItem.removeClass(className);
         $cartMobileItem.removeClass(className);
+        $conferenceItem.removeClass(className);
+        $conferenceMobileItem.removeClass(className);
         $chatsContent.show();
         $cartContent.hide();
 
         $lbItem.removeClass(className);
         $lbMobileItem.removeClass(className);
         $lbContent.hide();
+        $conferenceContent.hide();
 
         $lbmiWelcome.hide();
     };
@@ -61,12 +68,15 @@ define([
         $cartMobileItem.addClass(className);
         $chatsItem.removeClass(className);
         $chatsMobileItem.removeClass(className);
+        $conferenceItem.removeClass(className);
+        $conferenceMobileItem.removeClass(className);
         $chatsContent.hide();
         $cartContent.show();
 
         $lbItem.removeClass(className);
         $lbMobileItem.removeClass(className);
         $lbContent.hide();
+        $conferenceContent.hide();
 
         $lbmiWelcome.hide();
     };
@@ -80,10 +90,32 @@ define([
         $cartMobileItem.removeClass(className);
         $chatsItem.removeClass(className);
         $chatsMobileItem.removeClass(className);
+        $conferenceItem.removeClass(className);
+        $conferenceMobileItem.removeClass(className);
         $chatsContent.hide();
         $cartContent.hide();
+        $conferenceContent.hide();
 
         $lbmiWelcome.show();
+    };
+
+    const switchToConference = () => {
+        $chatsContent.hide();
+        $cartContent.hide();
+        $lbContent.hide();
+
+        $lbmiWelcome.hide();
+
+        $conferenceItem.addClass(className);
+        $conferenceMobileItem.addClass(className);
+        $conferenceContent.show();
+
+        $cartItem.removeClass(className);
+        $cartMobileItem.removeClass(className);
+        $chatsItem.removeClass(className);
+        $chatsMobileItem.removeClass(className);
+        $lbItem.removeClass(className);
+        $lbMobileItem.removeClass(className);
     };
 
     ob.onInit = (route) => {
@@ -98,15 +130,12 @@ define([
         $lbMobileItem = $('#leftbar-mobile .lbmi-lagblaster');
         $lbContent = $('#lagblaster-content');
 
+        $conferenceItem = $('#leftbar .lbi-conference');
+        $conferenceMobileItem = $('#leftbar-mobile .lbmi-conference');
+        $conferenceContent = $('#conference-content');
+
         nameInfo = document.querySelector('.lb-welcome__name');
         $lbmiWelcome = $('.lbmi-welcome');
-
-        // Temporary for mobile
-        // if (!isRegisterLBAccount) {
-        //     switchToLagBlaster();
-        //     console.log('icon show');
-        // }
-        // End Temporary for mobile 
 
         if (route === ROUTE.lagblaster) {
             switchToLagBlaster();
@@ -150,6 +179,13 @@ define([
         $lbMobileItem.off().click(() => {
             window.history.pushState({}, document.title, `${window.location.origin}${ROUTE.lagblaster}`);
             switchToLagBlaster();
+        });
+
+        $conferenceItem.off().click(() => {
+            switchToConference();
+        });
+        $conferenceMobileItem.off().click(() => {
+            switchToConference();
         });
     };
 

@@ -14,6 +14,10 @@ define(['shared/icon'], (ICON) => ({
             <button class="btn lbm-item lbmi-cart">
                 <i class="icon-cart"></i>
             </button>
+            <button class="btn lbm-item lbmi-conference">
+                <i class="icon-video-camera"></i>
+            </button>
+
         </div>
 
         <div id="leftbar">
@@ -33,6 +37,12 @@ define(['shared/icon'], (ICON) => ({
                 <i class="icon-cart"></i>
             </div>
 
+            <!-- Conference -->
+            <div class="lb-item lbi-conference">
+                <i class="icon-video-camera"></i>
+            </div>
+            <!-- End Conference -->
+
             <div class="lb-options-group">
                 <div class="lbog-users">
                     <div class="lbogi-icon btn-sidebar-contacts">
@@ -43,10 +53,14 @@ define(['shared/icon'], (ICON) => ({
                             <i class="icon-comments"></i>
                             <lang data-language="START_CHAT"></lang>
                         </div>
+
+                        <!-- 
                         <div class="sodi-conference">
                             <i class="icon-video-camera"></i>
                             <lang data-language="START_CONFERENCE"></lang>
                         </div>
+                        -->
+
                         <div class="sodi-channel">
                             <i class="icon-info-circle"></i>
                             <lang data-language="CREATE_CHANNEL"></lang>
@@ -266,6 +280,23 @@ define(['shared/icon'], (ICON) => ({
                 </div>
             </div>
         </div>
+
+        <!-- Conference content -->
+        <div id="conference-content">
+            <h2 class="conference-content__header text-center">
+                <lang data-language="VIDEO_CONFERENCE"></lang>
+            </h2>
+            <div class="conference-content-btnGroup text-center">
+                <button id="conference-content__startBtn" class="btn btn-success">
+                    <lang data-language="START_CONFERENCE"></lang>
+                </button>
+            </div>
+            <div class="conference-content-iframe">
+                
+            </div>
+        </div>
+
+
         <div id="frame">
             <div class="sidebar">
                 <div class="profile profile--mini js_info_you" id="sidebarProfile">

@@ -180,32 +180,30 @@ define([
 
     // ======== Start Scroll to origin position ===========
     const findOriginMess = (id) => {
-        let notFounded = true;
-        $wrapper.animate({ scrollTop: 0 }, 100);
+        $wrapper.animate({ scrollTop: 0 }, 600);
         onGetMoreMessageByScrolling().then(result => {
 
-            for (let i = 0; i < result.loadedResult.length; i++) {
-                if (result.loadedResult[i].id.messageId === id) {
-                    notFounded = false;
-                    let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+            if (result.loadedResult.some((item, index) => {
+                return item.id.messageId === id
+            })) {
+                let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                originMessageEle.classList.add('activeScrollTo');
+                setTimeout(() => {
+                    originMessageEle.classList.add('activeScrollTo');
+                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }, 2000)
 
-                    setTimeout(() => {
-                        originMessageEle.classList.add('activeScrollTo');
-                        originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                    }, 600)
+                setTimeout(() => {
+                    originMessageEle.classList.remove('activeScrollTo');
+                }, 5000)
 
-                    setTimeout(() => {
-                        originMessageEle.classList.remove('activeScrollTo');
-                    }, 3000)
-
-                    break;
-
-                }
-            }
-
-            if (notFounded) {
+            } else {
                 findOriginMess(id)
             }
+        }).catch((e) => {
+            console.log(e);
+            findOriginMess(id)
         })
     }
 
@@ -370,7 +368,7 @@ define([
                 })
             });
 
-            // Scroll to origin message when scroll more
+            // Add event listener to Scroll to origin message when scroll more
             moreMessages.forEach(item => {
                 const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
                 const quotedMessageItem = messageItem.querySelector('.comment-box-inline');

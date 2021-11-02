@@ -14,6 +14,7 @@ define([
     'features/sidebar/sidebarOptions',
     'features/sidebar/sidebarLeftBar',
     'features/sidebar/sidebarLagBlaster',
+    'features/sidebar/sidebarConference',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
@@ -40,6 +41,7 @@ define([
     sidebarOptionsComp,
     sidebarLeftBarComp,
     sidebarLagBlasterComp,
+    sidebarConferenceComp,
     chatboxTopbarComp,
     chatboxContentComp,
     chatboxInputComp,
@@ -134,6 +136,9 @@ define([
 
         // Lag Blaster Intergrate
         sidebarLagBlasterComp.onInit();
+
+        // Conference
+        sidebarConferenceComp.onInit();
 
         // Initialize chatbox DOM and register event
         chatboxTopbarComp.onInit();

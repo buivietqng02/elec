@@ -80,6 +80,7 @@ define([
         return response.data;
     }, async (error) => {
         const originalConfig = error.config;
+        console.log(error.response);
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
             if (error.config.url.includes('/auth/') || error.config.url.includes('/logout')) {
@@ -93,6 +94,7 @@ define([
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
+                        console.log(response);
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
