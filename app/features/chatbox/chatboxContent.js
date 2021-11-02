@@ -8,7 +8,10 @@ define([
     'features/chatbox/chatboxContentFunctions',
     'features/chatbox/chatboxContentTemplate',
     'features/chatbox/chatboxTopbar',
-    'features/chatbox/messageSettingsSlide'
+    'features/chatbox/messageSettingsSlide',
+    'features/sidebar/sidebarConference',
+    'features/sidebar/sidebarLeftBar'
+
 ], (
     constant,
     API,
@@ -19,7 +22,9 @@ define([
     contentFunc,
     template,
     chatboxTopbarComp,
-    messageSettingsSlideComp
+    messageSettingsSlideComp,
+    sidebarConferenceComp,
+    sidebarLeftBarComp
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -264,6 +269,25 @@ define([
         })
     }
 
+    // Conference Call
+    const addEventListenerToMeetingLink = (receiver) => {
+        let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
+
+        joinConferenceBtn.forEach(item => {
+            let link = item.getAttribute('link-conf');
+            item.addEventListener('click', () => {
+                console.log(item);
+                console.log('test');
+                sidebarLeftBarComp.onSwitchToConference();
+
+                if (receiver === 'receiver') {
+                    sidebarConferenceComp.onInitConferencePage(link);
+                }
+
+            })
+        })
+    }
+
     const onWrapperScroll = (event) => {
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
@@ -380,6 +404,9 @@ define([
             })
             // End scroll to origin message when scroll more
 
+            // Add event listener for conference call
+            addEventListenerToMeetingLink('receiver');
+
             setTimeout(() => {
                 processing = false;
             }, 50);
@@ -421,6 +448,8 @@ define([
         // Update file property for quotedMessage
         // getFileForQuoteMessage(messages);
 
+        console.log(messages);
+
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
         ).join('');
@@ -442,6 +471,9 @@ define([
         addEventToAllScrollToOriginl();
 
         $loadingOfNew.hide();
+
+        // Add event listener for conference call
+        addEventListenerToMeetingLink('receiver');
 
         setTimeout(() => {
             updateRoomInfo(roomInfo);
@@ -508,7 +540,6 @@ define([
             $wrapper = $('.js_con_list_mess');
             $loadingOfNew = $('.--load-mess');
             $unreadScroll = $('.unread-message-scroll');
-
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
             $wrapper.off('scroll').scroll(onWrapperScroll);
@@ -612,6 +643,9 @@ define([
                     handleScrollToOriginId(e.currentTarget);
                 })
 
+                // Add event listener for conference call
+                addEventListenerToMeetingLink('receiver');
+
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
@@ -634,6 +668,7 @@ define([
             $message.find('.btn-message-settings').hide();
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
+            $message.find('.conference-link').hide();
 
             // Remove last message from sidebar
             if (message.id.messageId === lastUndeletedMessageId) {
@@ -685,6 +720,9 @@ define([
                 // console.log(originId[1]);
                 handleScrollToOriginId(e.currentTarget);
             })
+
+            // Add event listener for conference call
+            addEventListenerToMeetingLink();
         },
 
         onAddLocal: async (data) => {

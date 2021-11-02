@@ -210,6 +210,9 @@ define([
                 idLocal
             };
             let text = htmlEncode(decodeStringBase64(message));
+            console.log(text);
+            let isConferenceLink = false;
+            let conferenceLink = '';
 
             // check add local
             if (idLocal) {
@@ -257,6 +260,14 @@ define([
                 text = highlightText(text, decodeStringBase64(search));
             }
 
+            // Render in case share conference link
+            if (text.includes(`${constant.ROUTE.meeting}`)) {
+                isConferenceLink = true;
+                conferenceLink = text;
+            } else {
+                isConferenceLink = false;
+            }
+
             data.src = getAvatar(sender?.id);
             data.name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
             data.officially_name = htmlEncode(sender?.name);
@@ -271,6 +282,9 @@ define([
             data.hide_when_removed = deleted ? 'hidden' : '';
             data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
+
+            data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
+            data.conf_link = conferenceLink;
 
             // render with case of comment
             if (quotedMessage && !deleted) {

@@ -1,4 +1,4 @@
-define(['app/constant'], (constant) => {
+define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
     const template = {
         unread: `
             <li class="not-mess-li">
@@ -116,6 +116,14 @@ define(['app/constant'], (constant) => {
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
                     <div class="--mess {forward} {class_removed}">{mess}</div>
+
+                    <div class="conference-link {is_conference_link} {hide_when_removed} text-right">
+                        <small>Invite conference call: </small>
+                        <button class="btn btn-success" link-conf={conf_link}>
+                            JOIN
+                        </button>
+                    </div>
+
                     <div class="messages__bottom">
                         <div class="--date" date-value="{dateTimestamp}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="--double-check {class_read_by_partners} {hide_for_partner}" viewBox="0 0 16 16">

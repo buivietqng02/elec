@@ -189,5 +189,7 @@ define([
         });
     };
 
+    ob.onSwitchToConference = () => switchToConference();
+
     return ob;
 });
