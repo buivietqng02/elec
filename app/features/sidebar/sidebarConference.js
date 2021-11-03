@@ -15,16 +15,18 @@ define([
 
     const initConference = (link) => {
         console.log(link);
-        if (link === '') {
+        if (link === undefined || link === null || link === '') {
             API.get('conference').then((res) => {
                 console.log(res);
                 const id = (+new Date()).toString(16).toUpperCase();
-                const url = `${constant.ROUTE.meeting}/${id}?jwt=${res}`;
-                iframeConf.src = url;
+                const url = `https://xm.iptp.dev${constant.ROUTE.meeting}/${id}?jwt=${res}`;
+                console.log(url);
+                iframeConf.src = `${url}`;
             }).catch((err) => {
                 console.log(err);
             });
         } else {
+            console.log(link);
             iframeConf.src = link;
         }
     };
@@ -32,6 +34,11 @@ define([
     const initConferencePage = (link) => {
         conferenceBtn.innerHTML = `<lang data-language="STOP_CONFERENCE">${GLOBAL.getLangJson().STOP_CONFERENCE}</lang>`;
         conferenceBtn.style.backgroundColor = '#FF5C58';
+
+        while (iframeConferenceWraper.firstChild) {
+            iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
+        }
+
         iframeConf = document.createElement('iframe');
         iframeConferenceWraper.appendChild(iframeConf);
         conferenceHeader.style.display = 'none';

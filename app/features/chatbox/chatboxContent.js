@@ -274,10 +274,11 @@ define([
         let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
 
         joinConferenceBtn.forEach(item => {
-            let link = item.getAttribute('link-conf');
+
             item.addEventListener('click', () => {
+                let link = item.getAttribute('link-conf');
                 console.log(item);
-                console.log('test');
+
                 sidebarLeftBarComp.onSwitchToConference();
 
                 if (receiver === 'receiver') {

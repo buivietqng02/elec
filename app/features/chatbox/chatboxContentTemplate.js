@@ -117,9 +117,9 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                     <div class="above-of-mess {forward}">Forwarded message:</div>
                     <div class="--mess {forward} {class_removed}">{mess}</div>
 
-                    <div class="conference-link {is_conference_link} {hide_when_removed} text-right">
+                    <div class="conference-link {is_conference_link} {hide_when_removed} text-right" link-conf="{conf_link}">
                         <small>Invite conference call: </small>
-                        <button class="btn btn-success" link-conf={conf_link}>
+                        <button class="btn btn-success">
                             JOIN
                         </button>
                     </div>

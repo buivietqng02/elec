@@ -210,7 +210,7 @@ define([
                 idLocal
             };
             let text = htmlEncode(decodeStringBase64(message));
-            console.log(text);
+
             let isConferenceLink = false;
             let conferenceLink = '';
 
@@ -261,9 +261,12 @@ define([
             }
 
             // Render in case share conference link
-            if (text.includes(`${constant.ROUTE.meeting}`)) {
+
+            if (text.includes(`https://xm.iptp.dev${constant.ROUTE.meeting}`)) {
                 isConferenceLink = true;
-                conferenceLink = text;
+                const conferenceId = text.split('/');
+
+                conferenceLink = `https://xm.iptp.dev${constant.ROUTE.meeting}/${conferenceId[4]}`;
             } else {
                 isConferenceLink = false;
             }
