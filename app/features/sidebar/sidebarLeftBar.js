@@ -190,6 +190,7 @@ define([
     };
 
     ob.onSwitchToConference = () => switchToConference();
+    ob.onSwitchToChat = () => switchToChat();
 
     return ob;
 });

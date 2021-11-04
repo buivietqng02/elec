@@ -262,11 +262,11 @@ define([
 
             // Render in case share conference link
 
-            if (text.includes(`https://xm.iptp.dev${constant.ROUTE.meeting}`)) {
+            if (text.includes(`${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}`) && text.length > 36) {
                 isConferenceLink = true;
                 const conferenceId = text.split('/');
 
-                conferenceLink = `https://xm.iptp.dev${constant.ROUTE.meeting}/${conferenceId[4]}`;
+                conferenceLink = `${conferenceId[4]}`;
             } else {
                 isConferenceLink = false;
             }
@@ -287,7 +287,7 @@ define([
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
 
             data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
-            data.conf_link = conferenceLink;
+            data.confRoom_chat_Id = conferenceLink;
 
             // render with case of comment
             if (quotedMessage && !deleted) {

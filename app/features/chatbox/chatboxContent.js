@@ -270,22 +270,17 @@ define([
     }
 
     // Conference Call
-    const addEventListenerToMeetingLink = (receiver) => {
+    const addEventListenerToMeetingLink = () => {
         let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
 
         joinConferenceBtn.forEach(item => {
-
-            item.addEventListener('click', () => {
-                let link = item.getAttribute('link-conf');
-                console.log(item);
+            item.querySelector('button').addEventListener('click', () => {
+                let confRoomID = item.getAttribute('confId');
+                console.log(confRoomID);
 
                 sidebarLeftBarComp.onSwitchToConference();
-
-                if (receiver === 'receiver') {
-                    sidebarConferenceComp.onInitConferencePage(link);
-                }
-
-            })
+                sidebarConferenceComp.onInitConferencePage(confRoomID);
+            });
         })
     }
 
@@ -406,7 +401,7 @@ define([
             // End scroll to origin message when scroll more
 
             // Add event listener for conference call
-            addEventListenerToMeetingLink('receiver');
+            addEventListenerToMeetingLink();
 
             setTimeout(() => {
                 processing = false;
@@ -449,7 +444,7 @@ define([
         // Update file property for quotedMessage
         // getFileForQuoteMessage(messages);
 
-        console.log(messages);
+        // console.log(messages);
 
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
@@ -474,7 +469,7 @@ define([
         $loadingOfNew.hide();
 
         // Add event listener for conference call
-        addEventListenerToMeetingLink('receiver');
+        addEventListenerToMeetingLink();
 
         setTimeout(() => {
             updateRoomInfo(roomInfo);
@@ -645,7 +640,7 @@ define([
                 })
 
                 // Add event listener for conference call
-                addEventListenerToMeetingLink('receiver');
+                addEventListenerToMeetingLink();
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
