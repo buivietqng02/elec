@@ -18,6 +18,11 @@ define([
     let xmConferenceLoading;
     let confContentIframeBtnGroup;
     let copyAndShareBtn;
+    let toggleFullScreen;
+    let conferenceContent;
+    let isFullScreen;
+    let hoverArea;
+    let closeAlert;
 
     let domain;
     let options;
@@ -25,11 +30,32 @@ define([
     let roomId;
     let sharedRoomId;
 
+    const conferenceBtnGroupTemplate = `
+    <div class="hover-toggle-area">
+        <div class="conference-content-iframe-buttons text-center">
+            <div class="share-roomid-wrap">
+                <span class="share-roomid"></span>
+                <button class="btn btn-info share-roomid-btn" data-toggle="tooltip" data-placement="left" title="COPY_TO_CLIPBOARD" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD">Invite</button>
+            </div>
+
+            <div class="full-screen-wrap">
+                <button class="btn btn-success toggle-full-screen" data-toggle="tooltip" data-placement="right" title="FULL_SCREEN" data-lang-type="tooltip" data-language="FULL_SCREEN"><i class="icon-fullscreen"></i></button>
+            </div>
+        </div>
+    </div>
+    `;
+
+    const closeAlertFunc = (body, divAlert) => {
+        closeAlert.addEventListener('click', () => {
+            body.removeChild(divAlert);
+        });
+    };
+
     const copyToClipBoard = () => {
         const body = document.querySelector('body');
         const div = document.createElement('div');
         div.setAttribute('class', 'alert__invite alert alert-success');
-        div.textContent = 'Paste Room ID in chat section to invite team to the conference call';
+        div.innerHTML = '<span>Paste RoomID in chat section to invite team to the conference call</span><button class="btn btn-info close-alert"><i class="icon-close"></i></button>';
 
         copyAndShareBtn.addEventListener('click', () => {
             const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
@@ -41,11 +67,46 @@ define([
                 sidebarLeftBarComp.onSwitchToChat();
                 body.append(div);
                 copyAndShareBtn.textContent = 'Invite';
+
+                closeAlert = document.querySelector('.close-alert');
+                closeAlertFunc(body, div);
             }, 1000);
 
-            setTimeout(() => {
-                body.removeChild(div);
-            }, 12000);
+            if (document.querySelector('.alert__invite')) {
+                setTimeout(() => {
+                    body.removeChild(div);
+                }, 30000);
+            }
+        });
+    };
+
+    const mouseEnter = () => {
+        confContentIframeBtnGroup.style.top = '10px';  
+    };
+    const mouseLeave = () => {
+        confContentIframeBtnGroup.style.top = '-100px'; 
+    };
+
+    const toggleFullScreenFunc = () => {
+        toggleFullScreen.addEventListener('click', () => {
+            if (isFullScreen) {
+                conferenceContent.classList.remove('fullScreen');
+                hoverArea.removeEventListener('mouseover', mouseEnter);
+                hoverArea.removeEventListener('mouseout', mouseLeave);
+                confContentIframeBtnGroup.style.padding = '0px';
+                confContentIframeBtnGroup.style.top = '10px';  
+            } else {
+                conferenceContent.classList.add('fullScreen');
+                confContentIframeBtnGroup.style.top = '-100px';  
+
+                setTimeout(() => {
+                    confContentIframeBtnGroup.style.padding = '15px';
+                    hoverArea.addEventListener('mouseover', mouseEnter);
+                    hoverArea.addEventListener('mouseout', mouseLeave);
+                }, 500);
+            }
+            
+            isFullScreen = !isFullScreen;
         });
     };
 
@@ -53,6 +114,8 @@ define([
         while (iframeConferenceWraper.firstChild) {
             iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
         }
+        const divTemplate = document.createElement('div');
+        divTemplate.innerHTML = conferenceBtnGroupTemplate;
 
         startConfContainer.style.display = 'none';
         xmConferenceLoading.style.display = 'block';
@@ -120,16 +183,34 @@ define([
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
             jitsiApi._frame.addEventListener('load', () => {
                 xmConferenceLoading.style.display = 'none';
-                confContentIframeBtnGroup.style.display = 'block';
+               
+                iframeConferenceWraper.style.display = 'block';
+
+                conferenceContent.append(divTemplate);
+               
+                sharedRoomId = document.querySelector('.share-roomid');
                 sharedRoomId.textContent = roomId;
-                iframeConferenceWraper.classList.add('iframeActive');
+
+                confContentIframeBtnGroup = document.querySelector('.conference-content-iframe-buttons');
+                copyAndShareBtn = confContentIframeBtnGroup.querySelector('.share-roomid-btn');
+                toggleFullScreen = confContentIframeBtnGroup.querySelector('.toggle-full-screen');
+                hoverArea = document.querySelector('.hover-toggle-area');
+
                 copyToClipBoard();
+                toggleFullScreenFunc();
             }, true);
             jitsiApi.addListener('readyToClose', () => {
                 jitsiApi._frame.remove();
                 startConfContainer.style.display = 'block';
-                confContentIframeBtnGroup.style.display = 'none';
-                iframeConferenceWraper.classList.remove('iframeActive');
+                iframeConferenceWraper.style.display = 'none';
+
+                conferenceContent.removeChild(divTemplate);
+
+                conferenceContent.classList.remove('fullScreen');
+                confContentIframeBtnGroup.style.padding = '0px';
+                confContentIframeBtnGroup.style.top = '10px';  
+
+                isFullScreen = false;
             });
         }).catch((err) => {
             console.log(err);
@@ -144,6 +225,10 @@ define([
 
     return {
         onInit: () => {
+            isFullScreen = false;
+
+            conferenceContent = document.querySelector('#conference-content');
+
             conferenceBtn = document.querySelector('#conference-content__startBtn');
 
             iframeConferenceWraper = document.querySelector('.conference-content-iframe');
@@ -151,12 +236,6 @@ define([
             startConfContainer = document.querySelector('.start-conference-container');
 
             xmConferenceLoading = document.querySelector('.xm-meeting-loading');
-
-            sharedRoomId = document.querySelector('.share-roomid');
-
-            confContentIframeBtnGroup = document.querySelector('.conference-content-iframe-buttons');
-
-            copyAndShareBtn = confContentIframeBtnGroup.querySelector('.share-roomid-btn');
 
             initConferencePage();
         },

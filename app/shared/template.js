@@ -294,13 +294,6 @@ define(['shared/icon'], (ICON) => ({
                 </div>
             </div>
 
-            <div class="conference-content-iframe-buttons text-center">
-                <div class="share-roomid-wrap">
-                    <span class="share-roomid"></span>
-                    <button class="btn btn-info share-roomid-btn" data-toggle="tooltip" data-placement="right" title="COPY_TO_CLIPBOARD" data-lang-type="tooltip" data-language="COPY_TO_CLIPBOARD">Invite</button>
-                </div>
-            </div>
-
             <!-- Jitsi frame content --> 
             <div class="conference-content-iframe">
             </div>
