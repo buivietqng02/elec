@@ -28,6 +28,14 @@ define([
         switchMap
     } = operators;
 
+    const isLogin = () => {
+        const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
+        const token = functions.getDataToLocalApplication(ACCESS_TOKEN) || '';
+        const userId = functions.getDataToLocalApplication(USER_ID) || '';
+
+        return !!(sessionId && token && userId);
+    };
+
     const refreshTokenSubject = new Rx.BehaviorSubject(null);
 
     const getHeaderJson = () => ({
@@ -125,7 +133,11 @@ define([
                 } catch (_error) {
                     isRefreshing = false;
                     if (error.response) {
-                        modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
+
+                        if(isLogin()){
+                            modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
+                        }
+    
                         return Promise.reject(new Error('Error refreshing token'));
                     }
                     return Promise.reject(_error);

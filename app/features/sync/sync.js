@@ -372,7 +372,7 @@ define([
                 }
             }).catch((err) => {
                 if (err.message !== 'Error refreshing token') {
-                    if (err.response?.status === 404) {
+                    if (err.response?.status === 404 && isLogin()) {
                         // API returns 404 if session_id is not found
                         // Logout because onSync() won't work anymore without a valid session_id
                         modalLogout.onInit(err?.response?.data?.details);

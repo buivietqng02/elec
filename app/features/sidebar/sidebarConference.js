@@ -55,7 +55,7 @@ define([
         const body = document.querySelector('body');
         const div = document.createElement('div');
         div.setAttribute('class', 'alert__invite alert alert-success');
-        div.innerHTML = '<span>Paste RoomID in chat section to invite team to the conference call</span><button class="btn btn-info close-alert"><i class="icon-close"></i></button>';
+        div.innerHTML = '<span>Paste RoomID in chat section to invite team to the conference call</span><button class="btn btn-outline-primary close-alert"><i class="icon-close"></i></button>';
 
         copyAndShareBtn.addEventListener('click', () => {
             const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
@@ -69,14 +69,17 @@ define([
                 copyAndShareBtn.textContent = 'Invite';
 
                 closeAlert = document.querySelector('.close-alert');
-                closeAlertFunc(body, div);
+
+                if (document.querySelector('.alert__invite')) { 
+                    closeAlertFunc(body, div);
+                }
             }, 1000);
 
-            if (document.querySelector('.alert__invite')) {
-                setTimeout(() => {
+            setTimeout(() => {
+                if (document.querySelector('.alert__invite')) {
                     body.removeChild(div);
-                }, 30000);
-            }
+                }
+            }, 12000);
         });
     };
 
