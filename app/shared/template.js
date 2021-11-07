@@ -288,7 +288,7 @@ define(['shared/icon'], (ICON) => ({
                     <lang data-language="VIDEO_CONFERENCE"></lang>
                 </h2>
                 <div class="conference-content-btnGroup text-center">
-                    <button id="conference-content__startBtn" class="btn btn-success">
+                    <button id="conference-content__startBtn" class="start-conf">
                         <lang data-language="START_CONFERENCE"></lang>
                     </button>
                 </div>

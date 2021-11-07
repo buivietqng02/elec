@@ -288,6 +288,8 @@ define([
 
             data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
             data.confRoom_chat_Id = conferenceLink;
+            data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
+            data.JOIN = GLOBAL.getLangJson().JOIN;
 
             // render with case of comment
             if (quotedMessage && !deleted) {

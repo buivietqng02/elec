@@ -66,6 +66,7 @@ define([
     });
 
     const refreshToken = () => {
+        // console.log(functions.getDataToLocalApplication(REFRESH_TOKEN))
         return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
     };
 
@@ -92,13 +93,18 @@ define([
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
             if (error.config.url.includes('/auth/') || error.config.url.includes('/logout')) {
+                // console.log('test')
                 isRefreshing = false;
                 return Promise.reject(error);
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
+
+                        // console.log('refresh token')
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
+
+                        // console.log(refreshToken())
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
@@ -128,12 +134,14 @@ define([
                             .subscribe(() => originalConfig);
 
                         // retry the failed request 
+                        // console.log(req)
                         return axios(req);
                     }
                 } catch (_error) {
                     isRefreshing = false;
                     if (error.response) {
 
+                        // console.log(isLogin());
                         if(isLogin()){
                             modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
                         }
