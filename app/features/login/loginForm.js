@@ -30,6 +30,7 @@ define([
     let $loginLBForm;
     let loading = false;
     const ob = {};
+    let $loaderERPLoginBtn;
 
     const leaveERPLoginForm = () => ob.onInit();
     const leaveLBLoginForm = () => ob.onInit();
@@ -97,11 +98,15 @@ define([
 
         loading = true;
         $loaderErp.show();
+        $loaderERPLoginBtn.show();
+        $loginForm.find('.erp').prop('disabled', true);
 
         axios.get(`${BASE_URL}/erp/token`).then(token => {
             loading = false;
             $loginForm.hide();
             $loaderErp.hide();
+            $loaderERPLoginBtn.hide();
+            $loginForm.find('.erp').prop('disabled', false);
             $loginERPForm.show();
             loginERPComp.onInit(token);
         }).catch(err => {
@@ -145,6 +150,8 @@ define([
         $loader = $loginForm.find('.login__btn-submit .--spin');
         $loaderErp = $loginForm.find('.login-erp-btn .--spin');
 
+        $loaderERPLoginBtn = $loginForm.find('.erp .--login-btn-spiner');
+      
         $passwordField.val('');
         $emailField.val('');
         $errMess.html('');
@@ -153,6 +160,8 @@ define([
         $loginERPForm.hide();
         $loginLBForm.hide();
         $loginForm.show();
+
+        $loaderERPLoginBtn.hide();
     };
 
     return ob;

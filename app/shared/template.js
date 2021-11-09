@@ -291,6 +291,15 @@ define(['shared/icon'], (ICON) => ({
                     <button id="conference-content__startBtn" class="start-conf">
                         <lang data-language="START_CONFERENCE"></lang>
                     </button>
+
+                    <div class="or-joint-existing-room">
+                        <span><lang data-language="OR_JOINT_EXISTING_ROOM"></lang></span>
+                    </div>
+
+                    <div class="input-group join-existing-room">
+                        <input type="text" class="join-existing-room__input form-control" placeholder="FILL_ROOM_ID" data-language="FILL_ROOM_ID" data-lang-type="placeholder">
+                        <button class="btn btn-outline-secondary" type="button" id="join-existing-room__btn" disabled><lang data-language="JOIN_MEETING"></lang></button>
+                    </div>
                 </div>
             </div>
 
@@ -646,7 +655,11 @@ define(['shared/icon'], (ICON) => ({
                     OR LOGIN WITH
                 </div>
                 <div class="thirdparty-login-btn-container">
-                    <button type="button" class="thirdparty-login-btn erp">${ICON.ERP_LOGO}</button>
+                    <button type="button" class="thirdparty-login-btn erp">
+                        ${ICON.ERP_LOGO}
+                        <div class="--login-btn-spiner spinner-border text-primary">
+                        </div>
+                    </button>
                     <button type="button" class="thirdparty-login-btn google">${ICON.GOOGLE_LOGO}</button>
 
                     <button type="button" class="thirdparty-login-btn lagblaster">

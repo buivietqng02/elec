@@ -105,11 +105,21 @@ img {
 	cursor: pointer;
 }
 
+.thirdparty-login-btn:disabled {
+	background-color: #6d6868;
+}
+
 .thirdparty-login-btn.erp svg {
 	width: 55px;
 	height: 47px;
 	position: relative;
 	left: -3.5px;
+}
+
+.--login-btn-spiner{
+	position: absolute;
+	left: 23%;
+	top: 23%;
 }
 
 .thirdparty-login-btn.google svg {

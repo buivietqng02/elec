@@ -13,14 +13,17 @@ define([
     sidebarLeftBarComp
 ) => {
     let conferenceBtn;
+    let joinExistingRoomBtn;
+    let joinExistingRoomInput;
+
     let iframeConferenceWraper;
     let startConfContainer;
     let xmConferenceLoading;
     let confContentIframeBtnGroup;
     let copyAndShareBtn;
-    let toggleFullScreen;
+    
     let conferenceContent;
-    let isFullScreen;
+  
     let isOpening;
     let hoverArea;
     let closeAlert;
@@ -38,13 +41,11 @@ define([
                 <span class="share-roomid"></span>
                 <button class="btn btn-info share-roomid-btn" data-toggle="tooltip" data-placement="left" title="CLICK_TO_COPY_AND_SHARE" data-lang-type="tooltip" data-language="CLICK_TO_COPY_AND_SHARE">${language.INVITE_PEOPLE}</button>
             </div>
-
-            <div class="full-screen-wrap">
-                <button class="btn btn-success toggle-full-screen" data-toggle="tooltip" data-placement="right" title="FULL_SCREEN" data-lang-type="tooltip" data-language="FULL_SCREEN"><i class="icon-fullscreen"></i></button>
-            </div>
         </div>
     </div>
     `;
+
+    const alertTemplate = (text) => `<span data-language="PASTE_TO_SHARE">${text}</span><button class="btn btn-outline-primary close-alert"><i class="icon-close"></i></button>`;
 
     const closeAlertFunc = (body, divAlert) => {
         closeAlert.addEventListener('click', () => {
@@ -56,7 +57,8 @@ define([
         const body = document.querySelector('body');
         const div = document.createElement('div');
         div.setAttribute('class', 'alert__invite alert alert-success');
-        div.innerHTML = `<span data-language="PASTE_TO_SHARE">${GLOBAL.getLangJson().PASTE_TO_SHARE}</span><button class="btn btn-outline-primary close-alert"><i class="icon-close"></i></button>`;
+
+        div.innerHTML = alertTemplate(GLOBAL.getLangJson().PASTE_TO_SHARE);
 
         copyAndShareBtn.addEventListener('click', () => {
             const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
@@ -91,37 +93,6 @@ define([
         confContentIframeBtnGroup.style.top = '-100px'; 
     };
 
-    const toggleFullScreenFunc = () => {
-        toggleFullScreen.addEventListener('click', () => {
-            if (isFullScreen) {
-                conferenceContent.classList.remove('fullScreen');
-                hoverArea.removeEventListener('mouseover', mouseEnter);
-                hoverArea.removeEventListener('mouseout', mouseLeave);
-                confContentIframeBtnGroup.style.padding = '0px';
-                confContentIframeBtnGroup.style.top = '10px';  
-            } else {
-                conferenceContent.classList.add('fullScreen');
-                confContentIframeBtnGroup.style.top = '-100px';  
-
-                setTimeout(() => {
-                    confContentIframeBtnGroup.style.padding = '15px';
-                    hoverArea.addEventListener('mouseover', mouseEnter);
-                    hoverArea.addEventListener('mouseout', mouseLeave);
-                }, 500);
-            }
-            
-            isFullScreen = !isFullScreen;
-        });
-    };
-
-    const resetConference = () => {
-        conferenceContent.classList.remove('fullScreen');
-        confContentIframeBtnGroup.style.padding = '0px';
-        confContentIframeBtnGroup.style.top = '10px';  
-        iframeConferenceWraper.style.display = 'none';
-        isFullScreen = false;
-    };
-
     const initJitsiConference = (inviteID) => {
         while (iframeConferenceWraper.firstChild) {
             iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
@@ -129,7 +100,7 @@ define([
 
         if (isOpening === true) { 
             const divTemp = document.querySelector('#divTemplate');
-            resetConference();
+            iframeConferenceWraper.style.display = 'none';
             conferenceContent.removeChild(divTemp);
         }  
 
@@ -215,29 +186,18 @@ define([
 
                 confContentIframeBtnGroup = document.querySelector('.conference-content-iframe-buttons');
                 copyAndShareBtn = confContentIframeBtnGroup.querySelector('.share-roomid-btn');
-                toggleFullScreen = confContentIframeBtnGroup.querySelector('.toggle-full-screen');
                 hoverArea = document.querySelector('.hover-toggle-area');
 
                 copyToClipBoard();
-                toggleFullScreenFunc();
+                hoverArea.addEventListener('mouseover', mouseEnter);
+                hoverArea.addEventListener('mouseout', mouseLeave);
             }, true);
             jitsiApi.addListener('readyToClose', () => {
                 jitsiApi._frame.remove();
-
                 startConfContainer.style.display = 'block';
-
-                resetConference();
-                // startConfContainer.style.display = 'block';
-                // iframeConferenceWraper.style.display = 'none';
-
+                iframeConferenceWraper.style.display = 'none';
                 conferenceContent.removeChild(divTemplate);
-
-                // conferenceContent.classList.remove('fullScreen');
-                // confContentIframeBtnGroup.style.padding = '0px';
-                // confContentIframeBtnGroup.style.top = '10px';  
-
                 isOpening = false;
-                // isFullScreen = false;
             });
         }).catch((err) => {
             console.log(err);
@@ -248,11 +208,45 @@ define([
         conferenceBtn.addEventListener('click', () => {
             initJitsiConference(inviteID);
         });
+
+        joinExistingRoomInput.addEventListener('keyup', () => {
+            if (joinExistingRoomInput.value.trim().length === 0) {
+                joinExistingRoomBtn.disabled = true;
+            } else {
+                joinExistingRoomBtn.disabled = false;
+            }
+        });
+
+        joinExistingRoomBtn.addEventListener('click', () => {
+            const body = document.querySelector('body');
+            const div = document.createElement('div');
+            div.setAttribute('class', 'alert__joinExitingRoom alert alert-danger');
+
+            const existingRoomId = joinExistingRoomInput.value;
+            if (existingRoomId === '' || existingRoomId === undefined || existingRoomId.trim().length !== 11) {
+                div.innerHTML = alertTemplate(GLOBAL.getLangJson().WRONG_ROOM_ID_FORMAT);
+
+                body.append(div);
+                closeAlert = document.querySelector('.close-alert');
+
+                if (document.querySelector('.alert__joinExitingRoom')) { 
+                    closeAlertFunc(body, div);
+                }
+
+                setTimeout(() => {
+                    if (document.querySelector('.alert__joinExitingRoom')) {
+                        body.removeChild(div);
+                    }
+                }, 5000);
+
+                return;
+            }
+            initJitsiConference(existingRoomId);
+        });
     };
 
     return {
         onInit: () => {
-            isFullScreen = false;
             isOpening = false;
 
             conferenceContent = document.querySelector('#conference-content');
@@ -264,6 +258,18 @@ define([
             startConfContainer = document.querySelector('.start-conference-container');
 
             xmConferenceLoading = document.querySelector('.xm-meeting-loading');
+
+            joinExistingRoomBtn = document.querySelector('#join-existing-room__btn');
+
+            joinExistingRoomInput = document.querySelector('.join-existing-room__input');
+
+            // style text orJointExistingRoomText
+            const orJointExistingRoomText = document.querySelector('.or-joint-existing-room');
+            if (GLOBAL.getLanguage() === constant.LANGUAGES.russian) {
+                orJointExistingRoomText.classList.add('russialangStyle');
+            } else {
+                orJointExistingRoomText.classList.remove('russialangStyle');
+            }
 
             initConferencePage();
         },
