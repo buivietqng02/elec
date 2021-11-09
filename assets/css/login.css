@@ -116,10 +116,20 @@ img {
 	left: -3.5px;
 }
 
-.--login-btn-spiner{
+.thirdparty-login-btn .--login-btn-spiner{
 	position: absolute;
 	left: 23%;
 	top: 23%;
+}
+
+/* Chrome 29+ */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+    .thirdparty-login-btn .--login-btn-spiner{
+		position: absolute;
+		left: 23%;
+		top: 23%;
+	}
 }
 
 .thirdparty-login-btn.google svg {
