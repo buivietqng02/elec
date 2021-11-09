@@ -53,11 +53,11 @@ define([
 
         API.get('messages', { chatId: roomId, search: value }).then(res => {
             $loading.hide();
-            if (value !== $input.val() || !res?.data?.messages?.length) {
+            if (value !== $input.val() || !res?.messages?.length) {
                 return;
             }
 
-            chatboxContentComp.onSearch(res.data.messages.reverse(), value);
+            chatboxContentComp.onSearch(res.messages.reverse(), value);
         });
     }, 1000);
 

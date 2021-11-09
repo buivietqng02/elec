@@ -354,7 +354,7 @@ define([
         processing = true;
 
         isLoadedMoreResult = await API.get('messages', params).then(res => {
-            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
             }
@@ -364,11 +364,11 @@ define([
             let messagesHtml = '';
             let moreMessages = [];
 
-            if (res?.data?.messages?.length < 20) {
+            if (res?.messages?.length < 20) {
                 isTouchLastMess = true;
             }
 
-            moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
+            moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
@@ -482,27 +482,18 @@ define([
         if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
             return;
         }
-
-        if (res.status !== 0) {
-            // Handle when room was deleted
-            if (res.status === 2) {
-                onHandleRoomWasDeleted();
-            }
-
-            return;
-        }
-
         // Update time activity to top bar
-        chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
-
-        let messages = (res?.data?.messages || []).reverse();
-
+        chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+        let messages = (res?.messages || []).reverse();
         // Assign message to store
         setChatsById(roomInfo.id, messages);
         storeRoomById(roomInfo.id, messages);
-
         handleDataFromGetMess(messages, roomInfo);
     }).catch(err => {
+        if (err.response?.status == 404) {
+            onHandleRoomWasDeleted();
+            return;
+        }
         if (err === 19940402) {
             onErrNetWork(err);
         }

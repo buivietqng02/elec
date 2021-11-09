@@ -57,7 +57,7 @@ define([
         };
         
         API.get('messages', params).then((res) => {
-            res.data.messages.reverse().forEach((mess, index) => {
+            res.messages.reverse().forEach((mess, index) => {
                 const activeClass = mess.id.messageId === currentImageId ? activeClassName : '';
                 const { file } = mess;
                 
