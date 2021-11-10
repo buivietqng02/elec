@@ -424,6 +424,12 @@ define(['shared/icon'], (ICON) => ({
                             <div class="--online"></div>
                             <div class="--typing"></div>
                         </div>
+                        <button class="btn-phone">
+                            <i class="xm xm-phone"></i>
+                        </button>
+                        <button class="btn-video">
+                            <i class="xm xm-video-camera"></i>
+                        </button>
                         <button class="btn-toggle-search-box">
                             <i class="xm xm-search"></i>
                         </button>
@@ -591,10 +597,6 @@ define(['shared/icon'], (ICON) => ({
                                     <i class="xm xm-photo xm-fw"></i>
                                     <lang data-language="UP_MEDIA"></lang>
                                 </label>
-                                <li class="js-up-phone menu__item" data-dismiss=".menu">
-                                    <i class="xm xm-phone xm-fw"></i>
-                                    <lang data-language="PHONE"></lang>
-                                </li>
                             </div>
 
                             <!-- Voice chat wrap -->
