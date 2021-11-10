@@ -97,11 +97,15 @@ define([
         $audio[0].pause();
         $audio[0].src = 'assets/sounds/call-end.mp3';
         $audio[0].loop = false;
-        $audio[0].play();
+        $audio[0].play();     
         jitsiApi.executeCommand('hangup');
         $videoCallerWrap.find('iframe').remove();
     };
-    const onHangup = () => {        
+    const onHangup = () => {   
+        $audio[0].pause();
+        $audio[0].src = 'assets/sounds/call-end.mp3';
+        $audio[0].loop = false;
+        $audio[0].play();     
         $modal.modal('hide');
         if (!roomInfo.group) {
             endCall();
@@ -265,12 +269,12 @@ define([
         $videoCallerWrap.attr('class', '').addClass('video-caller');
     };
 
-    const onAccept = () => {
+    const onAccept = (event) => {
         $modalDialog.removeClass('accept-state');
 
         $audio[0].pause();
         acceptCall();
-        setupWebrtc();
+        setupWebrtc(event.data.audioOnly);
     };
 
     const onDeclareDom = (isAudioOnly) => {
@@ -288,7 +292,7 @@ define([
         $audio = $('#video-call-audio');
 
         $hangupBtn.off().click(onHangup);
-        $acceptBtn.off().click(onAccept);
+        $acceptBtn.off().click({ audioOnly: isAudioOnly }, onAccept);
         $btnModalStateSwitch.off().click({ audioOnly: isAudioOnly }, modalStateSwitch);
     };
 

@@ -106,7 +106,7 @@ define([
     const handleWithCalling = (message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onInit(message.sender, roomId);
+            modalPhoneRequest.onInit(true, message.sender, roomId);
         }
     };
 
