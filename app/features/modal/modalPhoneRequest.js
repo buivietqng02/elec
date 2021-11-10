@@ -343,13 +343,16 @@ define([
             $callAnimation.addClass(hide);
             $modal.modal('show');
         },
-        onEndCall: (sender, rid) => {
-            if (rid === roomInfo.id) {
-                console.log(roomInfo.id);
-            }
+        onEndCall: () => {
             if ($modal.hasClass('show')) {
                 onClose();
                 $modal.modal('hide');
+            }
+        },
+        onAcceptCall: () => {
+            if ($modalDialog.hasClass('accept-state')) {
+                $audio[0].pause();
+                $modal.remove();
             }
         }
     };

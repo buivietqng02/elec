@@ -110,10 +110,17 @@ define([
         }
     };
 
-    const handleWithEndCall = (message, roomId) => {
+    const handleWithAcceptCall = (message) => {
+        const currentUserId = GLOBAL.getInfomation().id;
+        if (currentUserId === message.sender.id) {
+            modalPhoneRequest.onAcceptCall();
+        }
+    };
+
+    const handleWithEndCall = (message) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onEndCall(message.sender, roomId);
+            modalPhoneRequest.onEndCall();
         }
     };
 
@@ -149,10 +156,15 @@ define([
             if (message.type === 21) {
                 handleWithCalling(message, roomId);
             }
+            
+            // Handle with message is accept call
+            if (message.type === 23) {
+                handleWithAcceptCall(message);
+            }
 
             // Handle with message is end call
             if (message.type === 24) {
-                handleWithEndCall(message, roomId);
+                handleWithEndCall(message);
             }
 
             if (isCurrentRoom) {
