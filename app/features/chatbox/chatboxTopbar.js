@@ -234,6 +234,7 @@ define([
                 $removeBtn.hide();
                 $notificationBtn.show();
                 $timeActivity.show();
+                $callOptionsBtn.show();
 
                 offlineData.getChatById(roomInfo.id).then(chat => {
                     if (chat) {
