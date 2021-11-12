@@ -89,22 +89,20 @@ define([
         return response.data;
     }, async (error) => {
         const originalConfig = error.config;
-        console.log(error.response);
+
         if (error.response) {
             GLOBAL.setNetworkStatus(true);
+
             if (error.config.url.includes('/auth/') || error.config.url.includes('/logout')) {
-                // console.log('test')
                 isRefreshing = false;
                 return Promise.reject(error);
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
 
-                        // console.log('refresh token')
+                        console.log(error.response)
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
-
-                        // console.log(refreshToken())
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
@@ -141,7 +139,8 @@ define([
                     isRefreshing = false;
                     if (error.response) {
 
-                        // console.log(isLogin());
+                        console.log(isLogin());
+                        console.log(error.response);
                         if(isLogin()){
                             modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
                         }

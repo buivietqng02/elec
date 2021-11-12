@@ -604,6 +604,8 @@ define([
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
 
+                // console.log(messagesHtml)
+                // console.log(mess)
                 // Render new message
                 $messageList.append(messagesHtml);
 
@@ -680,6 +682,7 @@ define([
         },
 
         onFinishPostMessage: (data) => {
+            // console.log(data)
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
@@ -710,6 +713,29 @@ define([
 
             // Add event listener for conference call
             addEventListenerToMeetingLink();
+
+            // Fix repeating messages
+            const messagesList = document.querySelector('.messages__list')
+            const arryMessages = messagesList.querySelectorAll('.messages__item');
+            const indexArr = [];
+            const toFindDuplicates = (arryParam) => {
+                let newArray = Array.from(arryParam).map(ite => ite.getAttribute('data-chat-id'));
+                return newArray.filter((item, index) => {
+                    if(newArray.indexOf(item) !== index) {
+                        indexArr.push(index)
+                        return true;
+                    }
+                      
+                })
+            }
+            toFindDuplicates(arryMessages);
+
+            if(indexArr.length){
+                indexArr.map(item => {
+                    console.log(arryMessages[item]);
+                    messagesList.removeChild(arryMessages[item])
+                })
+            }
         },
 
         onAddLocal: async (data) => {
@@ -739,6 +765,7 @@ define([
             if (!isInit) {
                 messages = await getChatById(rid) || [];
             }
+            // console.log(messages)
 
             if (data.params.quotedMessageId) {
                 const quotedObject = messages.find(item => item.id.messageId === data.params.quotedMessageId);

@@ -389,7 +389,7 @@ define([
                 }
             }).catch((err) => {
                 if (err.message !== 'Error refreshing token') {
-                    // console.log(isLogin(), err.response?.status);
+                    console.log(isLogin(), err.response?.status);
                     if (err.response?.status === 404 && isLogin()) {
                         // API returns 404 if session_id is not found
                         // Logout because onSync() won't work anymore without a valid session_id

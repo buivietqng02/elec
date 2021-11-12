@@ -202,6 +202,7 @@ define([
             $notiBoard.removeClass('run');
             // onSetUpWebSocket(data[0].data.user.id);
         }).catch((err) => {
+            console.log(err);
             if (err === 19940402) {
                 setTimeout(() => {
                     if (!isRunFristTime && GLOBAL.getNetworkStatus()) {

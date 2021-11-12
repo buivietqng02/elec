@@ -126,8 +126,13 @@ define([
         console.log(err);
         if (err === 19940402) {
             setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 3000)
+            count = 0;
         }
     };
+
+    // Fixing repeating messages
+    let awaitProcessClone = [];
+    let count = 0;
 
     const postMessage = (data) => {
         if (data.isDelete) {
@@ -141,7 +146,7 @@ define([
             return;
         }
 
-        if (data.messageId) {
+        if (data.messageId !== 0) {
             API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -150,19 +155,51 @@ define([
             }).catch(onErrFetch);
 
             return;
+        } 
+
+        // Fixing repeating messages
+        awaitProcessClone.map((item, index) => {
+            if( item.idLocal === data.idLocal) {
+                count = count + 1
+            } 
+            // else {
+            //     if(awaitProcessClone.length === 1){
+            //         count = 0;
+            //     }
+            // }
+        })
+
+        // console.log('clone await array', awaitProcessClone); 
+        // console.log('data input', data);
+        // console.log('response ID', responseID)  
+        // console.log("new array", newArray)
+        // console.log(count)
+
+        // Fixing repeating messages
+        if(count > 1){
+            return
         }
 
-        API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
-            const chatboxContentComp = require('features/chatbox/chatboxContent');
-            messagesWaitProcessingArr.shift();
-            chatboxContentComp.onFinishPostMessage({
-                idLocal: data.idLocal,
-                ...res
-            });
-            if (messagesWaitProcessingArr.length) {
-                postMessage(messagesWaitProcessingArr[0]);
-            }
-        }).catch(onErrFetch);
+        if(data?.chatId) {
+            // console.log(data?.idLocal)
+            API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
+                const chatboxContentComp = require('features/chatbox/chatboxContent');
+                messagesWaitProcessingArr.shift();
+                
+                // Fixing repeating messages
+                count = 0;
+
+                chatboxContentComp.onFinishPostMessage({
+                    idLocal: data.idLocal,
+                    ...res
+                });  
+                
+                if (messagesWaitProcessingArr.length) {
+                    postMessage(messagesWaitProcessingArr[0]);
+                }
+            }).catch(onErrFetch);
+        }
+        
     };
 
     const onSendMessage = () => {
@@ -171,6 +208,8 @@ define([
         const roomId = GLOBAL.getCurrentRoomId();
         let text = $input.val();
         let data = {};
+
+        // console.log(obRoomEdited, roomId, text, data);
 
         if (!text.replace(/[\s\n]/g, '') && !deleteState) {
             onClear();
@@ -204,6 +243,9 @@ define([
 
         onClear();
         messagesWaitProcessingArr = messagesWaitProcessingArr.concat(data);
+
+        // Fixing repeating messages
+        awaitProcessClone = [...messagesWaitProcessingArr]
     };
 
     const onHideCommentBox = () => {
