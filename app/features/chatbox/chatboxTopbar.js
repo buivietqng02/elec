@@ -23,7 +23,9 @@ define([
 ) => {
     const { getAvatar } = functions;
     let $groupOptionsBtn;
+    let $callOptionsBtn;
     let $slide;
+    let $callSlide;
     let $editBtn;
     let $internalBtn;
     let $textInternalBtn;
@@ -39,6 +41,7 @@ define([
 
     const offEventClickOutside = () => {
         $slide.hide();
+        $callSlide.hide();
         $(document).off('.hideChatboxTopBarOptionsSlice');
     };
 
@@ -56,6 +59,14 @@ define([
         handleClickOutside();
     };
 
+    const showCallSlide = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $callSlide.show();
+        handleClickOutside();
+    }
+    
     const editGroup = () => {
         modalCreateGroupComp.onInit(GLOBAL.getCurrentRoomId());
         offEventClickOutside();
@@ -126,7 +137,9 @@ define([
     return {
         onInit: () => {
             $groupOptionsBtn = $('.js-group-option');
+            $callOptionsBtn = $('.js-call-option');
             $slide = $('#chatbox-group-option');
+            $callSlide = $('#chatbox-call-option');
             $editBtn = $slide.find('.--edit-group');
             $internalBtn = $slide.find('.--internal');
             $textInternalBtn = $internalBtn.find('span');
@@ -140,6 +153,7 @@ define([
             $typing = $('.js_info_parnter .toolbar-name .--typing');
 
             $groupOptionsBtn.off().click(showSlide);
+            $callOptionsBtn.off().click(showCallSlide);
             $editBtn.off().click(editGroup);
             $leaveBtn.off().click(leaveGroup);
             $removeBtn.off().click(removeGroup);
@@ -176,6 +190,7 @@ define([
                 $name.removeAttr(constant.ATTRIBUTE_CHANGE_NAME);
                 $name.attr(constant.ATTRIBUTE_CHANGE_GROUP_NAME, roomInfo.id);
                 $timeActivity.hide();
+                $callOptionsBtn.hide();
                 if (roomInfo.isLiveAssistance) {
                     $editBtn.show();
                     $leaveBtn.show();
@@ -219,6 +234,7 @@ define([
                 $removeBtn.hide();
                 $notificationBtn.show();
                 $timeActivity.show();
+                $callOptionsBtn.show();
 
                 offlineData.getChatById(roomInfo.id).then(chat => {
                     if (chat) {

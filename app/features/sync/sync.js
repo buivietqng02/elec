@@ -103,17 +103,24 @@ define([
 
     const handleMoveRoomUp = (room) => sidebarService.moveRoomUp(room);
 
-    const handleWithCalling = (message, roomId) => {
+    const handleWithCalling = (isAudioOnly, message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onInit(message.sender, roomId);
+            modalPhoneRequest.onInit(isAudioOnly, message.sender, roomId);
         }
     };
 
-    const handleWithEndCall = (message, roomId) => {
+    const handleWithAcceptCall = (message) => {
+        const currentUserId = GLOBAL.getInfomation().id;
+        if (currentUserId === message.sender.id) {
+            modalPhoneRequest.onAcceptCall();
+        }
+    };
+
+    const handleWithEndCall = (message) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onEndCall(message.sender, roomId);
+            modalPhoneRequest.onEndCall();
         }
     };
 
@@ -145,14 +152,24 @@ define([
                 isNotMoveRoomUp = false;
             }
 
-            // Handle with message is calling
+            // Handle with message is calling audio only
             if (message.type === 21) {
-                handleWithCalling(message, roomId);
+                handleWithCalling(true, message, roomId);
+            }
+            
+            // Handle with message is calling with video
+            if (message.type === 27) {
+                handleWithCalling(false, message, roomId);
+            }
+
+            // Handle with message is accept call
+            if (message.type === 23) {
+                handleWithAcceptCall(message);
             }
 
             // Handle with message is end call
             if (message.type === 24) {
-                handleWithEndCall(message, roomId);
+                handleWithEndCall(message);
             }
 
             if (isCurrentRoom) {

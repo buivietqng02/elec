@@ -250,7 +250,7 @@ define([
             }
 
             // render with calling
-            if (type === 21 || type === 24) {
+            if (type === 21 || type === 24 || type === 27 || type === 23) {
                 data.mess = text;
                 return render(template.call, data);
             }

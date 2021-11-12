@@ -25,6 +25,8 @@
     "CREATE": "Создавать",
     "CREATE_CHANNEL": "Создавать Канал",
     "CROSS_MESSENGER": "Cross Messenger",
+    "CALL_AUDIO_ONLY": "Аудиозвонок",
+    "CALL_WITH_VIDEO": "Видеозвонок",
     "D": "__________________________________",
     "DELETE_GROUP_CHAT": "Удалить групповой чат",
     "DESCRIPTION": "Описание",

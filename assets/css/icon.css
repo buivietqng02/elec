@@ -337,3 +337,21 @@
     height: 32px;
     width: 32px;
   } 
+  
+  .icon-minimize-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/minimize-window.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }
+
+  .icon-maximize-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/maximize-window.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }

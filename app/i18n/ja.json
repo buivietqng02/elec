@@ -23,6 +23,8 @@
     "CREATE": "作成",
     "CREATE_CHANNEL": "チャネルを作成する",
     "CROSS_MESSENGER": "Cross Messenger",
+    "CALL_AUDIO_ONLY": "Audio call",
+    "CALL_WITH_VIDEO": "Video call",
     "D": "__________________________________",
     "DELETE_GROUP_CHAT": "グループチャットを削除する",
     "DESCRIPTION": "情報",

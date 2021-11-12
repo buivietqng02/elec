@@ -82,7 +82,7 @@ define([
 
         chatboxInputComp.onClear();
         chatboxSearchComp.onCloseSearchBox();
-        chatboxAttachComp.markPhone(roomInfo.group);
+        // chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
         chatboxContentComp.onLoadMessage(roomInfo);
     };

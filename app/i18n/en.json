@@ -27,6 +27,8 @@
     "CREATE": "Create",
     "CREATE_CHANNEL": "Create Channel",
     "CROSS_MESSENGER": "Cross Messenger",
+    "CALL_AUDIO_ONLY": "Audio call",
+    "CALL_WITH_VIDEO": "Video call",
     "D": "__________________________________",
     "DELETE_GROUP_CHAT": "Delete Group Chat",
     "DESCRIPTION": "Description",

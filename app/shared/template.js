@@ -424,6 +424,17 @@ define(['shared/icon'], (ICON) => ({
                             <div class="--online"></div>
                             <div class="--typing"></div>
                         </div>
+                        <a class="js-call-option btn__option" data-target="#call-option"><i class="xm xm-phone xm-fw p-cur" aria-hidden="true"></i></a>
+                        <div id="chatbox-call-option" class="--option menu js-dismiss-menu">
+                            <button class="--call-audio menu__item">
+                                <i class="xm xm-phone"></i>
+                                <span data-language="CALL_AUDIO_ONLY"></span>
+                            </button>
+                            <button class="--call-video menu__item">
+                                <i class="xm xm-video-camera"></i>
+                                <span data-language="CALL_WITH_VIDEO"></span>
+                            </button>
+                        </div>
                         <button class="btn-toggle-search-box">
                             <i class="xm xm-search"></i>
                         </button>
@@ -591,10 +602,6 @@ define(['shared/icon'], (ICON) => ({
                                     <i class="xm xm-photo xm-fw"></i>
                                     <lang data-language="UP_MEDIA"></lang>
                                 </label>
-                                <li class="js-up-phone menu__item" data-dismiss=".menu">
-                                    <i class="xm xm-phone xm-fw"></i>
-                                    <lang data-language="PHONE"></lang>
-                                </li>
                             </div>
 
                             <!-- Voice chat wrap -->
