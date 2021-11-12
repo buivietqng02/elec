@@ -302,6 +302,28 @@ img {
 	display: none
 }
 
+.xm-current-version{
+	position: absolute;
+	top: 15px;
+	left: 20px;
+	width: 300px;
+	color: rgb(255, 255, 255);
+	font-size: 13px;	
+}
+.xm-current-version p{
+	padding: 3px;
+}
+
+@media (max-width: 767px) {
+	.xm-current-version{
+		position: relative;
+		left: 0px;
+		text-align: center;
+		width: 100%;
+		background-color:rgba(0, 0, 0, 0.459)
+	}
+}
+
 .download-app {
 	display: flex;
 	justify-content: center;

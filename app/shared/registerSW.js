@@ -11,6 +11,12 @@ define([], () => {
         }
 
         refreshing = true;
+
+         // Clear cache
+         window.self.caches.keys().then((keys) => {
+            keys.map(key => window.self.caches.delete(key));
+        });
+
         try {
             window.location.reload(true);
         } catch {
@@ -20,6 +26,11 @@ define([], () => {
     };
 
     const refreshCache = () => {
+         // Clear cache
+         window.self.caches.keys().then((keys) => {
+            keys.map(key => window.self.caches.delete(key));
+        });
+
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
         } catch {
@@ -29,6 +40,8 @@ define([], () => {
     };
 
     const showUpdateBar = (force) => {
+        console.log(force);
+
         if (isUpdate) {
             return;
         }
@@ -100,11 +113,6 @@ define([], () => {
             } else {
                 $reloadBtn.off('click').click(refreshCache);
             }
-
-            // Clear cache
-            window.self.caches.keys().then((keys) => {
-                keys.map(key => window.self.caches.delete(key));
-            });
         }, 50);
     };
 
