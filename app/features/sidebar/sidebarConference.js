@@ -3,15 +3,18 @@ define([
     'app/constant',
     'shared/api',
     'shared/data',
+    'shared/functions',
     'assets/js/jitsi_external_api',
     'features/sidebar/sidebarLeftBar'
 ], (
     constant,
     API,
     GLOBAL,
+    functions,
     JitsiMeetExternalAPI,
     sidebarLeftBarComp
 ) => {
+    const { getAvatar } = functions;
     let conferenceBtn;
     let joinExistingRoomBtn;
     let joinExistingRoomInput;
@@ -172,6 +175,7 @@ define([
             };
 
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
+            jitsiApi.executeCommand('avatarUrl', getAvatar(GLOBAL.getInfomation().id));
             jitsiApi._frame.addEventListener('load', () => {
                 isOpening = true;
 
