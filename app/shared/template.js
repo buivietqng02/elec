@@ -747,6 +747,9 @@ define(['shared/icon'], (ICON) => ({
             </form>
         </div>
 
+        <!-- Version -->
+        <div class="xm-current-version"></div>
+
         <div class="download-app"></div>
     </div>
     `,
