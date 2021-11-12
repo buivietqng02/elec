@@ -20,6 +20,8 @@ define([
         ACCESS_TOKEN,
         REFRESH_TOKEN,
         API_URL,
+        SESSION_ID, 
+        USER_ID
     } = constant;
 
     const {
@@ -99,14 +101,14 @@ define([
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
+                        // console.log(error.response)
 
-                        console.log(error.response)
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
-                        console.log(response);
+                        // console.log(response);
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
@@ -119,12 +121,13 @@ define([
 
                         // refreshing process is finished
                         isRefreshing = false;
-
+                       
                         // retry the failed request
                         return axios(originalConfig);
                     } else { // there is a refreshing process in progress:
                         // don't refresh token, instead suscribe to the 
                         // refresh token subject and wait for a response
+                        console.log('login status', isLogin());
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null
                             take(1), // take the first value
@@ -137,14 +140,12 @@ define([
                     }
                 } catch (_error) {
                     isRefreshing = false;
-                    if (error.response) {
+                     // Logout when refresh token fail
+                    if(_error.response.status === 403 && isLogin()){
+                        modalLogout.onInit('Login expired');
+                    }
 
-                        console.log(isLogin());
-                        console.log(error.response);
-                        if(isLogin()){
-                            modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
-                        }
-    
+                    if (error.response) {
                         return Promise.reject(new Error('Error refreshing token'));
                     }
                     return Promise.reject(_error);
