@@ -29,6 +29,7 @@ define([
     let $btnModalStateSwitchIcon;
     let $modal;
     let $audio;
+    let $notifyForm;
     let optionsCall;
     let jitsiApi;
     const audioCall = 'assets/sounds/call.mp3';
@@ -105,12 +106,13 @@ define([
         
         // Change location iframe before close modal
         // This fix ghost user on repeat call
+        $modal.hide();
         $videoCallerWrap.find('iframe')[0].src = domain;
 
         setTimeout(() => {
             $videoCallerWrap.find('iframe').remove();
             $modal.remove();
-        }, 700);
+        }, 400);
     };
     const onHangup = () => {   
         $audio[0].pause();
@@ -302,6 +304,7 @@ define([
         $acceptBtn = $('.vcnf-accept');
         $hangupBtn = $('.vcnf-hangup');
         $audio = $('#video-call-audio');
+        $notifyForm = $('.video-call-notify-form');
 
         $hangupBtn.off().click(onHangup);
         $acceptBtn.off().click({ audioOnly: isAudioOnly }, onAccept);
@@ -328,7 +331,9 @@ define([
                 const userName = GLOBAL.getRoomInfoWasEdited()[sender.id]?.user_name || sender.name;
                 [roomInfo] = GLOBAL.getRooms().filter(room => (room.id === rid));
                 $modalDialog.addClass('accept-state');
-                
+                if (isAudioOnly === true) {
+                    $notifyForm.find('h2').html('Incoming audio call...');
+                }
                 $nameSender.html(userName);
                 if (roomInfo.group) {
                     $imgSender.attr('src', getAvatar(roomInfo.id, true));
