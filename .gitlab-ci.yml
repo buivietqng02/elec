@@ -24,6 +24,7 @@ build:dev:
   only:
     - dev
     - multiparty-webrtc
+    - potapov.a.i
   artifacts:
     paths:
       - dist
@@ -40,6 +41,7 @@ deploy:dev:
   only:
     - dev
     - multiparty-webrtc
+    - potapov.a.i
   dependencies:
     - build:dev
 
