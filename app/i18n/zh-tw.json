@@ -25,6 +25,8 @@
     "DISABLE_NOTIFICATIONS": "禁用通知",
     "DO_YOU_ACCEPT_INVITATION": "你接受邀請嗎",
     "DRAG_AND_DROP": "拖放您的文件",
+    "CALL_AUDIO_ONLY": "Audio call",
+    "CALL_WITH_VIDEO": "Video call",
     "E": "__________________________________",
     "EDIT": "編輯",
     "EDIT_GROUP": "編輯 - 群組成員",

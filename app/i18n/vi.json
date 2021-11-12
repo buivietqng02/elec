@@ -25,6 +25,8 @@
     "CREATE": "Tạo",
     "CREATE_CHANNEL": "Tạo Kênh",
     "CROSS_MESSENGER": "Cross Messenger",
+    "CALL_AUDIO_ONLY": "Audio call",
+    "CALL_WITH_VIDEO": "Video call",
     "D": "__________________________________",
     "DELETE_GROUP_CHAT": "Xóa cuộc trò chuyện nhóm",
     "DESCRIPTION": "Mô tả",

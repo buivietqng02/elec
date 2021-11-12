@@ -14,7 +14,6 @@ define([
 ) => {
     const { getAvatar } = functions;
     let isInit;
-    let domain;
     let listenOnlyOne;
     let roomId;
     let roomInfo;
@@ -32,6 +31,11 @@ define([
     let $audio;
     let optionsCall;
     let jitsiApi;
+    const audioCall = 'assets/sounds/call.mp3';
+    const audioCallEnd = 'assets/sounds/call-end.mp3';
+    const audioCallJoined = 'assets/sounds/call-joined.wav';
+    const audioIncomingCall = 'assets/sounds/incoming-call.mp3';
+    const domain = constant.BASE_URL.replace('https://', '').replace('/xm', '') + constant.ROUTE.meeting;
 
     const hide = 'hidden';
     const renderTemplate = `
@@ -87,7 +91,7 @@ define([
         </div>
     `;
 
-    const postCall = () => API.post(`chats/${roomInfo.id}/call/place`);
+    const postCall = (audioOnly) => API.post(`chats/${roomInfo.id}/call/place?audioOnly=${audioOnly}`);
 
     const acceptCall = () => API.post(`chats/${roomInfo.id}/call/accept`);
 
@@ -95,15 +99,22 @@ define([
 
     const onClose = () => {
         $audio[0].pause();
-        $audio[0].src = 'assets/sounds/call-end.mp3';
+        $audio[0].src = audioCallEnd;
         $audio[0].loop = false;
-        $audio[0].play();     
-        jitsiApi.executeCommand('hangup');
-        $videoCallerWrap.find('iframe').remove();
+        $audio[0].play();
+        
+        // Change location iframe before close modal
+        // This fix ghost user on repeat call
+        $videoCallerWrap.find('iframe')[0].src = domain;
+
+        setTimeout(() => {
+            $videoCallerWrap.find('iframe').remove();
+            $modal.remove();
+        }, 700);
     };
     const onHangup = () => {   
         $audio[0].pause();
-        $audio[0].src = 'assets/sounds/call-end.mp3';
+        $audio[0].src = audioCallEnd;
         $audio[0].loop = false;
         $audio[0].play();     
         $modal.modal('hide');
@@ -130,19 +141,17 @@ define([
             jitsiApi.executeCommand('overwriteConfig', {
                 toolbarButtons: [
                     event.data.audioOnly ? '' : 'camera',
+                    event.data.audioOnly ? '' : 'desktop',
                     'hangup',
                     'microphone',
-                    'select-background',
-                    'shareaudio',
-                    'sharedvideo',
-                    'shortcuts',
-                    'toggle-camera',
-                    'videoquality',
-                    '__end'
+                    event.data.audioOnly ? '' : 'select-background',
+                    event.data.audioOnly ? '' : 'shareaudio',
+                    event.data.audioOnly ? '' : 'sharedvideo',
+                    event.data.audioOnly ? '' : 'toggle-camera'
                 ]
             });
             setTimeout(() => {
-                $modal.click(modalStateSwitch);
+                $modal.click({ audioOnly: event.data.audioOnly }, modalStateSwitch);
             }, 300);
         }
     };
@@ -158,7 +167,6 @@ define([
         isInit = false;
         API.get('contacts').then((contacts) => {
             API.get('conference').then((res) => {
-                domain = constant.BASE_URL.replace('https://', '').replace('/xm', '') + constant.ROUTE.meeting;
                 optionsCall = {
                     roomName: roomId,
                     width: '100%',
@@ -169,23 +177,19 @@ define([
                         displayName: contacts[0].contact.name
                     },
                     configOverwrite: {
-                        defaultLanguage: window.localStorage.getItem('lang'),
-                        // defaultLanguage: 'ru',
                         disableDeepLinking: true,
                         startWithAudioMuted: true,
                         startWithVideoMuted: true,
                         startAudioOnly: isAudioOnly,
                         toolbarButtons: [
                             isAudioOnly ? '' : 'camera',
-                            'desktop',
+                            isAudioOnly ? '' : 'desktop',
                             'hangup',
                             'microphone',
-                            'select-background',
-                            'shareaudio',
-                            'sharedvideo',
-                            'shortcuts',
-                            'toggle-camera',
-                            '__end'
+                            isAudioOnly ? '' : 'select-background',
+                            isAudioOnly ? '' : 'shareaudio',
+                            isAudioOnly ? '' : 'sharedvideo',
+                            isAudioOnly ? '' : 'toggle-camera'
                         ],
                         prejoinPageEnabled: false,
                         notifications: [
@@ -243,7 +247,8 @@ define([
                             disableKick: true,
                             disableGrantModerator: true
                         },
-                        disableRemoteMute: true
+                        disableRemoteMute: true,
+                        disableInviteFunctions: true
                     },
                     interfaceConfigOverwrite: {
                         LANG_DETECTION: false,
@@ -258,13 +263,20 @@ define([
                 });
                 jitsiApi.addEventListener('participantJoined', () => {
                     $audio[0].pause();
+                    $audio[0].src = audioCallJoined;
+                    $audio[0].loop = false;
+                    $audio[0].play();   
                 });
                 jitsiApi._frame.addEventListener('load', () => {
-                    $modal.click(modalStateSwitch);
+                    $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
                 }, true);
             }).catch((err) => {
                 console.error(err);
+                $modal.remove();
             });
+        }).catch((err) => {
+            console.error(err);
+            $modal.remove();
         });
         $videoCallerWrap.attr('class', '').addClass('video-caller');
     };
@@ -309,7 +321,7 @@ define([
             if (sender) {
                 $modal.attr('class', 'modal show maximize');
                 $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
-                $audio[0].src = 'assets/sounds/incoming-call.mp3';
+                $audio[0].src = audioIncomingCall;
                 $audio[0].loop = 'loop';
                 $audio[0].play();
                 $btnModalStateSwitch.hide();
@@ -332,11 +344,11 @@ define([
             } else {
                 [roomInfo] = GLOBAL.getRooms().filter(r => (r.id === GLOBAL.getCurrentRoomId()));
                 $modalDialog.removeClass('accept-state');
-                $audio[0].src = 'assets/sounds/call.mp3';
+                $audio[0].src = audioCall;
                 $audio[0].loop = 'loop';
                 $audio[0].play();
                 setupWebrtc(isAudioOnly);
-                postCall();
+                postCall(isAudioOnly);
             }
 
             $videoSettings.hide();
@@ -344,9 +356,11 @@ define([
             $modal.modal('show');
         },
         onEndCall: () => {
-            if ($modal.hasClass('show')) {
+            if (!$modalDialog.hasClass('accept-state')) {
                 onClose();
-                $modal.modal('hide');
+            } else {
+                $audio[0].pause();
+                $modal.remove();
             }
         },
         onAcceptCall: () => {

@@ -188,8 +188,8 @@ define([
             $inputFile = $('.--input-up-file');
             $inputImage = $('.--input-up-media');
             $wrapper = $('#media-menu');
-            $callBtn = $('.btn-phone');
-            $videoCallBtn = $('.btn-video');
+            $callBtn = $('.--call-audio');
+            $videoCallBtn = $('.--call-video');
             $progressWrapper = $('.chatbox-progress-upload');
             $pathCircle = $progressWrapper.find('path');
             $percentProgress = $progressWrapper.find('span');

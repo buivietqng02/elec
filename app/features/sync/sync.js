@@ -103,10 +103,10 @@ define([
 
     const handleMoveRoomUp = (room) => sidebarService.moveRoomUp(room);
 
-    const handleWithCalling = (message, roomId) => {
+    const handleWithCalling = (isAudioOnly, message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onInit(true, message.sender, roomId);
+            modalPhoneRequest.onInit(isAudioOnly, message.sender, roomId);
         }
     };
 
@@ -152,11 +152,16 @@ define([
                 isNotMoveRoomUp = false;
             }
 
-            // Handle with message is calling
+            // Handle with message is calling audio only
             if (message.type === 21) {
-                handleWithCalling(message, roomId);
+                handleWithCalling(true, message, roomId);
             }
             
+            // Handle with message is calling with video
+            if (message.type === 27) {
+                handleWithCalling(false, message, roomId);
+            }
+
             // Handle with message is accept call
             if (message.type === 23) {
                 handleWithAcceptCall(message);

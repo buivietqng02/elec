@@ -24,6 +24,8 @@
     "COPIED_TO_CLIPBOARD": "Copiado para área de transferência!",
     "CREATE": "Criar Canal",
     "CROSS_MESSENGER": "Cross Messenger",
+    "CALL_AUDIO_ONLY": "Audio call",
+    "CALL_WITH_VIDEO": "Video call",
     "D": "__________________________________",
     "DELETE_GROUP_CHAT": "Excluir Bate-papo em Grupo",
     "DESCRIPTION": "Descrição",
