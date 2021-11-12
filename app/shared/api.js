@@ -101,14 +101,14 @@ define([
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
-                        // console.log(error.response)
+                        console.log(error.response)
 
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
-                        // console.log(response);
+                        console.log(response);
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
@@ -127,7 +127,7 @@ define([
                     } else { // there is a refreshing process in progress:
                         // don't refresh token, instead suscribe to the 
                         // refresh token subject and wait for a response
-                        console.log('login status', isLogin());
+                        console.log('Is refreshing token');
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null
                             take(1), // take the first value

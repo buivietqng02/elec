@@ -42,7 +42,7 @@ define([
     const initCurrentVersion = (version, langJson) => {
         const xmVersionTemplate = `
             <p>
-                <lang data-language="WEB_VERSION">${langJson.WEB_VERSION}</lang>: #XM_VERSION
+                <lang data-language="WEB_VERSION">${langJson.WEB_VERSION}</lang>: #XM_VERSION 
             </p>
             <p>
                 <lang data-language="SERVER_VERSION">${langJson.SERVER_VERSION}</lang>: ${version}

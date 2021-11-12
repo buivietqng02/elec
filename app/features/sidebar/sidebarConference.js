@@ -44,6 +44,8 @@ define([
                 <span class="share-roomid"></span>
                 <button class="btn btn-info share-roomid-btn" data-toggle="tooltip" data-placement="left" title="CLICK_TO_COPY_AND_SHARE" data-lang-type="tooltip" data-language="CLICK_TO_COPY_AND_SHARE">${language.INVITE_PEOPLE}</button>
             </div>
+
+            <div id="test"></div>
         </div>
     </div>
     `;
@@ -63,9 +65,23 @@ define([
 
         div.innerHTML = alertTemplate(GLOBAL.getLangJson().PASTE_TO_SHARE);
 
-        copyAndShareBtn.addEventListener('click', () => {
+        copyAndShareBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
             const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
-            navigator.clipboard.writeText(link);
+
+            if (window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.match(/iPhone/i)) {
+            // iPad or iPhone
+                const elem = document.createElement('textarea');
+                elem.id = 'clipboard-safari-ios';
+                elem.value = link;
+                document.body.appendChild(elem);
+                elem.select();
+                document.execCommand('copy');
+                document.body.removeChild(elem);
+            } else {
+                navigator.clipboard.writeText(link);
+            }
 
             copyAndShareBtn.textContent = GLOBAL.getLangJson().COPIED_TO_CLIPBOARD;
 
@@ -90,7 +106,11 @@ define([
     };
 
     const mouseEnter = () => {
-        confContentIframeBtnGroup.style.top = '10px';  
+        if (window.innerWidth < 768) {
+            confContentIframeBtnGroup.style.top = '35px';  
+        } else {
+            confContentIframeBtnGroup.style.top = '10px';  
+        }
     };
     const mouseLeave = () => {
         confContentIframeBtnGroup.style.top = '-100px'; 
@@ -192,9 +212,10 @@ define([
                 copyAndShareBtn = confContentIframeBtnGroup.querySelector('.share-roomid-btn');
                 hoverArea = document.querySelector('.hover-toggle-area');
 
-                copyToClipBoard();
                 hoverArea.addEventListener('mouseover', mouseEnter);
                 hoverArea.addEventListener('mouseout', mouseLeave);
+
+                copyToClipBoard();
             }, true);
             jitsiApi.addListener('readyToClose', () => {
                 jitsiApi._frame.remove();

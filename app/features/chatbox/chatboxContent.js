@@ -263,7 +263,7 @@ define([
         let listMessages = [...messages]
         listMessages.reverse().some(item => {
             if (!item.deleted) {
-                lastUndeletedMessageId = item.id.messageId;
+                lastUndeletedMessageId = item?.id?.messageId;
                 return true;
             }
         })
