@@ -67,8 +67,10 @@ define([
         },
     });
 
+    // let countRefreshTime = 0;
     const refreshToken = () => {
-        // console.log(functions.getDataToLocalApplication(REFRESH_TOKEN))
+        // countRefreshTime++;
+        // console.log('countRefreshTime', countRefreshTime)
         return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
     };
 
@@ -105,10 +107,15 @@ define([
 
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
+                        
+                        // console.log(countRefreshTime)
+                        // if(countRefreshTime > 0) return
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
                         console.log(response);
+
+                        // if (response.status === 200) countRefreshTime = 0;
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
@@ -141,7 +148,8 @@ define([
                 } catch (_error) {
                     isRefreshing = false;
                      // Logout when refresh token fail
-                    if(_error.response.status === 403 && isLogin()){
+                     console.log(_error.response)
+                    if(_error.response.status === 403 && _error.response.data.details === 'Refresh token already used.' && isLogin()){
                         modalLogout.onInit('Login expired');
                     }
 
