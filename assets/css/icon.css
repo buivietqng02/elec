@@ -338,6 +338,15 @@
     width: 32px;
   } 
   
+  .icon-drag-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/all-directions.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }
+
   .icon-minimize-window:before{
     display: block;
     content: ' ';

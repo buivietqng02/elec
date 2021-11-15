@@ -169,14 +169,12 @@ define([
     const showPhoneModalAudioOnly = () => {
         if (!$('#modalPhoneRequest').hasClass('show')) {
             modalPhoneRequestComp.onInit(true);
-            offEventClickOutside();
         }
     };
 
     const showPhoneModalWithVideo = () => {
         if (!$('#modalPhoneRequest').hasClass('show')) {
             modalPhoneRequestComp.onInit(false);
-            offEventClickOutside();
         }
     };
 
