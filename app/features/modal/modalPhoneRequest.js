@@ -12,7 +12,7 @@ define([
     constant,
     JitsiMeetExternalAPI
 ) => {
-    const { getAvatar } = functions;
+    const { getAvatar, dragElement } = functions;
     let isInit;
     let listenOnlyOne;
     let roomId;
@@ -27,11 +27,14 @@ define([
     let $modalDialog;
     let $btnModalStateSwitch;
     let $btnModalStateSwitchIcon;
+    let $modalDrag;
     let $modal;
     let $audio;
     let $notifyForm;
     let optionsCall;
     let jitsiApi;
+    let lastPosition = { top: '7rem', right: '1rem' };
+
     const audioCall = 'assets/sounds/call.mp3';
     const audioCallEnd = 'assets/sounds/call-end.mp3';
     const audioCallJoined = 'assets/sounds/call-joined.wav';
@@ -40,10 +43,13 @@ define([
 
     const hide = 'hidden';
     const renderTemplate = `
-        <div class="modal maximize" id="modalPhoneRequest" tabindex="-1" role="dialog" data-backdrop="false" data-keyboard="false">
+        <div class="modal maximize" id="modalPhoneRequest" role="dialog" data-backdrop="false" data-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
+                        <div class="modal-drag" id="modal-drag" style="display: none;">
+                            <i class="icon-drag-window"></i>
+                        </div>
                         <div class="modal-state-switch" id="modal-state-switch" style="display: none;">
                             <i class="icon-minimize-window"></i>
                         </div>
@@ -127,7 +133,8 @@ define([
 
     const modalStateSwitch = (event) => {
         if ($modal.hasClass('maximize')) {
-            $modal.attr('class', 'modal show minimize');
+            $modal.css(lastPosition);
+            $modal.attr('class', 'modal show minimize ui-widget-content');
             $btnModalStateSwitchIcon.attr('class', 'icon-maximize-window');
             jitsiApi.executeCommand('overwriteConfig', {
                 toolbarButtons: [
@@ -136,8 +143,13 @@ define([
                     'microphone'
                 ]
             });
+            $modalDrag.show();
             $modal.off();
+            dragElement($modal, $modalDrag);
         } else if ($modal.hasClass('minimize')) {
+            lastPosition = { top: `${$modal.offset().top}px`, left: `${$modal.offset().left}px` };
+            console.log(lastPosition);
+            $modal.css({ top: 0, left: 0 });
             $modal.attr('class', 'modal show maximize');
             $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
             jitsiApi.executeCommand('overwriteConfig', {
@@ -152,6 +164,7 @@ define([
                     event.data.audioOnly ? '' : 'toggle-camera'
                 ]
             });
+            $modalDrag.hide();
             setTimeout(() => {
                 $modal.click({ audioOnly: event.data.audioOnly }, modalStateSwitch);
             }, 300);
@@ -180,8 +193,8 @@ define([
                 },
                 configOverwrite: {
                     disableDeepLinking: true,
-                    startWithAudioMuted: true,
-                    startWithVideoMuted: true,
+                    // startWithAudioMuted: true,
+                    // startWithVideoMuted: true,
                     startAudioOnly: isAudioOnly,
                     toolbarButtons: [
                         isAudioOnly ? '' : 'camera',
@@ -292,6 +305,7 @@ define([
         $modalDialog = $modal.find('.modal-dialog');
         $btnModalStateSwitch = $modal.find('#modal-state-switch');
         $btnModalStateSwitchIcon = $modal.find('#modal-state-switch i');
+        $modalDrag = $modal.find('#modal-drag');
         $videoSettings = $('.video-call-setting');
         $videoCallerWrap = $('.video-caller');
         $callAnimation = $('.call-animation');

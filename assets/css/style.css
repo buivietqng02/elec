@@ -3366,7 +3366,18 @@ body.body_fz_18 {
   z-index: 1;
   right: 0.5rem;
   top: 0.5rem;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.5);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.modal-content .modal-drag {
+  cursor: all-scroll;
+  position: absolute;
+  z-index: 1;
+  left: 0.5rem;
+  top: 0.5rem;
+  background-color: rgba(0,0,0,0.5);
   padding: 3px;
   border-radius: 5px;
 }
