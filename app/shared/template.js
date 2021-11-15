@@ -754,10 +754,10 @@ define(['shared/icon'], (ICON) => ({
             </form>
         </div>
 
+        <div class="download-app"></div>
+
         <!-- Version -->
         <div class="xm-current-version"></div>
-
-        <div class="download-app"></div>
     </div>
     `,
     signup: `

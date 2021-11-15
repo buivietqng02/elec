@@ -303,22 +303,15 @@ img {
 }
 
 .xm-current-version{
-	position: absolute;
-	top: 15px;
-	left: 20px;
-	width: 300px;
 	color: rgb(255, 255, 255);
 	font-size: 13px;	
-}
-.xm-current-version p{
-	padding: 3px;
+	text-align: center;
+	padding: 4px;
+	font-weight: bold;
 }
 
 @media (max-width: 767px) {
 	.xm-current-version{
-		position: relative;
-		left: 0px;
-		text-align: center;
 		width: 100%;
 		background-color:rgba(0, 0, 0, 0.459)
 	}
@@ -329,11 +322,12 @@ img {
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-	margin-top: 1rem;
+	margin-top: 0px;
 	max-width: 360px;
 	padding: 1rem;
 	margin-left: auto;
 	margin-right: auto;
+	padding-bottom: 9px;
 }
 
 .download-app__link {
@@ -441,7 +435,7 @@ img {
     display: flex;
 	width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, #06c 0, rgba(0, 102, 204, .6) 50%, rgba(0, 102, 204, .6) 65%, rgba(0, 102, 204, .4) 100%), url(../images/cosmos4-1.jpg) no-repeat center/cover;
+    background: linear-gradient(to bottom, #06c 0, rgba(0, 102, 204, .6) 50%, rgba(0, 102, 204, .6) 65%, rgba(0, 102, 204, .4) 100%), url(../images/login-background.png) no-repeat center/cover;
     font-family: "Roboto Condensed", Roboto, Helvetica, Noto SJK, "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", 宋体, SimSun, STXihei, "华文细黑", Arial, sans-serif;
 	font-size: 1rem
 }

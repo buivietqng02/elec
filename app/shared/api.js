@@ -20,6 +20,8 @@ define([
         ACCESS_TOKEN,
         REFRESH_TOKEN,
         API_URL,
+        SESSION_ID, 
+        USER_ID
     } = constant;
 
     const {
@@ -65,8 +67,10 @@ define([
         },
     });
 
+    // let countRefreshTime = 0;
     const refreshToken = () => {
-        // console.log(functions.getDataToLocalApplication(REFRESH_TOKEN))
+        // countRefreshTime++;
+        // console.log('countRefreshTime', countRefreshTime)
         return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
     };
 
@@ -99,14 +103,19 @@ define([
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
-
                         console.log(error.response)
+
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
+                        
+                        // console.log(countRefreshTime)
+                        // if(countRefreshTime > 0) return
 
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
                         console.log(response);
+
+                        // if (response.status === 200) countRefreshTime = 0;
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
@@ -119,12 +128,13 @@ define([
 
                         // refreshing process is finished
                         isRefreshing = false;
-
+                       
                         // retry the failed request
                         return axios(originalConfig);
                     } else { // there is a refreshing process in progress:
                         // don't refresh token, instead suscribe to the 
                         // refresh token subject and wait for a response
+                        console.log('Is refreshing token');
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null
                             take(1), // take the first value
@@ -137,14 +147,13 @@ define([
                     }
                 } catch (_error) {
                     isRefreshing = false;
-                    if (error.response) {
+                     // Logout when refresh token fail
+                     console.log(_error.response)
+                    if(_error.response.status === 403 && _error.response.data.details === 'Refresh token already used.' && isLogin()){
+                        modalLogout.onInit('Login expired');
+                    }
 
-                        console.log(isLogin());
-                        console.log(error.response);
-                        if(isLogin()){
-                            modalLogout.onInit(_error.response.data?.details || 'Unexpected error while refreshing token.');
-                        }
-    
+                    if (error.response) {
                         return Promise.reject(new Error('Error refreshing token'));
                     }
                     return Promise.reject(_error);

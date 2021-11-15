@@ -135,7 +135,7 @@ define([
     let count = 0;
 
     const postMessage = (data) => {
-        if (data.isDelete) {
+        if (data?.isDelete) {
             API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -146,7 +146,7 @@ define([
             return;
         }
 
-        if (data.messageId !== 0) {
+        if (data?.messageId) {
             API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -159,7 +159,7 @@ define([
 
         // Fixing repeating messages
         awaitProcessClone.map((item, index) => {
-            if( item.idLocal === data.idLocal) {
+            if( item?.idLocal === data?.idLocal) {
                 count = count + 1
             } 
             // else {
