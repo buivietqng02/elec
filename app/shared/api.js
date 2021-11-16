@@ -21,7 +21,8 @@ define([
         REFRESH_TOKEN,
         API_URL,
         SESSION_ID, 
-        USER_ID
+        USER_ID,
+        RANDOM_ID_REFRESH_TOKEN
     } = constant;
 
     const {
@@ -29,6 +30,9 @@ define([
         take,
         switchMap
     } = operators;
+
+    let currentRandomId;
+    let isRefreshTokenError = false;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -67,11 +71,27 @@ define([
         },
     });
 
-    // let countRefreshTime = 0;
-    const refreshToken = () => {
-        // countRefreshTime++;
-        // console.log('countRefreshTime', countRefreshTime)
-        return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}`);
+    const generateRandomId = (length) => {
+        let result = '';
+        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * 
+        charactersLength));
+       }
+       console.log(result);
+       return result;
+    }
+   
+    const refreshToken = (type) => {
+        if(type === 'refreshAgain' || isRefreshTokenError) {
+            currentRandomId = functions.getDataToLocalApplication(RANDOM_ID_REFRESH_TOKEN) || ''; 
+        } else {
+            currentRandomId = generateRandomId(10)
+        }
+        functions.setDataToLocalApplication(RANDOM_ID_REFRESH_TOKEN, currentRandomId);
+
+        return instance.post('oauth2/token', `grant_type=refresh_token&refresh_token=${functions.getDataToLocalApplication(REFRESH_TOKEN) || ''}&secret=${currentRandomId}`);
     };
 
     // Interceptors
@@ -108,14 +128,15 @@ define([
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
                         
-                        // console.log(countRefreshTime)
-                        // if(countRefreshTime > 0) return
-
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
                         console.log(response);
 
-                        // if (response.status === 200) countRefreshTime = 0;
+                        if(response.status === 200) {
+                            isRefreshTokenError = false;
+                        } else {
+                            isRefreshTokenError = true;
+                        }
 
                         // after successfull response, store values on local storage
                         functions.setDataToLocalApplication(ACCESS_TOKEN, response.data.access_token);
@@ -135,6 +156,7 @@ define([
                         // don't refresh token, instead suscribe to the 
                         // refresh token subject and wait for a response
                         console.log('Is refreshing token');
+                        isRefreshTokenError = true;
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null
                             take(1), // take the first value
@@ -147,16 +169,37 @@ define([
                     }
                 } catch (_error) {
                     isRefreshing = false;
-                     // Logout when refresh token fail
-                     console.log(_error.response)
-                    if(_error.response.status === 403 && _error.response.data.details === 'Refresh token already used.' && isLogin()){
-                        modalLogout.onInit('Login expired');
-                    }
+                    console.log(_error.response);
+                    if(!_error.response){
+                        isRefreshTokenError = true;
+                    } 
 
-                    if (error.response) {
-                        return Promise.reject(new Error('Error refreshing token'));
-                    }
-                    return Promise.reject(_error);
+                    if( isLogin() && (_error.response.status === 403 && _error.response.data.details === 'Refresh token already used.' || _error.response.status === 404 && _error.response.data.details === 'Refresh token not found.')){
+
+                        try {
+                            // try to refresh again in case of error 
+                            const res = await refreshToken('refreshAgain');
+                            console.log(res);
+
+                            if(res) isRefreshTokenError = false;
+
+                            functions.setDataToLocalApplication(ACCESS_TOKEN, res.data.access_token);
+                            functions.setDataToLocalApplication(REFRESH_TOKEN, res.data.refresh_token);
+                           
+                            functions.setCookie(res.data.access_token, 3650);
+                            isRefreshing = false;
+                           
+                            return axios(originalConfig);
+                            
+                        } catch {
+                             // Logout when refresh token fail to refresh
+                            modalLogout.onInit(_error.response.data.details);
+                            return Promise.reject(new Error('Error refreshing token'));
+                        }
+                    } else {
+                        console.log('error')
+                        return Promise.reject(_error);
+                    }          
                 }
             } else {
                 return Promise.reject(error);

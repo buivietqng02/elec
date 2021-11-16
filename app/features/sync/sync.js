@@ -393,7 +393,8 @@ define([
                     if (err.response?.status === 404 && isLogin()) {
                         // API returns 404 if session_id is not found
                         // Logout because onSync() won't work anymore without a valid session_id
-                        modalLogout.onInit(err?.response?.data?.details);
+                        // modalLogout.onInit(err?.response?.data?.details);
+                        modalLogout.onInit('sync problem');
                     } else {
                         console.error(err.response?.data?.details || 'Something went wrong');
                         setTimeout(onSync, 5000);

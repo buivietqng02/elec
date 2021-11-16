@@ -288,17 +288,49 @@ define(['shared/icon'], (ICON) => ({
                     <lang data-language="VIDEO_CONFERENCE"></lang>
                 </h2>
                 <div class="conference-content-btnGroup text-center">
-                    <button id="conference-content__startBtn" class="start-conf">
-                        <lang data-language="START_CONFERENCE"></lang>
-                    </button>
+                    <div class="carousel-create-conference-wraper">
 
-                    <div class="or-joint-existing-room">
-                        <span><lang data-language="OR_JOINT_EXISTING_ROOM"></lang></span>
-                    </div>
+                        <div id="conference-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#conference-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#conference-carousel" data-slide-to="1"></li>
+                                <li data-target="#conference-carousel" data-slide-to="2"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="/assets/images/xmimg1.png" class="d-block" alt="...">
+                                    <div class="carousel-caption">
+                                        <h5>Chat with anyone. Anywhere.</h5>
+                                        <p>You can use video conference inside the application as well as share it with anyone to join via browser.</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="/assets/images/xmimg2.png" class="d-block" alt="...">
+                                    <div class="carousel-caption">
+                                        <h5>Work together. Share your screen.</h5>
+                                        <p>You can share your desktop or dedicated application window to another user. One click and you can work together on a project!</p>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="/assets/images/xmimg3.png" class="d-block" alt="...">
+                                    <div class="carousel-caption">
+                                        <h5>Fully functional presentations</h5>
+                                        <p>Gather as many people as you want to make virtual presentations. Participants can virtually raise hands to ask the questions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <button id="conference-content__startBtn" class="start-conf">
+                                <lang data-language="START_CONFERENCE"></lang>
+                            </button>
+                        </div> 
+                    </div>   
 
                     <div class="input-group join-existing-room">
                         <input type="text" class="join-existing-room__input form-control" placeholder="FILL_ROOM_ID" data-language="FILL_ROOM_ID" data-lang-type="placeholder">
-                        <button class="btn btn-outline-secondary" type="button" id="join-existing-room__btn" disabled><lang data-language="JOIN_MEETING"></lang></button>
+                        <button class="" type="button" id="join-existing-room__btn" disabled><lang data-language="JOIN_MEETING"></lang></button>
                     </div>
                 </div>
             </div>
