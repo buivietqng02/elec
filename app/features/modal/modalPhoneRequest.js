@@ -59,7 +59,7 @@ define([
                             <div class="xm-loading-pulse"></div>
                         </div>
                     </div>
-                    <div class="modal-body" style="display:none">
+                    <div class="modal-body">
                         <div class="modal-drag" id="modal-drag" style="display: none;">
                             <i class="icon-drag-window"></i>
                         </div>
@@ -191,6 +191,7 @@ define([
         if (roomInfo.group) {
             return;
         }
+        $modalBody.hide();
         $loading.show();
         $btnModalStateSwitch.show();
         $modal.attr('class', 'modal show maximize');
