@@ -313,7 +313,7 @@ img {
 @media (max-width: 767px) {
 	.xm-current-version{
 		width: 100%;
-		background-color:rgba(0, 0, 0, 0.459)
+		font-size: 10px !important;
 	}
 }
 
