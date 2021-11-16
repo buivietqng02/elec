@@ -14,6 +14,8 @@ define([
     JitsiMeetExternalAPI,
     sidebarLeftBarComp
 ) => {
+    require('bootstrap/js/dist/carousel');
+
     const { getAvatar } = functions;
     let conferenceBtn;
     let joinExistingRoomBtn;
@@ -287,14 +289,6 @@ define([
             joinExistingRoomBtn = document.querySelector('#join-existing-room__btn');
 
             joinExistingRoomInput = document.querySelector('.join-existing-room__input');
-
-            // style text orJointExistingRoomText
-            const orJointExistingRoomText = document.querySelector('.or-joint-existing-room');
-            if (GLOBAL.getLanguage() === constant.LANGUAGES.russian) {
-                orJointExistingRoomText.classList.add('russialangStyle');
-            } else {
-                orJointExistingRoomText.classList.remove('russialangStyle');
-            }
 
             initConferencePage();
         },

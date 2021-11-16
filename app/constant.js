@@ -7,6 +7,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         SESSION_ID: 'sessionId',
         ACCESS_TOKEN: 'access_token',
         REFRESH_TOKEN: 'refresh_token',
+        RANDOM_ID_REFRESH_TOKEN: 'random_id_refresh_token',
         USER_ID: 'userId',
         BODY_BG_THEME: 'body_bg_theme',
         BODY_FZ: 'body_fz',

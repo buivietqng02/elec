@@ -91,13 +91,6 @@ define([
 
     const onChange = (newLanguage) => {
         currentLang = newLanguage;
-
-        const orJointExistingRoomText = document.querySelector('.or-joint-existing-room');
-        if (currentLang === LANGUAGES.russian) {
-            orJointExistingRoomText.classList.add('russialangStyle');
-        } else {
-            orJointExistingRoomText.classList.remove('russialangStyle');
-        }
         onInit();
     };
 
