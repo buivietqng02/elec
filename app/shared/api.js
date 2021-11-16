@@ -193,7 +193,7 @@ define([
                             
                         } catch {
                              // Logout when refresh token fail to refresh
-                            modalLogout.onInit('Login expired');
+                            modalLogout.onInit(_error.response.data.details);
                             return Promise.reject(new Error('Error refreshing token'));
                         }
                     } else {
