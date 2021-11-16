@@ -277,39 +277,5 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         return indexedArray;
     },
 
-    dragElement: (element, drag=false) => {
-        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        if (drag) {
-            drag.mousedown(dragMouseDown);
-        } else {
-            element.mousedown(dragMouseDown);
-        }
-
-        function dragMouseDown(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            document.onmouseup = closeDragElement;
-            document.onmousemove = elementDrag;
-        }
-
-        function elementDrag(e) {
-            e = e || window.event;
-            e.preventDefault();
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
-            newTop = (element.offset().top - pos2) <= 0 || (element.offset().top - pos2 + element.innerHeight()) >= window.innerHeight ? `${element.offset().top}px` : `${element.offset().top - pos2}px`;
-            newLeft = (element.offset().left - pos1 + element.innerWidth()) <= window.innerWidth && (element.offset().left - pos1) >= 0 ? `${element.offset().left - pos1}px` : `${element.offset().left}px`;
-            element.css({ top: newTop, left: newLeft });
-        }
-
-        function closeDragElement() {
-            document.onmouseup = null;
-            document.onmousemove = null;
-        }
-    },
     render: (html, data) => $.templates(convertToJSView(html)).render(data)
 }));

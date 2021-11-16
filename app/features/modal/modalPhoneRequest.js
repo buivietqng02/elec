@@ -4,15 +4,18 @@ define([
     'shared/api',
     'shared/functions',
     'app/constant',
-    'assets/js/jitsi_external_api'
+    'assets/js/jitsi_external_api',
+    'assets/js/jquery-ui.min.js'
 ], (
     GLOBAL,
     API,
     functions,
     constant,
-    JitsiMeetExternalAPI
+    JitsiMeetExternalAPI,
+    jqueryUi
 ) => {
-    const { getAvatar, dragElement } = functions;
+    const { getAvatar } = functions;
+    const { draggable } = jqueryUi;
     let isInit;
     let listenOnlyOne;
     let roomId;
@@ -145,10 +148,13 @@ define([
             });
             $modalDrag.show();
             $modal.off();
-            dragElement($modal, $modalDrag);
+            $modal.draggable({
+                handle: $modalDrag,
+                iframeFix: true
+              });
         } else if ($modal.hasClass('minimize')) {
+            $modal.draggable( "destroy" );
             lastPosition = { top: `${$modal.offset().top}px`, left: `${$modal.offset().left}px` };
-            console.log(lastPosition);
             $modal.css({ top: 0, left: 0 });
             $modal.attr('class', 'modal show maximize');
             $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
