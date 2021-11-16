@@ -3354,6 +3354,13 @@ body.body_fz_18 {
   background: rgba(0, 0, 0, .7) !important;
 }
 
+#modalPhoneRequest .modal-loading {
+  position: relative;
+  height: 600px;
+  background-color: transparent;
+  width: 100%;
+}
+
 #modalPhoneRequest .modal-body {
   height: 600px;
   width: 100%;
