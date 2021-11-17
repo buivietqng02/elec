@@ -732,7 +732,7 @@ define([
 
             if(indexArr.length){
                 indexArr.map(item => {
-                    console.log(arryMessages[item]);
+                    // console.log(arryMessages[item]);
                     messagesList.removeChild(arryMessages[item])
                 })
             }

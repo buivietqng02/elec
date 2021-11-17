@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.9] - 2021-11-17
+### Update
+- Fix refresh token bugs
+- Update version on login page
+- Fix repeating messages when bad connection
+- Update new conference design and functions
+- Fix pop up new version alert & and need to add close button
+- Improve scroll to origin quoted message
+
 ### [4.8] - 2021-10-29
 ### Fix
 - Update sidebar last message when remove last message on chat.

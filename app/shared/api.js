@@ -79,7 +79,7 @@ define([
         result += characters.charAt(Math.floor(Math.random() * 
         charactersLength));
        }
-       console.log(result);
+    //    console.log(result);
        return result;
     }
    
@@ -123,14 +123,14 @@ define([
             } else if (error.response.status === 401) { // request has failed with 401 (token expired)
                 try {
                     if (!isRefreshing) { // there is NOT a refreshing-token process in progress:
-                        console.log(error.response)
+                        // console.log(error.response)
 
                         isRefreshing = true;
                         refreshTokenSubject.next(null);
                         
                         // refresh the token in API and wait for response
                         const response = await refreshToken();
-                        console.log(response);
+                        // console.log(response);
 
                         if(response.status === 200) {
                             isRefreshTokenError = false;
@@ -155,7 +155,7 @@ define([
                     } else { // there is a refreshing process in progress:
                         // don't refresh token, instead suscribe to the 
                         // refresh token subject and wait for a response
-                        console.log('Is refreshing token');
+                        // console.log('Is refreshing token');
                         isRefreshTokenError = true;
                         const req = await refreshTokenSubject.pipe(
                             filter(data => data != null), // wait for data to not be null

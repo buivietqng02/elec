@@ -123,7 +123,7 @@ define([
     };
 
     const onErrFetch = (err) => {
-        console.log(err);
+        // console.log(err);
         if (err === 19940402) {
             setTimeout(() => postMessage(messagesWaitProcessingArr[0]), 3000)
             count = 0;
