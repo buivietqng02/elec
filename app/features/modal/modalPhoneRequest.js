@@ -401,14 +401,10 @@ define([
         onEndCall: () => {
             if (!$modalDialog.hasClass('accept-state')) {
                 onClose();
+            } else {
+                $audio[0].pause();
+                $modal.remove();
             }
-            // } else {
-            //     if (timeout) {
-            //         clearTimeout(timeout);
-            //     }
-            //     $audio[0].pause();
-            //     $modal.remove();
-            // }
         },
         onAcceptCall: () => {
             if ($modalDialog.hasClass('accept-state')) {
