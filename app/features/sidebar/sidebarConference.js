@@ -47,7 +47,9 @@ define([
                 <button class="btn btn-info share-roomid-btn" data-toggle="tooltip" data-placement="left" title="CLICK_TO_COPY_AND_SHARE" data-lang-type="tooltip" data-language="CLICK_TO_COPY_AND_SHARE">${language.INVITE_PEOPLE}</button>
             </div>
 
-            <div id="test"></div>
+            <div class="button-hover-indicator">
+                ...
+            </div>
         </div>
     </div>
     `;
@@ -115,7 +117,11 @@ define([
         }
     };
     const mouseLeave = () => {
-        confContentIframeBtnGroup.style.top = '-100px'; 
+        if (window.innerWidth < 768) {
+            confContentIframeBtnGroup.style.top = '-58px'; 
+        } else {
+            confContentIframeBtnGroup.style.top = '-68px'; 
+        }
     };
 
     const initJitsiConference = (inviteID) => {
