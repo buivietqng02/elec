@@ -156,10 +156,10 @@ define([
             if (message.type === 21) {
                 handleWithCalling(true, message, roomId);
             }
-            
-            // Handle with message is calling with video
-            if (message.type === 27) {
-                handleWithCalling(false, message, roomId);
+
+            // Handle with message is canceled
+            if (message.type === 22) {
+                handleWithEndCall(message);
             }
 
             // Handle with message is accept call
@@ -170,6 +170,11 @@ define([
             // Handle with message is end call
             if (message.type === 24) {
                 handleWithEndCall(message);
+            }
+
+            // Handle with message is calling with video
+            if (message.type === 27) {
+                handleWithCalling(false, message, roomId);
             }
 
             if (isCurrentRoom) {
