@@ -101,16 +101,8 @@ define([
         $audio[0].src = audioCallEnd;
         $audio[0].loop = false;
         $audio[0].play();
-        
-        // Change location iframe before close modal
-        // This fix ghost user on repeat call
-        $modal.hide();
-        $videoCallerWrap.find('iframe')[0].src = domain;
-
-        setTimeout(() => {
-            $videoCallerWrap.find('iframe').remove();
-            $modal.remove();
-        }, 400);
+        $videoCallerWrap.find('iframe').remove();
+        $modal.remove();
     };
     const onHangup = () => {   
         $audio[0].pause();
