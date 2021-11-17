@@ -173,6 +173,11 @@ define([
             }
 
             // Handle with message is calling with video
+            if (message.type === 25) {
+                handleWithEndCall(message);
+            }
+
+            // Handle with message is calling with video
             if (message.type === 27) {
                 handleWithCalling(false, message, roomId);
             }
