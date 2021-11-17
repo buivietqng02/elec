@@ -95,6 +95,8 @@ define([
 
     const cancelCall = () => API.post(`chats/${roomInfo.id}/call/cancel`);
 
+    const rejectCall = () => API.post(`chats/${roomInfo.id}/call/reject`);
+
     const onClose = () => {
         window.onbeforeunload = null;
         $audio[0].pause();
@@ -104,12 +106,8 @@ define([
         $videoCallerWrap.find('iframe').remove();
         $modal.remove();
     };
-    const onHangup = () => {   
-        $audio[0].pause();
-        $audio[0].src = audioCallEnd;
-        $audio[0].loop = false;
-        $audio[0].play();     
-        $modal.modal('hide');
+    const onHangup = () => {
+        onClose();
         if (!roomInfo.group) {
             endCall();
         }
@@ -118,6 +116,11 @@ define([
     const onCancel = () => {
         onClose();
         cancelCall();
+    }
+
+    const onReject = () => {
+        onClose();
+        rejectCall();
     }
 
     const modalStateSwitch = (event) => {
@@ -282,11 +285,10 @@ define([
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
             jitsiApi.executeCommand('avatarUrl', getAvatar(userInfo.id));
             jitsiApi.addListener('readyToClose', () => {
-                onClose();
                 onHangup();
             });
             jitsiApi.addEventListener('participantJoined', () => {
-                window.onbeforeunload = null;
+                window.onbeforeunload = onHangup;
                 $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
                 if (!isAccept) {
                     clearTimeout(timeout);
@@ -297,7 +299,7 @@ define([
             });
             jitsiApi._frame.addEventListener('load', () => {
                 if (!isAccept) {
-                    window.onbeforeunload = cancelCall;
+                    window.onbeforeunload = onCancel;
                     $notifyForm.find('h2').html('Calling...');
                     $audio[0].pause();
                     $audio[0].src = audioCall;
@@ -338,7 +340,7 @@ define([
         $audio = $('#video-call-audio');
         $notifyForm = $('.video-call-notify-form');
 
-        $hangupBtn.off().click(onHangup);
+        $hangupBtn.off().click(onReject);
         $acceptBtn.off().click({ audioOnly: isAudioOnly }, onAccept);
         $btnModalStateSwitch.off().click({ audioOnly: isAudioOnly }, modalStateSwitch);
     };
@@ -394,6 +396,7 @@ define([
             if (!$modalDialog.hasClass('accept-state')) {
                 onClose();
             } else {
+                clearTimeout(timeout);
                 $audio[0].pause();
                 $modal.remove();
             }
