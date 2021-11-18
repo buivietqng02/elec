@@ -15,10 +15,9 @@ define([
     jqueryUi
 ) => {
     const { getAvatar } = functions;
-    const { draggable } = jqueryUi;
+    const { draggable, resizable } = jqueryUi;
+    let inCall = false;
     let isInit;
-    let listenOnlyOne;
-    let roomId;
     let roomInfo;
     let $imgSender;
     let $nameSender;
@@ -95,7 +94,7 @@ define([
 
     const cancelCall = () => API.post(`chats/${roomInfo.id}/call/cancel`);
 
-    const rejectCall = () => API.post(`chats/${roomInfo.id}/call/reject`);
+    const rejectCall = (rid=false) => API.post(`chats/${rid ? rid : roomInfo.id}/call/reject`);
 
     const onClose = () => {
         clearTimeout(timeout);
@@ -126,6 +125,7 @@ define([
 
     const modalStateSwitch = (event) => {
         if ($modal.hasClass('maximize')) {
+            $modal.attr('style', 'display: block;');
             $modal.css(lastPosition);
             $modal.attr('class', 'modal show minimize');
             $btnModalStateSwitchIcon.attr('class', 'icon-maximize-window');
@@ -140,11 +140,32 @@ define([
             $modal.off();
             $modal.draggable({
                 handle: $modalDrag,
-                iframeFix: true
+                iframeFix: true,
+                scroll: false,
+                containment: "parent"
               });
+            $modal.resizable({
+                containment: "parent",
+                handles: "sw, n, e, s, w",
+                minHeight: 150,
+                minWidth: 150,
+                start: function(event, ui) {
+                    $('<div class="ui-resizable-iframeFix"></div>')
+                        .css({
+                            width:'100%', height: '100%',
+                            position: "absolute", zIndex: 1000, top:0, left: 0
+                        })
+                    .appendTo($modal);
+                },
+                stop: function(event, ui) {
+                    $('.ui-resizable-iframeFix').remove()
+                }
+            });
         } else if ($modal.hasClass('minimize')) {
-            $modal.draggable( "destroy" );
             lastPosition = { top: `${$modal.offset().top}px`, left: `${$modal.offset().left}px` };
+            $modal.draggable( "destroy" );
+            $modal.resizable( "destroy" );
+            $modal.attr('style', 'display: block;');
             $modal.css({ top: 0, left: 0 });
             $modal.attr('class', 'modal show maximize');
             $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
@@ -193,12 +214,11 @@ define([
         }
 
         switchState(isAccept);
-        roomId = roomInfo.id;
         isInit = false;
         const userInfo = GLOBAL.getInfomation();
         API.get('conference').then((res) => {
             optionsCall = {
-                roomName: roomId,
+                roomName: roomInfo.id,
                 width: '100%',
                 height: '100%',
                 jwt: res,
@@ -286,11 +306,13 @@ define([
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
             jitsiApi.executeCommand('avatarUrl', getAvatar(userInfo.id));
             jitsiApi.addListener('readyToClose', () => {
+                inCall = false;
                 onHangup();
             });
             jitsiApi.addEventListener('participantJoined', () => {
                 window.onbeforeunload = onHangup;
                 $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
+                inCall = true;
                 if (!isAccept) {
                     clearTimeout(timeout);
                     $notifyForm.hide();
@@ -348,7 +370,9 @@ define([
 
     return {
         onInit: (isAudioOnly, sender, rid) => {
-            if (listenOnlyOne) {
+
+            if (inCall) {
+                rejectCall(rid);
                 return;
             }
 
@@ -393,11 +417,26 @@ define([
             $callAnimation.addClass(hide);
             $modal.modal('show');
         },
-        onEndCall: () => {
+        onEndCall: (rid) => {
+            if (rid !== roomInfo.id) {
+                return;
+            }
             if (!$modalDialog.hasClass('accept-state')) {
                 onClose();
             } else {
                 clearTimeout(timeout);
+                $audio[0].pause();
+                $modal.remove();
+            }
+        },
+        onCancelCall: () => {
+            if (inCall) {
+                return
+            }
+            clearTimeout(timeout);
+            if (!$modalDialog.hasClass('accept-state')) {
+                onClose();
+            } else {
                 $audio[0].pause();
                 $modal.remove();
             }
