@@ -117,10 +117,17 @@ define([
         }
     };
 
-    const handleWithEndCall = (message) => {
+    const handleWithEndCall = (message, roomId) => {
         const currentUserId = GLOBAL.getInfomation().id;
         if (currentUserId !== message.sender.id) {
-            modalPhoneRequest.onEndCall();
+            modalPhoneRequest.onEndCall(roomId);
+        }
+    };
+
+    const handleWithCancelCall = (message) => {
+        const currentUserId = GLOBAL.getInfomation().id;
+        if (currentUserId !== message.sender.id) {
+            modalPhoneRequest.onCancelCall();
         }
     };
 
@@ -159,7 +166,7 @@ define([
 
             // Handle with message is canceled
             if (message.type === 22) {
-                handleWithEndCall(message);
+                handleWithCancelCall(message);
             }
 
             // Handle with message is accept call
@@ -169,12 +176,12 @@ define([
 
             // Handle with message is end call
             if (message.type === 24) {
-                handleWithEndCall(message);
+                handleWithEndCall(message, roomId);
             }
 
-            // Handle with message is calling with video
+            // Handle with message is reject call
             if (message.type === 25) {
-                handleWithEndCall(message);
+                handleWithCancelCall(message);
             }
 
             // Handle with message is calling with video
