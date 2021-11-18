@@ -4,7 +4,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
-### [4.9] - 2021-11-17
+### [4.9] - 2021-11-18
 ### Update
 - Fix refresh token bugs
 - Update version on login page
