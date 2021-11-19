@@ -202,7 +202,7 @@ define([
             };
 
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
-            jitsiApi.executeCommand('avatarUrl', getAvatar(GLOBAL.getInfomation().id));
+            jitsiApi.executeCommand('avatarUrl', process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}/${getAvatar(GLOBAL.getInfomation().id)}` : getAvatar(GLOBAL.getInfomation().id));
             jitsiApi._frame.addEventListener('load', () => {
                 isOpening = true;
 

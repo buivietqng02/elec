@@ -304,7 +304,7 @@ define([
                 }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
-            jitsiApi.executeCommand('avatarUrl', getAvatar(userInfo.id));
+            jitsiApi.executeCommand('avatarUrl', process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}/${getAvatar(userInfo.id)}` : getAvatar(userInfo.id));
             jitsiApi.addListener('readyToClose', () => {
                 inCall = false;
                 onHangup();
