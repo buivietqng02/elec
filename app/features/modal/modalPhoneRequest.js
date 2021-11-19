@@ -43,7 +43,7 @@ define([
     const audioCall = 'assets/sounds/call.mp3';
     const audioCallEnd = 'assets/sounds/call-end.mp3';
     const audioIncomingCall = 'assets/sounds/incoming-call.mp3';
-    const domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev/${constant.ROUTE.meeting}`;
+    const domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev${constant.ROUTE.meeting}`;
 
     const hide = 'hidden';
     const renderTemplate = `
