@@ -143,8 +143,7 @@ define([
         xmConferenceLoading.style.display = 'block';
 
         API.get('conference').then((res) => {
-            domain = constant.BASE_URL.substring(0, constant.BASE_URL.length - 2).replace('https://', '')
-            + constant.ROUTE.meeting.replace('/', '');
+            domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev/${constant.ROUTE.meeting}`;
             if (inviteID === undefined || inviteID === null || inviteID === '') {
                 roomId = (+new Date()).toString(16).toUpperCase();
             } else {
