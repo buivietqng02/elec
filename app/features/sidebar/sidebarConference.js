@@ -143,7 +143,7 @@ define([
         xmConferenceLoading.style.display = 'block';
 
         API.get('conference').then((res) => {
-            domain = constant.BASE_URL.replace('https://', '').substring(0, constant.BASE_URL.length - 2)
+            domain = constant.BASE_URL.substring(0, constant.BASE_URL.length - 2).replace('https://', '')
             + constant.ROUTE.meeting.replace('/', '');
             if (inviteID === undefined || inviteID === null || inviteID === '') {
                 roomId = (+new Date()).toString(16).toUpperCase();
