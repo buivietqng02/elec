@@ -2,6 +2,7 @@ define([
     'features/language/language',
     'app/constant',
     'shared/functions',
+    'shared/data',
     'features/modal/modalChangeLanguage',
     'features/login/loginForm',
     'features/login/resetPasswordForm'
@@ -9,6 +10,7 @@ define([
     languageComp,
     constant,
     functions,
+    GLOBAL,
     modalChangeLanguageComp,
     loginFormComp,
     resetPasswordFormComp
@@ -37,7 +39,34 @@ define([
         }
     };
 
+    const initCurrentVersion = (version, langJson) => {
+        const xmVersionTemplate = `
+            <p>
+                <lang data-language="WEB_VERSION">${langJson.WEB_VERSION}</lang>: #XM_VERSION 
+            </p>
+            <p>
+                <lang data-language="SERVER_VERSION">${langJson.SERVER_VERSION}</lang>: ${version}
+            </p>
+            `;
+
+        $('.xm-current-version').html(xmVersionTemplate);
+    };
+
+    const onGetVersion = () => {
+        $.ajax({
+            type: 'GET',
+            url: `${constant.BASE_URL}/version`,
+            success: (res) => { 
+                initCurrentVersion(res, GLOBAL.getLangJson());
+            }
+        });
+    };
+    
+   
+
     ob.onInit = () => {
+        onGetVersion()
+
         initDownloadLinkApp();
         $('.xm-page-loading').hide();
         $('[data-toggle="tooltip"]').tooltip();

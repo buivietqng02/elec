@@ -1353,6 +1353,22 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border-radius: 4px;
 }
 
+.btn-phone {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.btn-video {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
 .btn-toggle-search-box {
   background: transparent;
   border: 0;
@@ -1687,6 +1703,26 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   background: #FFFFFFB3;
   padding: 0.75rem;
   margin: 0;
+}
+
+.messages__item .conference-link{
+  margin-top: 10px;
+}
+
+.messages__item .conference-link small{
+    color: rgba(128, 128, 128, 0.815);
+}
+
+.messages__item .conference-link button{
+    background-color: #08c;
+}
+.messages__item .conference-link button:hover{
+  background-color: rgb(8, 151, 223);
+}
+
+.messages__item .conference-link.hidden {
+  /* display: none; */
+  color: red;
 }
 
 .messages__item.comment .btn__edit--close {
@@ -3290,14 +3326,67 @@ body.body_fz_18 {
   display: none !important;
 }
 
+#modalPhoneRequest.maximize {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+#modalPhoneRequest.minimize {
+  background-color: transparent;
+  top: 7rem;
+  left: auto;
+  right: 1rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#modalPhoneRequest.minimize .modal-content {
+  height: 100%;
+}
+#modalPhoneRequest.minimize .modal-dialog {
+  height: 100%;
+  margin: 0;
+}
+
 #modalPhoneRequest .modal-content {
-  background: #06c !important;
+  overflow: hidden;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, .7) !important;
+}
+
+#modalPhoneRequest .modal-loading {
+  position: relative;
+  height: 600px;
+  background-color: transparent;
+  width: 100%;
 }
 
 #modalPhoneRequest .modal-body {
   height: 600px;
   width: 100%;
   padding: 0;
+}
+
+.modal-content .modal-state-switch {
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  right: 0.5rem;
+  top: 0.5rem;
+  background-color: rgba(0,0,0,0.5);
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.modal-content .modal-drag {
+  cursor: all-scroll;
+  position: absolute;
+  z-index: 1;
+  left: 0.5rem;
+  top: 0.5rem;
+  background-color: rgba(0,0,0,0.5);
+  padding: 3px;
+  border-radius: 5px;
 }
 
 .video-call-setting {
@@ -3372,9 +3461,12 @@ body.body_fz_18 {
   height: 100%;
 }
 .video-caller {
-  overflow: auto;
+  overflow: hidden;
+  border-radius: 20px;
+  /* overflow: auto; */
   width: 100%;
-  height: calc(100% - 180px);
+  /* height: calc(100% - 180px); */
+  height: 100%;
   text-align: center;
   position: absolute;
 }
@@ -3428,17 +3520,10 @@ body.body_fz_18 {
 .easyrtcErrorDialog_title {
   display: none;
 }
-#video_close {
-  position: absolute;
-  right: 7px;
-  top: 3px;
-  z-index: 9999;
-}
 #modalPhoneRequest .accept-state {
   max-width: 400px;
 }
-#modalPhoneRequest .accept-state .video-call-modal-body,
-#modalPhoneRequest .accept-state #video_close {
+#modalPhoneRequest .accept-state .video-call-modal-body {
   display: none;
 }
 

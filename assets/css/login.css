@@ -105,11 +105,31 @@ img {
 	cursor: pointer;
 }
 
+.thirdparty-login-btn:disabled {
+	background-color: #6d6868;
+}
+
 .thirdparty-login-btn.erp svg {
 	width: 55px;
 	height: 47px;
 	position: relative;
 	left: -3.5px;
+}
+
+.thirdparty-login-btn .--login-btn-spiner{
+	position: absolute;
+	left: 23%;
+	top: 23%;
+}
+
+/* Chrome 29+ */
+@media screen and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+    .thirdparty-login-btn .--login-btn-spiner{
+		position: absolute;
+		left: 23%;
+		top: 23%;
+	}
 }
 
 .thirdparty-login-btn.google svg {
@@ -282,16 +302,32 @@ img {
 	display: none
 }
 
+.xm-current-version{
+	color: rgb(255, 255, 255);
+	font-size: 13px;	
+	text-align: center;
+	padding: 4px;
+	font-weight: bold;
+}
+
+@media (max-width: 767px) {
+	.xm-current-version{
+		width: 100%;
+		font-size: 10px !important;
+	}
+}
+
 .download-app {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-	margin-top: 1rem;
+	margin-top: 0px;
 	max-width: 360px;
 	padding: 1rem;
 	margin-left: auto;
 	margin-right: auto;
+	padding-bottom: 9px;
 }
 
 .download-app__link {
@@ -399,7 +435,7 @@ img {
     display: flex;
 	width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, #06c 0, rgba(0, 102, 204, .6) 50%, rgba(0, 102, 204, .6) 65%, rgba(0, 102, 204, .4) 100%), url(../images/cosmos4-1.jpg) no-repeat center/cover;
+    background: linear-gradient(to bottom, #06c 0, rgba(0, 102, 204, .6) 50%, rgba(0, 102, 204, .6) 65%, rgba(0, 102, 204, .4) 100%), url(../images/login-background.png) no-repeat center/cover;
     font-family: "Roboto Condensed", Roboto, Helvetica, Noto SJK, "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", 宋体, SimSun, STXihei, "华文细黑", Arial, sans-serif;
 	font-size: 1rem
 }

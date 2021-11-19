@@ -181,6 +181,10 @@
   .icon-volume:before {
     content: "\e934";
   }
+  .icon-conference:before {
+    content: "\e931";
+  }
+
   .icon-cart:before {
     display: block;
     content: ' ';
@@ -333,3 +337,30 @@
     height: 32px;
     width: 32px;
   } 
+  
+  .icon-drag-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/all-directions.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }
+
+  .icon-minimize-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/minimize-window.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }
+
+  .icon-maximize-window:before{
+    display: block;
+    content: ' ';
+    background-image: url('../images/maximize-window.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }

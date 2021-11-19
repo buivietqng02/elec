@@ -8,7 +8,10 @@ define([
     'features/chatbox/chatboxContentFunctions',
     'features/chatbox/chatboxContentTemplate',
     'features/chatbox/chatboxTopbar',
-    'features/chatbox/messageSettingsSlide'
+    'features/chatbox/messageSettingsSlide',
+    'features/sidebar/sidebarConference',
+    'features/sidebar/sidebarLeftBar'
+
 ], (
     constant,
     API,
@@ -19,7 +22,9 @@ define([
     contentFunc,
     template,
     chatboxTopbarComp,
-    messageSettingsSlideComp
+    messageSettingsSlideComp,
+    sidebarConferenceComp,
+    sidebarLeftBarComp
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -180,32 +185,30 @@ define([
 
     // ======== Start Scroll to origin position ===========
     const findOriginMess = (id) => {
-        let notFounded = true;
-        $wrapper.animate({ scrollTop: 0 }, 100);
+        $wrapper.animate({ scrollTop: 0 }, 600);
         onGetMoreMessageByScrolling().then(result => {
 
-            for (let i = 0; i < result.loadedResult.length; i++) {
-                if (result.loadedResult[i].id.messageId === id) {
-                    notFounded = false;
-                    let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+            if (result.loadedResult.some((item, index) => {
+                return item.id.messageId === id
+            })) {
+                let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                originMessageEle.classList.add('activeScrollTo');
+                setTimeout(() => {
+                    originMessageEle.classList.add('activeScrollTo');
+                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }, 2000)
 
-                    setTimeout(() => {
-                        originMessageEle.classList.add('activeScrollTo');
-                        originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                    }, 600)
+                setTimeout(() => {
+                    originMessageEle.classList.remove('activeScrollTo');
+                }, 5000)
 
-                    setTimeout(() => {
-                        originMessageEle.classList.remove('activeScrollTo');
-                    }, 3000)
-
-                    break;
-
-                }
-            }
-
-            if (notFounded) {
+            } else {
                 findOriginMess(id)
             }
+        }).catch((e) => {
+            console.log(e);
+            findOriginMess(id)
         })
     }
 
@@ -260,9 +263,24 @@ define([
         let listMessages = [...messages]
         listMessages.reverse().some(item => {
             if (!item.deleted) {
-                lastUndeletedMessageId = item.id.messageId;
+                lastUndeletedMessageId = item?.id?.messageId;
                 return true;
             }
+        })
+    }
+
+    // Conference Call
+    const addEventListenerToMeetingLink = () => {
+        let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
+
+        joinConferenceBtn.forEach(item => {
+            item.querySelector('button').addEventListener('click', () => {
+                let confRoomID = item.getAttribute('confId');
+                console.log(confRoomID);
+
+                sidebarLeftBarComp.onSwitchToConference();
+                sidebarConferenceComp.onInitConferencePage(confRoomID);
+            });
         })
     }
 
@@ -336,7 +354,7 @@ define([
         processing = true;
 
         isLoadedMoreResult = await API.get('messages', params).then(res => {
-            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId() || res.status !== 0) {
+            if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
             }
@@ -346,11 +364,11 @@ define([
             let messagesHtml = '';
             let moreMessages = [];
 
-            if (res?.data?.messages?.length < 20) {
+            if (res?.messages?.length < 20) {
                 isTouchLastMess = true;
             }
 
-            moreMessages = moreMessages.concat(res?.data?.messages || []).reverse();
+            moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
@@ -370,7 +388,7 @@ define([
                 })
             });
 
-            // Scroll to origin message when scroll more
+            // Add event listener to Scroll to origin message when scroll more
             moreMessages.forEach(item => {
                 const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
                 const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
@@ -381,6 +399,9 @@ define([
                 }
             })
             // End scroll to origin message when scroll more
+
+            // Add event listener for conference call
+            addEventListenerToMeetingLink();
 
             setTimeout(() => {
                 processing = false;
@@ -423,6 +444,8 @@ define([
         // Update file property for quotedMessage
         // getFileForQuoteMessage(messages);
 
+        // console.log(messages);
+
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
         ).join('');
@@ -445,6 +468,9 @@ define([
 
         $loadingOfNew.hide();
 
+        // Add event listener for conference call
+        addEventListenerToMeetingLink();
+
         setTimeout(() => {
             updateRoomInfo(roomInfo);
             processing = false;
@@ -456,27 +482,18 @@ define([
         if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
             return;
         }
-
-        if (res.status !== 0) {
-            // Handle when room was deleted
-            if (res.status === 2) {
-                onHandleRoomWasDeleted();
-            }
-
-            return;
-        }
-
         // Update time activity to top bar
-        chatboxTopbarComp.onRenderTimeActivity(res?.data?.partnerLastTimeActivity);
-
-        let messages = (res?.data?.messages || []).reverse();
-
+        chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+        let messages = (res?.messages || []).reverse();
         // Assign message to store
         setChatsById(roomInfo.id, messages);
         storeRoomById(roomInfo.id, messages);
-
         handleDataFromGetMess(messages, roomInfo);
     }).catch(err => {
+        if (err.response?.status == 404) {
+            onHandleRoomWasDeleted();
+            return;
+        }
         if (err === 19940402) {
             onErrNetWork(err);
         }
@@ -510,7 +527,6 @@ define([
             $wrapper = $('.js_con_list_mess');
             $loadingOfNew = $('.--load-mess');
             $unreadScroll = $('.unread-message-scroll');
-
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
             $wrapper.off('scroll').scroll(onWrapperScroll);
@@ -588,6 +604,8 @@ define([
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
 
+                // console.log(messagesHtml)
+                // console.log(mess)
                 // Render new message
                 $messageList.append(messagesHtml);
 
@@ -614,6 +632,9 @@ define([
                     handleScrollToOriginId(e.currentTarget);
                 })
 
+                // Add event listener for conference call
+                addEventListenerToMeetingLink();
+
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
                     $wrapper.scrollTop(wrapperHtml.scrollHeight);
@@ -636,6 +657,7 @@ define([
             $message.find('.btn-message-settings').hide();
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
+            $message.find('.conference-link').hide();
 
             // Remove last message from sidebar
             if (message.id.messageId === lastUndeletedMessageId) {
@@ -660,6 +682,7 @@ define([
         },
 
         onFinishPostMessage: (data) => {
+            // console.log(data)
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
@@ -687,6 +710,32 @@ define([
                 // console.log(originId[1]);
                 handleScrollToOriginId(e.currentTarget);
             })
+
+            // Add event listener for conference call
+            addEventListenerToMeetingLink();
+
+            // Fix repeating messages
+            const messagesList = document.querySelector('.messages__list')
+            const arryMessages = messagesList.querySelectorAll('.messages__item');
+            const indexArr = [];
+            const toFindDuplicates = (arryParam) => {
+                let newArray = Array.from(arryParam).map(ite => ite.getAttribute('data-chat-id'));
+                return newArray.filter((item, index) => {
+                    if(newArray.indexOf(item) !== index) {
+                        indexArr.push(index)
+                        return true;
+                    }
+                      
+                })
+            }
+            toFindDuplicates(arryMessages);
+
+            if(indexArr.length){
+                indexArr.map(item => {
+                    // console.log(arryMessages[item]);
+                    messagesList.removeChild(arryMessages[item])
+                })
+            }
         },
 
         onAddLocal: async (data) => {
@@ -716,6 +765,7 @@ define([
             if (!isInit) {
                 messages = await getChatById(rid) || [];
             }
+            // console.log(messages)
 
             if (data.params.quotedMessageId) {
                 const quotedObject = messages.find(item => item.id.messageId === data.params.quotedMessageId);

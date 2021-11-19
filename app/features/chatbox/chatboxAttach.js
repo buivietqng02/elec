@@ -19,6 +19,7 @@ define([
     let $inputImage;
     let $wrapper;
     let $callBtn;
+    let $videoCallBtn;
     let $progressWrapper;
     let $pathCircle;
     let $percentProgress;
@@ -165,9 +166,16 @@ define([
         }
     };
 
-    const showPhoneModal = () => {
-        modalPhoneRequestComp.onInit();
-        offEventClickOutside();
+    const showPhoneModalAudioOnly = () => {
+        if (!$('#modalPhoneRequest').hasClass('show')) {
+            modalPhoneRequestComp.onInit(true);
+        }
+    };
+
+    const showPhoneModalWithVideo = () => {
+        if (!$('#modalPhoneRequest').hasClass('show')) {
+            modalPhoneRequestComp.onInit(false);
+        }
     };
 
     return {
@@ -178,14 +186,16 @@ define([
             $inputFile = $('.--input-up-file');
             $inputImage = $('.--input-up-media');
             $wrapper = $('#media-menu');
-            $callBtn = $wrapper.find('.js-up-phone');
+            $callBtn = $('.--call-audio');
+            $videoCallBtn = $('.--call-video');
             $progressWrapper = $('.chatbox-progress-upload');
             $pathCircle = $progressWrapper.find('path');
             $percentProgress = $progressWrapper.find('span');
             $dropzone = $('.dropzone');
 
             $attachButton.off().click(showSlide);
-            $callBtn.off().click(showPhoneModal);
+            $callBtn.off().click(showPhoneModalAudioOnly);
+            $videoCallBtn.off().click(showPhoneModalWithVideo);
             $inputFile.off().change(() => {
                 offEventClickOutside();
                 uploadFile('file');
@@ -227,14 +237,13 @@ define([
                     });
                 };
             }
-        },
-
-        markPhone: (isGroup) => {
-            if (isGroup) {
-                $callBtn.hide();
-            } else {
-                $callBtn.show();
-            }
         }
+        // markPhone: (isGroup) => {
+        //     if (isGroup) {
+        //         $callBtn.hide();
+        //     } else {
+        //         $callBtn.show();
+        //     }
+        // }
     };
 });

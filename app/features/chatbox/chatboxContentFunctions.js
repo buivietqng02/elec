@@ -211,6 +211,9 @@ define([
             };
             let text = htmlEncode(decodeStringBase64(message));
 
+            let isConferenceLink = false;
+            let conferenceLink = '';
+
             // check add local
             if (idLocal) {
                 data.classLocal = 'js_li_mess_local';
@@ -247,7 +250,8 @@ define([
             }
 
             // render with calling
-            if (type === 21 || type === 24) {
+            if (type === 21 || type === 22 || type === 24 
+                || type === 25 || type === 27 || type === 23) {
                 data.mess = text;
                 return render(template.call, data);
             }
@@ -255,6 +259,17 @@ define([
             // highlight text if search exist
             if (search) {
                 text = highlightText(text, decodeStringBase64(search));
+            }
+
+            // Render in case share conference link
+
+            if (text.includes(`${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}`) && text.length > 36) {
+                isConferenceLink = true;
+                const conferenceId = text.split('/');
+
+                conferenceLink = `${conferenceId[4]}`;
+            } else {
+                isConferenceLink = false;
             }
 
             data.src = getAvatar(sender?.id);
@@ -271,6 +286,11 @@ define([
             data.hide_when_removed = deleted ? 'hidden' : '';
             data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
+
+            data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
+            data.confRoom_chat_Id = conferenceLink;
+            data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
+            data.JOIN = GLOBAL.getLangJson().JOIN;
 
             // render with case of comment
             if (quotedMessage && !deleted) {

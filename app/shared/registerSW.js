@@ -11,6 +11,12 @@ define([], () => {
         }
 
         refreshing = true;
+
+         // Clear cache
+         window.self.caches.keys().then((keys) => {
+            keys.map(key => window.self.caches.delete(key));
+        });
+
         try {
             window.location.reload(true);
         } catch {
@@ -20,6 +26,11 @@ define([], () => {
     };
 
     const refreshCache = () => {
+         // Clear cache
+         window.self.caches.keys().then((keys) => {
+            keys.map(key => window.self.caches.delete(key));
+        });
+
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
         } catch {
@@ -38,7 +49,7 @@ define([], () => {
         isUpdate = true;
 
         const popup = `
-            <style>
+            <style id="snackbar-style">
                 #snackbar {
                     display: none;
                     min-width: 250px;
@@ -62,9 +73,24 @@ define([], () => {
                     color: #3e97f3;
                     cursor: pointer;
                 }
+
+                #close-snackbar {
+                    position: absolute;
+                    top: 3px;
+                    right: 3px;
+                    background-color: transparent;
+                    border: none;
+                    color: white;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                }
             </style>
             <div id="snackbar">
                 A new version of this app is available. Click <a id="reload">here</a> to update.
+                <button id="close-snackbar" type="button" class="btn-close" aria-label="Close">
+                    <i class="icon-close"></i>
+                </button>
             </div>
         `;
         const $body = $('body');
@@ -73,9 +99,15 @@ define([], () => {
         setTimeout(() => {
             const $reloadBtn = $('#reload');
             const $snackbar = $('#snackbar');
+            const $snackbarStyle = $('#snackbar-style');
+            const $closeSnackbarBtn = $('#close-snackbar');
 
             $snackbar.addClass('show');
 
+            $closeSnackbarBtn.off('click').click(() => {
+                $snackbar.remove();
+                $snackbarStyle.remove();
+            });
             if (force) {
                 $reloadBtn.off('click').click(reloadPage);
             } else {
@@ -122,6 +154,7 @@ define([], () => {
                         setTimeout(() => {
                             if (versions.length > 1 && !isUpdate) {
                                 showUpdateBar(true);
+                                // keys.map(key => window.self.caches.delete(key));
                             }
 
                             if (versions.length === 1 && keys.length === 1) {
