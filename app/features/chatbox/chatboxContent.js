@@ -353,7 +353,10 @@ define([
         };
         processing = true;
 
+        console.log(params);
+
         isLoadedMoreResult = await API.get('messages', params).then(res => {
+            console.log(res);
             if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
@@ -373,8 +376,13 @@ define([
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
 
+            console.log(moreMessages[0])
+
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
+
+            console.log(lastOffset);
+
             storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
@@ -437,6 +445,9 @@ define([
         }
 
         lastOffset = messages[0]?.sequence;
+
+        console.log(messages)
+        console.log(lastOffset)
 
         // Update lastUndeletedMessageId when reload
         updateLastUndeletedMessageIdWhenReload(messages);

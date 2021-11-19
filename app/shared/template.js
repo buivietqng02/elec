@@ -492,6 +492,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-trash" aria-hidden="true"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
+                            <button class="--mediaAndFile menu__item">
+                                <i class="xm xm-photo xm-fw" aria-hidden="true"></i>
+                                <lang data-language="VIEW_MEDIA_FILE"></lang>
+                            </button>
                         </div>
                     </div>
                     <div class="mess-search-box">
@@ -663,6 +667,27 @@ define(['shared/icon'], (ICON) => ({
 
                         </div>
                     </div>
+
+                    <!-- View media and files --> 
+                        <div class="view-media-files-wraper hidden">
+                            <div class="media-files-topbar">
+                                <button class="media-files-close">Back</button>
+
+                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="media-list-tab" data-bs-toggle="pill" data-bs-target="#media-list" type="button" role="tab" aria-selected="true">Home</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="files-list-tab" data-bs-toggle="pill" data-bs-target="#files-list" type="button" role="tab" aria-selected="false">Profile</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="media-files-content tab-content">
+                                <div class="view-media-list tab-pane fade show active" id="media-list" role="tabpanel"></div>
+                                <div class="view-files-list tab-pane fade" id="files-list" role="tabpanel"></div>
+                            </div>
+                        </div>
+                    <!-- End View media and files -->
                 </div>
             </div>
         </div>

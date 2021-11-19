@@ -228,10 +228,13 @@ define([
                 });
                 document.onpaste = (event) => {
                     const { items } = (event.clipboardData || event.originalEvent.clipboardData);
+                    console.log(items);
                     Object.keys(items).forEach((key) => {
                         const item = items[key];
                         if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
                             const file = item.getAsFile();
+                            console.log(file);
+                            
                             checkFile(file);
                         }
                     });
