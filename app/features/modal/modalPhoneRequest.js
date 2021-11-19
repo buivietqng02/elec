@@ -43,8 +43,8 @@ define([
     const audioCall = 'assets/sounds/call.mp3';
     const audioCallEnd = 'assets/sounds/call-end.mp3';
     const audioIncomingCall = 'assets/sounds/incoming-call.mp3';
-    const domain = constant.BASE_URL.substring(0, constant.BASE_URL.length - 3).replace('https://', '')
-    + constant.ROUTE.meeting;
+    const domain = constant.BASE_URL.substring(0, constant.BASE_URL.length - 2)
+    + constant.ROUTE.meeting.replace('/', '');
 
     const hide = 'hidden';
     const renderTemplate = `
