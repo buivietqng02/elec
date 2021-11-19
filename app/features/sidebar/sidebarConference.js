@@ -72,7 +72,8 @@ define([
         copyAndShareBtn.addEventListener('click', (e) => {
             e.stopPropagation();
 
-            const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
+            const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            const link = `${enviroment}${constant.ROUTE.meeting}/${roomId}`;
 
             if (window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.match(/iPhone/i)) {
             // iPad or iPhone
