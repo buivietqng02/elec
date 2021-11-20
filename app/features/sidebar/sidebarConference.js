@@ -72,7 +72,8 @@ define([
         copyAndShareBtn.addEventListener('click', (e) => {
             e.stopPropagation();
 
-            const link = `${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}/${roomId}`;
+            const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            const link = `${enviroment}${constant.ROUTE.meeting}/${roomId}`;
 
             if (window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.match(/iPhone/i)) {
             // iPad or iPhone
@@ -143,8 +144,7 @@ define([
         xmConferenceLoading.style.display = 'block';
 
         API.get('conference').then((res) => {
-            domain = constant.BASE_URL.replace('https://', '').replace('/xm', '') + constant.ROUTE.meeting;
-
+            domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev${constant.ROUTE.meeting}`;
             if (inviteID === undefined || inviteID === null || inviteID === '') {
                 roomId = (+new Date()).toString(16).toUpperCase();
             } else {
@@ -203,7 +203,7 @@ define([
             };
 
             jitsiApi = new JitsiMeetExternalAPI(domain, options);
-            jitsiApi.executeCommand('avatarUrl', getAvatar(GLOBAL.getInfomation().id));
+            jitsiApi.executeCommand('avatarUrl', process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}/${getAvatar(GLOBAL.getInfomation().id)}` : getAvatar(GLOBAL.getInfomation().id));
             jitsiApi._frame.addEventListener('load', () => {
                 isOpening = true;
 

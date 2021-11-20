@@ -250,7 +250,8 @@ define([
             }
 
             // render with calling
-            if (type === 21 || type === 22 || type === 24 || type === 27 || type === 23) {
+            if (type === 21 || type === 22 || type === 24 
+                || type === 25 || type === 27 || type === 23) {
                 data.mess = text;
                 return render(template.call, data);
             }
@@ -261,11 +262,10 @@ define([
             }
 
             // Render in case share conference link
-
-            if (text.includes(`${constant.BASE_URL.substring(0, constant.BASE_URL.length - 3)}${constant.ROUTE.meeting}`) && text.length > 36) {
+            const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            if (text.includes(`${enviroment}${constant.ROUTE.meeting}`) && text.length > 30) {
                 isConferenceLink = true;
                 const conferenceId = text.split('/');
-
                 conferenceLink = `${conferenceId[4]}`;
             } else {
                 isConferenceLink = false;
