@@ -412,10 +412,10 @@ define([
         isFindingMediaFiles = true;
        
         $messageList.children().css('display', 'none');
-       
-        getOffsetListMessages(roomInfo, parseInt(offset) + 10, messageId);
+        
+        jumpFastToBottomBtn.classList.remove('hidden')
 
-        setTimeout(() =>  jumpFastToBottomBtn.classList.remove('hidden'), 500)
+        getOffsetListMessages(roomInfo, parseInt(offset) + 10, messageId);
 
         jumpFastToBottomBtn.addEventListener('click', jumpToBottom)
     };
