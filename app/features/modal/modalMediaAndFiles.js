@@ -10,7 +10,7 @@ define([
     functions
     ) => {
     require('bootstrap/js/dist/tab');
-    require('bootstrap/js/dist/tooltip');
+    // require('bootstrap/js/dist/tooltip');
     
     const { API_URL, ATTRIBUTE_MESSAGE_ID } = constant;
     const {
@@ -196,9 +196,6 @@ define([
                     filesSpiner.classList.add('hidden');
                 }
 
-                 // Add bootstrap tool tip
-                 $('[data-toggle="tooltip"]').tooltip();
-
                 if (res.messages.length > 0) {
                     res.messages.forEach(item => {
                         const elementItem = document.querySelector(`[data-mess-id="${item.id.messageId}"]`);
@@ -225,10 +222,7 @@ define([
         mediaFileScrollWrap.scrollTop = 0;
     };
 
-    function closeModal() {
-        // Remive ToolTip before close modal
-        $('[data-toggle="tooltip"]').tooltip('disable');
-        
+    function closeModal() {    
         mediaList.removeChild(mediaList.firstChild);
         filesList.removeChild(filesList.firstChild);
 
@@ -261,9 +255,6 @@ define([
                 renderImages(img.messages);
                 mediaSpiner.classList.add('hidden');
 
-                // Add bootstrap tool tip
-                $('[data-toggle="tooltip"]').tooltip();
-
                 showOriginIMGmessBtn = document.querySelectorAll('.ite__img__showMess');
                 showOriginIMGmessBtn.forEach(item => item.addEventListener('click', () => {
                     const dataMessageId = item.parentNode.parentNode.getAttribute('data-mess-id');
@@ -275,9 +266,6 @@ define([
             getImageFilesListAPI(TYPE_FILES).then(file => {
                 renderFiles(file.messages);
                 filesSpiner.classList.add('hidden');
-
-                // Add bootstrap tool tip
-                $('[data-toggle="tooltip"]').tooltip();
 
                 showOriginFILEmessBtn = document.querySelectorAll('.ite__file__showMess');
                 showOriginFILEmessBtn.forEach(item => item.addEventListener('click', () => {

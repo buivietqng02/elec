@@ -366,11 +366,11 @@ define([
 
             setTimeout(() => {
                 originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }, 2000)
+            }, 2500)
 
             setTimeout(() => {
                 originMessageEle.classList.remove('activeScrollTo');
-            }, 4000);
+            }, 5000);
 
             setTimeout(() => {
                 document.querySelector('.js_con_list_mess').addEventListener('scroll',handleLoadNewMessOnScrollDown)
