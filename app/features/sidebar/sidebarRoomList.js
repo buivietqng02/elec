@@ -26,7 +26,6 @@ define([
     let $caption;
     let $chatbox;
     let mediaFilesWraper;
-    let jumpToBottomBtn;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
@@ -41,7 +40,6 @@ define([
         })[0] || {};
         roomInfo = JSON.parse(JSON.stringify(roomInfo));
 
-        console.log(roomInfo);
         // Handle when the user has not accepted the invitation yet
         if (!roomId) {
             $caption.show();
@@ -92,8 +90,7 @@ define([
         chatboxContentComp.onLoadMessage(roomInfo);
 
         // Close view media and files comp when click on sidebar
-        console.log(jumpToBottomBtn);
-        console.log(mediaFilesWraper);
+       
         if (!mediaFilesWraper.classList.contains('hidden')) {
             console.log('test hehehehe');
            
@@ -107,7 +104,6 @@ define([
         $caption = $('.js_caption');
         $chatbox = $('.js_wrap_mess');
         mediaFilesWraper = document.querySelector('.view-media-files-wraper');
-        jumpToBottomBtn = document.querySelector('.jump-to-bottom');
 
         initScroll();
         getRooms();

@@ -286,9 +286,6 @@ define([
         const res = await API.get('messages', params);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
 
-        console.log(lastOffsetScrollDown)
-        console.log(res)
-
         return res;
     }
 
@@ -298,9 +295,6 @@ define([
     }
 
     const handleLoadNewMessOnScrollDown = () => {
-        console.log('still running scroll')
-        console.log(`lastOffsetScrollDown: ${lastOffsetScrollDown}`)
-        console.log(`ultiLastOffSet: ${ultiLastOffSet}`)
 
         if( $wrapper.scrollTop() + $wrapper.height() >= $wrapper[0].scrollHeight - 1 && !isProcessScrollDown && !isTouchLastMessBottom){    
             isProcessScrollDown = true;
@@ -355,7 +349,6 @@ define([
         };
         
         API.get('messages', params).then(res => {
-            console.log(res)
             // Handle when user switch room but the request has not finished yet
             if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
                 return;
@@ -365,19 +358,19 @@ define([
             handleDataFromGetMess(messages, roomInfo);
 
             lastOffsetScrollDown = messages[messages.length - 1].sequence;
-            console.log(lastOffsetScrollDown);
 
             const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${messageId}"]`);
-
-            console.log(messageId);
-            console.log(originMessageEle);
 
             originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
             originMessageEle.classList.add('activeScrollTo');
 
             setTimeout(() => {
+                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 2000)
+
+            setTimeout(() => {
                 originMessageEle.classList.remove('activeScrollTo');
-            }, 3000);
+            }, 4000);
 
             setTimeout(() => {
                 document.querySelector('.js_con_list_mess').addEventListener('scroll',handleLoadNewMessOnScrollDown)
@@ -417,8 +410,7 @@ define([
         document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
 
         isFindingMediaFiles = true;
-        console.log(offset)
-        console.log(roomInfo)
+       
         $messageList.children().css('display', 'none');
        
         getOffsetListMessages(roomInfo, parseInt(offset) + 10, messageId);
@@ -482,6 +474,8 @@ define([
 
     const onLoadImage = () => {
         const wrapperHtml = $wrapper.get(0);
+        console.log(wrapperHtml);
+        console.log(wrapperHtml.scrollHeight);
         $wrapper.scrollTop(wrapperHtml.scrollHeight);
     };
 
@@ -622,13 +616,8 @@ define([
         lastOffset = messages[0]?.sequence;
 
         console.log(messages)
-        console.log(messages[messages.length - 1].sequence)
-        console.log(`ultiLastOffSet before: ${ultiLastOffSet}`)
 
         if(ultiLastOffSet < messages[messages.length - 1].sequence) ultiLastOffSet = messages[messages.length - 1].sequence
-       
-        console.log(`ultiLastOffSet after: ${ultiLastOffSet}`)
-       
 
         // Update lastUndeletedMessageId when reload
         updateLastUndeletedMessageIdWhenReload(messages);
@@ -650,7 +639,9 @@ define([
             $wrapper.scrollTop($wrapper[0].scrollHeight);
         }
 
-        $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+        if(jumpFastToBottomBtn.classList.contains('hidden')){
+            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
+        }
 
         // Audio
         audioPlayStopFunc()
@@ -754,7 +745,6 @@ define([
             if (GLOBAL.getNetworkStatus()) {
                 isInit = true;
                 onGetMessage(roomInfo);
-                console.log('init when switch tab')
             } else {
                 const messagesChat = await getChatById(roomInfo.id);
                 if (!messagesChat) {
@@ -1001,7 +991,6 @@ define([
         onHandleViewMediaAndFiles: (offset, roomInfo, messageId) => handleViewMediaAndFiles(offset, roomInfo, messageId),
 
         onSwitchRoomWhileShowMessMediaAndFiles: () => {
-            console.log('remove scroll down')
             document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
            
             hideJumptoBottomBtn()

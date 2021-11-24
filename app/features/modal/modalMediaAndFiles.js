@@ -140,7 +140,6 @@ define([
 
     /* eslint-disable no-use-before-define */
     const showMessagesPosition = (id, sequence) => {
-        console.log(id);
         const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
         closeModal();
         if (originMessageEle) {
