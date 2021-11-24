@@ -212,7 +212,7 @@ define([
 
     ob.getRooms = () => {
         range = [0, offset];
-
+        
         getWrapper().html(getRoomsHtml(getRooms(), range));
     };
     ob.appendRoom = () => {

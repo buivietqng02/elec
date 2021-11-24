@@ -516,6 +516,12 @@ define(['shared/icon'], (ICON) => ({
                             <span class="unread-message-scroll">0</span>
                             <i class="xm xm-angle-down"></i>
                         </a>
+
+                        <button class="jump-to-bottom hidden">
+                            <i class="xm xm-angle-down"></i>
+                            <span class="">Fast jump to bottom</span>
+                        </button>
+
                         <ul class="js_ul_list_mess messages__list scroll__inner">
                             <li class="messages__item">
                                 <div></div>
@@ -671,21 +677,41 @@ define(['shared/icon'], (ICON) => ({
                     <!-- View media and files --> 
                         <div class="view-media-files-wraper hidden">
                             <div class="media-files-topbar">
-                                <button class="media-files-close">Back</button>
+                                <button class="media-files-close">
+                                    <i class="icon-chevron-left"></i>
+                                    Back
+                                </button>
 
-                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <ul id="media-files-tab" class="nav nav-pills mb-3" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="media-list-tab" data-bs-toggle="pill" data-bs-target="#media-list" type="button" role="tab" aria-selected="true">Home</button>
+                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">Images</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="files-list-tab" data-bs-toggle="pill" data-bs-target="#files-list" type="button" role="tab" aria-selected="false">Profile</button>
+                                        <a class="nav-link" id="files-tab" data-toggle="pill" href="#files-list" role="tab" aria-controls="files-list" aria-selected="false">Files</a>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="media-files-content tab-content">
-                                <div class="view-media-list tab-pane fade show active" id="media-list" role="tabpanel"></div>
-                                <div class="view-files-list tab-pane fade" id="files-list" role="tabpanel"></div>
+
+                            <div class="media-files-content tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active view-media-list" id="media-list" role="tabpanel" aria-labelledby="media-tab">
+                                 
+                                    <div class="text-center">
+                                        <div class="media__spiner spinner-grow text-secondary hidden" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+
+                                <div class="tab-pane fade view-files-list" id="files-list" role="tabpanel" aria-labelledby="files-tab">
+                                    <div class="text-center">
+                                        <div class="files__spiner spinner-grow text-secondary hidden" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     <!-- End View media and files -->
                 </div>

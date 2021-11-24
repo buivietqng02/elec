@@ -67,6 +67,8 @@ define([
     let $unreadScroll;
     let lastUndeletedMessageId = '';
 
+    let jumpFastToBottomBtn;
+
     // ========== Start Voice message ==============
 
     const timeConvert = (time) => {
@@ -258,6 +260,175 @@ define([
     // }
     // ======== End Scroll to origin position ===========
 
+    // ======== Handle View Media and Files scroll to origin message ===========
+    let numberOfOffset = 0;
+    let isFindingMediaFiles = false;;
+    let isProcessScrollDown = false;;
+    let isTouchLastMessBottom = false;;
+    let lastOffsetScrollDown = 0;;
+    let ultiLastOffSet = 0;
+
+    const resetAfterSearchMediaAndFiles = () => {
+        numberOfOffset = 0;
+        isFindingMediaFiles = false;
+        isProcessScrollDown = false;
+        isTouchLastMessBottom = false;
+        lastOffsetScrollDown = 0;
+    }
+
+    // Call API to get newer messages when scroll to bottom
+    const getMoreMessScrollDownAPI = async () => {
+        const params = {
+            chatId: GLOBAL.getCurrentRoomId(),
+            offset: parseInt(lastOffsetScrollDown) + 21,
+        };
+        
+        const res = await API.get('messages', params);
+        lastOffsetScrollDown = res?.messages[0]?.sequence;
+
+        console.log(lastOffsetScrollDown)
+        console.log(res)
+
+        return res;
+    }
+
+    const hideJumptoBottomBtn = () => {
+        jumpFastToBottomBtn.classList.add('hidden');
+        jumpFastToBottomBtn.removeEventListener('click', jumpToBottom)
+    }
+
+    const handleLoadNewMessOnScrollDown = () => {
+        console.log('still running scroll')
+        console.log(`lastOffsetScrollDown: ${lastOffsetScrollDown}`)
+        console.log(`ultiLastOffSet: ${ultiLastOffSet}`)
+
+        if( $wrapper.scrollTop() + $wrapper.height() >= $wrapper[0].scrollHeight - 1 && !isProcessScrollDown && !isTouchLastMessBottom){    
+            isProcessScrollDown = true;
+            console.log('test')
+
+            getMoreMessScrollDownAPI().then(res => {
+                isProcessScrollDown = false;
+
+                let messagesHtml = '';
+                let moreMessages = [];
+                let returnedMessages = res?.messages;
+
+                // In case scroll down and last messages are less than 20 messages
+                if(numberOfOffset > 0 && numberOfOffset < 20){
+                    returnedMessages = res?.messages.slice(0, numberOfOffset)
+                }
+
+                // Render message and append to chat list
+                moreMessages = moreMessages.concat(returnedMessages || []).reverse();
+                console.log(moreMessages)
+                messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
+                $messageList.append(messagesHtml);
+
+                // Add eventlistner of each messages (audio, conference, scroll to origin) to each scroll down more message
+                addEvtListenToMessOnScroll(moreMessages)
+
+                // If touch last message at bottom, stop call API, remove eventListner
+                if (lastOffsetScrollDown >= ultiLastOffSet) {
+                    isTouchLastMessBottom = true;
+                   
+                    // resetAfterSearchMediaAndFiles();
+                    document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown);
+
+                    hideJumptoBottomBtn()
+
+                } else {
+
+                    // Not not touch last message yet but within last 20 messages
+                    if (lastOffsetScrollDown + 21 > ultiLastOffSet) {
+                        numberOfOffset = ultiLastOffSet - lastOffsetScrollDown
+                    }
+                }
+                
+            })
+        }  
+    }
+
+    const getOffsetListMessages = (roomInfo, offset, messageId) => {
+        const params = {
+            chatId: roomInfo.id,
+            offset: offset
+        };
+        
+        API.get('messages', params).then(res => {
+            console.log(res)
+            // Handle when user switch room but the request has not finished yet
+            if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
+                return;
+            }
+
+            let messages = (res?.messages || []).reverse();
+            handleDataFromGetMess(messages, roomInfo);
+
+            lastOffsetScrollDown = messages[messages.length - 1].sequence;
+            console.log(lastOffsetScrollDown);
+
+            const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${messageId}"]`);
+
+            console.log(messageId);
+            console.log(originMessageEle);
+
+            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            originMessageEle.classList.add('activeScrollTo');
+
+            setTimeout(() => {
+                originMessageEle.classList.remove('activeScrollTo');
+            }, 3000);
+
+            setTimeout(() => {
+                document.querySelector('.js_con_list_mess').addEventListener('scroll',handleLoadNewMessOnScrollDown)
+
+                isFindingMediaFiles = false;
+            },200)
+            
+        }).catch(err => {
+            if (err.response?.status == 404) {
+                onHandleRoomWasDeleted();
+                return;
+            }
+            if (err === 19940402) {
+                onErrNetWork(err);
+            }
+        });
+    }
+
+    let currentViewMediaFilesRoomInfo;
+
+    const jumpToBottom = () => {
+        console.log('test test')
+        isFindingMediaFiles = true;
+        document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown);
+
+        $messageList.children().css('display', 'none');
+
+        hideJumptoBottomBtn()
+
+        onGetMessage(currentViewMediaFilesRoomInfo);
+    }
+
+    const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
+        currentViewMediaFilesRoomInfo = {...roomInfo};
+        resetAfterSearchMediaAndFiles();
+
+        document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
+
+        isFindingMediaFiles = true;
+        console.log(offset)
+        console.log(roomInfo)
+        $messageList.children().css('display', 'none');
+       
+        getOffsetListMessages(roomInfo, parseInt(offset) + 10, messageId);
+
+        setTimeout(() =>  jumpFastToBottomBtn.classList.remove('hidden'), 500)
+
+        jumpFastToBottomBtn.addEventListener('click', jumpToBottom)
+    };
+    // ======== End Handle View Media and Files scroll to origin message ===========
+
     // Update lastUndeletedMessageId when reload
     const updateLastUndeletedMessageIdWhenReload = (messages) => {
         let listMessages = [...messages]
@@ -285,6 +456,9 @@ define([
     }
 
     const onWrapperScroll = (event) => {
+        // If is finding media and files
+        if(isFindingMediaFiles) return
+
         // Show scroll to bottom button
         if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
             $btnScrollToBottom.show();
@@ -343,6 +517,31 @@ define([
 
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
+    
+    const addEvtListenToMessOnScroll = (moreMessages) => {
+        // Audio vocie mess addeventlistener when scroll top
+        moreMessages.filter(m => m.file?.id === 3).forEach(message => {
+            let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
+            scrollUpAudioRecorder.setAttribute("isPlaying", false);
+            scrollUpAudioRecorder.addEventListener('click', () => {
+                addEventListenerToAudioRecorder(message.file.id)
+            })
+        });
+
+        // Add event listener to Scroll to origin message when scroll more
+        moreMessages.forEach(item => {
+            const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
+            const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
+            if (quotedMessageItem) {
+                quotedMessageItem.addEventListener('click', () => {
+                    handleScrollToOriginId(quotedMessageItem);
+                })
+            }
+        })
+
+        // Add event listener for conference call
+        addEventListenerToMeetingLink();
+    }
 
     const onGetMoreMessageByScrolling = async () => {
         let isLoadedMoreResult = { isLoadedMore: false, loadedResult: [] };
@@ -353,10 +552,7 @@ define([
         };
         processing = true;
 
-        console.log(params);
-
         isLoadedMoreResult = await API.get('messages', params).then(res => {
-            console.log(res);
             if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
@@ -376,7 +572,7 @@ define([
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
 
-            console.log(moreMessages[0])
+            console.log(moreMessages)
 
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
@@ -387,29 +583,8 @@ define([
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
 
-            // Audio vocie mess addeventlistener when scroll top
-            moreMessages.filter(m => m.file?.id === 3).forEach(message => {
-                let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
-                scrollUpAudioRecorder.setAttribute("isPlaying", false);
-                scrollUpAudioRecorder.addEventListener('click', () => {
-                    addEventListenerToAudioRecorder(message.file.id)
-                })
-            });
-
-            // Add event listener to Scroll to origin message when scroll more
-            moreMessages.forEach(item => {
-                const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
-                const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
-                if (quotedMessageItem) {
-                    quotedMessageItem.addEventListener('click', () => {
-                        handleScrollToOriginId(quotedMessageItem);
-                    })
-                }
-            })
-            // End scroll to origin message when scroll more
-
-            // Add event listener for conference call
-            addEventListenerToMeetingLink();
+            // Add event listener to messages when scroll more
+            addEvtListenToMessOnScroll(moreMessages)
 
             setTimeout(() => {
                 processing = false;
@@ -447,7 +622,13 @@ define([
         lastOffset = messages[0]?.sequence;
 
         console.log(messages)
-        console.log(lastOffset)
+        console.log(messages[messages.length - 1].sequence)
+        console.log(`ultiLastOffSet before: ${ultiLastOffSet}`)
+
+        if(ultiLastOffSet < messages[messages.length - 1].sequence) ultiLastOffSet = messages[messages.length - 1].sequence
+       
+        console.log(`ultiLastOffSet after: ${ultiLastOffSet}`)
+       
 
         // Update lastUndeletedMessageId when reload
         updateLastUndeletedMessageIdWhenReload(messages);
@@ -500,6 +681,13 @@ define([
         setChatsById(roomInfo.id, messages);
         storeRoomById(roomInfo.id, messages);
         handleDataFromGetMess(messages, roomInfo);
+
+        // After click "Jump to bottom" button, allow to scroll top to get messages again
+     
+        setTimeout(() => {
+            isFindingMediaFiles = false;
+        }, 200)
+        
     }).catch(err => {
         if (err.response?.status == 404) {
             onHandleRoomWasDeleted();
@@ -523,6 +711,8 @@ define([
         processing = true;
         isSearchMode = false;
         isTouchLastMess = false;
+
+        ultiLastOffSet = 0;
     };
 
     return {
@@ -533,11 +723,14 @@ define([
             isTouchLastMess = false;
             isSearchMode = false;
             isInit = false;
+
             $btnScrollToBottom = $('.scroll-to__bottom');
             $messageList = $('.messages__list');
             $wrapper = $('.js_con_list_mess');
             $loadingOfNew = $('.--load-mess');
             $unreadScroll = $('.unread-message-scroll');
+
+            jumpFastToBottomBtn = document.querySelector('.jump-to-bottom');
             $unreadScroll.hide();
             messageSettingsSlideComp.onInit();
             $wrapper.off('scroll').scroll(onWrapperScroll);
@@ -547,7 +740,7 @@ define([
 
         onLoadMessage: async (roomInfo) => {
             onRefresh();
-
+           
             if (getRoomById(roomInfo.id) && isInit) {
                 onGetMessageFromCache(roomInfo);
 
@@ -561,6 +754,7 @@ define([
             if (GLOBAL.getNetworkStatus()) {
                 isInit = true;
                 onGetMessage(roomInfo);
+                console.log('init when switch tab')
             } else {
                 const messagesChat = await getChatById(roomInfo.id);
                 if (!messagesChat) {
@@ -652,6 +846,10 @@ define([
                     $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
                 }
             }
+
+            // Update ultiLastOffSet
+            if(mess.id.messageId) ultiLastOffSet++;
+            console.log(ultiLastOffSet)
         },
 
         onSyncRemove: (message) => {
@@ -799,5 +997,14 @@ define([
                 $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
             }
         },
+
+        onHandleViewMediaAndFiles: (offset, roomInfo, messageId) => handleViewMediaAndFiles(offset, roomInfo, messageId),
+
+        onSwitchRoomWhileShowMessMediaAndFiles: () => {
+            console.log('remove scroll down')
+            document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
+           
+            hideJumptoBottomBtn()
+        }
     };
 });

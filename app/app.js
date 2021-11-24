@@ -13,7 +13,7 @@ define([
     'features/sidebar/sidebarCollapse',
     'features/sidebar/sidebarOptions',
     'features/sidebar/sidebarLeftBar',
-    'features/sidebar/sidebarLagBlaster',
+    // 'features/sidebar/sidebarLagBlaster',
     'features/sidebar/sidebarConference',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxContent',
@@ -40,7 +40,7 @@ define([
     sidebarCollapseComp,
     sidebarOptionsComp,
     sidebarLeftBarComp,
-    sidebarLagBlasterComp,
+    // sidebarLagBlasterComp,
     sidebarConferenceComp,
     chatboxTopbarComp,
     chatboxContentComp,
@@ -135,7 +135,7 @@ define([
         sidebarLeftBarComp.onInit(route);
 
         // Lag Blaster Intergrate
-        sidebarLagBlasterComp.onInit();
+        // sidebarLagBlasterComp.onInit();
 
         // Conference
         sidebarConferenceComp.onInit();

@@ -347,6 +347,8 @@ define([
 
             roomDraft[currentId] = value;
             GLOBAL.setRoomDraft(roomDraft);
-        }
+        },
+
+        onTest: () => console.log('test chatbox input')
     };
 });
