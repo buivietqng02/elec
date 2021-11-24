@@ -366,7 +366,7 @@ define([
 
             setTimeout(() => {
                 originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }, 2500)
+            }, 2000)
 
             setTimeout(() => {
                 originMessageEle.classList.remove('activeScrollTo');
