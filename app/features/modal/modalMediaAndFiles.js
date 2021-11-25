@@ -60,9 +60,10 @@ define([
             imgagesArray.forEach((mess) => {
                 const div = document.createElement('div');
                 div.innerHTML = `
-                        <figure class="gallery__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}" data-chat-id="${mess.id.messageId}">
-                            <img class="gallery__img showFullImage --click-show-popup-up-img" src="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}">
-
+                        <figure class="gallery__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}">
+                            
+                            <img class="gallery__img showFullImage --click-show-popup-up-img" src="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}" data-chat-id="${mess.id.messageId}">
+                                          
                             <div class="gallery__item__features">
                                 <button type="button" class="ite__img__showMess btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message">
                                     <i class="icon-comment-o"></i>
@@ -144,8 +145,8 @@ define([
 
     /* eslint-disable no-use-before-define */
     const showMessagesPosition = (id, sequence) => {
-        const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
         closeModal();
+        const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
         if (originMessageEle) {
             originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
             originMessageEle.classList.add('activeScrollTo');

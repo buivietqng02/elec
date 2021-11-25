@@ -476,6 +476,12 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-edit"></i>
                                 <lang data-language="EDIT"></lang>
                             </button>
+
+                            <button class="--mediaAndFile menu__item">
+                                <i class="xm xm-photo xm-fw" aria-hidden="true"></i>
+                                <lang data-language="VIEW_MEDIA_FILE"></lang>
+                            </button>
+
                             <button class="--internal menu__item">
                                 <i class="xm xm-comments"></i>
                                 <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
@@ -492,10 +498,7 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-trash" aria-hidden="true"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
-                            <button class="--mediaAndFile menu__item">
-                                <i class="xm xm-photo xm-fw" aria-hidden="true"></i>
-                                <lang data-language="VIEW_MEDIA_FILE"></lang>
-                            </button>
+                           
                         </div>
                     </div>
                     <div class="mess-search-box">
@@ -679,15 +682,19 @@ define(['shared/icon'], (ICON) => ({
                             <div class="media-files-topbar">
                                 <button class="media-files-close">
                                     <i class="icon-chevron-left"></i>
-                                    Back
+                                    <lang data-language="BACK"></lang>
                                 </button>
 
                                 <ul id="media-files-tab" class="nav nav-pills mb-3" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">Images</a>
+                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
+                                            <lang data-language="IMAGES"></lang>
+                                        </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="files-tab" data-toggle="pill" href="#files-list" role="tab" aria-controls="files-list" aria-selected="false">Files</a>
+                                        <a class="nav-link" id="files-tab" data-toggle="pill" href="#files-list" role="tab" aria-controls="files-list" aria-selected="false">
+                                            <lang data-language="FILES"></lang>
+                                        </a>
                                     </li>
                                 </ul>
                             </div>
