@@ -95,7 +95,7 @@
                     .gallery__img {
                         width: 100%;
                         height: 100%;
-                        object-fit: cover;
+                        // object-fit: cover;
                     }
 
                     .gallery__item__features{
@@ -107,7 +107,7 @@
                         bottom: 0;
                         text-align: center;
                         color: white;
-                        background-color: rgba(0, 0, 0, 0.466);
+                        // background-color: rgba(0, 0, 0, 0.466);
                         padding: 5px;
     
                         .ite__img__showMess{
@@ -121,7 +121,42 @@
                         }
     
                         .ite__img__uploadDate{
+                            color: black;
                             font-size: 18px;
+                            position: relative;
+
+                            .hovertext {
+                                font-size: 14px;
+                                display: none;
+                                // visibility: hidden;
+                                
+                                width: 120px;
+                                background-color: black;
+                                color: #fff;
+                                text-align: center;
+                                border-radius: 6px;
+                                padding: 5px 0;
+                                position: absolute;
+                                z-index: 1;
+                                bottom: 130%;
+                                left: 50%;
+                                margin-left: -60px;
+                            }
+
+                            .hovertext::after {
+                                content: "";
+                                position: absolute;
+                                top: 100%;
+                                left: 50%;
+                                margin-left: -5px;
+                                border-width: 5px;
+                                border-style: solid;
+                                border-color: black transparent transparent transparent;
+                              }
+
+                            &:hover .hovertext{
+                                display: block;
+                            }
                         }
                     }
                 }
@@ -177,9 +212,43 @@
                         }
 
                         .ite__file__uploadDate{
+                            position: relative;
                             display: flex;
                             justify-content: center;
                             align-items: center;
+
+                          
+                            .hovertext {
+                                display: none;
+                                // visibility: hidden;
+                                font-size: 14px;
+                                width: 120px;
+                                background-color: black;
+                                color: #fff;
+                                text-align: center;
+                                border-radius: 6px;
+                                padding: 5px 0;
+                                position: absolute;
+                                z-index: 1;
+                                top: -10px;
+                                right: 140%;
+                            }
+
+                            .hovertext::after {
+                                content: "";
+                                position: absolute;
+                                top: 50%;
+                                left: 100%;
+                                margin-top: -5px;
+                                border-width: 5px;
+                                border-style: solid;
+                                border-color: transparent transparent transparent black;
+                              }
+
+                            &:hover .hovertext{
+                                display: block;
+                            }
+
                         }
                     }
                 }
@@ -193,8 +262,8 @@
 }
 
 .media__spiner, .files__spiner{
-    position: absolute;
-    bottom: 20px;
+    position: fixed;
+    bottom: 50px;
 }
 
 .view-media-files-wraper.slideIn{

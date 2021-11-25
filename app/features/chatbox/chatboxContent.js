@@ -356,8 +356,10 @@ define([
 
             let messages = (res?.messages || []).reverse();
             handleDataFromGetMess(messages, roomInfo);
-
+            
             lastOffsetScrollDown = messages[messages.length - 1].sequence;
+
+            $loadingOfNew.hide();
 
             const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${messageId}"]`);
 
@@ -404,6 +406,8 @@ define([
     }
 
     const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
+        $loadingOfNew.show();
+
         currentViewMediaFilesRoomInfo = {...roomInfo};
         resetAfterSearchMediaAndFiles();
 
