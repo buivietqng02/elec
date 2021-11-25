@@ -279,6 +279,8 @@ define([
                 $typing.hide();
                 $timeActivity.show();
             }
-        }
+        },
+
+        onOffEventClickOutside: () =>   offEventClickOutside()
     };
 });

@@ -467,14 +467,17 @@ define(['shared/icon'], (ICON) => ({
                                 <span data-language="CALL_WITH_VIDEO"></span>
                             </button>
                         </div>
-                        <button class="btn-toggle-search-box">
-                            <i class="xm xm-search"></i>
-                        </button>
+                        
                         <a class="js-group-option btn__option" data-target="#group-option"><i class="xm xm-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
                             <button class="--edit-group menu__item">
                                 <i class="xm xm-edit"></i>
                                 <lang data-language="EDIT"></lang>
+                            </button>
+
+                            <button class="btn-toggle-search-box menu__item">
+                                <i class="xm xm-search"></i>
+                                <lang data-language="SEARCH_PLACEHOLDER"></lang>
                             </button>
 
                             <button class="--mediaAndFile menu__item">

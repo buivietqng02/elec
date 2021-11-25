@@ -3,13 +3,15 @@ define([
     'shared/data',
     'shared/api',
     'shared/functions',
-    'features/chatbox/chatboxContent'
+    'features/chatbox/chatboxContent',
+    'features/chatbox/chatboxTopbar'
 ], (
     constant,
     GLOBAL, 
     API,
     functions,
-    chatboxContentComp
+    chatboxContentComp,
+    chatboxTopbarComp
 ) => {
     const { debounce } = functions;
     let $wrapper;
@@ -19,6 +21,7 @@ define([
     let $openBtn;
 
     const onOpenSearchBox = () => {
+        chatboxTopbarComp.onOffEventClickOutside();
         $wrapper.addClass('open');
         $input.focus();
     };
