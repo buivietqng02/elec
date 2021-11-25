@@ -522,7 +522,9 @@ define(['shared/icon'], (ICON) => ({
 
                         <button class="jump-to-bottom hidden">
                             <i class="xm xm-angle-down"></i>
-                            <span class="">Fast jump to bottom</span>
+                            <span class="">
+                                <lang data-language="JUMP_TO_BOTTOM"></lang>
+                            </span>
                         </button>
 
                         <ul class="js_ul_list_mess messages__list scroll__inner">
