@@ -2,7 +2,8 @@ define([
     'shared/data',
     'shared/api',
     'app/constant',
-    'shared/functions'
+    'shared/functions',
+    'assets/js/slick.min.js'
 ], (
     GLOBAL,
     API,
@@ -59,8 +60,8 @@ define([
             imgagesArray.forEach((mess) => {
                 const div = document.createElement('div');
                 div.innerHTML = `
-                        <figure class="gallery__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}">
-                            <img class="showFullImage --click-show-popup-up-img" src="${API_URL}/image?id=${mess.file.id}&small=1" class="gallery__img" alt="${mess.file.filename}">
+                        <figure class="gallery__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}" data-chat-id="${mess.id.messageId}">
+                            <img class="gallery__img showFullImage --click-show-popup-up-img" src="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}">
 
                             <div class="gallery__item__features">
                                 <button type="button" class="ite__img__showMess btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message">
