@@ -285,7 +285,7 @@ define([
         
         const res = await API.get('messages', params);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
-
+        console.log(`last offset scroll down ${lastOffsetScrollDown}`)
         return res;
     }
 
@@ -391,6 +391,8 @@ define([
         });
     }
 
+    let ob = {};
+
     let currentViewMediaFilesRoomInfo;
 
     const jumpToBottom = () => {
@@ -400,9 +402,9 @@ define([
 
         $messageList.children().css('display', 'none');
 
-        hideJumptoBottomBtn()
+        hideJumptoBottomBtn();
 
-        onGetMessage(currentViewMediaFilesRoomInfo);
+        loadMessages(currentViewMediaFilesRoomInfo)
     }
 
     const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
@@ -621,7 +623,11 @@ define([
 
         console.log(messages)
 
+        console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
+
         if(ultiLastOffSet < messages[messages.length - 1].sequence) ultiLastOffSet = messages[messages.length - 1].sequence
+
+        console.log(`After set ultiOffset: ${ultiLastOffSet}`)
 
         // Update lastUndeletedMessageId when reload
         updateLastUndeletedMessageIdWhenReload(messages);
@@ -710,6 +716,37 @@ define([
         ultiLastOffSet = 0;
     };
 
+    const loadMessages = async (roomInfo) => {
+        onRefresh();
+       
+        if (getRoomById(roomInfo.id) && isInit) {
+            onGetMessageFromCache(roomInfo);
+
+            // update chat last read time
+            API.post(`chats/${roomInfo.id}/read`).then(() => { })
+                .catch(err => console.error(err));
+
+            return;
+        }
+
+        if (GLOBAL.getNetworkStatus()) {
+            isInit = true;
+            onGetMessage(roomInfo);
+        } else {
+            const messagesChat = await getChatById(roomInfo.id);
+            if (!messagesChat) {
+                onErrNetWork('');
+                return;
+            }
+
+            let messagesHtml = messagesChat.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
+            $messageList.html(messagesHtml);
+            $loadingOfNew.hide();
+            $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
+            $wrapper.scrollTop($wrapper[0].scrollHeight);
+        }
+    }
+
     return {
         onInit: () => {
             lastOffset = 0;
@@ -733,36 +770,7 @@ define([
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },
 
-        onLoadMessage: async (roomInfo) => {
-            onRefresh();
-           
-            if (getRoomById(roomInfo.id) && isInit) {
-                onGetMessageFromCache(roomInfo);
-
-                // update chat last read time
-                API.post(`chats/${roomInfo.id}/read`).then(() => { })
-                    .catch(err => console.error(err));
-
-                return;
-            }
-
-            if (GLOBAL.getNetworkStatus()) {
-                isInit = true;
-                onGetMessage(roomInfo);
-            } else {
-                const messagesChat = await getChatById(roomInfo.id);
-                if (!messagesChat) {
-                    onErrNetWork('');
-                    return;
-                }
-
-                let messagesHtml = messagesChat.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
-                $messageList.html(messagesHtml);
-                $loadingOfNew.hide();
-                $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
-                $wrapper.scrollTop($wrapper[0].scrollHeight);
-            }
-        },
+        onLoadMessage: (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
             const mess = messList[0];

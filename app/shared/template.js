@@ -10,6 +10,7 @@ define(['shared/icon'], (ICON) => ({
             </button>
             <button class="btn lbm-item lbmi-chats">
                 <i class="icon-comments"></i>
+                <div class="lbi-chats__newMess-noti hidden"></div>
             </button>
             <button class="btn lbm-item lbmi-cart">
                 <i class="icon-cart"></i>
@@ -31,6 +32,7 @@ define(['shared/icon'], (ICON) => ({
 
             <div class="lb-item lbi-chats">
                 <i class="icon-comments"></i>
+                <div class="lbi-chats__newMess-noti hidden"></div>
             </div>
 
             <div class="lb-item lbi-cart">

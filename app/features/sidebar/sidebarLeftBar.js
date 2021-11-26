@@ -12,6 +12,7 @@ define([
     const ob = {};
     const className = 'active';
     let $chatsItem;
+    let $chatsItemNoti;
     let $cartItem;
     let $chatsMobileItem;
     let $cartMobileItem;
@@ -61,6 +62,8 @@ define([
         $conferenceContent.hide();
 
         $lbmiWelcome.hide();
+
+        if (!$chatsItemNoti.hasClass('hidden')) $chatsItemNoti.addClass('hidden');
     };
 
     const switchToCart = () => {
@@ -121,6 +124,8 @@ define([
     ob.onInit = (route) => {
         $chatsItem = $('#leftbar .lbi-chats');
         $chatsMobileItem = $('#leftbar-mobile .lbmi-chats');
+        $chatsItemNoti = $('.lbi-chats__newMess-noti');
+
         $cartItem = $('#leftbar .lbi-cart');
         $cartMobileItem = $('#leftbar-mobile .lbmi-cart');
         $chatsContent = $('#frame');

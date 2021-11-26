@@ -11,7 +11,6 @@
     .lbi-conference {
         font-size: 24px;
     }
-    
 }
 
 #leftbar-mobile {
@@ -46,7 +45,35 @@
             margin: 0 auto;
         }
     }
+
+    .lbm-item.lbmi-chats{
+        position: relative;
+    }
 }
+
+.lbi-chats__newMess-noti{
+    position: absolute;
+    top:8px;
+    left: 5px;
+    width:25px;
+    height:25px;
+    border-radius:50%;
+    background:#f57c00;
+    box-shadow:0 0 50px #f57c00;
+    animation:grow 1.5s ease-in-out infinite;
+}
+
+@keyframes grow
+    {
+        0% , 40% , 100%
+        {
+        transform:scale(0.3);
+        }
+        20%{
+        transform:scale(1);
+
+        }
+    }
 
 @media screen and (max-width: 768px) {
     #leftbar-mobile {
@@ -85,6 +112,10 @@
             left: 43px;
             top: 8px;
         }
+    }
+
+    .lbi-chats__newMess-noti{
+        top:-3px;
     }
 }
 

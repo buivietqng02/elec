@@ -156,7 +156,6 @@ define([
             }, 5000);
         } else {
             const chatboxContentComp = require('features/chatbox/chatboxContent');
-
             let roomInfo = GLOBAL.getRooms().filter((room) => {
                 if (String(room.id) === String(GLOBAL.getCurrentRoomId())) {
                     return true;

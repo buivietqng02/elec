@@ -28,6 +28,7 @@ define([
     let process = false;
     let search = '';
     let filter = 1;
+
     const template = `
         <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
             <img ${ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
@@ -227,6 +228,9 @@ define([
     ob.moveRoomUp = (room) => {
         $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
 
+        $chatsItem = $('#leftbar .lbi-chats');
+        $chatsItemNoti = $('.lbi-chats__newMess-noti');
+
         if (!$room.length && checkRoom(room.id)) {
             range = [range[0] + 1, range[1] + 1];
             getWrapper().prepend(ob.renderRoom(room));
@@ -236,6 +240,13 @@ define([
             $room.remove();
             getWrapper().prepend(ob.renderRoom(room));
         }
+
+        console.log(room)
+
+        if($chatsItemNoti.hasClass('hidden') && !$chatsItem.hasClass('active')) {
+            $chatsItemNoti.removeClass('hidden');
+        }
+       
     };
 
     ob.newRoomUp = (room) => {
