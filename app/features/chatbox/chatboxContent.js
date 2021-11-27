@@ -391,8 +391,6 @@ define([
         });
     }
 
-    let ob = {};
-
     let currentViewMediaFilesRoomInfo;
 
     const jumpToBottom = () => {
@@ -405,6 +403,11 @@ define([
         loadMessages(currentViewMediaFilesRoomInfo)
 
         hideJumptoBottomBtn();
+
+        // After click "Jump to bottom" button, allow to scroll top to get messages again
+        setTimeout(() => {
+            isFindingMediaFiles = false;
+        }, 200)
     }
 
     const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
@@ -705,12 +708,6 @@ define([
         setChatsById(roomInfo.id, messages);
         storeRoomById(roomInfo.id, messages);
         handleDataFromGetMess(messages, roomInfo);
-
-        // After click "Jump to bottom" button, allow to scroll top to get messages again
-     
-        setTimeout(() => {
-            isFindingMediaFiles = false;
-        }, 200)
         
     }).catch(err => {
         if (err.response?.status == 404) {
