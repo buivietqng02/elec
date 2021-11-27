@@ -241,8 +241,6 @@ define([
             getWrapper().prepend(ob.renderRoom(room));
         }
 
-        console.log(room)
-
         if($chatsItemNoti.hasClass('hidden') && !$chatsItem.hasClass('active')) {
             $chatsItemNoti.removeClass('hidden');
         }

@@ -402,9 +402,9 @@ define([
 
         $messageList.children().css('display', 'none');
 
-        hideJumptoBottomBtn();
-
         loadMessages(currentViewMediaFilesRoomInfo)
+
+        hideJumptoBottomBtn();
     }
 
     const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
@@ -480,8 +480,6 @@ define([
 
     const onLoadImage = () => {
         const wrapperHtml = $wrapper.get(0);
-        console.log(wrapperHtml);
-        console.log(wrapperHtml.scrollHeight);
         $wrapper.scrollTop(wrapperHtml.scrollHeight);
     };
 
@@ -621,13 +619,37 @@ define([
 
         lastOffset = messages[0]?.sequence;
 
-        console.log(messages)
+        // Remove dupplidate messageID in Array when bad connection
+        // console.log(messages)
+        const cloneArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
 
-        console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
+        // Update ultiLastOffSet whenever change room or reload room
+        console.log(cloneArray);
+        if(cloneArray.length > 0){
+            
+             console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
 
-        if(ultiLastOffSet < messages[messages.length - 1].sequence) ultiLastOffSet = messages[messages.length - 1].sequence
+            //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
+             let nullIndex = 0;
+ 
+             const checkNullSequence = (element, index) => {
+                 if (element.sequence === null) {
+                     nullIndex = index;
+                     return true
+                 }
+             }
+             const isNullSequence = cloneArray.some(checkNullSequence); 
 
-        console.log(`After set ultiOffset: ${ultiLastOffSet}`)
+             if(isNullSequence) {
+                 ultiLastOffSet = cloneArray[nullIndex - 1].sequence + (cloneArray.length - nullIndex)
+             } else {
+                 if(ultiLastOffSet < cloneArray[cloneArray.length - 1].sequence) ultiLastOffSet = cloneArray[cloneArray.length - 1].sequence
+             }
+ 
+             console.log(`After set ultiOffset: ${ultiLastOffSet}`)
+         }
+
+        messages = [...cloneArray]
 
         // Update lastUndeletedMessageId when reload
         updateLastUndeletedMessageIdWhenReload(messages);
@@ -668,6 +690,7 @@ define([
             updateRoomInfo(roomInfo);
             processing = false;
         }, timeWait);
+
     };
 
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
@@ -713,7 +736,9 @@ define([
         isSearchMode = false;
         isTouchLastMess = false;
 
-        ultiLastOffSet = 0;
+        if(jumpFastToBottomBtn.classList.contains('hidden')){
+            ultiLastOffSet = 0;
+        }
     };
 
     const loadMessages = async (roomInfo) => {
@@ -849,9 +874,12 @@ define([
                 }
             }
 
-            // Update ultiLastOffSet
-            if(mess.id.messageId) ultiLastOffSet++;
-            console.log(ultiLastOffSet)
+             // Update ultiLastOffSet when receive new message
+            if(GLOBAL.getInfomation().id !== mess.sender.id &&
+            !isSearchMode) {
+                if(mess.id.messageId) ultiLastOffSet++;
+                console.log(ultiLastOffSet)
+            }
         },
 
         onSyncRemove: (message) => {
@@ -893,7 +921,11 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            // console.log(data)
+            console.log(data)
+            // Update ultiLastOffSet when send new mess
+            ultiLastOffSet++;
+            console.log(ultiLastOffSet)
+
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
@@ -976,7 +1008,7 @@ define([
             if (!isInit) {
                 messages = await getChatById(rid) || [];
             }
-            // console.log(messages)
+            // console.log(data, messages)
 
             if (data.params.quotedMessageId) {
                 const quotedObject = messages.find(item => item.id.messageId === data.params.quotedMessageId);
