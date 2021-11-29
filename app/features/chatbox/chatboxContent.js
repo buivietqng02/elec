@@ -394,7 +394,6 @@ define([
     let currentViewMediaFilesRoomInfo;
 
     const jumpToBottom = () => {
-        console.log('test test')
         isFindingMediaFiles = true;
         document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown);
 
@@ -597,6 +596,38 @@ define([
         return isLoadedMoreResult;
     };
 
+    // Remove dupplicated messages with same messageId
+    const removeRepeatedMess = (messages) => {
+        let cloneArray = [];
+        if(messages.length > 0) {
+            cloneArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
+            // console.log(cloneArray)
+    
+            const indexDupplicate = [];
+            const toFindDuplicates = (cloneArray) => {
+                let newArray = cloneArray.map(ite => ite.id.messageId);
+                // console.log(newArray)
+                return newArray.filter((item, index) => {
+                    if(newArray.indexOf(item) !== index) {
+                        indexDupplicate.push(index)
+                        newArray.splice(index, 1);
+                        return true;
+                    }
+                      
+                })
+            }
+    
+            toFindDuplicates(cloneArray);
+            console.log(`Duplicated index: ${indexDupplicate}`);
+    
+            if(indexDupplicate.length > 0 ){
+                indexDupplicate.forEach(ide => cloneArray.splice(ide, 1)) 
+            }
+        }
+
+        return cloneArray;
+    }
+
     const handleDataFromGetMess = (messages, roomInfo) => {
         let messagesHtml = '';
         let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
@@ -623,15 +654,14 @@ define([
         lastOffset = messages[0]?.sequence;
 
         // Remove dupplidate messageID in Array when bad connection
-        // console.log(messages)
-        const cloneArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
-
-        // Update ultiLastOffSet whenever change room or reload room
+        console.log(messages)
+        const cloneArray = removeRepeatedMess(messages);
+       
+        // Update ultiLastOffSet whenever reload loadMessages function
         console.log(cloneArray);
-        if(cloneArray.length > 0){
-            
-             console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
 
+        if(cloneArray.length > 0){
+             console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
             //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
              let nullIndex = 0;
  
