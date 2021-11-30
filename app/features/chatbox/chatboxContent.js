@@ -674,7 +674,14 @@ define([
              const isNullSequence = cloneArray.some(checkNullSequence); 
 
              if(isNullSequence) {
-                 ultiLastOffSet = cloneArray[nullIndex - 1].sequence + (cloneArray.length - nullIndex)
+                console.log(nullIndex)
+                // In case newly created group
+                if(nullIndex === 0){
+                    ultiLastOffSet = cloneArray.length;
+                } else {
+                    ultiLastOffSet = cloneArray[nullIndex - 1].sequence + (cloneArray.length - nullIndex)
+                }
+                
              } else {
                  if(ultiLastOffSet < cloneArray[cloneArray.length - 1].sequence) ultiLastOffSet = cloneArray[cloneArray.length - 1].sequence
              }
