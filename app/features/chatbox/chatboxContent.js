@@ -599,30 +599,29 @@ define([
     // Remove dupplicated messages with same messageId
     const removeRepeatedMess = (messages) => {
         let cloneArray = [];
+        let processArray = [];
         if(messages.length > 0) {
-            cloneArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
+            processArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
             // console.log(cloneArray)
     
-            const indexDupplicate = [];
+            const indexAfterRemoveDup = [];
             const toFindDuplicates = (cloneArray) => {
                 let newArray = cloneArray.map(ite => ite.id.messageId);
-                // console.log(newArray)
+                console.log(newArray)
                 return newArray.filter((item, index) => {
-                    if(newArray.indexOf(item) !== index) {
-                        indexDupplicate.push(index)
-                        newArray.splice(index, 1);
+                    if(newArray.indexOf(item) === index) {
+                        indexAfterRemoveDup.push(index)
                         return true;
-                    }
-                      
+                    } 
                 })
             }
     
-            toFindDuplicates(cloneArray);
-            console.log(`Duplicated index: ${indexDupplicate}`);
-    
-            if(indexDupplicate.length > 0 ){
-                indexDupplicate.forEach(ide => cloneArray.splice(ide, 1)) 
-            }
+            toFindDuplicates(processArray);
+            console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
+            
+            indexAfterRemoveDup.forEach(item => {
+                cloneArray.push(processArray[item])
+            })
         }
 
         return cloneArray;
@@ -674,7 +673,14 @@ define([
              const isNullSequence = cloneArray.some(checkNullSequence); 
 
              if(isNullSequence) {
-                 ultiLastOffSet = cloneArray[nullIndex - 1].sequence + (cloneArray.length - nullIndex)
+                console.log(nullIndex)
+                // In case newly created group
+                if(nullIndex === 0){
+                    ultiLastOffSet = cloneArray.length;
+                } else {
+                    ultiLastOffSet = cloneArray[nullIndex - 1].sequence + (cloneArray.length - nullIndex)
+                }
+                
              } else {
                  if(ultiLastOffSet < cloneArray[cloneArray.length - 1].sequence) ultiLastOffSet = cloneArray[cloneArray.length - 1].sequence
              }

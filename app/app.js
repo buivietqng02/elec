@@ -193,7 +193,7 @@ define([
         // Get information about chat list and current user
         // Get information about the chat list what user changed (name, description).
         Promise.all([API.get('chats'), API.get(`users/${userId}`), API.get('users/preferences')]).then(data => {
-            // console.log(data);
+            console.log(data);
             onAssignDataToStore(data);
             onGetPrefrences(data[2]);
             onGetRoomList(data[0]);
