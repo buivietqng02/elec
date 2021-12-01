@@ -221,6 +221,7 @@ define([
                         $removeBtn.hide();
                     }
                 } else {
+                    $callOptionsBtn.show();
                     $editBtn.show();
                     $leaveBtn.show();
                     $notificationBtn.show();
