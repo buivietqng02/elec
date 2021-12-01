@@ -599,30 +599,29 @@ define([
     // Remove dupplicated messages with same messageId
     const removeRepeatedMess = (messages) => {
         let cloneArray = [];
+        let processArray = [];
         if(messages.length > 0) {
-            cloneArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
+            processArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
             // console.log(cloneArray)
     
-            const indexDupplicate = [];
+            const indexAfterRemoveDup = [];
             const toFindDuplicates = (cloneArray) => {
                 let newArray = cloneArray.map(ite => ite.id.messageId);
-                // console.log(newArray)
+                console.log(newArray)
                 return newArray.filter((item, index) => {
-                    if(newArray.indexOf(item) !== index) {
-                        indexDupplicate.push(index)
-                        newArray.splice(index, 1);
+                    if(newArray.indexOf(item) === index) {
+                        indexAfterRemoveDup.push(index)
                         return true;
-                    }
-                      
+                    } 
                 })
             }
     
-            toFindDuplicates(cloneArray);
-            console.log(`Duplicated index: ${indexDupplicate}`);
-    
-            if(indexDupplicate.length > 0 ){
-                indexDupplicate.forEach(ide => cloneArray.splice(ide, 1)) 
-            }
+            toFindDuplicates(processArray);
+            console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
+            
+            indexAfterRemoveDup.forEach(item => {
+                cloneArray.push(processArray[item])
+            })
         }
 
         return cloneArray;
