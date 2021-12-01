@@ -3331,6 +3331,7 @@ body.body_fz_18 {
 }
 
 #modalPhoneRequest.minimize {
+  position: fixed;
   background-color: transparent;
   top: 7rem;
   left: auto;

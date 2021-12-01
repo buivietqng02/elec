@@ -57,6 +57,7 @@
     "bootstrap": "^4.5.3",
     "idb-keyval": "^5.0.2",
     "jquery": "^3.5.1",
+    "jquery-ui": "^1.13.0",
     "jsrender": "^1.0.9",
     "moment": "^2.29.1",
     "navigo": "^8.11.1",

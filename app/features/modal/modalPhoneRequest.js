@@ -5,17 +5,22 @@ define([
     'shared/functions',
     'app/constant',
     'assets/js/jitsi_external_api',
-    'assets/js/jquery-ui.min.js'
+    'jquery-ui/ui/widgets/draggable.js',
+    'jquery-ui/ui/widgets/resizable.js',
 ], (
     GLOBAL,
     API,
     functions,
     constant,
     JitsiMeetExternalAPI,
-    jqueryUi
+    draggable,
+    resizable
 ) => {
+    require('jquery-ui/themes/base/draggable.css');
+    require('jquery-ui/themes/base/resizable.css');
+
     const { getAvatar } = functions;
-    const { draggable, resizable } = jqueryUi;
+    // const { draggable, resizable } = jqueryUi;
     let inCall = false;
     let isInit;
     let roomInfo;
