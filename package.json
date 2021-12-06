@@ -55,7 +55,7 @@
     "@stomp/stompjs": "^6.0.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
-    "idb-keyval": "^5.0.2",
+    "idb-keyval": "^6.0.3",
     "jquery": "^3.5.1",
     "jquery-ui": "^1.13.0",
     "jsrender": "^1.0.9",

@@ -579,7 +579,10 @@ define([
 
             console.log(lastOffset);
 
-            storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
+            if(jumpFastToBottomBtn.classList.contains('hidden')) {
+                storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
+            }
+          
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
 
