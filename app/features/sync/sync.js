@@ -242,8 +242,12 @@ define([
                 if (!isNotMoveRoomUp) {
                     const newRoom = updateRoom(room, messagesResponse);
                     blinkTitle();
-                    handleMoveRoomUp(newRoom);
                     roomsMove = roomsMove.concat(newRoom);
+
+                    // If init first time (open or reload), ignore move room up
+                    if (isInit) {
+                        handleMoveRoomUp(newRoom);
+                    }
                 }
 
                 return isNotMoveRoomUp;
@@ -404,6 +408,8 @@ define([
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                     chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
                 }
+
+                isInit = true;
             }).catch((err) => {
                 if (err.message !== 'Error refreshing token') {
                     // console.log(isLogin(), err.response?.status);
@@ -417,6 +423,8 @@ define([
                         setTimeout(onSync, 5000);
                     }
                 }
+
+                isInit = true;
             });
         }
     };
@@ -424,7 +432,6 @@ define([
     return {
         onInit: () => {
             if (!isInit) {
-                isInit = true;
                 onSync();
             }
         },
