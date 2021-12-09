@@ -5,17 +5,22 @@ define([
     'shared/functions',
     'app/constant',
     'assets/js/jitsi_external_api',
-    'assets/js/jquery-ui.min.js'
+    'jquery-ui/ui/widgets/draggable.js',
+    'jquery-ui/ui/widgets/resizable.js',
 ], (
     GLOBAL,
     API,
     functions,
     constant,
     JitsiMeetExternalAPI,
-    jqueryUi
+    draggable,
+    resizable
 ) => {
+    require('jquery-ui/themes/base/draggable.css');
+    require('jquery-ui/themes/base/resizable.css');
+
     const { getAvatar } = functions;
-    const { draggable, resizable } = jqueryUi;
+    // const { draggable, resizable } = jqueryUi;
     let inCall = false;
     let isInit;
     let roomInfo;
@@ -115,12 +120,16 @@ define([
 
     const onCancel = () => {
         onClose();
-        cancelCall();
+        if (!roomInfo.group) {
+            cancelCall();
+        }
     }
 
     const onReject = () => {
         onClose();
-        rejectCall();
+        if (!roomInfo.group){
+            rejectCall();
+        }
     }
 
     const modalStateSwitch = (event) => {
@@ -188,8 +197,21 @@ define([
         }
     };
     
-    const switchState = (isAccept) => {
-        if (isAccept) {
+    const switchState = (isAccept, isConnect) => {
+        $modal.show();
+        if (isConnect) {
+            $notifyForm.show();
+            $notifyForm.find('h2').html('Connecting...');
+            $imgSender.attr('src', getAvatar(roomInfo.partner.id));
+            $nameSender.html(roomInfo.partner.name);
+            $acceptBtn.remove();
+            $notifyForm.find('.vcnf-group').css({display: "flex", justifyContent: "center"});
+            if (isAccept) {
+                $hangupBtn.off().click(onReject);
+            } else {
+                $hangupBtn.off().click(onCancel);
+            }
+        } else {
             $modalDialog.removeClass('accept-state');
             $modalBody.show();
             $iframeWrapper.show();
@@ -197,23 +219,11 @@ define([
             $modal.attr('class', 'modal show maximize');
             $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
             $videoCallerWrap.show();
-        } else {
-            $notifyForm.show();
-            $notifyForm.find('h2').html('Connecting...');
-            $imgSender.attr('src', getAvatar(roomInfo.partner.id));
-            $nameSender.html(roomInfo.partner.name);
-            $acceptBtn.remove();
-            $notifyForm.find('.vcnf-group').css({padding: "0 90px"});
-            $hangupBtn.off().click(onCancel);
         }
     }
 
     const setupWebrtc = (isAudioOnly, isAccept) => {
-        if (roomInfo.group) {
-            return;
-        }
-
-        switchState(isAccept);
+        switchState(isAccept, true);
         isInit = false;
         const userInfo = GLOBAL.getInfomation();
         API.get('conference').then((res) => {
@@ -310,18 +320,36 @@ define([
                 onHangup();
             });
             jitsiApi.addEventListener('participantJoined', () => {
-                window.onbeforeunload = onHangup;
-                $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
-                inCall = true;
-                if (!isAccept) {
-                    clearTimeout(timeout);
-                    $notifyForm.hide();
-                    switchState(true);
+                if (!roomInfo.group){
+                    window.onbeforeunload = onHangup;
+                    $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
+                    inCall = true;
+                    if (!isAccept) {
+                        clearTimeout(timeout);
+                        $notifyForm.hide();
+                        switchState(isAccept, false);
+                    }
+                    $audio[0].pause();
                 }
-                $audio[0].pause();
             });
             jitsiApi._frame.addEventListener('load', () => {
-                if (!isAccept) {
+                if (!roomInfo.group && isAccept) {
+                    switchState(isAccept, false);
+                    $notifyForm.hide();
+                    acceptCall();
+                }
+                if (roomInfo.group) {
+                    switchState(isAccept, false);
+                    $notifyForm.hide();
+                    window.onbeforeunload = onHangup;
+                    $modal.click({ audioOnly: isAudioOnly }, modalStateSwitch);
+                    inCall = true;
+                    if (!isAccept) {
+                        clearTimeout(timeout);
+                        postCall(isAudioOnly);
+                    }
+                    $audio[0].pause();
+                } else if (!isAccept) {
                     window.onbeforeunload = onCancel;
                     $notifyForm.find('h2').html('Calling...');
                     $audio[0].pause();
@@ -342,7 +370,9 @@ define([
         $modalDialog.removeClass('accept-state');
 
         $audio[0].pause();
-        acceptCall();
+        // if (!roomInfo.group){
+        //     acceptCall();
+        // }
         setupWebrtc(event.data.audioOnly, true);
     };
 
@@ -372,7 +402,10 @@ define([
         onInit: (isAudioOnly, sender, rid) => {
 
             if (inCall) {
-                rejectCall(rid);
+                [roomInfo] = GLOBAL.getRooms().filter(r => (r.id === GLOBAL.getCurrentRoomId()));
+                if (!roomInfo.group) {
+                    rejectCall(rid);
+                }
                 return;
             }
 
@@ -380,24 +413,16 @@ define([
                 $('body').append(renderTemplate);
             }
             onDeclareDom(isAudioOnly);
-            $modalDialog.addClass('accept-state');
             if (sender) {
-                $modal.attr('class', 'modal show maximize');
+                $modalDialog.addClass('accept-state');
                 $btnModalStateSwitchIcon.attr('class', 'icon-minimize-window');
                 $audio[0].src = audioIncomingCall;
                 $audio[0].loop = 'loop';
                 $audio[0].play();
                 $btnModalStateSwitch.hide();
-                const userName = GLOBAL.getRoomInfoWasEdited()[sender.id]?.user_name || sender.name;
                 [roomInfo] = GLOBAL.getRooms().filter(room => (room.id === rid));
                 if (isAudioOnly === true) {
                     $notifyForm.find('h2').html('Incoming audio call...');
-                }
-                $nameSender.html(userName);
-                if (roomInfo.group) {
-                    $imgSender.attr('src', getAvatar(roomInfo.id, true));
-                } else {
-                    $imgSender.attr('src', getAvatar(sender.id));
                 }
 
                 if (isInit) {
@@ -412,6 +437,15 @@ define([
                 // $audio[0].play();
                 timeout = setTimeout(onCancel, 60000);
                 setupWebrtc(isAudioOnly);
+            }
+            if (roomInfo.group) {
+                const groupName = roomInfo.subject
+                $nameSender.html(groupName);
+                $imgSender.attr('src', getAvatar(roomInfo.id, true));
+            } else {
+                const userName = GLOBAL.getRoomInfoWasEdited()[sender.id]?.user_name || sender.name;
+                $nameSender.html(userName);
+                $imgSender.attr('src', getAvatar(sender.id));
             }
 
             $callAnimation.addClass(hide);

@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.10] - 2021-12-09
+### Update
+- Added group calls.
+- Added view multimedia (images and files) window.
+- Fixed the bug that caused repeating messages.
+- Fixed the bug showing chats with new messages in the wrong order when opening XM.
+- Fixed the bug that won't allow updating on iOS devices.
+- Other minor improvements.
+
 ### [4.9] - 2021-11-18
 ### Update
 - Fix refresh token bugs

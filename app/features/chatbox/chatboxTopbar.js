@@ -8,7 +8,8 @@ define([
     'features/modal/modalCreateGroup',
     'features/modal/modalEditRoom',
     'features/modal/modalRemoveGroup',
-    'features/modal/modalLeaveGroup'
+    'features/modal/modalLeaveGroup',
+    'features/modal/modalMediaAndFiles'
 ], (
     moment,
     constant,
@@ -19,7 +20,8 @@ define([
     modalCreateGroupComp,
     modalEditRoomComp,
     modalRemoveGroupComp,
-    modalLeaveGroupComp
+    modalLeaveGroupComp,
+    modalMediaAndFiles
 ) => {
     const { getAvatar } = functions;
     let $groupOptionsBtn;
@@ -81,6 +83,11 @@ define([
         modalRemoveGroupComp.onInit();
         offEventClickOutside();
     };
+
+    const initMediaAndFiles = () => {
+        modalMediaAndFiles.onInit();
+        offEventClickOutside();
+    }
 
     const updateInternalMessage = () => {
         const roomId = GLOBAL.getCurrentRoomId();
@@ -147,6 +154,7 @@ define([
             $textNotiBtn = $notificationBtn.find('span');
             $leaveBtn = $slide.find('.--leave');
             $removeBtn = $slide.find('.--remove');
+            $mediaAndFilesBtn = $slide.find('.--mediaAndFile');
             $name = $('.js_info_parnter .toolbar-name .--name');
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
@@ -159,6 +167,7 @@ define([
             $removeBtn.off().click(removeGroup);
             $notificationBtn.off().click(updateNotification);
             $internalBtn.off().click(updateInternalMessage);
+            $mediaAndFilesBtn.off().click(initMediaAndFiles)
             $image.off().click(modalEditRoomComp.onInit);
         },
 
@@ -212,6 +221,7 @@ define([
                         $removeBtn.hide();
                     }
                 } else {
+                    $callOptionsBtn.show();
                     $editBtn.show();
                     $leaveBtn.show();
                     $notificationBtn.show();
@@ -270,6 +280,8 @@ define([
                 $typing.hide();
                 $timeActivity.show();
             }
-        }
+        },
+
+        onOffEventClickOutside: () =>   offEventClickOutside()
     };
 });

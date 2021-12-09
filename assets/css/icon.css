@@ -364,3 +364,12 @@
     height: 24px;
     width: 24px;
   }
+
+  .icon-chevron-left:before {
+    display: block;
+    content: ' ';
+    background-image: url('../images/chevron-left.svg');
+    background-size: 24px 24px;
+    height: 24px;
+    width: 24px;
+  }

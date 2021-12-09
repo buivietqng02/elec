@@ -7,7 +7,8 @@ define([
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxAttach',
     'features/chatbox/chatboxSearch',
-    'features/modal/modalAcceptInvitation'
+    'features/modal/modalAcceptInvitation',
+    'features/modal/modalMediaAndFiles'
 
 ], (
     constant,
@@ -18,11 +19,13 @@ define([
     chatboxTopbarComp,
     chatboxAttachComp,
     chatboxSearchComp,
-    modalAcceptInvitationComp
+    modalAcceptInvitationComp,
+    viewMediaAndFilesComp
 ) => {
     const { getRooms, initScroll } = services;
     let $caption;
     let $chatbox;
+    let mediaFilesWraper;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
@@ -85,11 +88,23 @@ define([
         // chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
         chatboxContentComp.onLoadMessage(roomInfo);
+
+        // Close view media and files comp when click on sidebar
+       
+        if (!mediaFilesWraper.classList.contains('hidden')) {
+            console.log('test hehehehe');
+           
+            viewMediaAndFilesComp.closeMediaAndFilesModal();
+        } 
+
+        chatboxContentComp.onSwitchRoomWhileShowMessMediaAndFiles();
     };
 
     const onInit = () => {
         $caption = $('.js_caption');
         $chatbox = $('.js_wrap_mess');
+        mediaFilesWraper = document.querySelector('.view-media-files-wraper');
+
         initScroll();
         getRooms();
         $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`, onRoomClick);

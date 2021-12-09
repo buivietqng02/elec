@@ -10,6 +10,7 @@ define(['shared/icon'], (ICON) => ({
             </button>
             <button class="btn lbm-item lbmi-chats">
                 <i class="icon-comments"></i>
+                <div class="lbi-chats__newMess-noti hidden"></div>
             </button>
             <button class="btn lbm-item lbmi-cart">
                 <i class="icon-cart"></i>
@@ -31,6 +32,7 @@ define(['shared/icon'], (ICON) => ({
 
             <div class="lb-item lbi-chats">
                 <i class="icon-comments"></i>
+                <div class="lbi-chats__newMess-noti hidden"></div>
             </div>
 
             <div class="lb-item lbi-cart">
@@ -467,15 +469,24 @@ define(['shared/icon'], (ICON) => ({
                                 <span data-language="CALL_WITH_VIDEO"></span>
                             </button>
                         </div>
-                        <button class="btn-toggle-search-box">
-                            <i class="xm xm-search"></i>
-                        </button>
+                        
                         <a class="js-group-option btn__option" data-target="#group-option"><i class="xm xm-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
                             <button class="--edit-group menu__item">
                                 <i class="xm xm-edit"></i>
                                 <lang data-language="EDIT"></lang>
                             </button>
+
+                            <button class="btn-toggle-search-box menu__item">
+                                <i class="xm xm-search"></i>
+                                <lang data-language="SEARCH_PLACEHOLDER"></lang>
+                            </button>
+
+                            <button class="--mediaAndFile menu__item">
+                                <i class="xm xm-photo xm-fw" aria-hidden="true"></i>
+                                <lang data-language="VIEW_MEDIA_FILE"></lang>
+                            </button>
+
                             <button class="--internal menu__item">
                                 <i class="xm xm-comments"></i>
                                 <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
@@ -492,6 +503,7 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm xm-trash" aria-hidden="true"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
+                           
                         </div>
                     </div>
                     <div class="mess-search-box">
@@ -512,6 +524,14 @@ define(['shared/icon'], (ICON) => ({
                             <span class="unread-message-scroll">0</span>
                             <i class="xm xm-angle-down"></i>
                         </a>
+
+                        <button class="jump-to-bottom hidden">
+                            <i class="xm xm-angle-down"></i>
+                            <span class="">
+                                <lang data-language="JUMP_TO_BOTTOM"></lang>
+                            </span>
+                        </button>
+
                         <ul class="js_ul_list_mess messages__list scroll__inner">
                             <li class="messages__item">
                                 <div></div>
@@ -663,6 +683,51 @@ define(['shared/icon'], (ICON) => ({
 
                         </div>
                     </div>
+
+                    <!-- View media and files --> 
+                        <div class="view-media-files-wraper hidden">
+                            <div class="media-files-topbar">
+                                <button class="media-files-close">
+                                    <i class="icon-chevron-left"></i>
+                                    <lang data-language="BACK"></lang>
+                                </button>
+
+                                <ul id="media-files-tab" class="nav nav-pills mb-3" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
+                                            <lang data-language="IMAGES"></lang>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="files-tab" data-toggle="pill" href="#files-list" role="tab" aria-controls="files-list" aria-selected="false">
+                                            <lang data-language="FILES"></lang>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="media-files-content tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active view-media-list" id="media-list" role="tabpanel" aria-labelledby="media-tab">
+                                 
+                                    <div class="text-center">
+                                        <div class="media__spiner spinner-grow text-secondary hidden" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+
+                                <div class="tab-pane fade view-files-list" id="files-list" role="tabpanel" aria-labelledby="files-tab">
+                                    <div class="text-center">
+                                        <div class="files__spiner spinner-grow text-secondary hidden" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    <!-- End View media and files -->
                 </div>
             </div>
         </div>

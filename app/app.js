@@ -13,7 +13,7 @@ define([
     'features/sidebar/sidebarCollapse',
     'features/sidebar/sidebarOptions',
     'features/sidebar/sidebarLeftBar',
-    'features/sidebar/sidebarLagBlaster',
+    // 'features/sidebar/sidebarLagBlaster',
     'features/sidebar/sidebarConference',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxContent',
@@ -40,7 +40,7 @@ define([
     sidebarCollapseComp,
     sidebarOptionsComp,
     sidebarLeftBarComp,
-    sidebarLagBlasterComp,
+    // sidebarLagBlasterComp,
     sidebarConferenceComp,
     chatboxTopbarComp,
     chatboxContentComp,
@@ -135,7 +135,7 @@ define([
         sidebarLeftBarComp.onInit(route);
 
         // Lag Blaster Intergrate
-        sidebarLagBlasterComp.onInit();
+        // sidebarLagBlasterComp.onInit();
 
         // Conference
         sidebarConferenceComp.onInit();
@@ -193,7 +193,7 @@ define([
         // Get information about chat list and current user
         // Get information about the chat list what user changed (name, description).
         Promise.all([API.get('chats'), API.get(`users/${userId}`), API.get('users/preferences')]).then(data => {
-            // console.log(data);
+            console.log(data);
             onAssignDataToStore(data);
             onGetPrefrences(data[2]);
             onGetRoomList(data[0]);
