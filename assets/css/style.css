@@ -3338,7 +3338,6 @@ body.body_fz_18 {
   right: 1rem;
   width: 10rem;
   height: 10rem;
-  border-radius: 8px;
   overflow: hidden;
 }
 #modalPhoneRequest.minimize .modal-content {
@@ -3351,7 +3350,7 @@ body.body_fz_18 {
 
 #modalPhoneRequest .modal-content {
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
   background: rgba(0, 0, 0, .7) !important;
 }
 
@@ -3463,7 +3462,7 @@ body.body_fz_18 {
 }
 .video-caller {
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
   /* overflow: auto; */
   width: 100%;
   /* height: calc(100% - 180px); */
