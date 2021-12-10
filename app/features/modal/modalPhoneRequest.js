@@ -310,7 +310,8 @@ define([
                 },
                 interfaceConfigOverwrite: {
                     LANG_DETECTION: false,
-                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true
+                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+                    HIDE_DEEP_LINKING_LOGO: true
                 }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
