@@ -604,13 +604,11 @@ define([
         let cloneArray = [];
         let processArray = [];
         if(messages.length > 0) {
-            processArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
-            // console.log(cloneArray)
-    
+            processArray = [...messages]
             const indexAfterRemoveDup = [];
             const toFindDuplicates = (cloneArray) => {
                 let newArray = cloneArray.map(ite => ite.id.messageId);
-                console.log(newArray)
+                // console.log(newArray)
                 return newArray.filter((item, index) => {
                     if(newArray.indexOf(item) === index) {
                         indexAfterRemoveDup.push(index)
@@ -620,7 +618,7 @@ define([
             }
     
             toFindDuplicates(processArray);
-            console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
+            // console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
             
             indexAfterRemoveDup.forEach(item => {
                 cloneArray.push(processArray[item])
@@ -656,19 +654,19 @@ define([
         lastOffset = messages[0]?.sequence;
 
         // Remove dupplidate messageID in Array when bad connection
-        console.log(messages)
+        // console.log(messages)
         const cloneArray = removeRepeatedMess(messages);
        
         // Update ultiLastOffSet whenever reload loadMessages function
-        console.log(cloneArray);
+        // console.log(cloneArray);
 
         if(cloneArray.length > 0){
-             console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
+            //  console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
             //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
              let nullIndex = 0;
  
              const checkNullSequence = (element, index) => {
-                 if (element.sequence === null) {
+                 if (element.sequence === null || element.sequence === undefined) {
                      nullIndex = index;
                      return true
                  }
@@ -676,7 +674,7 @@ define([
              const isNullSequence = cloneArray.some(checkNullSequence); 
 
              if(isNullSequence) {
-                console.log(nullIndex)
+                // console.log(nullIndex)
                 // In case newly created group
                 if(nullIndex === 0){
                     ultiLastOffSet = cloneArray.length;
@@ -688,7 +686,7 @@ define([
                  if(ultiLastOffSet < cloneArray[cloneArray.length - 1].sequence) ultiLastOffSet = cloneArray[cloneArray.length - 1].sequence
              }
  
-             console.log(`After set ultiOffset: ${ultiLastOffSet}`)
+            //  console.log(`After set ultiOffset: ${ultiLastOffSet}`)
          }
 
         messages = [...cloneArray]
@@ -914,7 +912,7 @@ define([
             if(GLOBAL.getInfomation().id !== mess.sender.id &&
             !isSearchMode) {
                 if(mess.id.messageId) ultiLastOffSet++;
-                console.log(ultiLastOffSet)
+                // console.log(ultiLastOffSet)
             }
         },
 
@@ -957,10 +955,10 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            console.log(data)
+            // console.log(data)
             // Update ultiLastOffSet when send new mess
             ultiLastOffSet++;
-            console.log(ultiLastOffSet)
+            // console.log(ultiLastOffSet)
 
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
