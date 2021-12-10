@@ -17,10 +17,10 @@
     "url": "https://git.iptp.dev/sa/xm-web-client.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.2.2",
     "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.1",
@@ -52,16 +52,16 @@
   "author": "IPTP Ltd",
   "license": "IPTP Ltd",
   "dependencies": {
-    "@stomp/stompjs": "^6.1.2",
-    "axios": "^0.24.0",
-    "bootstrap": "^4.6.1",
+    "@stomp/stompjs": "^6.0.0",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.5.3",
     "idb-keyval": "^6.0.3",
-    "jquery": "^3.6.0",
+    "jquery": "^3.5.1",
     "jquery-ui": "^1.13.0",
-    "jsrender": "^1.0.11",
+    "jsrender": "^1.0.9",
     "moment": "^2.29.1",
     "navigo": "^8.11.1",
     "popper.js": "^1.16.1",
-    "websocket": "^1.0.34"
+    "websocket": "^1.0.33"
   }
 }
