@@ -285,7 +285,7 @@ define([
         
         const res = await API.get('messages', params);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
-        console.log(`last offset scroll down ${lastOffsetScrollDown}`)
+        // console.log(`last offset scroll down ${lastOffsetScrollDown}`)
         return res;
     }
 
@@ -298,7 +298,6 @@ define([
 
         if( $wrapper.scrollTop() + $wrapper.height() >= $wrapper[0].scrollHeight - 1 && !isProcessScrollDown && !isTouchLastMessBottom){    
             isProcessScrollDown = true;
-            console.log('test')
 
             getMoreMessScrollDownAPI().then(res => {
                 isProcessScrollDown = false;
@@ -314,7 +313,7 @@ define([
 
                 // Render message and append to chat list
                 moreMessages = moreMessages.concat(returnedMessages || []).reverse();
-                console.log(moreMessages)
+                // console.log(moreMessages)
                 messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
                 $messageList.append(messagesHtml);
 
@@ -572,12 +571,12 @@ define([
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
 
-            console.log(moreMessages)
+            // console.log(moreMessages)
 
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
 
-            console.log(lastOffset);
+            // console.log(lastOffset);
 
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
                 storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
