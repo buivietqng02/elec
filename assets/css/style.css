@@ -3338,7 +3338,7 @@ body.body_fz_18 {
   right: 1rem;
   width: 10rem;
   height: 10rem;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
 }
 #modalPhoneRequest.minimize .modal-content {
