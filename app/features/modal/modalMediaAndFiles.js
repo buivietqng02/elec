@@ -84,7 +84,7 @@ define([
     };
 
     const renderFiles = (filesArray) => {
-        console.log(filesArray);
+        // console.log(filesArray);
         if (filesArray.length === 0) {
             filesListContainer.innerHTML = '<div class="files__not__found">No files found</div>';
         } else {

@@ -92,8 +92,6 @@ define([
         // Close view media and files comp when click on sidebar
        
         if (!mediaFilesWraper.classList.contains('hidden')) {
-            console.log('test hehehehe');
-           
             viewMediaAndFilesComp.closeMediaAndFilesModal();
         } 
 
