@@ -135,6 +135,7 @@ define([], () => {
                         switch (newWorker.state) {
                             case 'installed':
                                 if (navigator.serviceWorker.controller) {
+                                    console.log('test');
                                     showUpdateBar();
                                 }
                                 break;
@@ -155,12 +156,14 @@ define([], () => {
                     window.self.caches.keys().then((keys) => {
                         setTimeout(() => {
                             if (versions.length > 1 && !isUpdate) {
+                                console.log('test 2');
                                 showUpdateBar(true);
                                 // keys.map(key => window.self.caches.delete(key));
                             }
 
                             if (versions.length === 1 && keys.length === 1) {
                                 if (versions[0] !== keys[0] && !isUpdate) {
+                                    console.log('test 3');
                                     showUpdateBar(true);
                                 }
                             }
