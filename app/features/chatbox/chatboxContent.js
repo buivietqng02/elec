@@ -606,7 +606,7 @@ define([
             processArray = [...messages]
             const indexAfterRemoveDup = [];
             const toFindDuplicates = (cloneArray) => {
-                let newArray = cloneArray.map(ite => ite.id.messageId);
+                let newArray = cloneArray.map(ite => ite?.id?.messageId);
                 // console.log(newArray)
                 return newArray.filter((item, index) => {
                     if(newArray.indexOf(item) === index) {

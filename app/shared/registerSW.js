@@ -124,6 +124,7 @@ define([], () => {
 
             window.self.caches.keys().then((keys) => {
                 versions = keys;
+                console.log(versions);
             });
 
             navigator.serviceWorker.register('/sw.js').then((reg) => {
@@ -145,6 +146,7 @@ define([], () => {
                     if (!(versions || []).length) {
                         window.self.caches.keys().then((keys) => {
                             versions = keys;
+                            console.log(versions);
                         });
 
                         return;
