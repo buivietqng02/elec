@@ -1,4 +1,4 @@
-define(['features/logout/logout'], (logout) => {
+define([], () => {
     const ob = {};
     let versions;
     let newWorker;
@@ -17,10 +17,6 @@ define(['features/logout/logout'], (logout) => {
             keys.map(key => window.self.caches.delete(key));
         });
 
-        // Test logout when update 
-        console.log('test 5a');
-        logout.onLogout();
-
         try {
             window.location.reload(true);
         } catch {
@@ -34,10 +30,6 @@ define(['features/logout/logout'], (logout) => {
          window.self.caches.keys().then((keys) => {
             keys.map(key => window.self.caches.delete(key));
         });
-
-         // Test logout when update 
-        console.log('test 5b');
-        logout.onLogout();
 
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
