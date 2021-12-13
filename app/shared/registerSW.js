@@ -18,6 +18,7 @@ define(['features/logout/logout'], (logout) => {
         });
 
         // Test logout when update 
+        console.log('test 5a');
         logout.onLogout();
 
         try {
@@ -35,8 +36,8 @@ define(['features/logout/logout'], (logout) => {
         });
 
          // Test logout when update 
+        console.log('test 5b');
         logout.onLogout();
-        console.log('test 4');
 
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
