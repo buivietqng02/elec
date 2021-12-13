@@ -33,7 +33,10 @@ define([
     jsrender($);
 
     // if (process.env.NODE_ENV === 'production') {
-        registerSW.onInit();
+        if (window.location.hostname !== 'localhost') {
+            registerSW.onInit();
+        }
+      
     // }
 
     const {
