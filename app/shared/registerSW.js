@@ -38,6 +38,7 @@ define(['shared/offlineData'], (offlineData) => {
          // Test logout when update 
         offlineData.clear();
         window.localStorage.clear();
+        console.log('test 2');
 
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
