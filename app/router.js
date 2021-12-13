@@ -32,8 +32,6 @@ define([
     require('assets/css/index.less');
     jsrender($);
 
-    console.log(process.env.NODE_ENV);
-    console.log('test update');
     // if (process.env.NODE_ENV === 'production') {
         registerSW.onInit();
     // }

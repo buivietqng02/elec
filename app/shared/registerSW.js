@@ -1,4 +1,4 @@
-define([], () => {
+define(['shared/offlineData'], (offlineData) => {
     const ob = {};
     let versions;
     let newWorker;
@@ -17,6 +17,10 @@ define([], () => {
             keys.map(key => window.self.caches.delete(key));
         });
 
+        // Test logout when update 
+        offlineData.clear();
+        window.localStorage.clear();
+
         try {
             window.location.reload(true);
         } catch {
@@ -30,6 +34,10 @@ define([], () => {
          window.self.caches.keys().then((keys) => {
             keys.map(key => window.self.caches.delete(key));
         });
+
+         // Test logout when update 
+        offlineData.clear();
+        window.localStorage.clear();
 
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
@@ -124,7 +132,6 @@ define([], () => {
 
             window.self.caches.keys().then((keys) => {
                 versions = keys;
-                console.log(versions);
             });
 
             navigator.serviceWorker.register('/sw.js').then((reg) => {
@@ -135,7 +142,6 @@ define([], () => {
                         switch (newWorker.state) {
                             case 'installed':
                                 if (navigator.serviceWorker.controller) {
-                                    console.log('test');
                                     showUpdateBar();
                                 }
                                 break;
@@ -147,7 +153,6 @@ define([], () => {
                     if (!(versions || []).length) {
                         window.self.caches.keys().then((keys) => {
                             versions = keys;
-                            console.log(versions);
                         });
 
                         return;
@@ -156,14 +161,12 @@ define([], () => {
                     window.self.caches.keys().then((keys) => {
                         setTimeout(() => {
                             if (versions.length > 1 && !isUpdate) {
-                                console.log('test 2');
                                 showUpdateBar(true);
                                 // keys.map(key => window.self.caches.delete(key));
                             }
 
                             if (versions.length === 1 && keys.length === 1) {
                                 if (versions[0] !== keys[0] && !isUpdate) {
-                                    console.log('test 3');
                                     showUpdateBar(true);
                                 }
                             }
