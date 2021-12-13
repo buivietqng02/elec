@@ -1,4 +1,4 @@
-define(['shared/offlineData'], (offlineData) => {
+define(['features/logout/logout'], (logout) => {
     const ob = {};
     let versions;
     let newWorker;
@@ -18,8 +18,7 @@ define(['shared/offlineData'], (offlineData) => {
         });
 
         // Test logout when update 
-        offlineData.clear();
-        window.localStorage.clear();
+        logout.onLogout();
 
         try {
             window.location.reload(true);
@@ -36,9 +35,8 @@ define(['shared/offlineData'], (offlineData) => {
         });
 
          // Test logout when update 
-        offlineData.clear();
-        window.localStorage.clear();
-        console.log('test 2');
+        logout.onLogout();
+        console.log('test 3');
 
         try {
             newWorker.postMessage({ action: 'skipWaiting' });
