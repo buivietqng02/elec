@@ -102,6 +102,7 @@ define([
     const rejectCall = (rid=false) => API.post(`chats/${rid ? rid : roomInfo.id}/call/reject`);
 
     const onClose = () => {
+        inCall = false;
         clearTimeout(timeout);
         window.onbeforeunload = null;
         $audio[0].pause();
