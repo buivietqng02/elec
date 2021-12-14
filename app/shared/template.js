@@ -647,10 +647,10 @@ define(['shared/icon'], (ICON) => ({
                                 <label class="js-up-file menu__item" data-trigger=".--input-up-file" data-dismiss=".menu">
                                     <i class="xm xm-file-o xm-fw"></i>
                                     <lang data-language="UP_FILE"></lang>
-                                    <input type="file" hide class="--input-up-file --hide" />
+                                    <input type="file" hide class="--input-up-file --hide" multiple/>
                                 </label>
                                 <label class="js-up-media menu__item" data-trigger=".--input-up-media" data-dismiss=".menu">
-                                    <input type="file" hide class="--input-up-media --hide" accept="image/*,video/*,audio/*" />
+                                    <input type="file" hide class="--input-up-media --hide" accept="image/*,video/*,audio/*" multiple/>
                                     <i class="xm xm-photo xm-fw"></i>
                                     <lang data-language="UP_MEDIA"></lang>
                                 </label>
