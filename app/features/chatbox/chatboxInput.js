@@ -135,6 +135,7 @@ define([
     let count = 0;
 
     const postMessage = (data) => {
+        console.log(data);
         if (data?.isDelete) {
             API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
                 messagesWaitProcessingArr.shift();
@@ -303,7 +304,7 @@ define([
 
         onUpdate: (id, value) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-
+            console.log(text);
             $input.val(text);
             $input.focus();
             messageId = id;

@@ -837,6 +837,9 @@ define([
             lastUndeletedMessageId = mess.id.messageId;
 
             let id = GLOBAL.getCurrentRoomId();
+
+            console.log(mess);
+
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
                 return false;
@@ -938,6 +941,9 @@ define([
         },
 
         onSyncUpdate: (message) => {
+            console.log(message.message)
+            console.log(htmlEncode(decodeStringBase64(message.message)))
+
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
 

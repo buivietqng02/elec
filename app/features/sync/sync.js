@@ -385,7 +385,9 @@ define([
                 onSync();
 
                 if (res?.messages?.length) {
+                    console.log(res);
                     const messages = functions.sortBy(res.messages, 'msgDate');
+                    console.log(messages);
                     handleRealTimeMessage(messages);
                 }
 
