@@ -210,9 +210,7 @@ define([
                 idLocal
             };
 
-            console.log(message);
             let text = htmlEncode(decodeStringBase64(message));
-            console.log(text);
 
             let isConferenceLink = false;
             let conferenceLink = '';

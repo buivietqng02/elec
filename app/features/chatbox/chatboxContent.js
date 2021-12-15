@@ -65,7 +65,6 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
-    let lastUndeletedMessageId = '';
 
     let jumpFastToBottomBtn;
 
@@ -428,17 +427,6 @@ define([
     };
     // ======== End Handle View Media and Files scroll to origin message ===========
 
-    // Update lastUndeletedMessageId when reload
-    const updateLastUndeletedMessageIdWhenReload = (messages) => {
-        let listMessages = [...messages]
-        listMessages.reverse().some(item => {
-            if (!item.deleted) {
-                lastUndeletedMessageId = item?.id?.messageId;
-                return true;
-            }
-        })
-    }
-
     // Conference Call
     const addEventListenerToMeetingLink = () => {
         let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
@@ -690,9 +678,6 @@ define([
 
         messages = [...cloneArray]
 
-        // Update lastUndeletedMessageId when reload
-        updateLastUndeletedMessageIdWhenReload(messages);
-
         // Update file property for quotedMessage
         // getFileForQuoteMessage(messages);
 
@@ -833,12 +818,7 @@ define([
         onSync: (messList = []) => {
             const mess = messList[0];
 
-            // Update lastUndeletedMessageId when post new message
-            lastUndeletedMessageId = mess.id.messageId;
-
             let id = GLOBAL.getCurrentRoomId();
-
-            console.log(mess);
 
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
@@ -919,12 +899,7 @@ define([
         },
 
         onSyncRemove: (message) => {
-
             const id = message.id.messageId;
-            const roomId = message.id.chatId;
-
-            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
-
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
             $message.find('.--mess').removeClass('fwme');
@@ -933,20 +908,11 @@ define([
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
             $message.find('.conference-link').hide();
-
-            // Remove last message from sidebar
-            if (message.id.messageId === lastUndeletedMessageId) {
-                sidebarItem[0].querySelector('.preview').textContent = 'This message was removed';
-            }
         },
 
         onSyncUpdate: (message) => {
-            console.log(message.message)
-            console.log(htmlEncode(decodeStringBase64(message.message)))
-
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-
             $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));
             $message.find('.--edited').removeClass('hidden');
         },
@@ -1056,7 +1022,7 @@ define([
                 }
             }
 
-            if (messages.length) {
+            if (messages?.length) {
                 messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
             } else {
                 messagesHtml = renderMessage(mess);
