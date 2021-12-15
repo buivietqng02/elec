@@ -372,9 +372,6 @@ define([
         $modalDialog.removeClass('accept-state');
 
         $audio[0].pause();
-        // if (!roomInfo.group){
-        //     acceptCall();
-        // }
         setupWebrtc(event.data.audioOnly, true);
     };
 
@@ -404,8 +401,7 @@ define([
         onInit: (isAudioOnly, sender, rid) => {
 
             if (inCall) {
-                [roomInfo] = GLOBAL.getRooms().filter(r => (r.id === GLOBAL.getCurrentRoomId()));
-                if (!roomInfo.group) {
+                if (!GLOBAL.getRooms().filter(r => (r.id === rid)).group) {
                     rejectCall(rid);
                 }
                 return;
