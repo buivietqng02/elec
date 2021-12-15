@@ -24,6 +24,7 @@ define([
     let inCall = false;
     let isInit;
     let roomInfo;
+    let incomingCallRoom;
     let $imgSender;
     let $nameSender;
     let $callAnimation;
@@ -399,9 +400,9 @@ define([
 
     return {
         onInit: (isAudioOnly, sender, rid) => {
-
             if (inCall) {
-                if (!GLOBAL.getRooms().filter(r => (r.id === rid)).group) {
+                [incomingCallRoom] = GLOBAL.getRooms().filter(room => (room.id === rid))
+                if (!incomingCallRoom.group) {
                     rejectCall(rid);
                 }
                 return;
