@@ -1,6 +1,9 @@
 define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
     const pushNotificationForMessage = message => {
-        const text = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
+        // Notification for edit message
+        const editMessage = message.updated ? 'Edited message:' : '';
+       
+        const text = `${editMessage} ${functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''))}`;
 
         const notification = new Notification(message.sender.name, {
             body: text.replace(/<[^>]+>/g, ''),
