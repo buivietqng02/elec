@@ -35,8 +35,8 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                 </div>
             </li>
         `,
-        file: `<i class="xm xm-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
-        quotedFile: `<i class="xm xm-download"></i> <b>{fileName}</b> {fileSize}`,
+        file: `<i class="xm icon-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+        quotedFile: `<i class="xm icon-download"></i> <b>{fileName}</b> {fileSize}`,
 
         image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
         quotedImage: '<img class="p-cur" src="{src}">',
@@ -132,7 +132,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                             {date}
                             <span class="--edited {show_edited}">(Edited)</span>
                         </div>
-                        <div class="xm xm-bars --bars --menu p-cur btn-message-settings {hide_when_removed}"></div>
+                        <div class="xm icon-bars --bars --menu p-cur btn-message-settings {hide_when_removed}"></div>
                     </div>
                 </div>
             </li>

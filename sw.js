@@ -12,7 +12,7 @@ const urls = [
     '/source/232.bundle.js',
     '/source/styles.bundle.js',
     '/source/styles.css',
-    '/assets/css/xm-icon.min.css',
+    '/assets/css/icon.css',
     '/source/700-scaled.jpg',
     '/assets/images/cosmos4-1.jpg',
     '/source/check.svg',

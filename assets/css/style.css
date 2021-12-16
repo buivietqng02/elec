@@ -1434,7 +1434,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #fff;
 }
 
-.mess-search-box .msb-group i.xm-search {
+.mess-search-box .msb-group i.icon-search {
   position: absolute;
   font-size: 22px;
   color: #cecece;
@@ -1991,7 +1991,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   align-items: center;
 }
 
-.contact__name .xm-volume-mute {
+.contact__name .icon-volume-mute {
   display: none;
   margin-right: 5px;
 }
@@ -2000,7 +2000,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: inline;
 }
 
-.js_li_list_user.mute .xm-volume-mute,.contact__name span.mute .xm-volume-mute {
+.js_li_list_user.mute .icon-volume-mute,.contact__name span.mute .icon-volume-mute {
   display: inline-block;
 }
 
@@ -2452,7 +2452,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   margin: 8px 0 0 10px;
 }
 
-.sidebar #search label .xm-search {
+.sidebar #search label .icon-search {
   font-size: 1.3em;
   color: #fff;
 }

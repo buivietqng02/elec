@@ -47,7 +47,7 @@ define([
                         <div class="crm-frame-wrapper">
                             <div class="crmfwu">
                                 <div class="crmfwu-search-box">
-                                    <i class="xm xm-search"></i>
+                                    <i class="xm icon-search"></i>
                                     <input data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" type="search" name="search" id="cgm-input-search" placeholder="${langJson.SEARCH_PLACEHOLDER}" />
                                     <span class="crmfwusb-title">
                                         <lang data-language="GROUP_MEMBERS">${langJson.GROUP_MEMBERS}</lang>: 

@@ -69,10 +69,10 @@ define([
                             <h3 class="vcnf-name">Bonnie</h3>
                             <div class="vcnf-group clearfix">
                                 <button class="vcnf-hangup">
-                                    <i class="xm xm-phone"></i>
+                                    <i class="xm icon-phone"></i>
                                 </button>
                                 <button class="vcnf-accept">
-                                    <i class="xm xm-phone"></i>
+                                    <i class="xm icon-phone"></i>
                                 </button>
                             </div>
                         </div>
