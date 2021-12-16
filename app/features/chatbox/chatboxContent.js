@@ -65,7 +65,6 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
-    let lastUndeletedMessageId = '';
 
     let jumpFastToBottomBtn;
 
@@ -285,7 +284,7 @@ define([
         
         const res = await API.get('messages', params);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
-        console.log(`last offset scroll down ${lastOffsetScrollDown}`)
+        // console.log(`last offset scroll down ${lastOffsetScrollDown}`)
         return res;
     }
 
@@ -298,7 +297,6 @@ define([
 
         if( $wrapper.scrollTop() + $wrapper.height() >= $wrapper[0].scrollHeight - 1 && !isProcessScrollDown && !isTouchLastMessBottom){    
             isProcessScrollDown = true;
-            console.log('test')
 
             getMoreMessScrollDownAPI().then(res => {
                 isProcessScrollDown = false;
@@ -314,7 +312,7 @@ define([
 
                 // Render message and append to chat list
                 moreMessages = moreMessages.concat(returnedMessages || []).reverse();
-                console.log(moreMessages)
+                // console.log(moreMessages)
                 messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
                 $messageList.append(messagesHtml);
 
@@ -428,17 +426,6 @@ define([
         jumpFastToBottomBtn.addEventListener('click', jumpToBottom)
     };
     // ======== End Handle View Media and Files scroll to origin message ===========
-
-    // Update lastUndeletedMessageId when reload
-    const updateLastUndeletedMessageIdWhenReload = (messages) => {
-        let listMessages = [...messages]
-        listMessages.reverse().some(item => {
-            if (!item.deleted) {
-                lastUndeletedMessageId = item?.id?.messageId;
-                return true;
-            }
-        })
-    }
 
     // Conference Call
     const addEventListenerToMeetingLink = () => {
@@ -572,12 +559,12 @@ define([
             // Render quotedMessage for files and images
             // getFileForQuoteMessage(moreMessages)
 
-            console.log(moreMessages)
+            // console.log(moreMessages)
 
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
 
-            console.log(lastOffset);
+            // console.log(lastOffset);
 
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
                 storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
@@ -604,13 +591,11 @@ define([
         let cloneArray = [];
         let processArray = [];
         if(messages.length > 0) {
-            processArray = messages.filter((item, index) => item.hasOwnProperty('sequence'))
-            // console.log(cloneArray)
-    
+            processArray = [...messages]
             const indexAfterRemoveDup = [];
             const toFindDuplicates = (cloneArray) => {
-                let newArray = cloneArray.map(ite => ite.id.messageId);
-                console.log(newArray)
+                let newArray = cloneArray.map(ite => ite?.id?.messageId);
+                // console.log(newArray)
                 return newArray.filter((item, index) => {
                     if(newArray.indexOf(item) === index) {
                         indexAfterRemoveDup.push(index)
@@ -620,7 +605,7 @@ define([
             }
     
             toFindDuplicates(processArray);
-            console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
+            // console.log(`Message ID after remove dupplicate: ${indexAfterRemoveDup}`);
             
             indexAfterRemoveDup.forEach(item => {
                 cloneArray.push(processArray[item])
@@ -656,19 +641,19 @@ define([
         lastOffset = messages[0]?.sequence;
 
         // Remove dupplidate messageID in Array when bad connection
-        console.log(messages)
+        // console.log(messages)
         const cloneArray = removeRepeatedMess(messages);
        
         // Update ultiLastOffSet whenever reload loadMessages function
-        console.log(cloneArray);
+        // console.log(cloneArray);
 
         if(cloneArray.length > 0){
-             console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
+            //  console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
             //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
              let nullIndex = 0;
  
              const checkNullSequence = (element, index) => {
-                 if (element.sequence === null) {
+                 if (element.sequence === null || element.sequence === undefined) {
                      nullIndex = index;
                      return true
                  }
@@ -676,7 +661,7 @@ define([
              const isNullSequence = cloneArray.some(checkNullSequence); 
 
              if(isNullSequence) {
-                console.log(nullIndex)
+                // console.log(nullIndex)
                 // In case newly created group
                 if(nullIndex === 0){
                     ultiLastOffSet = cloneArray.length;
@@ -688,13 +673,10 @@ define([
                  if(ultiLastOffSet < cloneArray[cloneArray.length - 1].sequence) ultiLastOffSet = cloneArray[cloneArray.length - 1].sequence
              }
  
-             console.log(`After set ultiOffset: ${ultiLastOffSet}`)
+            //  console.log(`After set ultiOffset: ${ultiLastOffSet}`)
          }
 
         messages = [...cloneArray]
-
-        // Update lastUndeletedMessageId when reload
-        updateLastUndeletedMessageIdWhenReload(messages);
 
         // Update file property for quotedMessage
         // getFileForQuoteMessage(messages);
@@ -836,10 +818,8 @@ define([
         onSync: (messList = []) => {
             const mess = messList[0];
 
-            // Update lastUndeletedMessageId when post new message
-            lastUndeletedMessageId = mess.id.messageId;
-
             let id = GLOBAL.getCurrentRoomId();
+
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
                 return false;
@@ -914,17 +894,12 @@ define([
             if(GLOBAL.getInfomation().id !== mess.sender.id &&
             !isSearchMode) {
                 if(mess.id.messageId) ultiLastOffSet++;
-                console.log(ultiLastOffSet)
+                // console.log(ultiLastOffSet)
             }
         },
 
         onSyncRemove: (message) => {
-
             const id = message.id.messageId;
-            const roomId = message.id.chatId;
-
-            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
-
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             $message.find('.--mess').addClass('--message-removed').html(decodeStringBase64(message.message));
             $message.find('.--mess').removeClass('fwme');
@@ -933,17 +908,11 @@ define([
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
             $message.find('.conference-link').hide();
-
-            // Remove last message from sidebar
-            if (message.id.messageId === lastUndeletedMessageId) {
-                sidebarItem[0].querySelector('.preview').textContent = 'This message was removed';
-            }
         },
 
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-
             $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));
             $message.find('.--edited').removeClass('hidden');
         },
@@ -957,10 +926,10 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            console.log(data)
+            // console.log(data)
             // Update ultiLastOffSet when send new mess
             ultiLastOffSet++;
-            console.log(ultiLastOffSet)
+            // console.log(ultiLastOffSet)
 
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
@@ -1053,7 +1022,7 @@ define([
                 }
             }
 
-            if (messages.length) {
+            if (messages?.length) {
                 messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
             } else {
                 messagesHtml = renderMessage(mess);

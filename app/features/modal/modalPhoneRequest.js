@@ -24,6 +24,7 @@ define([
     let inCall = false;
     let isInit;
     let roomInfo;
+    let incomingCallRoom;
     let $imgSender;
     let $nameSender;
     let $callAnimation;
@@ -68,10 +69,10 @@ define([
                             <h3 class="vcnf-name">Bonnie</h3>
                             <div class="vcnf-group clearfix">
                                 <button class="vcnf-hangup">
-                                    <i class="xm xm-phone"></i>
+                                    <i class="xm icon-phone"></i>
                                 </button>
                                 <button class="vcnf-accept">
-                                    <i class="xm xm-phone"></i>
+                                    <i class="xm icon-phone"></i>
                                 </button>
                             </div>
                         </div>
@@ -102,6 +103,7 @@ define([
     const rejectCall = (rid=false) => API.post(`chats/${rid ? rid : roomInfo.id}/call/reject`);
 
     const onClose = () => {
+        inCall = false;
         clearTimeout(timeout);
         window.onbeforeunload = null;
         $audio[0].pause();
@@ -310,7 +312,8 @@ define([
                 },
                 interfaceConfigOverwrite: {
                     LANG_DETECTION: false,
-                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true
+                    DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+                    DEFAULT_LOGO_URL: ''
                 }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
@@ -370,9 +373,6 @@ define([
         $modalDialog.removeClass('accept-state');
 
         $audio[0].pause();
-        // if (!roomInfo.group){
-        //     acceptCall();
-        // }
         setupWebrtc(event.data.audioOnly, true);
     };
 
@@ -400,10 +400,9 @@ define([
 
     return {
         onInit: (isAudioOnly, sender, rid) => {
-
             if (inCall) {
-                [roomInfo] = GLOBAL.getRooms().filter(r => (r.id === GLOBAL.getCurrentRoomId()));
-                if (!roomInfo.group) {
+                [incomingCallRoom] = GLOBAL.getRooms().filter(room => (room.id === rid))
+                if (!incomingCallRoom.group) {
                     rejectCall(rid);
                 }
                 return;

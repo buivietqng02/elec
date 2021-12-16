@@ -209,6 +209,7 @@ define([
                 chatType: type,
                 idLocal
             };
+
             let text = htmlEncode(decodeStringBase64(message));
 
             let isConferenceLink = false;

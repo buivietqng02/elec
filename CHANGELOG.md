@@ -4,6 +4,17 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.11] - 2021-12-16
+### Update
+- Reject incoming calls when the user is in another call.
+- Register SW for both dev and prod environments.
+- Update styles on call window.
+- Shows that a message is edited on web notifications.
+- Remove logs.
+### Fix
+- Fixed a bug that allowed too many files to be sent at once.
+- Other minor improvements.
+
 ### [4.10] - 2021-12-09
 ### Update
 - Added group calls.

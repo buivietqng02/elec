@@ -35,7 +35,7 @@ define([
             <div class="badge badge-orange">{unread}</div>
             <div class="p-pl-10 meta">
                 <div class="--name contact__name p-1-line">
-                    <i class="xm xm-volume-mute" aria-hidden="true"></i>
+                    <i class="xm icon-volume-mute" aria-hidden="true"></i>
                     <span ${ATTRIBUTE_CHANGE_GROUP_NAME}="{id}" ${ATTRIBUTE_CHANGE_NAME}="{userId}">{name}</span>
                 </div>
                 <div class="p-1-line preview">{mess}</div>

@@ -21,6 +21,7 @@ define([
     let $callBtn;
     let $videoCallBtn;
     let $progressWrapper;
+    let isOnProgress = false;
     let $pathCircle;
     let $percentProgress;
     let $dropzone;
@@ -84,9 +85,11 @@ define([
         $progressWrapper.hide();
         $percentProgress.html(Math.round(0));
         $pathCircle.attr('stroke-dashoffset', percentCircle(0));
+        isOnProgress = false;
     };
 
     const callAPI = (endpoint, file) => {
+        isOnProgress = true;
         const formData = new window.FormData();
         $progressWrapper.show();
         formData.append('file', file);
@@ -133,11 +136,30 @@ define([
         callAPI('file', file);
     };
 
+    const sendMultipleFilesImg = (input) => {
+        if (isOnProgress) {
+            ALERT.show('Please wait, other files are sending!');
+            return;
+        }
+
+        const objectArray = Object.keys(input.get(0).files);
+            if (objectArray.length > 6) {
+                ALERT.show('Maximum 6 pictures/ files allowed at one time');
+                return;
+            }
+
+            objectArray.forEach((key) => {
+                const item = input.get(0).files[key];
+                checkFile(item, true);
+            });
+    };
+
     const uploadFile = (endpoint) => {
         if (endpoint === 'file') {
-            callAPI(endpoint, $inputFile.get(0).files[0]);
+            sendMultipleFilesImg($inputFile);
+            // callAPI(endpoint, $inputFile.get(0).files[0]);
         } else {
-            checkFile($inputImage.get(0).files[0], true);
+            sendMultipleFilesImg($inputImage);
         }
     };
 
@@ -228,13 +250,23 @@ define([
                 });
                 document.onpaste = (event) => {
                     const { items } = (event.clipboardData || event.originalEvent.clipboardData);
-                    console.log(items);
-                    Object.keys(items).forEach((key) => {
+
+                    // Only allow to send maximum 10 pictures / files at one time
+                    const objectArray = Object.keys(items);
+                    if (objectArray.length > 5) {
+                        ALERT.show('Maximum 5 pictures/ files can be pasted at one time');
+                        return;
+                    }
+
+                    if (isOnProgress) {
+                        ALERT.show('Please wait, other files are sending!');
+                        return;
+                    }
+
+                    objectArray.forEach((key) => {
                         const item = items[key];
                         if (item.kind === 'file' && GLOBAL.getCurrentRoomId()) {
                             const file = item.getAsFile();
-                            console.log(file);
-                            
                             checkFile(file);
                         }
                     });

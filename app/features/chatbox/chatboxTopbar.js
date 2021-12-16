@@ -199,14 +199,15 @@ define([
                 $name.removeAttr(constant.ATTRIBUTE_CHANGE_NAME);
                 $name.attr(constant.ATTRIBUTE_CHANGE_GROUP_NAME, roomInfo.id);
                 $timeActivity.hide();
-                $callOptionsBtn.hide();
                 if (roomInfo.isLiveAssistance) {
+                    $callOptionsBtn.hide();
                     $editBtn.show();
                     $leaveBtn.show();
                     $notificationBtn.show();
                     $internalBtn.show();
                     $removeBtn.hide();
                 } else if (roomInfo.channel) {
+                    $callOptionsBtn.hide();
                     if (roomInfo.owner) {
                         $editBtn.show();
                         $leaveBtn.hide();

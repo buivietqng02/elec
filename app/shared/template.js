@@ -364,7 +364,7 @@ define(['shared/icon'], (ICON) => ({
                 </div>
                 <div id="search" class="search">
                     <button class="search-toggle">
-                        <i class="xm xm-search --icon"></i>
+                        <i class="xm icon-search --icon"></i>
                     </button>
                     <div class="--item js-menu menu" style="display:none;">
                         <button type="button" class="menu__item --s-all active" data-s="1" data-language="ALL"></button>
@@ -374,7 +374,7 @@ define(['shared/icon'], (ICON) => ({
                     </div>
                     <span class="clearable xs-search">
                         <button class="search__option" title="Option">
-                            <i class="xm xm-sliders" aria-hidden="true"></i>
+                            <i class="xm icon-sliders" aria-hidden="true"></i>
                         </button>
                         <input class="search__input" type="search" data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" placeholder="Search..." />
                         <i class="clearable__clear">&times;</i>
@@ -458,49 +458,49 @@ define(['shared/icon'], (ICON) => ({
                             <div class="--online"></div>
                             <div class="--typing"></div>
                         </div>
-                        <a class="js-call-option btn__option" data-target="#call-option"><i class="xm xm-phone xm-fw p-cur" aria-hidden="true"></i></a>
+                        <a class="js-call-option btn__option" data-target="#call-option"><i class="xm icon-phone xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-call-option" class="--option menu js-dismiss-menu">
                             <button class="--call-audio menu__item">
-                                <i class="xm xm-phone"></i>
+                                <i class="xm icon-phone"></i>
                                 <span data-language="CALL_AUDIO_ONLY"></span>
                             </button>
                             <button class="--call-video menu__item">
-                                <i class="xm xm-video-camera"></i>
+                                <i class="xm icon-video-camera"></i>
                                 <span data-language="CALL_WITH_VIDEO"></span>
                             </button>
                         </div>
                         
-                        <a class="js-group-option btn__option" data-target="#group-option"><i class="xm xm-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
+                        <a class="js-group-option btn__option" data-target="#group-option"><i class="xm icon-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
                             <button class="--edit-group menu__item">
-                                <i class="xm xm-edit"></i>
+                                <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>
                             </button>
 
                             <button class="btn-toggle-search-box menu__item">
-                                <i class="xm xm-search"></i>
+                                <i class="xm icon-search"></i>
                                 <lang data-language="SEARCH_PLACEHOLDER"></lang>
                             </button>
 
                             <button class="--mediaAndFile menu__item">
-                                <i class="xm xm-photo xm-fw" aria-hidden="true"></i>
+                                <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
 
                             <button class="--internal menu__item">
-                                <i class="xm xm-comments"></i>
+                                <i class="xm icon-comments"></i>
                                 <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
                             </button>
                             <button class="--disabled menu__item">
-                                <i class="xm xm-volume-mute" aria-hidden="true"></i>
+                                <i class="xm icon-volume-mute" aria-hidden="true"></i>
                                 <span data-language="DISABLE_NOTIFICATIONS"></span>
                             </button>
                             <button class="--leave menu__item">
-                                <i class="xm xm-mail-forward" aria-hidden="true"></i>
+                                <i class="xm icon-mail-forward" aria-hidden="true"></i>
                                 <lang data-language="LEAVE_GROUP"></lang>
                             </button>
                             <button class="--remove menu__item">
-                                <i class="xm xm-trash" aria-hidden="true"></i>
+                                <i class="xm icon-trash" aria-hidden="true"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
                            
@@ -508,7 +508,7 @@ define(['shared/icon'], (ICON) => ({
                     </div>
                     <div class="mess-search-box">
                         <div class="msb-group">
-                            <i class="xm xm-search"></i>
+                            <i class="xm icon-search"></i>
                             <input type="text" id="msbg-input" placeholder="Please enter at least 3 letters..." />
                             <div class="pulse"></div>
                         </div>
@@ -522,11 +522,11 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                         <a class="scroll-to scroll-to__bottom p-cur show" style="display:none">
                             <span class="unread-message-scroll">0</span>
-                            <i class="xm xm-angle-down"></i>
+                            <i class="xm icon-angle-down"></i>
                         </a>
 
                         <button class="jump-to-bottom hidden">
-                            <i class="xm xm-angle-down"></i>
+                            <i class="xm icon-angle-down"></i>
                             <span class="">
                                 <lang data-language="JUMP_TO_BOTTOM"></lang>
                             </span>
@@ -539,27 +539,27 @@ define(['shared/icon'], (ICON) => ({
                         </ul>
                         <div class="--menu-item menu js-menu-messages">
                             <button class="--cmt menu__item js-menu-messages-cmt">
-                                <i class="xm xm-comment-o"></i>
+                                <i class="xm icon-comment-o"></i>
                                 <lang data-language="COMMENT"></lang>
                             </button>
                             <button class="--fw menu__item js-menu-messages-forward">
-                                <i class="xm xm-mail-forward"></i>
+                                <i class="xm icon-mail-forward"></i>
                                 <lang data-language="FORWARD"></lang>
                             </button>
                             <button class="--fw menu__item js-menu-messages-copytext">
-                                <i class="xm xm-file-o"></i>
+                                <i class="xm icon-file-o"></i>
                                 <lang data-language="COPY_TEXT"></lang>
                             </button>
                             <button class="--fw menu__item js-menu-messages-info">
-                                <i class="xm xm-info-circle"></i>
+                                <i class="xm icon-info-circle"></i>
                                 <lang data-language="INFO"></lang>
                             </button>
                             <button class="--update menu__item js-menu-messages-edit">
-                                <i class="xm xm-edit"></i>
+                                <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>
                             </button>
                             <button class="--remove menu__item js-menu-messages-remove">
-                                <i class="xm xm-close"></i>
+                                <i class="xm icon-close"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
                         </div>
@@ -578,19 +578,19 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="--real_name" hidden></div>
                             </div>
                             <div class="--mess p-2-line"></div>
-                            <button type="button" class="--close btn__edit--close"><i class="xm xm-close"></i></button>
+                            <button type="button" class="--close btn__edit--close"><i class="xm icon-close"></i></button>
                         </div>
                         <div class="wrap-enter-mess messages-input-wrap">
                             <div class="wrap-tag-member" style="display: none;"></div>
                             <div class="col-xs-12 mess-comment-box" style="display: none;">
                                 <div class="mess-fw-box"></div>
-                                <i class="xm xm-close mess-fw-box-close" role="button" tabindex="0"></i>
+                                <i class="xm icon-close mess-fw-box-close" role="button" tabindex="0"></i>
                             </div>
                             <textarea class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..."></textarea>
 
                             <!-- Voice & send group button --> 
                             <div class="input-wrap-group-btn">
-                                <button class="btn__send js_send_mess"><i class="xm xm-paper-plane xm-fw"></i></button>
+                                <button class="btn__send js_send_mess"><i class="xm icon-paper-plane xm-fw"></i></button>
                                 
                                 <!-- Voice chat btn -->
 
@@ -602,7 +602,7 @@ define(['shared/icon'], (ICON) => ({
                             </div>
                             <!-- End Voice & send group button --> 
 
-                            <button type="button" class="js_close_update_mess btn__edit--close" style="display: none;"><i class="xm xm-close"></i></button>
+                            <button type="button" class="js_close_update_mess btn__edit--close" style="display: none;"><i class="xm icon-close"></i></button>
                             
                             <!-- Attached button --> 
                             <button class="btn__attach" data-target="#media-menu"><svg height="20px" viewBox="0 0 426.66667 426.66667" width="20px" xmlns="http://www.w3.org/2000/svg">
@@ -640,18 +640,18 @@ define(['shared/icon'], (ICON) => ({
                                
                                 <!-- Emoji button -->
                                 <label class="js-up-file menu__item" data-dismiss=".menu">
-                                    <button class="js-emoji btn__emoji"><i class="xm xm-smile-o"></i></button>
+                                    <button class="js-emoji btn__emoji"><i class="xm icon-smile-o"></i></button>
                                 </label>
                                 <!-- End Emoji button -->
 
                                 <label class="js-up-file menu__item" data-trigger=".--input-up-file" data-dismiss=".menu">
-                                    <i class="xm xm-file-o xm-fw"></i>
+                                    <i class="xm icon-file-o xm-fw"></i>
                                     <lang data-language="UP_FILE"></lang>
-                                    <input type="file" hide class="--input-up-file --hide" />
+                                    <input type="file" hide class="--input-up-file --hide" multiple/>
                                 </label>
                                 <label class="js-up-media menu__item" data-trigger=".--input-up-media" data-dismiss=".menu">
-                                    <input type="file" hide class="--input-up-media --hide" accept="image/*,video/*,audio/*" />
-                                    <i class="xm xm-photo xm-fw"></i>
+                                    <input type="file" hide class="--input-up-media --hide" accept="image/*,video/*,audio/*" multiple/>
+                                    <i class="xm icon-photo xm-fw"></i>
                                     <lang data-language="UP_MEDIA"></lang>
                                 </label>
                             </div>
@@ -929,11 +929,11 @@ define(['shared/icon'], (ICON) => ({
                     <div class="mvwmb-group-btn">
                         <button class="btn-round mvwmb-btn-mic">
                             <span></span>
-                            <i class="xm xm-microphone"></i>
+                            <i class="xm icon-microphone"></i>
                         </button>
                         <button class="btn-round mvwmb-btn-camera">
                             <span></span>
-                            <i class="xm xm-video-camera btn-camera"></i>
+                            <i class="xm icon-video-camera btn-camera"></i>
                         </button>
                     </div>
                 </div>
@@ -942,23 +942,23 @@ define(['shared/icon'], (ICON) => ({
                 <div class="mvwms-settings">
                     <div class="mvwmss-utility">
                         <button data-lang-type="tooltip" data-language="SHARE_YOUR_SCREEN" class="mvwmss-btn-share-screen" data-toggle="tooltip" data-placement="top" title="Share your screen">
-                            <i class="xm xm-desktop xm-fw" aria-hidden="true"></i>
+                            <i class="xm icon-desktop xm-fw" aria-hidden="true"></i>
                         </button>
                         <button data-lang-type="tooltip" data-language="INVITE_PEOPLE" class="mvwmss-btn-add-people" data-toggle="tooltip" data-placement="top" title="Invite people">
-                            <i class="xm xm-send-plus xm-fw" aria-hidden="true"></i>
+                            <i class="xm icon-send xm-fw" aria-hidden="true"></i>
                         </button>
                         <button class="mvwmss-btn-left-conference" data-toggle="tooltip" data-placement="top" title="Left the conference">
-                            <i class="xm xm-mail-forward xm-fw" aria-hidden="true"></i>
+                            <i class="xm icon-mail-forward xm-fw" aria-hidden="true"></i>
                         </button>
                     </div>
                     <div class="mvwmss-group-btn">
                         <button class="btn-round mvwmb-btn-mic">
                             <span></span>
-                            <i class="xm xm-microphone"></i>
+                            <i class="xm icon-microphone"></i>
                         </button>
                         <button class="btn-round mvwmb-btn-camera">
                             <span></span>
-                            <i class="xm xm-video-camera btn-camera"></i>
+                            <i class="xm icon-video-camera btn-camera"></i>
                         </button>
                     </div>
                 </div>

@@ -1,11 +1,19 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to SVGRepo https://www.svgrepo.com -->
-<svg version="1.1" id="Layer_1" fill="white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
-<g id="maximize">
-	<path id="maximize_1_" d="M31.36,31.36H22v-0.72h8.131l-9.386-9.385l0.51-0.51l9.385,9.386V22h0.721v9.36H31.36z M10,31.36H0.64V22
-		h0.72v8.131l9.386-9.386l0.509,0.51L1.869,30.64H10V31.36z M21.255,11.254l-0.51-0.509l9.386-9.386H22V0.64h9.36V10h-0.72V1.869
-		L21.255,11.254z M10.746,11.254L1.36,1.869V10H0.64V0.64H10v0.72H1.869l9.385,9.386L10.746,11.254z"/>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" baseProfile="basic" fill="white" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1792 1792"
+	 xml:space="preserve">
+<g>
+	<line fill="none" x1="1119.59" y1="174.77" x2="1119.59" y2="174.77"/>
+	<polygon points="1701.55,651.88 1701.55,74.77 1119.59,74.77 1119.59,174.77 1532.95,174.77 1066.87,653.32 1138.47,723.14 
+		1601.55,247.65 1601.55,651.88 	"/>
 </g>
-<rect id="_Transparent_Rectangle" style="fill:none;" width="32" height="32"/>
+<polygon points="87.6,1119.99 87.6,1697.1 669.56,1697.1 669.56,1597.1 256.2,1597.1 706.41,1129.92 634.81,1060.1 187.6,1524.22 
+	187.6,1119.99 "/>
+<g>
+	<line fill="none" x1="1605.74" y1="1110.95" x2="1605.74" y2="1110.95"/>
+	<polygon points="1128.63,1692.91 1705.74,1692.91 1705.74,1110.95 1605.74,1110.95 1605.74,1524.31 1127.19,1058.23 
+		1057.37,1129.83 1532.86,1592.91 1128.63,1592.91 	"/>
+</g>
+<polygon points="660.52,78.96 83.41,78.96 83.41,660.92 183.41,660.92 183.41,247.56 650.59,697.77 720.41,626.17 256.29,178.96 
+	660.52,178.96 "/>
 </svg>

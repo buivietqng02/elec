@@ -29,7 +29,7 @@ define([
     let isInit = false;
     let isBlinkTitleBrowser = false;
     const {
-        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID
+        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID, ATTRIBUTE_SIDEBAR_ROOM
     } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
@@ -39,6 +39,12 @@ define([
     const {
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
+
+    const {
+        stripTags,
+        htmlEncode,
+        decodeStringBase64
+    } = functions;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -131,6 +137,17 @@ define([
         }
     };
 
+    const handleUpdateRemoveMessOnSidebar = (message) => {
+        const listMess = getRoomById(message.id.chatId);
+        const lastMessage = listMess[listMess.length - 1].id.messageId;
+        
+        if (message.id.messageId === lastMessage) {
+            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
+            const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+            sidebarItem[0].querySelector('.preview').textContent = text;
+        } 
+    };
+
     const renderMessageForActiveRoom = (messages, roomId) => {
         let isNotMoveRoomUp = true;
         const isCurrentRoom = GLOBAL.getCurrentRoomId() === roomId;
@@ -142,6 +159,9 @@ define([
                     chatboxContentComp.onSyncRemove(message);
                 }
 
+                // Handle with deleted message in sidebar room
+                handleUpdateRemoveMessOnSidebar(message);
+
                 return;
             }
 
@@ -150,6 +170,9 @@ define([
                 if (isCurrentRoom) {
                     chatboxContentComp.onSyncUpdate(message);
                 }
+
+                // Handle with updated message in sidebar room
+                handleUpdateRemoveMessOnSidebar(message);
 
                 return;
             }

@@ -32,9 +32,12 @@ define([
     require('assets/css/index.less');
     jsrender($);
 
-    if (process.env.NODE_ENV === 'production') {
-        registerSW.onInit();
-    }
+    // if (process.env.NODE_ENV === 'production') {
+        if (window.location.hostname !== 'localhost') {
+            registerSW.onInit();
+        }
+      
+    // }
 
     const {
         ACCESS_TOKEN,

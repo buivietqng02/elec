@@ -135,7 +135,7 @@ define([
     let count = 0;
 
     const postMessage = (data) => {
-        if (data?.isDelete) {
+        if (data.isDelete) {
             API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -146,7 +146,7 @@ define([
             return;
         }
 
-        if (data?.messageId) {
+        if (data.messageId) {
             API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -180,7 +180,7 @@ define([
             return
         }
 
-        if(data?.chatId) {
+        if(data.chatId) {
             // console.log(data?.idLocal)
             API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
                 const chatboxContentComp = require('features/chatbox/chatboxContent');
@@ -303,7 +303,6 @@ define([
 
         onUpdate: (id, value) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-
             $input.val(text);
             $input.focus();
             messageId = id;
