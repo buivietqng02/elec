@@ -172,6 +172,32 @@ deploy:syd:
   dependencies:
     - build:syd
 
+build:slave:
+  stage: build
+  when: manual
+  tags:
+    - slave
+  script:
+    *build-prod
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist
+    expire_in: 3 days
+
+deploy:slave:
+  stage: deploy
+  when: manual
+  tags:
+    - slave
+  script:
+    *deploy-prod
+  only:
+    - master
+  dependencies:
+    - build:slave
+
 .switch-prod:
   script: &switch-prod
     - export CURR_ENV=$(if grep -q 'blue' /var/www/deployment_id; then echo 'blue'; else echo 'green'; fi;)
@@ -219,6 +245,17 @@ switch:syd:
   when: manual
   tags:
     - syd
+  script:
+    *switch-prod
+  only:
+    - master
+  dependencies: []
+
+switch:slave:
+  stage: switch
+  when: manual
+  tags:
+    - slave
   script:
     *switch-prod
   only:
