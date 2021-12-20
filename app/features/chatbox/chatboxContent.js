@@ -447,7 +447,7 @@ define([
         if(isFindingMediaFiles) return
 
         // Show scroll to bottom button
-        if ($wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400) {
+        if (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight < 1) {
             $btnScrollToBottom.show();
         } else {
             unreadScrollNum = 0;
@@ -828,7 +828,7 @@ define([
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
-                $wrapper.scrollTop() + $wrapper.height() < $wrapper[0].scrollHeight - 400 &&
+                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 &&
                 GLOBAL.getInfomation().id !== mess.sender.id &&
                 !isSearchMode
             ) {

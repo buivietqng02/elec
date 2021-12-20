@@ -72,7 +72,7 @@ define([
     };
 
     const onCopyText = () => {
-        const value = $message.find('.--mess').html();
+        const value = $message.find('.--mess').text();
 
         const elem = document.createElement('textarea');
         elem.value = value;

@@ -4,6 +4,13 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.12] - 2021-12-20
+### Update
+- Add GitLab jobs for slave node
+### Fix
+- Fix issue: show bagde with unread messages.
+- Fix issue: copy message content without HTML tags.
+
 ### [4.11] - 2021-12-16
 ### Update
 - Reject incoming calls when the user is in another call.
