@@ -95,7 +95,7 @@ define([
                         <div class="files__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}">
                             <div class="files__item__link">
                                 <i class="xm icon-download"></i>
-                                <a href="${API_URL}/audio?id=${mess.file.id}" target="_blank">${mess.file.filename}</a> ${fileSize}
+                                <a href="${API_URL}/file?id=${mess.file.id}" target="_blank">${mess.file.filename}</a> ${fileSize}
                             </div>
                             
                             <div class="files__item__features">
