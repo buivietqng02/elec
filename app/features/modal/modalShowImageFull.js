@@ -13,6 +13,8 @@ define([
     let $img;
     let wzoom;
     let $frame;
+    let $viewHDImage;
+    let isHDMode = false;
     // let $imgSlide;
     // let currentImageId;
     // const activeClassName = 'issi-active';
@@ -34,13 +36,21 @@ define([
                             <div class="ibo-zoom-up">
                                 <i class="icon-search"></i>
                             </div>
+
+                            <!-- View HD image -->
+                            <div class="switch-HD-image custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input view-hd-mode" id="switchHDView">
+                                <label class="custom-control-label" for="switchHDView">HD Image</label>
+                            </div>
+                            
                         </div>
+
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
                             </div>
                         </div>
-                        <div id="image-slick-slide"></div>
+                        <!-- <div id="image-slick-slide"></div> -->
                     </div>
                 </div>
             </div>
@@ -80,18 +90,32 @@ define([
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             // $img.src = e.target.src.replace('&small=1', '&small=0');
-            $img.src = e.target.src;
+            $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
+            // $img.src = e.target.src;
             $img.addEventListener('load', () => {
                 $img.style.visibility = 'visible';
             }, { once: true });
-        }, 500);
+        }, 100);
+    };
+
+    const viewHDModeFunc = (e) => {
+        $viewHDImage = $('.view-hd-mode');
+        const switchButton = document.getElementById('switchHDView');
+        switchButton.checked = false;
+
+        $viewHDImage.off().click(() => {
+            isHDMode = switchButton.checked ? isHDMode = true : isHDMode = false;
+            applyLargePicture(e);
+        });
     };
 
     const showImage = (e) => {
+        isHDMode = false;
         $modal.modal('show');
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
+        viewHDModeFunc(e);
         // setTimeout(() => {
         //     getImageList();
         // }, 500);
