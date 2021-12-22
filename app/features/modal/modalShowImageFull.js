@@ -79,7 +79,8 @@ define([
         $img.style.visibility = 'hidden';
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
-            $img.src = e.target.src.replace('&small=1', '&small=0');
+            // $img.src = e.target.src.replace('&small=1', '&small=0');
+            $img.src = e.target.src;
             $img.addEventListener('load', () => {
                 $img.style.visibility = 'visible';
             }, { once: true });
