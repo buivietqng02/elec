@@ -67,12 +67,16 @@ define([
             return;
         }
 
-        const { password, email } = getFormData($loginForm);
+        const loginData = getFormData($loginForm);
         loading = true;
         $errMess.html('');
         $loader.show();
 
-        axios.post(`${BASE_URL}/auth/login`, `password=${password}&email=${email}`).then(res => {
+        axios.post(`${BASE_URL}/auth/login`, loginData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
             if (res) {
                 // checkLBAccountIsExist(email);
                 setDataToLocalApplication(SESSION_ID, res.sessionId);
@@ -151,7 +155,7 @@ define([
         $loaderErp = $loginForm.find('.login-erp-btn .--spin');
 
         $loaderERPLoginBtn = $loginForm.find('.erp .--login-btn-spiner');
-      
+
         $passwordField.val('');
         $emailField.val('');
         $errMess.html('');
