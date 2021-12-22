@@ -36,9 +36,15 @@ define([
         loading = true;
         $errMess.html('');
         $loader.show();
-        const { password, login } = getFormData($loginForm);
 
-        axios.post(`${BASE_URL}/auth/login-erp`, `password=${password}&login=${login}&token=${token}`).then(res => {
+        const loginData = getFormData($loginForm);
+        loginData.token = token;
+
+        axios.post(`${BASE_URL}/auth/login-erp`, loginData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
             if (res) {
                 setDataToLocalApplication(SESSION_ID, res.sessionId);
                 setDataToLocalApplication(USER_ID, res.userId);

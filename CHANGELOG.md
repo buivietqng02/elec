@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.13] - 2021-12-22
+### Fix
+- Fixed the bug that didn't allow special characters in the password.
+
 ### [4.12] - 2021-12-20
 ### Update
 - Add GitLab jobs for slave node
