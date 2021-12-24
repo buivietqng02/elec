@@ -201,7 +201,8 @@ img {
 
 .mess {
 	float: left;
-	color: #fff;
+	color: #f60;
+	text-shadow: 1px 1px #444;
 }
 
 .form-style {
