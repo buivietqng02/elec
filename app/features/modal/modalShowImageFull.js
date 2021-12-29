@@ -95,7 +95,7 @@ define([
             $img.addEventListener('load', () => {
                 $img.style.visibility = 'visible';
             }, { once: true });
-        }, 100);
+        }, 500);
     };
 
     const viewHDModeFunc = (e) => {
