@@ -1,10 +1,12 @@
 define([
     'axios',
     'shared/functions',
+    'shared/data',
     'app/constant'
 ], (
     axios,
     functions,
+    GLOBAL,
     constant
 ) => {
     const ob = {};
@@ -42,7 +44,8 @@ define([
 
         axios.post(`${BASE_URL}/auth/login-erp`, loginData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept-Language': GLOBAL.getLanguage()
             }
         }).then(res => {
             if (res) {
