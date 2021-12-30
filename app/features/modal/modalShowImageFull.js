@@ -11,9 +11,7 @@ define([
     // const { API_URL } = constant;
     let $modal;
     let $img;
-    let hdImg;
     let wzoom;
-    let wzoomHD;
     let $frame;
 
     // let $viewHDImage;
@@ -51,7 +49,6 @@ define([
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
-                                <img id="icw-hd-image" class="inactive" />
                             </div>
                         </div>
                         <!-- <div id="image-slick-slide"></div> -->
@@ -89,11 +86,11 @@ define([
     // };
 
     const zoomFunc = (id) => {
-        const zoomObj = {
-            zoomOnClick: false,
-            maxScale: 10,
-            speed: 2,
-            dragScrollableOptions: {
+            wzoom = WZoom.create(`#${id}`, {
+                zoomOnClick: false,
+                maxScale: 10,
+                speed: 2,
+                dragScrollableOptions: {
                 onGrab: () => {
                     $frame.style.cursor = 'grabbing';
                 },
@@ -101,29 +98,7 @@ define([
                     $frame.style.cursor = 'grab';
                 }
             }
-        };
-
-        if (id === 'icw-hd-image') {
-            wzoomHD = WZoom.create(`#${id}`, zoomObj);
-
-            $('.ibo-zoom-up').off().click(() => {
-                wzoomHD.zoomUp();
-            });
-    
-            $('.ibo-zoom-down').off().click(() => {
-                wzoomHD.zoomDown();
-            });
-        } else {
-            wzoom = WZoom.create(`#${id}`, zoomObj);
-
-            $('.ibo-zoom-up').off().click(() => {
-                wzoom.zoomUp();
-            });
-    
-            $('.ibo-zoom-down').off().click(() => {
-                wzoom.zoomDown();
-            });
-        }
+        });
     };
 
     const applyLargePicture = (e) => {
@@ -136,8 +111,13 @@ define([
             
             $img.addEventListener('load', () => {
                 $img.style.visibility = 'visible';
-
+                
+                const hdImg = document.createElement('img');
                 hdImg.src = e.target.src.replace('&small=1', '&small=0');
+                hdImg.id = 'icw-hd-image';
+                hdImg.classList.add('inactive');
+                $frame.append(hdImg);
+
                 hdImg.addEventListener('load', () => {
                     // isHDMode = true;
                     $img.style.display = 'none';
@@ -163,9 +143,8 @@ define([
         // isHDMode = false;
         $modal.modal('show');
         $img.style.display = 'block';
-        hdImg.classList.add('inactive');
-        hdImg.removeAttribute('style');
-        hdImg.removeAttribute('src');
+
+        $frame.removeChild($frame.lastElementChild);
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
@@ -202,10 +181,9 @@ define([
                 $modal = $('#showImageFull');
                 // $imgSlide = $('#image-slick-slide');
                 $img = document.getElementById('icw-image');
-                hdImg = document.getElementById('icw-hd-image');
 
                 $frame = document.getElementById('image-caption-wrap');
-
+                
                 $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
                 // $(document).off('.changeLargeImage').
                 // on('click.changeLargeImage', '.iss-item', changeImage);
@@ -252,6 +230,14 @@ define([
                 $('#viewFullLibrary').off().click(() => {
                     $('#showImageFull').modal('hide');
                     modalMediaAndFiles.onInit();
+                });
+
+                $('.ibo-zoom-up').off().click(() => {
+                    wzoom.zoomUp();
+                });
+        
+                $('.ibo-zoom-down').off().click(() => {
+                    wzoom.zoomDown();
                 });
             }
         }
