@@ -1,20 +1,22 @@
 define([
     // 'shared/api',
-    // 'shared/data',
     // 'app/constant',
+    'features/modal/modalMediaAndFiles',
     'assets/js/slick.min.js'
 ], (
     // API,
-    // GLOBAL,
     // constant
+    modalMediaAndFiles
 ) => {
     // const { API_URL } = constant;
     let $modal;
     let $img;
+    let hdImg;
     let wzoom;
     let $frame;
-    let $viewHDImage;
-    let isHDMode = false;
+
+    // let $viewHDImage;
+    // let isHDMode = false;
     // let $imgSlide;
     // let currentImageId;
     // const activeClassName = 'issi-active';
@@ -37,10 +39,10 @@ define([
                                 <i class="icon-search"></i>
                             </div>
 
-                            <!-- View HD image -->
-                            <div class="switch-HD-image custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input view-hd-mode" id="switchHDView">
-                                <label class="custom-control-label" for="switchHDView">HD Image</label>
+                            <!-- View All image -->
+                            <div id="viewFullLibrary">
+                                <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
+                                <span>View library</span>
                             </div>
                             
                         </div>
@@ -48,6 +50,7 @@ define([
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
+                                <img id="icw-hd-image" class="inactive" />
                             </div>
                         </div>
                         <!-- <div id="image-slick-slide"></div> -->
@@ -89,33 +92,42 @@ define([
         $img.style.visibility = 'hidden';
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
-            // $img.src = e.target.src.replace('&small=1', '&small=0');
-            $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
-            // $img.src = e.target.src;
+            // $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
+            $img.src = e.target.src;
+            
             $img.addEventListener('load', () => {
                 $img.style.visibility = 'visible';
+
+                hdImg.src = e.target.src.replace('&small=1', '&small=0');
+                hdImg.addEventListener('load', () => {
+                    // isHDMode = true;
+                    $img.style.display = 'none';
+                    hdImg.classList.remove('inactive');
+                });
             }, { once: true });
         }, 500);
     };
 
-    const viewHDModeFunc = (e) => {
-        $viewHDImage = $('.view-hd-mode');
-        const switchButton = document.getElementById('switchHDView');
-        switchButton.checked = false;
+    // const viewHDModeFunc = (e) => {
+    //     $viewHDImage = $('.view-hd-mode');
+    //     const switchButton = document.getElementById('switchHDView');
+    //     switchButton.checked = false;
 
-        $viewHDImage.off().click(() => {
-            isHDMode = switchButton.checked ? isHDMode = true : isHDMode = false;
-            applyLargePicture(e);
-        });
-    };
+    //     $viewHDImage.off().click(() => {
+    //         isHDMode = switchButton.checked ? isHDMode = true : isHDMode = false;
+    //         applyLargePicture(e);
+    //     });
+    // };
 
     const showImage = (e) => {
-        isHDMode = false;
+        // isHDMode = false;
         $modal.modal('show');
+        $img.style.display = 'block';
+        hdImg.classList.add('inactive');
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
-        viewHDModeFunc(e);
+        // viewHDModeFunc(e);
         // setTimeout(() => {
         //     getImageList();
         // }, 500);
@@ -148,6 +160,8 @@ define([
                 $modal = $('#showImageFull');
                 // $imgSlide = $('#image-slick-slide');
                 $img = document.getElementById('icw-image');
+                hdImg = document.getElementById('icw-hd-image');
+
                 $frame = document.getElementById('image-caption-wrap');
 
                 $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
@@ -157,7 +171,7 @@ define([
                 wzoom = WZoom.create('#icw-image', {
                     zoomOnClick: false,
                     maxScale: 10,
-                    speed: 2,
+                    speed: 1,
                     dragScrollableOptions: {
                         onGrab: () => {
                             $frame.style.cursor = 'grabbing';
@@ -205,6 +219,10 @@ define([
                 //         }
                 //     ]
                 // });
+                $('#viewFullLibrary').off().click(() => {
+                    $('#showImageFull').modal('hide');
+                    modalMediaAndFiles.onInit();
+                });
 
                 $('.ibo-zoom-up').off().click(() => {
                     wzoom.zoomUp();
