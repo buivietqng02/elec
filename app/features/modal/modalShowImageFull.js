@@ -91,7 +91,7 @@ define([
         wzoom = WZoom.create(`#${id}`, {
             zoomOnClick: false,
             maxScale: 10,
-            speed: 1,
+            speed: 2,
             dragScrollableOptions: {
                 onGrab: () => {
                     $frame.style.cursor = 'grabbing';
@@ -141,6 +141,8 @@ define([
         $modal.modal('show');
         $img.style.display = 'block';
         hdImg.classList.add('inactive');
+        hdImg.removeAttribute('style');
+
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
