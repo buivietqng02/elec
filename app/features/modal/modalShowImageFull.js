@@ -50,7 +50,7 @@ define([
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
-                                <img id="icw-hd-image" class="inactive" />
+                                <img id="icw-hd-image" class="inactive icw-image" />
                             </div>
                         </div>
                         <!-- <div id="image-slick-slide"></div> -->
@@ -168,7 +168,7 @@ define([
                 // $(document).off('.changeLargeImage').
                 // on('click.changeLargeImage', '.iss-item', changeImage);
                 
-                wzoom = WZoom.create('#icw-image', {
+                wzoom = WZoom.create('.icw-image', {
                     zoomOnClick: false,
                     maxScale: 10,
                     speed: 1,
