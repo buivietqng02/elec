@@ -50,7 +50,7 @@ define([
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
-                                <img id="icw-hd-image" class="inactive icw-image" />
+                                <img id="icw-hd-image" class="inactive" />
                             </div>
                         </div>
                         <!-- <div id="image-slick-slide"></div> -->
@@ -87,6 +87,22 @@ define([
     //     });
     // };
 
+    const zoomFunc = (id) => {
+        wzoom = WZoom.create(`#${id}`, {
+            zoomOnClick: false,
+            maxScale: 10,
+            speed: 1,
+            dragScrollableOptions: {
+                onGrab: () => {
+                    $frame.style.cursor = 'grabbing';
+                },
+                onDrop: () => {
+                    $frame.style.cursor = 'grab';
+                }
+            }
+        });
+    };
+
     const applyLargePicture = (e) => {
         wzoom.maxZoomDown();
         $img.style.visibility = 'hidden';
@@ -103,6 +119,7 @@ define([
                     // isHDMode = true;
                     $img.style.display = 'none';
                     hdImg.classList.remove('inactive');
+                    zoomFunc('icw-hd-image');
                 });
             }, { once: true });
         }, 500);
@@ -168,19 +185,7 @@ define([
                 // $(document).off('.changeLargeImage').
                 // on('click.changeLargeImage', '.iss-item', changeImage);
                 
-                wzoom = WZoom.create('.icw-image', {
-                    zoomOnClick: false,
-                    maxScale: 10,
-                    speed: 1,
-                    dragScrollableOptions: {
-                        onGrab: () => {
-                            $frame.style.cursor = 'grabbing';
-                        },
-                        onDrop: () => {
-                            $frame.style.cursor = 'grab';
-                        }
-                    }
-                });
+                zoomFunc('icw-image');
 
                 // $imgSlide.slick({
                 //     slidesToShow: 10,
