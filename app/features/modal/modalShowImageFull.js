@@ -144,7 +144,10 @@ define([
         $modal.modal('show');
         $img.style.display = 'block';
 
-        $frame.removeChild($frame.lastElementChild);
+        if ($frame.childElementCount > 1) {
+            $frame.removeChild($frame.lastElementChild);
+        }
+       
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
