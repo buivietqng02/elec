@@ -13,6 +13,7 @@ define([
     let $img;
     let hdImg;
     let wzoom;
+    let wzoomHD;
     let $frame;
 
     // let $viewHDImage;
@@ -88,7 +89,7 @@ define([
     // };
 
     const zoomFunc = (id) => {
-        wzoom = WZoom.create(`#${id}`, {
+        const zoomObj = {
             zoomOnClick: false,
             maxScale: 10,
             speed: 2,
@@ -100,7 +101,29 @@ define([
                     $frame.style.cursor = 'grab';
                 }
             }
-        });
+        };
+
+        if (id === 'icw-hd-image') {
+            wzoomHD = WZoom.create(`#${id}`, zoomObj);
+
+            $('.ibo-zoom-up').off().click(() => {
+                wzoomHD.zoomUp();
+            });
+    
+            $('.ibo-zoom-down').off().click(() => {
+                wzoomHD.zoomDown();
+            });
+        } else {
+            wzoom = WZoom.create(`#${id}`, zoomObj);
+
+            $('.ibo-zoom-up').off().click(() => {
+                wzoom.zoomUp();
+            });
+    
+            $('.ibo-zoom-down').off().click(() => {
+                wzoom.zoomDown();
+            });
+        }
     };
 
     const applyLargePicture = (e) => {
@@ -142,7 +165,7 @@ define([
         $img.style.display = 'block';
         hdImg.classList.add('inactive');
         hdImg.removeAttribute('style');
-
+        hdImg.removeAttribute('src');
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
         applyLargePicture(e);
@@ -229,14 +252,6 @@ define([
                 $('#viewFullLibrary').off().click(() => {
                     $('#showImageFull').modal('hide');
                     modalMediaAndFiles.onInit();
-                });
-
-                $('.ibo-zoom-up').off().click(() => {
-                    wzoom.zoomUp();
-                });
-
-                $('.ibo-zoom-down').off().click(() => {
-                    wzoom.zoomDown();
                 });
             }
         }
