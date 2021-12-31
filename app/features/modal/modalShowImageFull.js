@@ -116,22 +116,23 @@ define([
             // eslint-disable-next-line prefer-destructuring
             // $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
             $img.src = e.target.src;
-            
             $img.addEventListener('load', () => {
+                console.log('load low img');
                 $img.style.visibility = 'visible';
-                
-                const hdImg = document.createElement('img');
-                hdImg.src = e.target.src.replace('&small=1', '&small=0');
-                hdImg.id = 'icw-hd-image';
-                hdImg.classList.add('inactive');
-                $frame.append(hdImg);
+            }, { once: true });
 
-                hdImg.addEventListener('load', () => {
-                    // isHDMode = true;
-                    $img.style.display = 'none';
-                    hdImg.classList.remove('inactive');
-                    zoomFunc('icw-hd-image');
-                }, { once: true });
+            const hdImg = document.createElement('img');
+            hdImg.src = e.target.src.replace('&small=1', '&small=0');
+            hdImg.id = 'icw-hd-image';
+            hdImg.classList.add('inactive');
+            $frame.append(hdImg);
+
+            hdImg.addEventListener('load', () => {
+                // isHDMode = true;
+                console.log('load hd img');
+                $img.style.display = 'none';
+                hdImg.classList.remove('inactive');
+                zoomFunc('icw-hd-image');
             }, { once: true });
         }, 500);
     };
