@@ -131,7 +131,7 @@ define([
                     $img.style.display = 'none';
                     hdImg.classList.remove('inactive');
                     zoomFunc('icw-hd-image');
-                });
+                }, { once: true });
             }, { once: true });
         }, 500);
     };
@@ -150,13 +150,8 @@ define([
     const showImage = (e) => {
         // isHDMode = false;
         $modal.modal('show');
-        $img.style.display = 'block';
 
         zoomFunc('icw-image');
-
-        if ($frame.childElementCount > 1) {
-            $frame.removeChild($frame.lastElementChild);
-        }
        
         // $imgSlide.slick('removeSlide', null, null, true);
         // currentImageId = $(e.target).closest('[data-chat-id]').data().chatId;
@@ -241,6 +236,16 @@ define([
                 $('#viewFullLibrary').off().click(() => {
                     $('#showImageFull').modal('hide');
                     modalMediaAndFiles.onInit();
+                });
+
+                $('#showImageFull').on('hidden.bs.modal', () => {
+                    console.log('test');
+                    
+                    while ($frame.childElementCount > 1) {
+                        $frame.removeChild($frame.lastElementChild);
+                    }
+
+                    $img.style.display = 'block';
                 });
             }
         }
