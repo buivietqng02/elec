@@ -14,6 +14,7 @@ define([
     let wzoom;
     let $frame;
     let hdImg;
+    let timeoutLoadHDimg;
 
     // let $viewHDImage;
     // let isHDMode = false;
@@ -132,12 +133,11 @@ define([
                 hdImg.id = 'icw-hd-image';
                 hdImg.classList.add('inactive');
                 $frame.append(hdImg);
-    
-                hdImg.addEventListener('load', () => {
-                    // isHDMode = true;
+                
+                timeoutLoadHDimg = setTimeout(() => {
                     console.log('load hd img');
                     loadingHDimg();
-                }, { once: true });
+                }, 10000);
             }, { once: true });
         }, 500);
     };
@@ -251,11 +251,7 @@ define([
                         $frame.removeChild($frame.lastElementChild);
                     }
 
-                    hdImg.removeEventListener('load', () => {
-                        // isHDMode = true;
-                        console.log('remove load hd img event');
-                        loadingHDimg();
-                    }, { once: true });
+                    clearTimeout(timeoutLoadHDimg);
 
                     $img.style.display = 'block';
                 });
