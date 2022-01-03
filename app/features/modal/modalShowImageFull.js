@@ -13,6 +13,7 @@ define([
     let $img;
     let wzoom;
     let $frame;
+    let hdImg;
 
     // let $viewHDImage;
     // let isHDMode = false;
@@ -109,6 +110,12 @@ define([
         });
     };
 
+    const loadingHDimg = () => {
+        $img.style.display = 'none';
+        hdImg.classList.remove('inactive');
+        zoomFunc('icw-hd-image');
+    };
+
     const applyLargePicture = (e) => {
         wzoom.maxZoomDown();
         $img.style.visibility = 'hidden';
@@ -119,20 +126,18 @@ define([
             $img.addEventListener('load', () => {
                 console.log('load low img');
                 $img.style.visibility = 'visible';
-            }, { once: true });
 
-            const hdImg = document.createElement('img');
-            hdImg.src = e.target.src.replace('&small=1', '&small=0');
-            hdImg.id = 'icw-hd-image';
-            hdImg.classList.add('inactive');
-            $frame.append(hdImg);
-
-            hdImg.addEventListener('load', () => {
-                // isHDMode = true;
-                console.log('load hd img');
-                $img.style.display = 'none';
-                hdImg.classList.remove('inactive');
-                zoomFunc('icw-hd-image');
+                hdImg = document.createElement('img');
+                hdImg.src = e.target.src.replace('&small=1', '&small=0');
+                hdImg.id = 'icw-hd-image';
+                hdImg.classList.add('inactive');
+                $frame.append(hdImg);
+    
+                hdImg.addEventListener('load', () => {
+                    // isHDMode = true;
+                    console.log('load hd img');
+                    loadingHDimg();
+                }, { once: true });
             }, { once: true });
         }, 500);
     };
@@ -245,6 +250,12 @@ define([
                     while ($frame.childElementCount > 1) {
                         $frame.removeChild($frame.lastElementChild);
                     }
+
+                    hdImg.removeEventListener('load', () => {
+                        // isHDMode = true;
+                        console.log('remove load hd img event');
+                        loadingHDimg();
+                    }, { once: true });
 
                     $img.style.display = 'block';
                 });
