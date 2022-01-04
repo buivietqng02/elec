@@ -309,10 +309,10 @@ define([
         if (!isVoiceInit) {
             initRecordFunc('start');
             if (GLOBAL.getBodyBgTheme() === 'body_theme_black') {
-                initVoiceChat.innerHTML = '<i class="keyboard-vc-dark"></i>';
+                initVoiceChat.innerHTML = '<i class="icon-keyboard-dark"></i>';
                 btnVoiceChatDescription.style.color = '#80C9FF';
             } else {
-                initVoiceChat.innerHTML = '<i class="keyboard-vc"></i>';
+                initVoiceChat.innerHTML = '<i class="icon-keyboard"></i>';
                 btnVoiceChatDescription.style.color = '#111';
             }
 

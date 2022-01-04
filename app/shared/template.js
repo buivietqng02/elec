@@ -41,7 +41,7 @@ define(['shared/icon'], (ICON) => ({
 
             <!-- Conference -->
             <div class="lb-item lbi-conference">
-                <i class="icon-conference"></i>
+                <i class="icon-video-camera"></i>
             </div>
             <!-- End Conference -->
 

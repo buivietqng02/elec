@@ -32,11 +32,11 @@ define([
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div class="image-bottom-options clearfix">
-                            <div class="ibo-zoom-down">
-                                <i class="icon-search"></i>
-                            </div>
                             <div class="ibo-zoom-up">
-                                <i class="icon-search"></i>
+                                <i class="icon-zoom-out"></i>
+                            </div>
+                            <div class="ibo-zoom-down">
+                                <i class="icon-zoom-in"></i>
                             </div>
 
                             <!-- View All image -->
