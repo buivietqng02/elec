@@ -61,6 +61,7 @@ define([
     let isSearchMode = false;
     let isInit = false;
     let $btnScrollToBottom;
+    let $scrollToMess;
     let $messageList;
     let $wrapper;
     let $loadingOfNew;
@@ -454,6 +455,10 @@ define([
             $unreadScroll.text(0);
             $unreadScroll.hide();
             $btnScrollToBottom.hide();
+
+            $btnScrollToBottom.addClass('round');
+            $btnScrollToBottom.removeClass('square');
+            $scrollToMess.hide();
         }
 
         // condition 1: When the request is being processed, this action will skip, prevent user spam
@@ -800,6 +805,7 @@ define([
             isInit = false;
 
             $btnScrollToBottom = $('.scroll-to__bottom');
+            $scrollToMess = $('.scroll-to__message');
             $messageList = $('.messages__list');
             $wrapper = $('.js_con_list_mess');
             $loadingOfNew = $('.--load-mess');
@@ -835,6 +841,10 @@ define([
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
                 $unreadScroll.show();
+
+                $btnScrollToBottom.removeClass('round');
+                $btnScrollToBottom.addClass('square');
+                $scrollToMess.show();
             }
 
             // Render new quotedMessage

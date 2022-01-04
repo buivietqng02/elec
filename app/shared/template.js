@@ -520,9 +520,13 @@ define(['shared/icon'], (ICON) => ({
                         <div class="--load-mess">
                             <div class="pulse"></div>
                         </div>
-                        <a class="scroll-to scroll-to__bottom p-cur show" style="display:none">
-                            <span class="unread-message-scroll">0</span>
+                        <a class="scroll-to scroll-to__bottom p-cur show round" style="display:none">
                             <i class="xm icon-angle-down"></i>
+                            <p class="scroll-to__message" style="display:none">
+                                <span class="unread-message-scroll">0</span> 
+                                <lang data-language="NEW_MESSAGE"></lang>
+                            </p>
+                           
                         </a>
 
                         <button class="jump-to-bottom hidden">

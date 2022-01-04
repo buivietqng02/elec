@@ -14,7 +14,7 @@ const urls = [
     '/source/styles.css',
     '/assets/css/icon.css',
     '/source/700-scaled.jpg',
-    '/assets/images/cosmos4-1.jpg',
+    '/assets/images/login-background.png',
     '/source/check.svg',
     '/source/clear.svg',
     '/source/flowers_bw03.png',
