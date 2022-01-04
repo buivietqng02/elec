@@ -14,7 +14,6 @@ define([
     let wzoom;
     let $frame;
     let hdImg;
-    let timeoutLoadHDimg;
 
     // let $viewHDImage;
     // let isHDMode = false;
@@ -119,25 +118,29 @@ define([
 
     const applyLargePicture = (e) => {
         wzoom.maxZoomDown();
-        $img.style.visibility = 'hidden';
+        // $img.style.visibility = 'hidden';
+        $img.style.display = 'none';
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             // $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
             $img.src = e.target.src;
             $img.addEventListener('load', () => {
                 console.log('load low img');
-                $img.style.visibility = 'visible';
-
-                hdImg = document.createElement('img');
-                hdImg.src = e.target.src.replace('&small=1', '&small=0');
-                hdImg.id = 'icw-hd-image';
-                hdImg.classList.add('inactive');
-                $frame.append(hdImg);
+                // $img.style.visibility = 'visible';
+                $img.style.display = 'block';
                 
-                timeoutLoadHDimg = setTimeout(() => {
-                    console.log('load hd img');
-                    loadingHDimg();
-                }, 10000);
+                setTimeout(() => {
+                    hdImg = document.createElement('img');
+                    hdImg.src = e.target.src.replace('&small=1', '&small=0');
+                    hdImg.id = 'icw-hd-image';
+                    hdImg.classList.add('inactive');
+                    $frame.append(hdImg);
+                    
+                    hdImg.addEventListener('load', () => {
+                        console.log('load hd img');
+                        loadingHDimg();
+                    }, { once: true });
+                }, 500);
             }, { once: true });
         }, 500);
     };
@@ -250,8 +253,6 @@ define([
                     while ($frame.childElementCount > 1) {
                         $frame.removeChild($frame.lastElementChild);
                     }
-
-                    clearTimeout(timeoutLoadHDimg);
 
                     $img.style.display = 'block';
                 });
