@@ -33,10 +33,10 @@ define([
                         </button>
                         <div class="image-bottom-options clearfix">
                             <div class="ibo-zoom-up">
-                                <i class="icon-zoom-out"></i>
+                                <i class="icon-zoom-in"></i>
                             </div>
                             <div class="ibo-zoom-down">
-                                <i class="icon-zoom-in"></i>
+                                <i class="icon-zoom-out"></i>
                             </div>
 
                             <!-- View All image -->
