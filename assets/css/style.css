@@ -874,12 +874,19 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: none;
   color: #fff;
   width: 60px;
-  height: 45px;
+  height: 50px;
   background: #00CEFF;
   border-radius: 12px 0;
   text-transform: uppercase;
   font-size: 1.3rem;
 }
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .btn__send{
+      height: 46px;
+    }
+  }
 
 .btn__send:hover {
   background: #08c;
@@ -3937,9 +3944,9 @@ body.body_fz_18 {
   .btn__voice-chat{
     margin-right: 5px !important;
   }
-  .btn__voice-chat-picture{
+  /* .btn__voice-chat-picture{
     width: 25px;
-  }
+  } */
 
   .btn__attach{
     left:-2px;
@@ -4026,7 +4033,7 @@ body.body_fz_18 {
  /* ============= voice chat ============ */
  /* Init voice chat */
  .btn__voice-chat{
-  /* width: 40px; */
+  width: 40px;
   border:none;
   background-color: transparent;
   border-radius: 5px;
@@ -4036,11 +4043,11 @@ body.body_fz_18 {
   font-size: 30px;
 }
 
-.btn__voice-chat-picture{
+/* .btn__voice-chat-picture{
   width: 20px;
   padding:0;
   margin:0;
-}
+} */
 
 /* -------------Recording button style --------------- */
 #voice-statusRecording{

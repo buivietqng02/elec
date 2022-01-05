@@ -724,16 +724,26 @@ define([
 
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
         // Handle when user switch room but the request has not finished yet
-        if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
+        let messages;
+     
+        if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
             return;
         }
+
+        messages = (res?.messages || []).reverse();
+
         // Update time activity to top bar
-        chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
-        let messages = (res?.messages || []).reverse();
-        // Assign message to store
-        setChatsById(roomInfo.id, messages);
-        storeRoomById(roomInfo.id, messages);
-        handleDataFromGetMess(messages, roomInfo);
+        if(!roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
+            chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+
+            handleDataFromGetMess(messages, roomInfo);
+        }
+
+         // Assign message to store
+         setChatsById(roomInfo.id, messages);
+         storeRoomById(roomInfo.id, messages);
+
+        return messages;
         
     }).catch(err => {
         if (err.response?.status == 404) {
@@ -766,7 +776,8 @@ define([
 
     const loadMessages = async (roomInfo) => {
         onRefresh();
-       
+
+        let messagesListLoadFirstTime;
         if (getRoomById(roomInfo.id) && isInit) {
             onGetMessageFromCache(roomInfo);
 
@@ -779,7 +790,11 @@ define([
 
         if (GLOBAL.getNetworkStatus()) {
             isInit = true;
-            onGetMessage(roomInfo);
+
+            messagesListLoadFirstTime = await onGetMessage(roomInfo);
+
+            return messagesListLoadFirstTime;
+           
         } else {
             const messagesChat = await getChatById(roomInfo.id);
             if (!messagesChat) {
@@ -819,7 +834,7 @@ define([
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
         },
 
-        onLoadMessage: (roomInfo) => loadMessages(roomInfo),
+        onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
             const mess = messList[0];

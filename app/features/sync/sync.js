@@ -138,14 +138,39 @@ define([
     };
 
     const handleUpdateRemoveMessOnSidebar = (message) => {
-        const listMess = getRoomById(message.id.chatId);
-        const lastMessage = listMess[listMess.length - 1].id.messageId;
-        
-        if (message.id.messageId === lastMessage) {
-            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-            const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
-            sidebarItem[0].querySelector('.preview').textContent = text;
-        } 
+        let lastMessage;
+        let roomInfo = GLOBAL.getRooms().filter((room) => {
+            if (String(room.id) === String(message.id.chatId)) {
+                return true;
+            }
+
+            return false;
+        })[0] || {};
+        roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+        const renderLastMessSideBar = () => {
+            if (message.id.messageId === lastMessage) {
+                const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
+                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+                sidebarItem[0].querySelector('.preview').textContent = text;
+            } 
+        };
+
+        // If the "getRoomById()" is undefined (user has not click to the room), init onLoadMessage
+        if (!roomInfo?.owner && !getRoomById(message.id.chatId)) {
+            roomInfo.isUpdateOrRemoveMessBeforeGetRoomById = true;
+            chatboxContentComp.onLoadMessage(roomInfo).then((res) => {
+                lastMessage = res[res.length - 1].id.messageId;
+
+                renderLastMessSideBar();
+
+                delete roomInfo.isUpdateOrRemoveMessBeforeGetRoomById;
+            });
+        } else {
+            const listMess = getRoomById(message.id.chatId);
+            lastMessage = listMess[listMess.length - 1].id.messageId;
+            renderLastMessSideBar();
+        }
     };
 
     const renderMessageForActiveRoom = (messages, roomId) => {
@@ -154,6 +179,7 @@ define([
         messages.forEach(message => {
             handleSyncData(message, roomId);
             // Handle with message was deleted
+
             if (message.deleted) {
                 if (isCurrentRoom) {
                     chatboxContentComp.onSyncRemove(message);

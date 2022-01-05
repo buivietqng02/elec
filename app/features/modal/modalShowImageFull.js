@@ -14,6 +14,7 @@ define([
     let wzoom;
     let $frame;
     let hdImg;
+    let mediaFilesWraper;
 
     // let $viewHDImage;
     // let isHDMode = false;
@@ -194,6 +195,8 @@ define([
     return {
         onInit: () => {
             if (!$('#showImageFull').length) {
+                mediaFilesWraper = document.querySelector('.view-media-files-wraper');
+
                 $('body').append(renderTemplate);
                 $modal = $('#showImageFull');
                 // $imgSlide = $('#image-slick-slide');
@@ -244,12 +247,14 @@ define([
                 // });
                 $('#viewFullLibrary').off().click(() => {
                     $('#showImageFull').modal('hide');
-                    modalMediaAndFiles.onInit();
+                    
+                    // If already open model viewAndMedia, don't need to init again
+                    if (mediaFilesWraper.classList.contains('hidden')) {
+                        modalMediaAndFiles.onInit();
+                    }
                 });
 
                 $('#showImageFull').on('hidden.bs.modal', () => {
-                    console.log('test');
-                    
                     while ($frame.childElementCount > 1) {
                         $frame.removeChild($frame.lastElementChild);
                     }

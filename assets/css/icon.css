@@ -315,16 +315,7 @@
     background-size: 25px 25px;
     height: 25px;
     width: 25px;
-  } 
-
-  .icon-arrow-left:before {
-    display: block;
-    content: ' ';
-    background-image: url('../images/icon-arrow-left.png');
-    background-size: 25px 25px;
-    height: 25px;
-    width: 25px;
-  } 
+  }
 
   .icon-transaction-success:before {
     display: block;

@@ -10,7 +10,7 @@ define([], () => {
     const renderTemplate = (title, content) => `
         <header>
             <button class="returnBtn">
-                <i class="icon-arrow-left"></i>
+                <i class="icon-chevron-left"></i>
             </button>
             <p class="templateModal__title">${title}</p>
         </header>
