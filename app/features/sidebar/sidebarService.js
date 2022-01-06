@@ -146,7 +146,8 @@ define([
             group,
             subject,
             sender,
-            lastMessage
+            lastMessage,
+            muted
         } = room;
         let data = {};
         let src = '';
@@ -205,7 +206,7 @@ define([
             name: htmlEncode(name),
             mess,
             userId,
-            mute: obRoomEdited[id]?.notification_mess === false ? 'mute' : ''
+            mute: muted ? 'mute' : ''
         };
 
         return render(template, data);

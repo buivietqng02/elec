@@ -4,6 +4,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.14] - WIP
+### Update
+- Mute/unmute chats on server-side.
+- Improve web notifications content.
+
 ### [4.13] - 2021-12-22
 ### Fix
 - Fixed the bug that didn't allow special characters in the password.

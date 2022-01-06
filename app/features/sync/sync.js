@@ -282,7 +282,7 @@ define([
                     isPushNotification = true;
                     if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
-                        notificationComp.pushNotificationForMessage(messagesResponse[0]);
+                        notificationComp.pushNotificationForMessage(messagesResponse[0], room);
                     }
                 }
 
@@ -413,6 +413,40 @@ define([
         });
     };
 
+    /**
+     * Method to mute/unmute a chat
+     * @param {*} muteChatEvents 
+     */
+    const handleMuteChatEvents = (muteChatEvents) => {
+        muteChatEvents.forEach(muteChatEvent => {
+            const roomId = muteChatEvent.chatId;
+            const $room = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
+
+            if (muteChatEvent.muted) {
+                $room.addClass('mute');
+            } else {
+                $room.removeClass('mute');
+            }
+
+            if (roomId === GLOBAL.getCurrentRoomId()) {
+                const $textNotiBtn = $('#chatbox-group-option').find('.--disabled').find('span');
+                if (muteChatEvent.muted) {
+                    $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
+                } else {
+                    $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
+                }
+            }
+
+            GLOBAL.setRooms(GLOBAL.getRooms().map(room => {
+                const tempRoom = { ...room };
+                if (room.id === roomId) {
+                    tempRoom.muted = muteChatEvent.muted;
+                }
+                return tempRoom;
+            }));
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -452,6 +486,10 @@ define([
 
                 if (res?.acceptInviteEvents?.length) {
                     handleAcceptInviteEvents(res.acceptInviteEvents);
+                }
+
+                if (res?.muteChatEvents?.length) {
+                    handleMuteChatEvents(res.muteChatEvents);
                 }
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {

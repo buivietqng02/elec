@@ -109,23 +109,10 @@ define([
 
     const updateNotification = () => {
         const roomId = GLOBAL.getCurrentRoomId();
-        const $room = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
-        const obRoomEdited = { ...GLOBAL.getRoomInfoWasEdited() };
-        obRoomEdited[roomId] = obRoomEdited[roomId] || {};
-
-        if (obRoomEdited[roomId].notification_mess === false) {
-            $room.removeClass('mute');
-            $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
-            delete obRoomEdited[roomId].notification_mess;
-        } else {
-            $room.addClass('mute');
-            $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
-            obRoomEdited[roomId].notification_mess = false;
-        }
-
-        GLOBAL.setRoomInfoWasEdited(obRoomEdited);
-        offEventClickOutside();
-        API.put('users/preferences', { user_chat_info: obRoomEdited }).then(() => { });
+        const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomId));
+        API.post(`chats/${roomId}/${roomInfo.muted ? 'unmute' : 'mute'}`).then(() => {
+            offEventClickOutside();
+        });
     };
 
     const onRenderTimeActivity = (time) => {
@@ -172,6 +159,7 @@ define([
         },
 
         onRenderInfomation: (roomInfo) => {
+            console.log('onRenderInfomation', roomInfo)
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
             $roomInfo = roomInfo;
             $image.off('error');
@@ -179,7 +167,7 @@ define([
             $typing.hide();
 
             // Check status of notification
-            if (obRoomEdited[roomInfo.id]?.notification_mess === false) {
+            if (roomInfo.muted) {
                 $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
             } else {
                 $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
