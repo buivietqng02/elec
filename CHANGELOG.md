@@ -8,6 +8,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### Update
 - Mute/unmute chats on server-side.
 - Improve web notifications content.
+- Improve loading time of viewing full-size image
+- Fixed bug remove & edit message not update in the left chat room list 
+- Improve UI for notice for new messages when scrolling up 
+- Other small UI/UX improvements
 
 ### [4.13] - 2021-12-22
 ### Fix
