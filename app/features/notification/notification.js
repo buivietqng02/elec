@@ -1,11 +1,13 @@
 define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
-    const pushNotificationForMessage = message => {
+    const pushNotificationForMessage = (message, room) => {
         // Notification for edit message
-        const editMessage = message.updated ? 'Edited message:' : '';
-       
-        const text = `${editMessage} ${functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''))}`;
+        const editMessage = message.updated ? ' (Edited message)' : '';
 
-        const notification = new Notification(message.sender.name, {
+        const title = room.group ? room.subject : message.sender.name;
+        const decodedMessage = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
+        const text = `${room.group ? `${message.sender.name}: ${decodedMessage}` : decodedMessage}`;
+
+        const notification = new Notification(title + editMessage, {
             body: text.replace(/<[^>]+>/g, ''),
             icon: '/assets/images/icon.png'
         });
@@ -39,18 +41,17 @@ define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
             }
         },
 
-        pushNotificationForMessage: message => {
+        pushNotificationForMessage: (message, room) => {
             const info = GLOBAL.getInfomation();
-            const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
 
             if (
                 window.Notification
                 && Notification.permission === 'granted'
                 && !document.hasFocus()
                 && info.id !== message.sender.id
-                && obRoomEdited[message.id.chatId]?.notification_mess !== false
+                && !room.muted
             ) {
-                pushNotificationForMessage(message);
+                pushNotificationForMessage(message, room);
             }
         }
     };

@@ -58,7 +58,7 @@ define([
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="modal-drag" id="modal-drag" style="display: none;">
-                            <i class="icon-drag-window"></i>
+                            <i class="icon-all-directions"></i>
                         </div>
                         <div class="modal-state-switch" id="modal-state-switch" style="display: none;">
                             <i class="icon-minimize-window"></i>

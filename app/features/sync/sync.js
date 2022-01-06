@@ -138,14 +138,39 @@ define([
     };
 
     const handleUpdateRemoveMessOnSidebar = (message) => {
-        const listMess = getRoomById(message.id.chatId);
-        const lastMessage = listMess[listMess.length - 1].id.messageId;
-        
-        if (message.id.messageId === lastMessage) {
-            const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-            const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
-            sidebarItem[0].querySelector('.preview').textContent = text;
-        } 
+        let lastMessage;
+        let roomInfo = GLOBAL.getRooms().filter((room) => {
+            if (String(room.id) === String(message.id.chatId)) {
+                return true;
+            }
+
+            return false;
+        })[0] || {};
+        roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+        const renderLastMessSideBar = () => {
+            if (message.id.messageId === lastMessage) {
+                const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
+                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+                sidebarItem[0].querySelector('.preview').textContent = text;
+            } 
+        };
+
+        // If the "getRoomById()" is undefined (user has not click to the room), init onLoadMessage
+        if (!roomInfo?.owner && !getRoomById(message.id.chatId)) {
+            roomInfo.isUpdateOrRemoveMessBeforeGetRoomById = true;
+            chatboxContentComp.onLoadMessage(roomInfo).then((res) => {
+                lastMessage = res[res.length - 1].id.messageId;
+
+                renderLastMessSideBar();
+
+                delete roomInfo.isUpdateOrRemoveMessBeforeGetRoomById;
+            });
+        } else {
+            const listMess = getRoomById(message.id.chatId);
+            lastMessage = listMess[listMess.length - 1].id.messageId;
+            renderLastMessSideBar();
+        }
     };
 
     const renderMessageForActiveRoom = (messages, roomId) => {
@@ -154,6 +179,7 @@ define([
         messages.forEach(message => {
             handleSyncData(message, roomId);
             // Handle with message was deleted
+
             if (message.deleted) {
                 if (isCurrentRoom) {
                     chatboxContentComp.onSyncRemove(message);
@@ -256,7 +282,7 @@ define([
                     isPushNotification = true;
                     if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
-                        notificationComp.pushNotificationForMessage(messagesResponse[0]);
+                        notificationComp.pushNotificationForMessage(messagesResponse[0], room);
                     }
                 }
 
@@ -387,6 +413,40 @@ define([
         });
     };
 
+    /**
+     * Method to mute/unmute a chat
+     * @param {*} muteChatEvents 
+     */
+    const handleMuteChatEvents = (muteChatEvents) => {
+        muteChatEvents.forEach(muteChatEvent => {
+            const roomId = muteChatEvent.chatId;
+            const $room = $(`[${constant.ATTRIBUTE_SIDEBAR_ROOM}="${roomId}"]`);
+
+            if (muteChatEvent.muted) {
+                $room.addClass('mute');
+            } else {
+                $room.removeClass('mute');
+            }
+
+            if (roomId === GLOBAL.getCurrentRoomId()) {
+                const $textNotiBtn = $('#chatbox-group-option').find('.--disabled').find('span');
+                if (muteChatEvent.muted) {
+                    $textNotiBtn.html(GLOBAL.getLangJson().ENABLE_NOTIFICATIONS);
+                } else {
+                    $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
+                }
+            }
+
+            GLOBAL.setRooms(GLOBAL.getRooms().map(room => {
+                const tempRoom = { ...room };
+                if (room.id === roomId) {
+                    tempRoom.muted = muteChatEvent.muted;
+                }
+                return tempRoom;
+            }));
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -426,6 +486,10 @@ define([
 
                 if (res?.acceptInviteEvents?.length) {
                     handleAcceptInviteEvents(res.acceptInviteEvents);
+                }
+
+                if (res?.muteChatEvents?.length) {
+                    handleMuteChatEvents(res.muteChatEvents);
                 }
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {

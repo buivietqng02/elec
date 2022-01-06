@@ -874,12 +874,19 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: none;
   color: #fff;
   width: 60px;
-  height: 45px;
+  height: 50px;
   background: #00CEFF;
   border-radius: 12px 0;
   text-transform: uppercase;
   font-size: 1.3rem;
 }
+
+/* Style for Firefox */
+@-moz-document url-prefix() {
+  .btn__send{
+      height: 46px;
+    }
+  }
 
 .btn__send:hover {
   background: #08c;
@@ -1333,7 +1340,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .unread-message-scroll {
-  position: absolute;
+  /* position: absolute;
   font-size: 11px;
   background: #f60;
   display: block;
@@ -1345,7 +1352,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   text-align: center;
   border-radius: 50%;
   top: -4px;
-  right: -5px;
+  right: -5px; */
 }
 
 .highlight-text {
@@ -1926,20 +1933,54 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .scroll-to {
-  height: 35px;
-  width: 35px;
-  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: rgba(0,0,0,0.3);
   position: fixed;
   color: #fff!important;
-  opacity: 0.6;
+  opacity: 0.8;
   z-index: 10;
   display: none;
   font-size: 1.5rem;
   right: 10px;
+}
+
+.scroll-to.round {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+}
+
+.scroll-to.square {
+    font-size: 16px;
+    border-radius: 3px;
+    background: white;
+    color: #0093FF !important;
+    opacity: 1;
+    padding: 3px 8px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+
+    animation-name: giggle;
+    animation-duration: 0.5s;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.scroll-to.square:hover{
+    box-shadow: 0 1px 5px rgba(34, 34, 34, 0.12), 0 1px 5px rgba(26, 26, 26, 0.24);
+}
+
+/* The animation code */
+@keyframes giggle {
+  0% {
+    margin-bottom: 10px;
+  }
+  100% {
+    margin-bottom: 17px;
+  }
 }
 
 .scroll-to.hidden {
@@ -1960,6 +2001,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .scroll-to__bottom {
   bottom: 60px;
+}
+
+.scroll-to__message{
+  margin-left: 5px;
 }
 
 .img-view {
@@ -3122,6 +3167,12 @@ body.body_fz_18 {
   text-align: center;
 }
 
+@media screen and (max-width: 767px) {
+  #versionModal .modal-dialog {
+   margin: auto;
+  }
+}
+
 #versionModal .modal-body {
   padding: 2rem;
 }
@@ -3893,9 +3944,9 @@ body.body_fz_18 {
   .btn__voice-chat{
     margin-right: 5px !important;
   }
-  .btn__voice-chat-picture{
+  /* .btn__voice-chat-picture{
     width: 25px;
-  }
+  } */
 
   .btn__attach{
     left:-2px;
@@ -3982,19 +4033,21 @@ body.body_fz_18 {
  /* ============= voice chat ============ */
  /* Init voice chat */
  .btn__voice-chat{
-  /* width: 40px; */
+  width: 40px;
   border:none;
   background-color: transparent;
   border-radius: 5px;
   height: 50px;
   margin-right: 15px;
+
+  font-size: 30px;
 }
 
-.btn__voice-chat-picture{
+/* .btn__voice-chat-picture{
   width: 20px;
   padding:0;
   margin:0;
-}
+} */
 
 /* -------------Recording button style --------------- */
 #voice-statusRecording{

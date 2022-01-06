@@ -30,7 +30,8 @@ define(() => {
         unreadMessages: room.unreadMessages,
         updated: room.updated,
         sender: room.sender,
-        owner: room.owner
+        owner: room.owner,
+        muted: room.muted
     });
 
     const refresh = () => {

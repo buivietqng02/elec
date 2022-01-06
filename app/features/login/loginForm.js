@@ -1,12 +1,14 @@
 define([
     'axios',
     'shared/functions',
+    'shared/data',
     'app/constant',
     'features/login/loginERP',
     'features/login/loginLagblaster'
 ], (
     axios,
     functions,
+    GLOBAL,
     constant,
     loginERPComp,
     loginLagblasterComp
@@ -74,7 +76,8 @@ define([
 
         axios.post(`${BASE_URL}/auth/login`, loginData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept-Language': GLOBAL.getLanguage()
             }
         }).then(res => {
             if (res) {
