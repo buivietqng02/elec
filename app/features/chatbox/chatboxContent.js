@@ -887,7 +887,7 @@ define([
                     const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
                     if (newAudioRecorder) {
                         // Scroll to bottom when new voice message sent
-                        onScrollToBottom()
+                        if (GLOBAL.getInfomation().id === mess.sender.id) onScrollToBottom()
 
                         newAudioRecorder.setAttribute("isPlaying", false);
                         newAudioRecorder.addEventListener('click', () => {

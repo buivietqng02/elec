@@ -2049,6 +2049,11 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: inline-block;
 }
 
+.js_li_list_user.mute .badge-orange {
+  color: #fff;
+  background-color: grey;
+}
+
 .contact-list {
   margin-bottom: 0;
   padding: 0;

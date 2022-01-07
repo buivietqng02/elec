@@ -159,7 +159,7 @@ define([
         },
 
         onRenderInfomation: (roomInfo) => {
-            console.log('onRenderInfomation', roomInfo)
+            // console.log('onRenderInfomation', roomInfo)
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
             $roomInfo = roomInfo;
             $image.off('error');
