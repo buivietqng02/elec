@@ -841,9 +841,9 @@ define([
             let id = GLOBAL.getCurrentRoomId();
 
             // Prevent duplicate message
-            // if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
-            //     return false;
-            // }
+            if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
+                return false;
+            }
 
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
