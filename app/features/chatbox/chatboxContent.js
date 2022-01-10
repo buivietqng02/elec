@@ -838,13 +838,12 @@ define([
 
         onSync: (messList = []) => {
             const mess = messList[0];
-
             let id = GLOBAL.getCurrentRoomId();
 
             // Prevent duplicate message
-            if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
-                return false;
-            }
+            // if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
+            //     return false;
+            // }
 
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
@@ -879,8 +878,8 @@ define([
 
                 // console.log(messagesHtml)
                 // console.log(mess)
-                // Render new message
-                $messageList.append(messagesHtml);
+                // Render new message if you are receiver
+                if (GLOBAL.getInfomation().id !== mess.sender.id || mess.file) $messageList.append(messagesHtml);
 
                 // Audio when send new voice mess
                 if (mess.file?.id) {
@@ -987,28 +986,6 @@ define([
             // Add event listener for conference call
             addEventListenerToMeetingLink();
 
-            // Fix repeating messages
-            const messagesList = document.querySelector('.messages__list')
-            const arryMessages = messagesList.querySelectorAll('.messages__item');
-            const indexArr = [];
-            const toFindDuplicates = (arryParam) => {
-                let newArray = Array.from(arryParam).map(ite => ite.getAttribute('data-chat-id'));
-                return newArray.filter((item, index) => {
-                    if(newArray.indexOf(item) !== index) {
-                        indexArr.push(index)
-                        return true;
-                    }
-                      
-                })
-            }
-            toFindDuplicates(arryMessages);
-
-            if(indexArr.length){
-                indexArr.map(item => {
-                    // console.log(arryMessages[item]);
-                    messagesList.removeChild(arryMessages[item])
-                })
-            }
         },
 
         onAddLocal: async (data) => {

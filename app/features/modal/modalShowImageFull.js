@@ -15,6 +15,7 @@ define([
     let $frame;
     let hdImg;
     let mediaFilesWraper;
+    let loadingHigherResCap;
 
     // let $viewHDImage;
     // let isHDMode = false;
@@ -48,6 +49,8 @@ define([
                             
                         </div>
 
+                        <p class="loading-hd-img" style="display:none">Loading higher resolution image...</p>
+                        
                         <div class="embed-responsive embed-responsive-4by3">
                             <div class="image-caption-wrap embed-responsive-item" id="image-caption-wrap">
                                 <img class="icw-image" id="icw-image" />
@@ -126,9 +129,9 @@ define([
             // $img.src = isHDMode ? e.target.src.replace('&small=1', '&small=0') : e.target.src;
             $img.src = e.target.src;
             $img.addEventListener('load', () => {
-                console.log('load low img');
                 // $img.style.visibility = 'visible';
                 $img.style.display = 'block';
+                loadingHigherResCap.style.display = 'block';
                 
                 setTimeout(() => {
                     hdImg = document.createElement('img');
@@ -138,7 +141,7 @@ define([
                     $frame.append(hdImg);
                     
                     hdImg.addEventListener('load', () => {
-                        console.log('load hd img');
+                        loadingHigherResCap.style.display = 'none';
                         loadingHDimg();
                     }, { once: true });
                 }, 500);
@@ -203,6 +206,7 @@ define([
                 $img = document.getElementById('icw-image');
 
                 $frame = document.getElementById('image-caption-wrap');
+                loadingHigherResCap = document.querySelector('.loading-hd-img');
                 
                 $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
                 // $(document).off('.changeLargeImage').
