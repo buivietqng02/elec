@@ -320,6 +320,22 @@ define([
             initConferencePage();
         },
 
-        onInitConferencePage: (inviteID) => initJitsiConference(inviteID)
+        onInitConferencePage: (inviteID) => initJitsiConference(inviteID),
+
+        toggleMuteConfCall: (audio) => {
+            if (audio === 'off') {
+                jitsiApi.isAudioMuted().then(muted => {
+                    if (!muted) jitsiApi.executeCommand('toggleAudio');
+                });
+            }
+
+            if (audio === 'on') {
+                jitsiApi.isAudioMuted().then(muted => {
+                    if (muted) jitsiApi.executeCommand('toggleAudio');
+                });
+            }
+        },
+
+        getConfIsOpen: () => isOpening
     };
 });

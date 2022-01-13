@@ -66,9 +66,8 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
-
     let jumpFastToBottomBtn;
-
+  
     // ========== Start Voice message ==============
 
     const timeConvert = (time) => {
@@ -242,22 +241,6 @@ define([
         })
     }
 
-    // render file for quotedMessage
-    // const getFileForQuoteMessage = (messagesArray) => {
-    //     let newArray = messagesArray.map((item, index) => {
-    //         if (item.quotedMessage) {
-    //             messagesArray.map(ite => {
-    //                 if (item.quotedMessage.id.messageId === ite.id.messageId) {
-    //                     return item.quotedMessage.file = ite.file
-    //                 }
-
-    //             })
-
-    //         }
-    //         return item;
-    //     })
-    //     return newArray;
-    // }
     // ======== End Scroll to origin position ===========
 
     // ======== Handle View Media and Files scroll to origin message ===========
@@ -842,9 +825,8 @@ define([
 
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
-                return false;
-            }
-
+                return;
+            }     
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
@@ -861,25 +843,12 @@ define([
                 $scrollToMess.show();
             }
 
-            // Render new quotedMessage
-            // if (mess.quotedMessage) {
-            //     messages.some(item => {
-            //         if (mess.quotedMessage.id.messageId === item.id.messageId) {
-            //             mess.quotedMessage.file = item.file
-            //             return true;
-            //         }
-            //     })
-            // }
-
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
 
-                // console.log(messagesHtml)
-                // console.log(mess)
-                // Render new message if you are receiver
-                if (GLOBAL.getInfomation().id !== mess.sender.id || mess.file) $messageList.append(messagesHtml);
+                $messageList.append(messagesHtml);
 
                 // Audio when send new voice mess
                 if (mess.file?.id) {
@@ -893,14 +862,12 @@ define([
                             // console.log('click');
                             addEventListenerToAudioRecorder(mess.file.id);
                         })
-                        // addEventListenerToAudioRecorder(mess.file.id);
                     }
                 }
 
                 // Scroll to origin message
                 const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
                 $messItem.find('.comment-box-inline').on('click', (e) => {
-                    // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
                     handleScrollToOriginId(e.currentTarget);
                 })
 
@@ -950,11 +917,8 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            // console.log(data)
             // Update ultiLastOffSet when send new mess
-            ultiLastOffSet++;
-            // console.log(ultiLastOffSet)
-
+            ultiLastOffSet++; 
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
@@ -978,14 +942,33 @@ define([
             $mess.removeClass('js_li_mess_local');
 
             $mess.find('.comment-box-inline').on('click', (e) => {
-                // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                // console.log(originId[1]);
                 handleScrollToOriginId(e.currentTarget);
             })
 
             // Add event listener for conference call
             addEventListenerToMeetingLink();
 
+            // Fix repeating messages
+            const messagesList = document.querySelector('.js_ul_list_mess')
+            const arryMessages = messagesList.querySelectorAll('.js_li_list_mess');
+            const indexArr = [];
+            const toFindDuplicates = (arryParam) => {
+                let newArray = Array.from(arryParam).map(ite => ite.getAttribute('data-chat-id'));
+                return newArray.filter((item, index) => {
+                    if(newArray.indexOf(item) !== index) {
+                        indexArr.push(index)
+                        return true;
+                    }
+                        
+                })
+            }
+            toFindDuplicates(arryMessages);
+
+            if(indexArr.length){
+                indexArr.map(item => {
+                    messagesList.removeChild(arryMessages[item])
+                })
+            }
         },
 
         onAddLocal: async (data) => {
