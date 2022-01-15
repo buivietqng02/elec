@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?2qlaed');
-  src:  url('fonts/icomoon.eot?2qlaed#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?2qlaed') format('truetype'),
-    url('fonts/icomoon.woff?2qlaed') format('woff'),
-    url('fonts/icomoon.svg?2qlaed#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?gdv4ud');
+  src:  url('fonts/icomoon.eot?gdv4ud#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?gdv4ud') format('truetype'),
+    url('fonts/icomoon.woff?gdv4ud') format('woff'),
+    url('fonts/icomoon.svg?gdv4ud#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,32 +25,46 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-star-full:before {
+  content: "\e940";
+}
+.icon-star-empty:before {
+  content: "\e941";
+}
+.icon-microphoneVoice:before {
+  content: "\e93e";
+  color: #b2b2b2;
+}
+.icon-microphoneVoiceBlue:before {
+  content: "\e93f";
+  color: #0093ff;
+}
+.icon-zoom-out:before {
+  content: "\e900";
+}
+.icon-zoom-in:before {
+  content: "\e901";
+}
 .icon-all-directions:before {
   content: "\e902";
-  color: #fff;
 }
 .icon-chevron-left:before {
   content: "\e903";
-  color: #0093ff;
 }
 .icon-keyboard-dark:before {
   content: "\e904";
-  color: #0093ff;
 }
 .icon-keyboard:before {
   content: "\e905";
 }
 .icon-maximize-window:before {
   content: "\e906";
-  color: #fff;
 }
 .icon-minimize-window:before {
   content: "\e907";
-  color: #fff;
 }
-.icon-cart:before {
+.icon-shopping-cart:before {
   content: "\e908";
-  color: #fff;
 }
 .icon-angle-down:before {
   content: "\e909";
@@ -208,24 +222,9 @@
 .icon-volume:before {
   content: "\e93c";
 }
-.icon-cart2:before {
+.icon-cart:before {
   content: "\e93d";
 }
-.icon-zoom-out:before {
-  content: "\e900";
-}
-.icon-zoom-in:before {
-  content: "\e901";
-}
-
-  .micro-vc:before {
-    display: block;
-    content: ' ';
-    background-image: url('../images/microphone.svg');
-    background-size: 32px 32px;
-    height: 32px;
-    width: 32px;
-  }
 
   .icon-lb:before {
     display: block;

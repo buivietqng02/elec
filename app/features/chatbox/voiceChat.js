@@ -324,7 +324,7 @@ define([
             initVoiceChat.setAttribute('isUsingVoiceMess', true);
         } else {
             initRecordFunc('stop');
-            initVoiceChat.innerHTML = '<i class="micro-vc"></i>';
+            initVoiceChat.innerHTML = '<i class="icon-microphoneVoice"></i>';
             initVoiceButton.style.display = 'none';
             btnVoiceChatDescription.style.display = 'none';
             inputTextChat.classList.remove('de-active');

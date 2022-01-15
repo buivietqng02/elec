@@ -1800,11 +1800,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .comment-box-inline .audio-timeIndicate {
-  margin-top: -40px;
-}
-
-.comment-box-inline .audio-microPic {
-  margin-top: -20px;
+  margin-top: 5px;
 }
 
 /* Style for Safari */
@@ -2663,12 +2659,13 @@ body.body_fz_18 {
   top: -126px;
 }
 
-.mess-comment-box .mess-fw-box .audio-microPic{
-  margin-top: -30px;
+.audio-number .icon-microphoneVoice,.icon-microphoneVoiceBlue{
+  font-size: 25px;
+  display: block;
+  margin-bottom: -40px;
 }
-
-.mess-comment-box .mess-fw-box .audio-timeIndicate{
-  margin-top: -45px;
+.mess-comment-box .mess-fw-box .icon-microphoneVoice,.icon-microphoneVoiceBlue{
+  margin-top: 5px;
 }
 
 /* Style for Safari */
@@ -4115,9 +4112,13 @@ body.body_fz_18 {
   z-index: 99 !important;
 }
 
-#record__start-stop__btn img{
+#record__start-stop__btn i{
   touch-action: none;
   pointer-events: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .record__start-stop-pulse-ring.active{
@@ -4266,15 +4267,10 @@ body.body_fz_18 {
   transform: translate(-50%,-50%);
 }
 
-.audio-microPic{
-width: 17px;
-height: 25px;
-margin-top: -40px;
-}
 .audio-timeIndicate{
 color: #0093FF;
 font-size: 9px;
-margin-top:-60px;
+/* margin-top:-60px; */
 
 }
 
@@ -4310,7 +4306,7 @@ margin-top:-60px;
   left:50%;
   transform: translate(-50%, -50%);
   z-index:10;
-  max-height: 100px;
+  /* max-height: 100px; */
   pointer-events:none;
 }
 

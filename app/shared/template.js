@@ -13,7 +13,7 @@ define(['shared/icon'], (ICON) => ({
                 <div class="lbi-chats__newMess-noti hidden"></div>
             </button>
             <button class="btn lbm-item lbmi-cart">
-                <i class="icon-cart"></i>
+                <i class="icon-shopping-cart"></i>
             </button>
             <button class="btn lbm-item lbmi-conference">
                 <i class="icon-video-camera"></i>
@@ -36,7 +36,7 @@ define(['shared/icon'], (ICON) => ({
             </div>
 
             <div class="lb-item lbi-cart">
-                <i class="icon-cart"></i>
+                <i class="icon-shopping-cart"></i>
             </div>
 
             <!-- Conference -->
@@ -599,7 +599,7 @@ define(['shared/icon'], (ICON) => ({
                                 <!-- Voice chat btn -->
 
                                 <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">
-                                    <i class="micro-vc"></i>
+                                    <i class="icon-microphoneVoice"></i>
                                 </button>
                                 <!-- End Voice chat btn -->
 
@@ -676,7 +676,8 @@ define(['shared/icon'], (ICON) => ({
 
                                 <div class="voice-button-group" style="display:none">
                                     <button id="record__start-stop__btn" class="btn btn-primary">
-                                        <img src="/assets/images/microphone.svg" alt="">
+        
+                                        <i class="icon-microphoneVoice"></i>
                                         <div class="record__start-stop-pulse-ring"></div>
                                     </button>
                                 </div>

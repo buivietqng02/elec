@@ -97,7 +97,7 @@ define([
         const playStopBtn = document.querySelector(`#btn-${id}`);
 
         let countDownTimmer;
-        let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
+        let audioMicroPic = document.querySelector(`#btn-${id} .icon-mic-js`);
         let isPlaying = playStopBtn.getAttribute('isPlaying');
         let audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
         let audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
@@ -117,7 +117,8 @@ define([
         if (isPlaying === 'true') {
             playStopBtn.setAttribute("isPlaying", false);
             audio.pause()
-            audioMicroPic.src = `/assets/images/microphone.svg`
+            // audioMicroPic.src = `/assets/images/microphone.svg`
+            audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
             clearInterval(countDownTimmer)
 
             audioProgress[0].style.animationPlayState = "paused";
@@ -130,8 +131,8 @@ define([
             let playPromise = audio.play()
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
-
+                    // audioMicroPic.src = `/assets/images/microphoneListening.svg`
+                    audioMicroPic.classList.replace('icon-microphoneVoice', 'icon-microphoneVoiceBlue');
                     // console.log(audio.getAttribute('duration'))
                     countDownTimmer = setInterval(() => {
                         audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
@@ -158,7 +159,8 @@ define([
         }
 
         audio.addEventListener('ended', () => {
-            audioMicroPic.src = `/assets/images/microphone.svg`;
+            // audioMicroPic.src = `/assets/images/microphone.svg`;
+            audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
             playStopBtn.setAttribute("isPlaying", false)
             clearInterval(countDownTimmer)
 

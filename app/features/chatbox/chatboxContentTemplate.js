@@ -57,8 +57,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                             <div class="audio-circular">
                                 <div class="audio-inner"></div>
                                 <div class="audio-number">
-                                    <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
-
+                                    <i class="icon-microphoneVoice icon-mic-js"></i>
                                     <div class="audio-timeIndicate">{durationTime}</div>
                                 </div>
 
@@ -85,7 +84,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                     <div class="audio-circular">
                         <div class="audio-inner"></div>
                         <div class="audio-number">
-                            <img class="audio-microPic" src="/assets/images/microphone.svg" alt="">
+                            <i class="icon-microphoneVoice icon-mic-js"></i>
 
                             <div class="audio-timeIndicate">{durationTime}</div>
                         </div>
