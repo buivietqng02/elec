@@ -170,11 +170,8 @@ define([
     }
 
     const audioPlayStopFunc = (e) => {
-        console.log(e.target)
         e.target.setAttribute("isPlaying", false);
-
         addEventListenerToAudioRecorder(getAudioID(e.target.id));
-        console.log(e.target.id)
     }
 
     // ============== End voice message ==============
@@ -196,6 +193,7 @@ define([
                 }, 2000)
 
                 setTimeout(() => {
+                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
                     originMessageEle.classList.remove('activeScrollTo');
                 }, 5000)
 
@@ -208,8 +206,9 @@ define([
         })
     }
 
-    const handleScrollToOriginId = (element) => {
-        const quotedOriginalMess = element.getAttribute('quoted-original-id');
+    const handleScrollToOriginId = (e) => {
+        console.log(e.target)
+        const quotedOriginalMess = e.target.getAttribute('quoted-original-id');
         let originId = quotedOriginalMess.split('-')
         let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${originId[1]}"]`);
 
@@ -226,16 +225,6 @@ define([
             findOriginMess(originId[1]);
         }
     }
-
-    const addEventToAllScrollToOriginl = () => {
-        let quotedMessage = document.querySelectorAll('.comment-box-inline');
-        quotedMessage.forEach(item => {
-            item.addEventListener('click', (e) => {
-                handleScrollToOriginId(item);
-            })
-        })
-    }
-
     // ======== End Scroll to origin position ===========
 
     // ======== Handle View Media and Files scroll to origin message ===========
@@ -294,9 +283,6 @@ define([
                 // console.log(moreMessages)
                 messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
                 $messageList.append(messagesHtml);
-
-                // Add eventlistner of each messages (audio, conference, scroll to origin) to each scroll down more message
-                addEvtListenToMessOnScroll(moreMessages)
 
                 // If touch last message at bottom, stop call API, remove eventListner
                 if (lastOffsetScrollDown >= ultiLastOffSet) {
@@ -481,28 +467,6 @@ define([
 
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
-    
-    const addEvtListenToMessOnScroll = (moreMessages) => {
-        // Audio vocie mess addeventlistener when scroll top
-        // moreMessages.filter(m => m.file?.id === 3).forEach(message => {
-        //     let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
-        //     scrollUpAudioRecorder.setAttribute("isPlaying", false);
-        //     scrollUpAudioRecorder.addEventListener('click', () => {
-        //         addEventListenerToAudioRecorder(message.file.id)
-        //     })
-        // });
-
-        // Add event listener to Scroll to origin message when scroll more
-        moreMessages.forEach(item => {
-            const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
-            const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
-            if (quotedMessageItem) {
-                quotedMessageItem.addEventListener('click', () => {
-                    handleScrollToOriginId(quotedMessageItem);
-                })
-            }
-        })
-    }
 
     const onGetMoreMessageByScrolling = async () => {
         let isLoadedMoreResult = { isLoadedMore: false, loadedResult: [] };
@@ -541,9 +505,6 @@ define([
           
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
-
-            // Add event listener to messages when scroll more
-            addEvtListenToMessOnScroll(moreMessages)
 
             setTimeout(() => {
                 processing = false;
@@ -615,7 +576,6 @@ define([
        
         // Update ultiLastOffSet whenever reload loadMessages function
         // console.log(cloneArray);
-
         if(cloneArray.length > 0){
             //  console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
             //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
@@ -667,11 +627,6 @@ define([
         if(jumpFastToBottomBtn.classList.contains('hidden')){
             $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         }
-        // Audio
-        // audioPlayStopFunc()
-
-        // Scroll to orginal message
-        addEventToAllScrollToOriginl();
 
         $loadingOfNew.hide();
 
@@ -796,6 +751,8 @@ define([
             $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item .conference-link button', (e) => addEventListenerToMeetingLink(e));
 
             $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => audioPlayStopFunc(e))
+
+            $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e))
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
@@ -830,27 +787,6 @@ define([
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
 
                 $messageList.append(messagesHtml);
-
-                // Audio when send new voice mess
-                // if (mess.file?.id) {
-                //     const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
-                //     if (newAudioRecorder) {
-                //         // Scroll to bottom when new voice message sent
-                //         if (GLOBAL.getInfomation().id === mess.sender.id) onScrollToBottom()
-
-                //         newAudioRecorder.setAttribute("isPlaying", false);
-                //         newAudioRecorder.addEventListener('click', () => {
-                //             // console.log('click');
-                //             addEventListenerToAudioRecorder(mess.file.id);
-                //         })
-                //     }
-                // }
-
-                // Scroll to origin message
-                const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
-                $messItem.find('.comment-box-inline').on('click', (e) => {
-                    handleScrollToOriginId(e.currentTarget);
-                })
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
@@ -918,10 +854,6 @@ define([
 
             $mess.attr(ATTRIBUTE_MESSAGE_ID, data.messageId);
             $mess.removeClass('js_li_mess_local');
-
-            $mess.find('.comment-box-inline').on('click', (e) => {
-                handleScrollToOriginId(e.currentTarget);
-            })
 
             // Fix repeating messages
             const messagesList = document.querySelector('.js_ul_list_mess')
