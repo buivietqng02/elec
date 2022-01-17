@@ -125,27 +125,34 @@ define([
         }
     };
 
+    const removeAllDivTemplate = () => {
+        const divTemp = document.querySelectorAll('.divTemplate');
+        divTemp.forEach(devTempItem => {
+            conferenceContent.removeChild(devTempItem);
+        });
+    };
+
     const initJitsiConference = (inviteID) => {
         while (iframeConferenceWraper.firstChild) {
             iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
         }
 
         if (isOpening === true) { 
-            const divTemp = document.querySelector('#divTemplate');
+            jitsiApi.dispose();
             iframeConferenceWraper.style.display = 'none';
-            conferenceContent.removeChild(divTemp);
+            removeAllDivTemplate();
         }  
 
         const divTemplate = document.createElement('div');
         divTemplate.innerHTML = conferenceBtnGroupTemplate(GLOBAL.getLangJson());
-        divTemplate.id = 'divTemplate';
+        divTemplate.classList.add('divTemplate');
 
         startConfContainer.style.display = 'none';
         xmConferenceLoading.style.display = 'block';
 
         API.get('conference').then((res) => {
             domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev${constant.ROUTE.meeting}`;
-            if (inviteID === undefined || inviteID === null || inviteID === '') {
+            if (!inviteID) {
                 roomId = (+new Date()).toString(16).toUpperCase();
             } else {
                 roomId = inviteID;
@@ -226,10 +233,16 @@ define([
                 copyToClipBoard();
             }, true);
             jitsiApi.addListener('readyToClose', () => {
+                jitsiApi.dispose();
                 jitsiApi._frame.remove();
                 startConfContainer.style.display = 'block';
                 iframeConferenceWraper.style.display = 'none';
-                conferenceContent.removeChild(divTemplate);
+                removeAllDivTemplate();
+
+                while (iframeConferenceWraper.firstChild) {
+                    iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
+                }
+                
                 isOpening = false;
             });
         }).catch((err) => {
@@ -256,11 +269,11 @@ define([
         });
     };
 
-    const initConferencePage = (inviteID) => {
+    const initConferencePage = () => {
         slideCarouselOnMobile();
 
         conferenceBtn.addEventListener('click', () => {
-            initJitsiConference(inviteID);
+            initJitsiConference();
         });
 
         joinExistingRoomInput.addEventListener('keyup', () => {
@@ -277,7 +290,7 @@ define([
             div.setAttribute('class', 'alert__joinExitingRoom alert alert-danger');
 
             const existingRoomId = joinExistingRoomInput.value;
-            if (existingRoomId === '' || existingRoomId === undefined || existingRoomId.trim().length !== 11) {
+            if (!existingRoomId || existingRoomId.trim().length !== 11) {
                 div.innerHTML = alertTemplate(GLOBAL.getLangJson().WRONG_ROOM_ID_FORMAT);
 
                 body.append(div);

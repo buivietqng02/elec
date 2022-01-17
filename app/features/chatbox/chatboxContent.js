@@ -117,7 +117,6 @@ define([
         if (isPlaying === 'true') {
             playStopBtn.setAttribute("isPlaying", false);
             audio.pause()
-            // audioMicroPic.src = `/assets/images/microphone.svg`
             audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
             clearInterval(countDownTimmer)
 
@@ -131,7 +130,6 @@ define([
             let playPromise = audio.play()
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    // audioMicroPic.src = `/assets/images/microphoneListening.svg`
                     audioMicroPic.classList.replace('icon-microphoneVoice', 'icon-microphoneVoiceBlue');
                     // console.log(audio.getAttribute('duration'))
                     countDownTimmer = setInterval(() => {
@@ -159,7 +157,6 @@ define([
         }
 
         audio.addEventListener('ended', () => {
-            // audioMicroPic.src = `/assets/images/microphone.svg`;
             audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
             playStopBtn.setAttribute("isPlaying", false)
             clearInterval(countDownTimmer)
@@ -414,18 +411,12 @@ define([
     // ======== End Handle View Media and Files scroll to origin message ===========
 
     // Conference Call
-    const addEventListenerToMeetingLink = () => {
-        let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
+    const addEventListenerToMeetingLink = (e) => {
+        let confRoomID = e.target.closest('.is_conference').getAttribute('confid'); 
+        console.log(confRoomID);
 
-        joinConferenceBtn.forEach(item => {
-            item.querySelector('button').addEventListener('click', () => {
-                let confRoomID = item.getAttribute('confId');
-                console.log(confRoomID);
-
-                sidebarLeftBarComp.onSwitchToConference();
-                sidebarConferenceComp.onInitConferencePage(confRoomID);
-            });
-        })
+        sidebarLeftBarComp.onSwitchToConference();
+        sidebarConferenceComp.onInitConferencePage(confRoomID);
     }
 
     const onWrapperScroll = (event) => {
@@ -515,9 +506,6 @@ define([
                 })
             }
         })
-
-        // Add event listener for conference call
-        addEventListenerToMeetingLink();
     }
 
     const onGetMoreMessageByScrolling = async () => {
@@ -697,9 +685,6 @@ define([
 
         $loadingOfNew.hide();
 
-        // Add event listener for conference call
-        addEventListenerToMeetingLink();
-
         setTimeout(() => {
             updateRoomInfo(roomInfo);
             processing = false;
@@ -817,6 +802,8 @@ define([
             $wrapper.off('scroll').scroll(onWrapperScroll);
             $btnScrollToBottom.off('click').click(onScrollToBottom);
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
+
+            $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item button', (e) => addEventListenerToMeetingLink(e))
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
@@ -872,9 +859,6 @@ define([
                 $messItem.find('.comment-box-inline').on('click', (e) => {
                     handleScrollToOriginId(e.currentTarget);
                 })
-
-                // Add event listener for conference call
-                addEventListenerToMeetingLink();
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
@@ -946,9 +930,6 @@ define([
             $mess.find('.comment-box-inline').on('click', (e) => {
                 handleScrollToOriginId(e.currentTarget);
             })
-
-            // Add event listener for conference call
-            addEventListenerToMeetingLink();
 
             // Fix repeating messages
             const messagesList = document.querySelector('.js_ul_list_mess')
