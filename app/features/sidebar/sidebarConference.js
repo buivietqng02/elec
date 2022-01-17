@@ -39,6 +39,8 @@ define([
     let roomId;
     let sharedRoomId;
 
+    let mainChatContent;
+
     const conferenceBtnGroupTemplate = (language) => `
     <div class="hover-toggle-area">
         <div class="conference-content-iframe-buttons text-center">
@@ -63,7 +65,7 @@ define([
     };
 
     const copyToClipBoard = () => {
-        const body = document.querySelector('body');
+        // const body = document.querySelector('body');
         const div = document.createElement('div');
         div.setAttribute('class', 'alert__invite alert alert-success');
 
@@ -92,19 +94,19 @@ define([
 
             setTimeout(() => {
                 sidebarLeftBarComp.onSwitchToChat();
-                body.append(div);
+                mainChatContent.append(div);
                 copyAndShareBtn.textContent = GLOBAL.getLangJson().INVITE_PEOPLE;
 
                 closeAlert = document.querySelector('.close-alert');
 
                 if (document.querySelector('.alert__invite')) { 
-                    closeAlertFunc(body, div);
+                    closeAlertFunc(mainChatContent, div);
                 }
             }, 1000);
 
             setTimeout(() => {
                 if (document.querySelector('.alert__invite')) {
-                    body.removeChild(div);
+                    mainChatContent.removeChild(div);
                 }
             }, 12000);
         });
@@ -329,6 +331,8 @@ define([
             joinExistingRoomBtn = document.querySelector('#join-existing-room__btn');
 
             joinExistingRoomInput = document.querySelector('.join-existing-room__input');
+
+            mainChatContent = document.querySelector('.main-right');
 
             initConferencePage();
         },

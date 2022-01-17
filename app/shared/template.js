@@ -371,6 +371,7 @@ define(['shared/icon'], (ICON) => ({
                         <button type="button" class="menu__item --s-unread" data-s="2" data-language="UNREAD"></button>
                         <button type="button" class="menu__item --s-group" data-s="3" data-language="GROUP"></button>
                         <button type="button" class="menu__item --s-personal" data-s="4" data-language="PERSONAL"></button>
+                        <button type="button" class="menu__item --s-favourites" data-s="5" data-language="FAVOURITES"></button>
                     </div>
                     <span class="clearable xs-search">
                         <button class="search__option" title="Option">
@@ -472,6 +473,12 @@ define(['shared/icon'], (ICON) => ({
                         
                         <a class="js-group-option btn__option" data-target="#group-option"><i class="xm icon-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
+                            <button class="--favourite menu__item">
+                                <i class="xm icon-star-empty" aria-hidden="true"></i>
+                                <i class="xm icon-star-full" aria-hidden="true"></i>
+                                <span data-language="ADD_TO_FAVOURITES"></span>
+                            </button>
+
                             <button class="--edit-group menu__item">
                                 <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>

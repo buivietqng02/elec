@@ -30,13 +30,14 @@ define([
     let filter = 1;
 
     const template = `
-        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute}" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
+        <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute} {isFavourite}" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
             <img ${ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
             <div class="badge badge-orange">{unread}</div>
             <div class="p-pl-10 meta">
                 <div class="--name contact__name p-1-line">
                     <i class="xm icon-volume-mute" aria-hidden="true"></i>
-                    <span ${ATTRIBUTE_CHANGE_GROUP_NAME}="{id}" ${ATTRIBUTE_CHANGE_NAME}="{userId}">{name}</span>
+                    <span ${ATTRIBUTE_CHANGE_GROUP_NAME}="{id}" ${ATTRIBUTE_CHANGE_NAME}="{userId}">{name}</span> 
+                     <i class="xm icon-star-full" aria-hidden="true"></i>
                 </div>
                 <div class="p-1-line preview">{mess}</div>
             </div>
@@ -49,7 +50,7 @@ define([
 
     const getRooms = () => {
         let rooms = GLOBAL.getRooms();
-
+        // console.log(rooms);
         if (search) {
             rooms = rooms.filter(room => {
                 const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
@@ -115,6 +116,19 @@ define([
             });
         }
 
+        // Favourite rooms
+        if (filter === 5) {
+            const listFavouritesRooms = GLOBAL.getFavouritesRooms()
+            const filterFavorRooms = [];
+            rooms = rooms.forEach(room => {
+                listFavouritesRooms.forEach(favorItem => {
+                    if(room.id === favorItem) filterFavorRooms.push(room);
+                })
+            });
+
+            rooms = [...filterFavorRooms]
+        }
+
         return rooms;
     };
 
@@ -157,6 +171,7 @@ define([
         let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage))) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
+        let isFavourite = false;
 
         // data error during processing
         if (group && !name) {
@@ -193,6 +208,14 @@ define([
             status = '';
         }
 
+        // Favourite Room
+        const listFavouritesRooms = GLOBAL.getFavouritesRooms()
+        if(listFavouritesRooms.indexOf(id) > -1) {
+            isFavourite = true;
+        } else {
+            isFavourite = false;
+        }
+
         data = {
             id: id,
             isGroup: group ? 'data-is-group="true"' : 'data-is-group="false"',
@@ -206,7 +229,8 @@ define([
             name: htmlEncode(name),
             mess,
             userId,
-            mute: muted ? 'mute' : ''
+            mute: muted ? 'mute' : '',
+            isFavourite: isFavourite ? 'favourites' : ''
         };
 
         return render(template, data);

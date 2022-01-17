@@ -169,16 +169,12 @@ define([
 
     }
 
-    const audioPlayStopFunc = () => {
-        let playPauseBtn = document.querySelectorAll('.audio-playStop');
-        playPauseBtn.forEach(item => {
-            item.setAttribute("isPlaying", false);
+    const audioPlayStopFunc = (e) => {
+        console.log(e.target)
+        e.target.setAttribute("isPlaying", false);
 
-            item.addEventListener('click', (e) => {
-                addEventListenerToAudioRecorder(getAudioID(item.id));
-
-            })
-        })
+        addEventListenerToAudioRecorder(getAudioID(e.target.id));
+        console.log(e.target.id)
     }
 
     // ============== End voice message ==============
@@ -488,13 +484,13 @@ define([
     
     const addEvtListenToMessOnScroll = (moreMessages) => {
         // Audio vocie mess addeventlistener when scroll top
-        moreMessages.filter(m => m.file?.id === 3).forEach(message => {
-            let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
-            scrollUpAudioRecorder.setAttribute("isPlaying", false);
-            scrollUpAudioRecorder.addEventListener('click', () => {
-                addEventListenerToAudioRecorder(message.file.id)
-            })
-        });
+        // moreMessages.filter(m => m.file?.id === 3).forEach(message => {
+        //     let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
+        //     scrollUpAudioRecorder.setAttribute("isPlaying", false);
+        //     scrollUpAudioRecorder.addEventListener('click', () => {
+        //         addEventListenerToAudioRecorder(message.file.id)
+        //     })
+        // });
 
         // Add event listener to Scroll to origin message when scroll more
         moreMessages.forEach(item => {
@@ -533,11 +529,6 @@ define([
             }
 
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
-
-            // Render quotedMessage for files and images
-            // getFileForQuoteMessage(moreMessages)
-
-            // console.log(moreMessages)
 
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
@@ -676,9 +667,8 @@ define([
         if(jumpFastToBottomBtn.classList.contains('hidden')){
             $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         }
-
         // Audio
-        audioPlayStopFunc()
+        // audioPlayStopFunc()
 
         // Scroll to orginal message
         addEventToAllScrollToOriginl();
@@ -803,7 +793,9 @@ define([
             $btnScrollToBottom.off('click').click(onScrollToBottom);
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
 
-            $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item button', (e) => addEventListenerToMeetingLink(e))
+            $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item .conference-link button', (e) => addEventListenerToMeetingLink(e));
+
+            $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => audioPlayStopFunc(e))
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
@@ -840,19 +832,19 @@ define([
                 $messageList.append(messagesHtml);
 
                 // Audio when send new voice mess
-                if (mess.file?.id) {
-                    const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
-                    if (newAudioRecorder) {
-                        // Scroll to bottom when new voice message sent
-                        if (GLOBAL.getInfomation().id === mess.sender.id) onScrollToBottom()
+                // if (mess.file?.id) {
+                //     const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
+                //     if (newAudioRecorder) {
+                //         // Scroll to bottom when new voice message sent
+                //         if (GLOBAL.getInfomation().id === mess.sender.id) onScrollToBottom()
 
-                        newAudioRecorder.setAttribute("isPlaying", false);
-                        newAudioRecorder.addEventListener('click', () => {
-                            // console.log('click');
-                            addEventListenerToAudioRecorder(mess.file.id);
-                        })
-                    }
-                }
+                //         newAudioRecorder.setAttribute("isPlaying", false);
+                //         newAudioRecorder.addEventListener('click', () => {
+                //             // console.log('click');
+                //             addEventListenerToAudioRecorder(mess.file.id);
+                //         })
+                //     }
+                // }
 
                 // Scroll to origin message
                 const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);

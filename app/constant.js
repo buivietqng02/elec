@@ -61,7 +61,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             lagblaster: '/lagblaster',
             cart: '/cart',
             signup: '/signup'
-        }
+        },
+        FAVOURITES_ROOMS: 'favourites_rooms',
     };
 
     return Object.freeze(obj);
