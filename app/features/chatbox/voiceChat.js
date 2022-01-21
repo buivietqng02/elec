@@ -37,19 +37,111 @@ define([
 
     let btnVoiceChatDescription;
 
-    // let cancelRecord;
-    // let mouseMoved;
-    // let isCanceled = false;
+    // Play stop audio
+    const timeConvert = (time) => {
+        // Calculate the time left and the total duration
+        let currentMinutes = Math.floor(time / 60);
+        let currentSeconds = Math.floor(time - currentMinutes * 60);
 
-    // const getDuration = (src) => {
-    //     return new Promise(function (resolve) {
-    //         let audio = new Audio();
-    //         audio.addEventListener("loadedmetadata", () => {
-    //             resolve(audio.duration);
-    //         });
-    //         audio.src = src;
-    //     });
-    // }
+        // Add a zero to the single digit time values
+        if (currentSeconds < 10) { currentSeconds = `0${currentSeconds}`; }
+        if (currentMinutes < 10) { currentMinutes = `0${currentMinutes}`; }
+
+        return `${currentMinutes}:${currentSeconds}`;
+    };
+
+    const getAudioID = (string) => {
+        let stringValue;
+        if (string.includes('audio-')) {
+            stringValue = string.substring(6, string.length);
+        }
+
+        if (string.includes('btn-')) {
+            stringValue = string.substring(4, string.length);
+        }
+
+        return stringValue;
+    };
+
+    const addEventListenerToAudioRecorder = (id) => {
+        const audio = document.querySelector(`#audio-${id}`);
+        const playStopBtn = document.querySelector(`#btn-${id}`);
+
+        let countDownTimmer;
+        const audioMicroPic = document.querySelector(`#btn-${id} .icon-mic-js`);
+        const isPlaying = playStopBtn.getAttribute('isPlaying');
+        const audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
+        const audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
+
+        let audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+
+        if (!audioProgress || audioProgress.length === 0) {
+            audioBar[0].innerHTML = '<div class="audio-progress"></div>';
+            audioBar[1].innerHTML = '<div class="audio-progress"></div>';
+
+            audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
+        }
+
+        const durationAudio = parseFloat(audio.getAttribute('duration'));
+
+        if (isPlaying === 'true') {
+            playStopBtn.setAttribute('isPlaying', false);
+            audio.pause();
+            audioMicroPic.classList.replace('icon-microphoneVoiceBlue', 'icon-microphoneVoice');
+            clearInterval(countDownTimmer);
+
+            audioProgress[0].style.animationPlayState = 'paused';
+            audioProgress[1].style.animationPlayState = 'paused';
+        }
+
+        if (isPlaying === 'false') {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioMicroPic.classList.replace('icon-microphoneVoice', 'icon-microphoneVoiceBlue');
+                    // console.log(audio.getAttribute('duration'))
+                    countDownTimmer = setInterval(() => {
+                        audioTime.textContent = timeConvert(durationAudio - audio.currentTime);
+                    }, 1000);
+
+                    audioProgress[0].style.animationName = 'left';
+                    audioProgress[1].style.animationName = 'right';
+
+                    audioProgress[0].style.animationPlayState = 'running';
+                    audioProgress[1].style.animationPlayState = 'running';
+
+                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
+                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
+
+                    playStopBtn.setAttribute('isPlaying', true);
+                })
+                    .catch(error => {
+                        console.log(error);
+                        // Auto-play was prevented
+                        // Show paused UI.
+                    });
+            }
+        }
+
+        audio.addEventListener('ended', () => {
+            audioMicroPic.classList.replace('icon-microphoneVoiceBlue', 'icon-microphoneVoice');
+            playStopBtn.setAttribute('isPlaying', false);
+            clearInterval(countDownTimmer);
+
+            audioTime.textContent = timeConvert(durationAudio);
+
+            audioBar[0].innerHTML = '';
+            audioBar[1].innerHTML = '';
+        });
+    };
+
+    const audioPlayStopFunc = (e) => {
+        e.target.setAttribute('isPlaying', false);
+        addEventListenerToAudioRecorder(getAudioID(e.target.id));
+    };
+
+    // End Play stop audio
 
     const percentCircle = (numberPercent) => {
         let percent = numberPercent;
@@ -122,10 +214,6 @@ define([
             notiStatus.textContent = '';
             btnVoiceChatDescription.innerHTML = `<div><lang data-language="HOLD_TO_SPEAK">${GLOBAL.getLangJson().HOLD_TO_SPEAK}</lang></div>`;
             btnVoiceChatDescription.style.bottom = '10px';
-
-            // if (secondCount < 2) {
-            //     console.log('Too short message');
-            // }
         }
 
         if (event === 'mouseleave') {
@@ -143,44 +231,6 @@ define([
         }
     };
 
-    // const getMousePosition = (e) => {
-    //     const clientRect = cancelRecord.getBoundingClientRect();
-    //     const clientX1 = clientRect.left;
-    //     const clientX2 = clientRect.right;
-    //     const clientY1 = clientRect.top;
-    //     const clientY2 = clientRect.bottom;
-    //     const checkClientX = e.clientX >= clientX1 && e.clientX <= clientX2;
-    //     const checkClientY = e.clientY >= clientY1 && e.clientY <= clientY2;
-    //     if (checkClientX && checkClientY) {
-    //         console.log('on cancel position');
-    //         cancelRecord.style.backgroundColor = '#FE8F8F';
-    //         mouseMoved = true;
-    //     } else {
-    //         console.log('on send position');
-    //         cancelRecord.style.backgroundColor = '#9D9D9D';
-    //         mouseMoved = false;
-    //     }
-    // };
-
-    // const touchPosition = (e) => {
-    //     const clientRect = cancelRecord.getBoundingClientRect();
-    //     const clientX1 = clientRect.left;
-    //     const clientX2 = clientRect.right;
-    //     const clientY1 = clientRect.top;
-    //     const clientY2 = clientRect.bottom;
-    //     const checkTouchX = e.touches[0].clientX >= clientX1 && e.touches[0].clientX <= clientX2;
-    //     const checkTouchY = e.touches[0].clientY >= clientY1 && e.touches[0].clientY <= clientY2;
-    //     if (checkTouchX && checkTouchY) {
-    //         console.log('on cancel position');
-    //         cancelRecord.style.backgroundColor = '#FE8F8F';
-    //         mouseMoved = true;
-    //     } else {
-    //         console.log('on send position');
-    //         cancelRecord.style.backgroundColor = '#9D9D9D';
-    //         mouseMoved = false;
-    //     }
-    // };
-
     const callAPI = (file, namefile) => {
         const formData = new window.FormData();
         $progressWrapper.show();
@@ -194,17 +244,15 @@ define([
                 },
                 onUploadProgress: (progressEvent) => progressUpload(progressEvent)
             })
-            .then(() => hideProcess())
+            .then(() => {
+                hideProcess();
+                const $wrapper = $('.js_con_list_mess');
+                $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 200);
+            })
             .catch(() => hideProcess());
     };
 
     const setMouseUPEvent = () => {
-        // console.log('mouseup');
-        // if (mouseMoved) {
-        //     isCanceled = true;
-        // } else {
-        //     isCanceled = false;
-        // }
         releaseRecord('mouseup');
         // window.removeEventListener('mousemove', getMousePosition);
         window.removeEventListener('mouseup', setMouseUPEvent);
@@ -249,24 +297,12 @@ define([
                     };
 
                     recorder.onstop = () => {
-                        // console.log(secondCount);
-                        // if (isCanceled || secondCount < 2) {
-                        //     chunks = [];
-                        //     return;
-                        // }
                         console.log(secondCount);
-                        // if (secondCount < 1) {
-                        //     chunks = [];
-                        //     return;
-                        // }
 
                         if (recorder.state === 'inactive') {
                             // Remove && !isCanceled
                             const blob = new window.Blob(chunks, { type: mimeTypeBrowser });
                             //  ===  call API ====
-                            // postData(blob).then(response => {
-                            //     console.log(response);
-                            // });
                             chunks = [];
 
                             // Get audio duration of the files
@@ -358,6 +394,8 @@ define([
             // btnVoiceChatPic = document.querySelector('.btn__voice-chat-picture');
 
             initVoiceChat.addEventListener('click', toggleVoiceChat);
-        }
+        },
+
+        audioPlayStopFunc: (e) => audioPlayStopFunc(e)
     };
 });

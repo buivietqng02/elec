@@ -41,10 +41,7 @@ define([
     let $typing;
     let $roomInfo;
 
-    let $toggleFavouritesRoomBtn;
-    let $textToggleFavouritesBtn;
-    let $iconFavorEmpty;
-    let $iconFavorFull;
+    let $iconFavorites;
 
     const offEventClickOutside = () => {
         $slide.hide();
@@ -133,54 +130,6 @@ define([
         }
     };
 
-    const onToggleFavouritesRoom = () => {
-        let isLoading = true;
-        $toggleFavouritesRoomBtn.disabled = isLoading;
-        const roomID = GLOBAL.getCurrentRoomId();
-        let listFavouritesRooms = GLOBAL.getFavouritesRooms();
-        let indexExistRoomId = -1;
-
-        indexExistRoomId = listFavouritesRooms.indexOf(roomID);
-
-        if(indexExistRoomId > -1) {
-            listFavouritesRooms.splice(indexExistRoomId, 1)
-        } else {
-            listFavouritesRooms.push(roomID);
-        }
-
-        try {
-            API.put('users/preferences', { favourites_rooms: listFavouritesRooms }).then(() => {
-                isLoading = false;
-                $toggleFavouritesRoomBtn.disabled = isLoading;
-               
-                let roomElement = document.querySelector(`[data-room-id="${roomID}"]`)
-                let iconFavourite = roomElement.querySelector('.icon-star-full')
-                if(indexExistRoomId > -1) {
-                    // After Remove
-                    iconFavourite.style.display = 'none';
-                    $textToggleFavouritesBtn.html(GLOBAL.getLangJson().ADD_TO_FAVOURITES);
-                    $iconFavorEmpty.show()
-                    $iconFavorFull.hide()
-                } else {
-                    // After Add
-                    iconFavourite.style.display = 'block';
-                    $textToggleFavouritesBtn.html(GLOBAL.getLangJson().REMOVE_FROM_FAVOURITES);
-                    $iconFavorEmpty.hide()
-                    $iconFavorFull.show()
-                }
-                
-                GLOBAL.setFavouritesRooms([...listFavouritesRooms]);
-                
-                offEventClickOutside();
-            });
-        } catch {
-            (e) => console.log(e);
-            isLoading = false;
-            $toggleFavouritesRoomBtn.disabled = isLoading;
-        }
-       
-    }
-
     return {
         onInit: () => {
             $groupOptionsBtn = $('.js-group-option');
@@ -199,10 +148,7 @@ define([
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
             $typing = $('.js_info_parnter .toolbar-name .--typing');
-            $toggleFavouritesRoomBtn = $slide.find('.--favourite');
-            $textToggleFavouritesBtn = $toggleFavouritesRoomBtn.find('span');
-            $iconFavorEmpty = $toggleFavouritesRoomBtn.find('.icon-star-empty');
-            $iconFavorFull = $toggleFavouritesRoomBtn.find('.icon-star-full');
+            $iconFavorites = $('.js_info_parnter .toolbar-name .--favourite')
 
             $groupOptionsBtn.off().click(showSlide);
             $callOptionsBtn.off().click(showCallSlide);
@@ -213,11 +159,9 @@ define([
             $internalBtn.off().click(updateInternalMessage);
             $mediaAndFilesBtn.off().click(initMediaAndFiles)
             $image.off().click(modalEditRoomComp.onInit);
-            $toggleFavouritesRoomBtn.off().click(onToggleFavouritesRoom);
         },
 
         onRenderInfomation: (roomInfo) => {
-            // console.log('onRenderInfomation', roomInfo)
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
             $roomInfo = roomInfo;
             $image.off('error');
@@ -231,16 +175,12 @@ define([
                 $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
             }
 
-            // before favourite add/remove button
+            // favourite chat
             let listFavouritesRooms = GLOBAL.getFavouritesRooms();
-            if (listFavouritesRooms.indexOf(roomInfo.id) === -1) {
-                $textToggleFavouritesBtn.html(GLOBAL.getLangJson().ADD_TO_FAVOURITES);
-                $iconFavorEmpty.show()
-                $iconFavorFull.hide()
+            if (listFavouritesRooms.indexOf(roomInfo.id) === -1) {  
+                $iconFavorites.addClass('hidden');
             } else {
-                $textToggleFavouritesBtn.html(GLOBAL.getLangJson().REMOVE_FROM_FAVOURITES);
-                $iconFavorEmpty.hide()
-                $iconFavorFull.show()
+                $iconFavorites.removeClass('hidden');
             }
 
             if (obRoomEdited[roomInfo.id]?.hide_mess) {
@@ -249,6 +189,7 @@ define([
                 $textInternalBtn.html(GLOBAL.getLangJson().ENABLE_INTERNAL_MESSAGES);
             }
 
+            $iconFavorites.attr('favourites-id', roomInfo.id);
             if (roomInfo.group) {
                 $image.attr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP, roomInfo.id);
                 $image.attr('src', getAvatar(roomInfo.id, true));

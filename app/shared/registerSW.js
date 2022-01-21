@@ -60,7 +60,7 @@ define([], () => {
                     padding: 16px;
                     position: fixed;
                     z-index: 9999999;
-                    left: 20px;
+                    left: 62px;
                     bottom: 30px;
                     font-size: 14px;
                 }

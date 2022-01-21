@@ -27,7 +27,7 @@
 
 .icon-star-full:before {
   content: "\e940";
-  color: #FFD700;
+  /* color: #FFD700; */
 }
 .icon-star-empty:before {
   content: "\e941";

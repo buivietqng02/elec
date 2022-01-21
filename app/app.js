@@ -72,6 +72,8 @@ define([
     const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
     let $notiBoard;
+    let $sidebar;
+    let $mainRight;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -249,12 +251,28 @@ define([
                 document.selection.empty();
             }
         });
+
+        // Set view for mobile and desktop
+        const widthBrowser = window.innerWidth;
+        if (widthBrowser < 768) {
+            $sidebar.removeClass('desktop');
+            $mainRight.removeClass('desktop');
+            $sidebar.addClass('mobile');
+            $mainRight.addClass('mobile');
+        } else {
+            $sidebar.removeClass('mobile');
+            $mainRight.removeClass('mobile');
+            $sidebar.addClass('desktop');
+            $mainRight.addClass('desktop');
+        }
     };
 
     const onInit = async (route) => {
         isRunFristTime = false;
         $('.xm-page-loading').hide();
         $notiBoard = $('.notify-update-info');
+        $sidebar = $('.sidebar');
+        $mainRight = $('.main-right');
         $notiBoard.addClass('run');
         languageComp.onInit();
         syncComp.onInitAgain();

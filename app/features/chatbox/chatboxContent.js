@@ -9,6 +9,7 @@ define([
     'features/chatbox/chatboxContentTemplate',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/messageSettingsSlide',
+    'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar'
 
@@ -23,6 +24,7 @@ define([
     template,
     chatboxTopbarComp,
     messageSettingsSlideComp,
+    voiceChatComp,
     sidebarConferenceComp,
     sidebarLeftBarComp
 ) => {
@@ -67,120 +69,12 @@ define([
     let $loadingOfNew;
     let $unreadScroll;
     let jumpFastToBottomBtn;
-  
-    // ========== Start Voice message ==============
-
-    const timeConvert = (time) => {
-        // Calculate the time left and the total duration
-        let currentMinutes = Math.floor(time / 60);
-        let currentSeconds = Math.floor(time - currentMinutes * 60);
-
-        // Add a zero to the single digit time values
-        if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
-        if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
-
-        return `${currentMinutes}:${currentSeconds}`
-    }
-
-    const getAudioID = (string) => {
-        if (string.includes("audio-")) {
-            return string.substring(6, string.length)
-        }
-
-        if (string.includes("btn-")) {
-            return string.substring(4, string.length)
-        }
-    }
-
-    const addEventListenerToAudioRecorder = (id) => {
-        const audio = document.querySelector(`#audio-${id}`);
-        const playStopBtn = document.querySelector(`#btn-${id}`);
-
-        let countDownTimmer;
-        let audioMicroPic = document.querySelector(`#btn-${id} .icon-mic-js`);
-        let isPlaying = playStopBtn.getAttribute('isPlaying');
-        let audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
-        let audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
-
-
-        let audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
-
-        if (!audioProgress || audioProgress.length === 0) {
-            audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
-            audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
-
-            audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
-        }
-
-        let durationAudio = parseFloat(audio.getAttribute('duration'));
-
-        if (isPlaying === 'true') {
-            playStopBtn.setAttribute("isPlaying", false);
-            audio.pause()
-            audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
-            clearInterval(countDownTimmer)
-
-            audioProgress[0].style.animationPlayState = "paused";
-            audioProgress[1].style.animationPlayState = "paused";
-
-        }
-
-
-        if (isPlaying === 'false') {
-            let playPromise = audio.play()
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audioMicroPic.classList.replace('icon-microphoneVoice', 'icon-microphoneVoiceBlue');
-                    // console.log(audio.getAttribute('duration'))
-                    countDownTimmer = setInterval(() => {
-                        audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
-                    }, 1000)
-
-                    audioProgress[0].style.animationName = "left";
-                    audioProgress[1].style.animationName = "right";
-
-                    audioProgress[0].style.animationPlayState = "running";
-                    audioProgress[1].style.animationPlayState = "running";
-
-                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
-
-                    playStopBtn.setAttribute("isPlaying", true)
-                })
-                    .catch(error => {
-                        console.log(error)
-                        // Auto-play was prevented
-                        // Show paused UI.
-                    });
-            }
-        }
-
-        audio.addEventListener('ended', () => {
-            audioMicroPic.classList.replace('icon-microphoneVoiceBlue','icon-microphoneVoice');
-            playStopBtn.setAttribute("isPlaying", false)
-            clearInterval(countDownTimmer)
-
-            audioTime.textContent = timeConvert(durationAudio)
-
-            audioBar[0].innerHTML = ``;
-            audioBar[1].innerHTML = ``;
-        })
-
-    }
-
-    const audioPlayStopFunc = (e) => {
-        e.target.setAttribute("isPlaying", false);
-        addEventListenerToAudioRecorder(getAudioID(e.target.id));
-    }
-
-    // ============== End voice message ==============
 
     // ======== Start Scroll to origin position ===========
     const findOriginMess = (id) => {
         $wrapper.animate({ scrollTop: 0 }, 600);
+      
         onGetMoreMessageByScrolling().then(result => {
-
             if (result.loadedResult.some((item, index) => {
                 return item.id.messageId === id
             })) {
@@ -198,16 +92,15 @@ define([
                 }, 5000)
 
             } else {
-                findOriginMess(id)
+                findOriginMess(id);
             }
         }).catch((e) => {
             console.log(e);
-            findOriginMess(id)
+            setTimeout(() => findOriginMess(id), 3000)
         })
     }
 
     const handleScrollToOriginId = (e) => {
-        console.log(e.target)
         const quotedOriginalMess = e.target.getAttribute('quoted-original-id');
         let originId = quotedOriginalMess.split('-')
         let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${originId[1]}"]`);
@@ -748,10 +641,13 @@ define([
             $btnScrollToBottom.off('click').click(onScrollToBottom);
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
 
+            // Conferecne invite link
             $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item .conference-link button', (e) => addEventListenerToMeetingLink(e));
 
-            $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => audioPlayStopFunc(e))
+            // Voice message
+            $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => voiceChatComp.audioPlayStopFunc(e))
 
+            // Scroll to origin quoted message
             $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e))
         },
 
