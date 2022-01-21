@@ -18,7 +18,8 @@ define([
         getAvatar,
         stripTags,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        truncate
     } = functions;
     const {
         ATTRIBUTE_SIDEBAR_ROOM,
@@ -378,7 +379,7 @@ define([
             handleImageErr: `onerror="this.src='${group ? '/assets/images/group.svg' : '/assets/images/user.jpg'}'"`,
             classImg: group ? 'hagr' : '',
             src,
-            name: htmlEncode(name),
+            name: truncate(htmlEncode(name), 37),
             mess,
             userId,
             mute: muted ? 'mute' : '',
