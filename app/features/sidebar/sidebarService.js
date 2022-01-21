@@ -107,7 +107,8 @@ define([
  
      const touchStart = (e) => {
         const frame = document.querySelector('#frame');
-        if (!frame.classList.contains('indent')) return
+        // Prevent slide after collapse
+        if (!frame.classList.contains('indent')) currentTranslate = 0
 
          startPos = getPositionX(e);
 
