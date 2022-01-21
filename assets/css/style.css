@@ -556,13 +556,13 @@ body {
 
 .toolbar-profile .--name-wraper {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 .toolbar-profile .--favourite{
   margin-left: 10px;
   /* color: #FFD700; */
-  font-size: 20px;
+  margin-top: 3px;
 }
 
 .search {
