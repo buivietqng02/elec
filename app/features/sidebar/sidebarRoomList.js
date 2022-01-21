@@ -2,6 +2,7 @@ define([
     'app/constant',
     'shared/data',
     'features/sidebar/sidebarService',
+    'features/sidebar/sidebarFavourites',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxTopbar',
@@ -14,6 +15,7 @@ define([
     constant,
     GLOBAL,
     services,
+    sidebarFavouritesComp,
     chatboxContentComp,
     chatboxInputComp,
     chatboxTopbarComp,
@@ -23,9 +25,7 @@ define([
     viewMediaAndFilesComp
 
 ) => {
-    const { 
-        getRooms, initScroll, onToggleFavouritesRoom
-     } = services;
+    const { getRooms, initScroll } = services;
     let $caption;
     let $chatbox;
     let mediaFilesWraper;
@@ -123,7 +123,8 @@ define([
         getRooms();
         initScroll();
 
-        $(document).off('.sidebarFavorRooms').on('click.sidebarFavorRooms', '.favouriteBtn', (e) => onToggleFavouritesRoom(e, 'desktop'));
+        $(document).off('.sidebarFavorRooms').on('click.sidebarFavorRooms', '.favouriteBtn', (e) => sidebarFavouritesComp.onToggleFavouritesRoom(e, 'desktop'));
+        $(document).off('.sidebarFavorRoomsMB').on('click.sidebarFavorRoomsMB', '.favourite-mb-btn', (e) => sidebarFavouritesComp.onToggleFavouritesRoom(e, 'mobile'));
 
         $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`, onRoomClick);
     };
