@@ -56,8 +56,8 @@ define([
 
             <div class="contact-list__item-menu-mb slide-menu">
                 <div class="favourite-mb-btn" favourRoom-mobile-id="{id}">
-                    <i class="xm icon-star-empty" aria-hidden="true"></i>
-                    <small><lang data-language="FAVOURITES">{lang_FAVOURITES}</lang></small>
+                    <i class="xm icon-star-{favouriteIcon}" aria-hidden="true"></i>
+                    <div><small><lang data-language="{lang_FAVOURITES}">{lang_FAVOURITES}</lang></small></div>
                 </div>
             </div>
         </div>
@@ -379,7 +379,8 @@ define([
             userId,
             mute: muted ? 'mute' : '',
             isFavourite: isFavourite ? 'favourites' : '',
-            lang_FAVOURITES: GLOBAL.getLangJson().FAVOURITES
+            lang_FAVOURITES: isFavourite ? GLOBAL.getLangJson().REMOVE_FAVOURITES : GLOBAL.getLangJson().FAVOURITES,
+            favouriteIcon: isFavourite ? 'empty': 'full'
         };
 
         return render(template, data);
@@ -495,6 +496,11 @@ define([
                 const iconFavouriteEmpty = roomElement.querySelector('.favouriteBtn .icon-star-empty');
                 // Icon star mobile
                 const iconFavouriteFullMb = roomElement.querySelector('.contact__name .icon-star-full');
+
+                const iconStarMbBtn = selectedSliderContainerFunc(roomID).querySelector('.favourite-mb-btn i')
+                console.log(iconStarMbBtn);
+                const textFavorMbBtn = selectedSliderContainerFunc(roomID).querySelector('.favourite-mb-btn lang')
+                console.log(textFavorMbBtn);
                 
                 if (indexExistRoomId > -1) {
                     // After Remove
@@ -503,7 +509,11 @@ define([
                         iconFavouriteEmpty.style.display = 'none';
                     }
                    
-                    if (type === 'mobile') iconFavouriteFullMb.style.display = 'none';
+                    if (type === 'mobile') {
+                        iconFavouriteFullMb.style.display = 'none';
+                        iconStarMbBtn.classList.replace('icon-star-empty', 'icon-star-full');
+                        textFavorMbBtn.textContent = GLOBAL.getLangJson().FAVOURITES;
+                    }
 
                     $iconFavoritesTopBar.addClass('hidden');
                     ALERT.show(GLOBAL.getLangJson().REMOVE_FROM_FAVOURITES, 'warning');
@@ -514,7 +524,11 @@ define([
                         iconFavouriteEmpty.style.display = 'none';
                     }
 
-                    if (type === 'mobile') iconFavouriteFullMb.style.display = 'block';
+                    if (type === 'mobile') {
+                        iconFavouriteFullMb.style.display = 'block';
+                        iconStarMbBtn.classList.replace('icon-star-full', 'icon-star-empty');
+                        textFavorMbBtn.textContent = GLOBAL.getLangJson().REMOVE_FAVOURITES;
+                    } 
 
                     $iconFavoritesTopBar.removeClass('hidden');
                     ALERT.show(GLOBAL.getLangJson().ADD_TO_FAVOURITES, 'success');
