@@ -11,7 +11,6 @@ define([
     functions
     ) => {
     require('bootstrap/js/dist/tab');
-    // require('bootstrap/js/dist/tooltip');
     
     const { API_URL, ATTRIBUTE_MESSAGE_ID } = constant;
     const {

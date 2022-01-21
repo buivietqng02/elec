@@ -264,10 +264,12 @@ define([
 
             // Render in case share conference link
             const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            
             if (text.includes(`${enviroment}${constant.ROUTE.meeting}`) && text.length > 30) {
                 isConferenceLink = true;
-                const conferenceId = text.split('/');
-                conferenceLink = `${conferenceId[4]}`;
+                
+                const positionOfLinkConf = text.search(`${enviroment}${constant.ROUTE.meeting}`);
+                conferenceLink = text.substring(positionOfLinkConf + 28, positionOfLinkConf + 39);
             } else {
                 isConferenceLink = false;
             }

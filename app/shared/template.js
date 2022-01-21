@@ -13,7 +13,7 @@ define(['shared/icon'], (ICON) => ({
                 <div class="lbi-chats__newMess-noti hidden"></div>
             </button>
             <button class="btn lbm-item lbmi-cart">
-                <i class="icon-cart"></i>
+                <i class="icon-shopping-cart"></i>
             </button>
             <button class="btn lbm-item lbmi-conference">
                 <i class="icon-video-camera"></i>
@@ -36,7 +36,7 @@ define(['shared/icon'], (ICON) => ({
             </div>
 
             <div class="lb-item lbi-cart">
-                <i class="icon-cart"></i>
+                <i class="icon-shopping-cart"></i>
             </div>
 
             <!-- Conference -->
@@ -355,7 +355,7 @@ define(['shared/icon'], (ICON) => ({
 
 
         <div id="frame">
-            <div class="sidebar">
+            <div class="sidebar desktop">
                 <div class="profile profile--mini js_info_you" id="sidebarProfile">
                     <a title="Edit Profile">
                         <img class="--avatar avatar p-cur" src="" alt="" style="display:none">
@@ -371,6 +371,7 @@ define(['shared/icon'], (ICON) => ({
                         <button type="button" class="menu__item --s-unread" data-s="2" data-language="UNREAD"></button>
                         <button type="button" class="menu__item --s-group" data-s="3" data-language="GROUP"></button>
                         <button type="button" class="menu__item --s-personal" data-s="4" data-language="PERSONAL"></button>
+                        <button type="button" class="menu__item --s-favourites" data-s="5" data-language="FAVOURITES"></button>
                     </div>
                     <span class="clearable xs-search">
                         <button class="search__option" title="Option">
@@ -441,7 +442,7 @@ define(['shared/icon'], (ICON) => ({
                     </button>
                 </div>
             </div>
-            <div class="main-right content">
+            <div class="main-right content desktop">
                 <div class="notify-update-info">Updating Information...</div>
                 <div class="js_caption">
                     <p class="messages__first" data-language="PLEASE_SELECT_A_CHAT"></p>
@@ -454,7 +455,11 @@ define(['shared/icon'], (ICON) => ({
                     <div class="js_info_parnter toolbar-profile">
                         <img class="--img avatar" src="" alt="" style="cursor: pointer;" />
                         <div class="toolbar-name">
-                            <div class="--name"></div>
+                            <div class="--name-wraper">
+                                <div class="--name"></div> 
+                                <div class="--favourite hidden"><i class="xm icon-star-full" aria-hidden="true"></i></div>
+                            </div>
+                           
                             <div class="--online"></div>
                             <div class="--typing"></div>
                         </div>
@@ -472,6 +477,7 @@ define(['shared/icon'], (ICON) => ({
                         
                         <a class="js-group-option btn__option" data-target="#group-option"><i class="xm icon-ellipsis-v xm-fw p-cur" aria-hidden="true"></i></a>
                         <div id="chatbox-group-option" class="--option menu js-dismiss-menu">
+                    
                             <button class="--edit-group menu__item">
                                 <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>
@@ -599,7 +605,7 @@ define(['shared/icon'], (ICON) => ({
                                 <!-- Voice chat btn -->
 
                                 <button id="init-voiceChat"" class="btn__voice-chat js_voice-chat">
-                                    <i class="micro-vc"></i>
+                                    <i class="icon-microphoneVoice"></i>
                                 </button>
                                 <!-- End Voice chat btn -->
 
@@ -676,7 +682,8 @@ define(['shared/icon'], (ICON) => ({
 
                                 <div class="voice-button-group" style="display:none">
                                     <button id="record__start-stop__btn" class="btn btn-primary">
-                                        <img src="/assets/images/microphone.svg" alt="">
+        
+                                        <i class="icon-microphoneVoice"></i>
                                         <div class="record__start-stop-pulse-ring"></div>
                                     </button>
                                 </div>

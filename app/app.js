@@ -72,6 +72,8 @@ define([
     const { setGeneral, getGeneral, clear } = offlineData;
     let isRunFristTime = false;
     let $notiBoard;
+    let $sidebar;
+    let $mainRight;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -173,11 +175,14 @@ define([
         const fontsize = res?.body_fz || FONTSIZES[2];
         const enterKeyPreference = res?.enter_key_preference || ENTER_KEY_PREFERENCES[0].value;
         const roomInfo = res?.user_chat_info || {};
+        const favouritesRooms = res?.favourites_rooms || [];
 
         GLOBAL.setRoomInfoWasEdited(roomInfo);
         GLOBAL.setBodyBgTheme(theme);
         GLOBAL.setBodyFontSize(fontsize);
         GLOBAL.setEnterKeyPreference(enterKeyPreference);
+        GLOBAL.setFavouritesRooms(favouritesRooms);
+
         setDataToLocalApplication(BODY_BG_THEME, theme);
         setDataToLocalApplication(BODY_FZ, fontsize);
         setDataToLocalApplication(ENTER_KEY_PREFERENCE, enterKeyPreference);
@@ -246,12 +251,28 @@ define([
                 document.selection.empty();
             }
         });
+
+        // Set view for mobile and desktop
+        const widthBrowser = window.innerWidth;
+        if (widthBrowser < 768) {
+            $sidebar.removeClass('desktop');
+            $mainRight.removeClass('desktop');
+            $sidebar.addClass('mobile');
+            $mainRight.addClass('mobile');
+        } else {
+            $sidebar.removeClass('mobile');
+            $mainRight.removeClass('mobile');
+            $sidebar.addClass('desktop');
+            $mainRight.addClass('desktop');
+        }
     };
 
     const onInit = async (route) => {
         isRunFristTime = false;
         $('.xm-page-loading').hide();
         $notiBoard = $('.notify-update-info');
+        $sidebar = $('.sidebar');
+        $mainRight = $('.main-right');
         $notiBoard.addClass('run');
         languageComp.onInit();
         syncComp.onInitAgain();

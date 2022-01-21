@@ -9,6 +9,7 @@ define([
     'features/chatbox/chatboxContentTemplate',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/messageSettingsSlide',
+    'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar'
 
@@ -23,6 +24,7 @@ define([
     template,
     chatboxTopbarComp,
     messageSettingsSlideComp,
+    voiceChatComp,
     sidebarConferenceComp,
     sidebarLeftBarComp
 ) => {
@@ -66,130 +68,13 @@ define([
     let $wrapper;
     let $loadingOfNew;
     let $unreadScroll;
-
     let jumpFastToBottomBtn;
-
-    // ========== Start Voice message ==============
-
-    const timeConvert = (time) => {
-        // Calculate the time left and the total duration
-        let currentMinutes = Math.floor(time / 60);
-        let currentSeconds = Math.floor(time - currentMinutes * 60);
-
-        // Add a zero to the single digit time values
-        if (currentSeconds < 10) { currentSeconds = "0" + currentSeconds; }
-        if (currentMinutes < 10) { currentMinutes = "0" + currentMinutes; }
-
-        return `${currentMinutes}:${currentSeconds}`
-    }
-
-    const getAudioID = (string) => {
-        if (string.includes("audio-")) {
-            return string.substring(6, string.length)
-        }
-
-        if (string.includes("btn-")) {
-            return string.substring(4, string.length)
-        }
-    }
-
-    const addEventListenerToAudioRecorder = (id) => {
-        const audio = document.querySelector(`#audio-${id}`);
-        const playStopBtn = document.querySelector(`#btn-${id}`);
-
-        let countDownTimmer;
-        let audioMicroPic = document.querySelector(`#btn-${id} .audio-microPic`);
-        let isPlaying = playStopBtn.getAttribute('isPlaying');
-        let audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
-        let audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
-
-
-        let audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
-
-        if (!audioProgress || audioProgress.length === 0) {
-            audioBar[0].innerHTML = `<div class="audio-progress"></div>`;
-            audioBar[1].innerHTML = `<div class="audio-progress"></div>`;
-
-            audioProgress = document.querySelectorAll(`#btn-${id} .audio-progress`);
-        }
-
-        let durationAudio = parseFloat(audio.getAttribute('duration'));
-
-        if (isPlaying === 'true') {
-            playStopBtn.setAttribute("isPlaying", false);
-            audio.pause()
-            audioMicroPic.src = `/assets/images/microphone.svg`
-            clearInterval(countDownTimmer)
-
-            audioProgress[0].style.animationPlayState = "paused";
-            audioProgress[1].style.animationPlayState = "paused";
-
-        }
-
-
-        if (isPlaying === 'false') {
-            let playPromise = audio.play()
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audioMicroPic.src = `/assets/images/microphoneListening.svg`
-
-                    // console.log(audio.getAttribute('duration'))
-                    countDownTimmer = setInterval(() => {
-                        audioTime.textContent = timeConvert(durationAudio - audio.currentTime)
-                    }, 1000)
-
-                    audioProgress[0].style.animationName = "left";
-                    audioProgress[1].style.animationName = "right";
-
-                    audioProgress[0].style.animationPlayState = "running";
-                    audioProgress[1].style.animationPlayState = "running";
-
-                    audioProgress[0].style.animationDuration = `${durationAudio / 2}s`;
-                    audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
-                    audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
-
-                    playStopBtn.setAttribute("isPlaying", true)
-                })
-                    .catch(error => {
-                        console.log(error)
-                        // Auto-play was prevented
-                        // Show paused UI.
-                    });
-            }
-        }
-
-        audio.addEventListener('ended', () => {
-            audioMicroPic.src = `/assets/images/microphone.svg`;
-            playStopBtn.setAttribute("isPlaying", false)
-            clearInterval(countDownTimmer)
-
-            audioTime.textContent = timeConvert(durationAudio)
-
-            audioBar[0].innerHTML = ``;
-            audioBar[1].innerHTML = ``;
-        })
-
-    }
-
-    const audioPlayStopFunc = () => {
-        let playPauseBtn = document.querySelectorAll('.audio-playStop');
-        playPauseBtn.forEach(item => {
-            item.setAttribute("isPlaying", false);
-
-            item.addEventListener('click', (e) => {
-                addEventListenerToAudioRecorder(getAudioID(item.id));
-
-            })
-        })
-    }
-
-    // ============== End voice message ==============
 
     // ======== Start Scroll to origin position ===========
     const findOriginMess = (id) => {
         $wrapper.animate({ scrollTop: 0 }, 600);
+      
         onGetMoreMessageByScrolling().then(result => {
-
             if (result.loadedResult.some((item, index) => {
                 return item.id.messageId === id
             })) {
@@ -202,20 +87,21 @@ define([
                 }, 2000)
 
                 setTimeout(() => {
+                    originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
                     originMessageEle.classList.remove('activeScrollTo');
                 }, 5000)
 
             } else {
-                findOriginMess(id)
+                findOriginMess(id);
             }
         }).catch((e) => {
             console.log(e);
-            findOriginMess(id)
+            setTimeout(() => findOriginMess(id), 3000)
         })
     }
 
-    const handleScrollToOriginId = (element) => {
-        const quotedOriginalMess = element.getAttribute('quoted-original-id');
+    const handleScrollToOriginId = (e) => {
+        const quotedOriginalMess = e.target.getAttribute('quoted-original-id');
         let originId = quotedOriginalMess.split('-')
         let originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${originId[1]}"]`);
 
@@ -232,32 +118,6 @@ define([
             findOriginMess(originId[1]);
         }
     }
-
-    const addEventToAllScrollToOriginl = () => {
-        let quotedMessage = document.querySelectorAll('.comment-box-inline');
-        quotedMessage.forEach(item => {
-            item.addEventListener('click', (e) => {
-                handleScrollToOriginId(item);
-            })
-        })
-    }
-
-    // render file for quotedMessage
-    // const getFileForQuoteMessage = (messagesArray) => {
-    //     let newArray = messagesArray.map((item, index) => {
-    //         if (item.quotedMessage) {
-    //             messagesArray.map(ite => {
-    //                 if (item.quotedMessage.id.messageId === ite.id.messageId) {
-    //                     return item.quotedMessage.file = ite.file
-    //                 }
-
-    //             })
-
-    //         }
-    //         return item;
-    //     })
-    //     return newArray;
-    // }
     // ======== End Scroll to origin position ===========
 
     // ======== Handle View Media and Files scroll to origin message ===========
@@ -316,9 +176,6 @@ define([
                 // console.log(moreMessages)
                 messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
                 $messageList.append(messagesHtml);
-
-                // Add eventlistner of each messages (audio, conference, scroll to origin) to each scroll down more message
-                addEvtListenToMessOnScroll(moreMessages)
 
                 // If touch last message at bottom, stop call API, remove eventListner
                 if (lastOffsetScrollDown >= ultiLastOffSet) {
@@ -429,18 +286,12 @@ define([
     // ======== End Handle View Media and Files scroll to origin message ===========
 
     // Conference Call
-    const addEventListenerToMeetingLink = () => {
-        let joinConferenceBtn = document.querySelectorAll('.messages__item .is_conference')
+    const addEventListenerToMeetingLink = (e) => {
+        let confRoomID = e.target.closest('.is_conference').getAttribute('confid'); 
+        console.log(confRoomID);
 
-        joinConferenceBtn.forEach(item => {
-            item.querySelector('button').addEventListener('click', () => {
-                let confRoomID = item.getAttribute('confId');
-                console.log(confRoomID);
-
-                sidebarLeftBarComp.onSwitchToConference();
-                sidebarConferenceComp.onInitConferencePage(confRoomID);
-            });
-        })
+        sidebarLeftBarComp.onSwitchToConference();
+        sidebarConferenceComp.onInitConferencePage(confRoomID);
     }
 
     const onWrapperScroll = (event) => {
@@ -509,31 +360,6 @@ define([
 
         $wrapper.scrollTop((topPos + posScrollParent) - (topParent + 200));
     };
-    
-    const addEvtListenToMessOnScroll = (moreMessages) => {
-        // Audio vocie mess addeventlistener when scroll top
-        moreMessages.filter(m => m.file?.id === 3).forEach(message => {
-            let scrollUpAudioRecorder = document.querySelector(`#btn-${message.file.id}`);
-            scrollUpAudioRecorder.setAttribute("isPlaying", false);
-            scrollUpAudioRecorder.addEventListener('click', () => {
-                addEventListenerToAudioRecorder(message.file.id)
-            })
-        });
-
-        // Add event listener to Scroll to origin message when scroll more
-        moreMessages.forEach(item => {
-            const messageItem = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${item.id.messageId}"]`)
-            const quotedMessageItem = messageItem.querySelector('.comment-box-inline');
-            if (quotedMessageItem) {
-                quotedMessageItem.addEventListener('click', () => {
-                    handleScrollToOriginId(quotedMessageItem);
-                })
-            }
-        })
-
-        // Add event listener for conference call
-        addEventListenerToMeetingLink();
-    }
 
     const onGetMoreMessageByScrolling = async () => {
         let isLoadedMoreResult = { isLoadedMore: false, loadedResult: [] };
@@ -561,11 +387,6 @@ define([
 
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
-            // Render quotedMessage for files and images
-            // getFileForQuoteMessage(moreMessages)
-
-            // console.log(moreMessages)
-
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
 
@@ -577,9 +398,6 @@ define([
           
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
-
-            // Add event listener to messages when scroll more
-            addEvtListenToMessOnScroll(moreMessages)
 
             setTimeout(() => {
                 processing = false;
@@ -651,7 +469,6 @@ define([
        
         // Update ultiLastOffSet whenever reload loadMessages function
         // console.log(cloneArray);
-
         if(cloneArray.length > 0){
             //  console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
             //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
@@ -704,16 +521,7 @@ define([
             $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         }
 
-        // Audio
-        audioPlayStopFunc()
-
-        // Scroll to orginal message
-        addEventToAllScrollToOriginl();
-
         $loadingOfNew.hide();
-
-        // Add event listener for conference call
-        addEventListenerToMeetingLink();
 
         setTimeout(() => {
             updateRoomInfo(roomInfo);
@@ -832,20 +640,27 @@ define([
             $wrapper.off('scroll').scroll(onWrapperScroll);
             $btnScrollToBottom.off('click').click(onScrollToBottom);
             $(document).off('.btnMessageSettings').on('click.btnMessageSettings', '.btn-message-settings', (e) => messageSettingsSlideComp.onShow(e));
+
+            // Conferecne invite link
+            $(document).off('.btnConferenceLink').on('click.btnConferenceLink', '.messages__item .conference-link button', (e) => addEventListenerToMeetingLink(e));
+
+            // Voice message
+            $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => voiceChatComp.audioPlayStopFunc(e))
+
+            // Scroll to origin quoted message
+            $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e))
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
             const mess = messList[0];
-
             let id = GLOBAL.getCurrentRoomId();
 
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
-                return false;
-            }
-
+                return;
+            }     
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
@@ -862,51 +677,12 @@ define([
                 $scrollToMess.show();
             }
 
-            // Render new quotedMessage
-            // if (mess.quotedMessage) {
-            //     messages.some(item => {
-            //         if (mess.quotedMessage.id.messageId === item.id.messageId) {
-            //             mess.quotedMessage.file = item.file
-            //             return true;
-            //         }
-            //     })
-            // }
-
             if (!isSearchMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
 
-                // console.log(messagesHtml)
-                // console.log(mess)
-                // Render new message
                 $messageList.append(messagesHtml);
-
-                // Audio when send new voice mess
-                if (mess.file?.id) {
-                    const newAudioRecorder = document.querySelector(`#btn-${mess.file.id}`);
-                    if (newAudioRecorder) {
-                        // Scroll to bottom when new voice message sent
-                        onScrollToBottom()
-
-                        newAudioRecorder.setAttribute("isPlaying", false);
-                        newAudioRecorder.addEventListener('click', () => {
-                            // console.log('click');
-                            addEventListenerToAudioRecorder(mess.file.id);
-                        })
-                        // addEventListenerToAudioRecorder(mess.file.id);
-                    }
-                }
-
-                // Scroll to origin message
-                const $messItem = $(`[${ATTRIBUTE_MESSAGE_ID}="${mess.id.messageId}"]`);
-                $messItem.find('.comment-box-inline').on('click', (e) => {
-                    // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                    handleScrollToOriginId(e.currentTarget);
-                })
-
-                // Add event listener for conference call
-                addEventListenerToMeetingLink();
 
                 // Check if chatbox scrolled to the bottom
                 if (isBottom) {
@@ -951,11 +727,8 @@ define([
         },
 
         onFinishPostMessage: (data) => {
-            // console.log(data)
             // Update ultiLastOffSet when send new mess
-            ultiLastOffSet++;
-            // console.log(ultiLastOffSet)
-
+            ultiLastOffSet++; 
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
 
@@ -978,18 +751,9 @@ define([
             $mess.attr(ATTRIBUTE_MESSAGE_ID, data.messageId);
             $mess.removeClass('js_li_mess_local');
 
-            $mess.find('.comment-box-inline').on('click', (e) => {
-                // let originId = e.currentTarget.getAttribute('quoted-original-id').split('-')
-                // console.log(originId[1]);
-                handleScrollToOriginId(e.currentTarget);
-            })
-
-            // Add event listener for conference call
-            addEventListenerToMeetingLink();
-
             // Fix repeating messages
-            const messagesList = document.querySelector('.messages__list')
-            const arryMessages = messagesList.querySelectorAll('.messages__item');
+            const messagesList = document.querySelector('.js_ul_list_mess')
+            const arryMessages = messagesList.querySelectorAll('.js_li_list_mess');
             const indexArr = [];
             const toFindDuplicates = (arryParam) => {
                 let newArray = Array.from(arryParam).map(ite => ite.getAttribute('data-chat-id'));
@@ -998,14 +762,13 @@ define([
                         indexArr.push(index)
                         return true;
                     }
-                      
+                        
                 })
             }
             toFindDuplicates(arryMessages);
 
             if(indexArr.length){
                 indexArr.map(item => {
-                    // console.log(arryMessages[item]);
                     messagesList.removeChild(arryMessages[item])
                 })
             }

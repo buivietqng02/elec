@@ -7,6 +7,7 @@ define([
     'assets/js/jitsi_external_api',
     'jquery-ui/ui/widgets/draggable.js',
     'jquery-ui/ui/widgets/resizable.js',
+    'features/sidebar/sidebarConference'
 ], (
     GLOBAL,
     API,
@@ -14,7 +15,8 @@ define([
     constant,
     JitsiMeetExternalAPI,
     draggable,
-    resizable
+    resizable,
+    sidebarConference
 ) => {
     require('jquery-ui/themes/base/draggable.css');
     require('jquery-ui/themes/base/resizable.css');
@@ -112,6 +114,9 @@ define([
         $audio[0].play();
         $videoCallerWrap.find('iframe').remove();
         $modal.remove();
+
+         // If user is on conference call and same time have a call, when end call, the conference will be back to unMute
+        if (sidebarConference.getConfIsOpen()) sidebarConference.toggleMuteConfCall('on');
     };
     const onHangup = () => {
         onClose();
@@ -374,6 +379,9 @@ define([
 
         $audio[0].pause();
         setupWebrtc(event.data.audioOnly, true);
+
+        // If user is on conference call and receive a call, the conference call will mute
+        if (sidebarConference.getConfIsOpen()) sidebarConference.toggleMuteConfCall('off');
     };
 
     const onDeclareDom = (isAudioOnly) => {

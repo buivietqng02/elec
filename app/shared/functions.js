@@ -74,6 +74,10 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
 
     stripTags: (text) => text.replace(/(<([^>]+)>)/gi, ''),
 
+    truncate: (str, n) => {
+        return (str.length > n) ? str.substr(0, n-1) + '&hellip;' : str;
+    },
+
     convertMessagetime: (time, langJson, isSearch) => {
         const timeMessage = moment(time);
         const today = moment();

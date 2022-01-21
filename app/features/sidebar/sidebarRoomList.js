@@ -2,6 +2,7 @@ define([
     'app/constant',
     'shared/data',
     'features/sidebar/sidebarService',
+    'features/sidebar/sidebarFavourites',
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxTopbar',
@@ -14,6 +15,7 @@ define([
     constant,
     GLOBAL,
     services,
+    sidebarFavouritesComp,
     chatboxContentComp,
     chatboxInputComp,
     chatboxTopbarComp,
@@ -21,17 +23,22 @@ define([
     chatboxSearchComp,
     modalAcceptInvitationComp,
     viewMediaAndFilesComp
+
 ) => {
     const { getRooms, initScroll } = services;
     let $caption;
     let $chatbox;
     let mediaFilesWraper;
+    let roomInfo;
+    let $frame;
+    let $lCollapse;
+    let sidebar;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
         const roomId = $this.attr('data-room-id');
-        let roomInfo = GLOBAL.getRooms().filter((room) => {
+        roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
                 return true;
             }
@@ -39,6 +46,13 @@ define([
             return false;
         })[0] || {};
         roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+         // For mobile view 
+         sidebar = document.querySelector('.sidebar');
+         if (sidebar.classList.contains('mobile')) {
+             $frame.removeClass('indent');
+             $lCollapse.removeClass('indent');
+         } 
 
         // Handle when the user has not accepted the invitation yet
         if (!roomId) {
@@ -103,8 +117,15 @@ define([
         $chatbox = $('.js_wrap_mess');
         mediaFilesWraper = document.querySelector('.view-media-files-wraper');
 
-        initScroll();
+        $frame = $('#frame');
+        $lCollapse = $('.lbog-collapse');
+
         getRooms();
+        initScroll();
+
+        $(document).off('.sidebarFavorRooms').on('click.sidebarFavorRooms', '.favouriteBtn', (e) => sidebarFavouritesComp.onToggleFavouritesRoom(e, 'desktop'));
+        $(document).off('.sidebarFavorRoomsMB').on('click.sidebarFavorRoomsMB', '.favourite-mb-btn', (e) => sidebarFavouritesComp.onToggleFavouritesRoom(e, 'mobile'));
+
         $(document).off('.sidebarRoomList').on('click.sidebarRoomList', `[${constant.ATTRIBUTE_SIDEBAR_ROOM}]`, onRoomClick);
     };
 

@@ -16,6 +16,7 @@ define(() => {
     let language = '';
     let langJson = {};
     let roomDraft = {};
+    let favouritesRooms = [];
 
     const useAdapterForRoom = (room) => ({
         channel: room.channel,
@@ -82,6 +83,11 @@ define(() => {
         getRooms: () => rooms,
         setRooms: (value) => {
             rooms = value;
+        },
+
+        getFavouritesRooms: () => favouritesRooms,
+        setFavouritesRooms: (value) => {
+            favouritesRooms = value;
         },
 
         setRoomWithAdapter: useAdapterForRoom,

@@ -41,6 +41,8 @@ define([
     let $typing;
     let $roomInfo;
 
+    let $iconFavorites;
+
     const offEventClickOutside = () => {
         $slide.hide();
         $callSlide.hide();
@@ -146,6 +148,7 @@ define([
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
             $typing = $('.js_info_parnter .toolbar-name .--typing');
+            $iconFavorites = $('.js_info_parnter .toolbar-name .--favourite')
 
             $groupOptionsBtn.off().click(showSlide);
             $callOptionsBtn.off().click(showCallSlide);
@@ -159,7 +162,6 @@ define([
         },
 
         onRenderInfomation: (roomInfo) => {
-            console.log('onRenderInfomation', roomInfo)
             const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
             $roomInfo = roomInfo;
             $image.off('error');
@@ -173,12 +175,21 @@ define([
                 $textNotiBtn.html(GLOBAL.getLangJson().DISABLE_NOTIFICATIONS);
             }
 
+            // favourite chat
+            let listFavouritesRooms = GLOBAL.getFavouritesRooms();
+            if (listFavouritesRooms.indexOf(roomInfo.id) === -1) {  
+                $iconFavorites.addClass('hidden');
+            } else {
+                $iconFavorites.removeClass('hidden');
+            }
+
             if (obRoomEdited[roomInfo.id]?.hide_mess) {
                 $textInternalBtn.html(GLOBAL.getLangJson().DISABLE_INTERNAL_MESSAGES);
             } else {
                 $textInternalBtn.html(GLOBAL.getLangJson().ENABLE_INTERNAL_MESSAGES);
             }
 
+            $iconFavorites.attr('favourites-id', roomInfo.id);
             if (roomInfo.group) {
                 $image.attr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP, roomInfo.id);
                 $image.attr('src', getAvatar(roomInfo.id, true));

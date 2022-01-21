@@ -554,6 +554,17 @@ body {
   margin-right: 16px;
 }
 
+.toolbar-profile .--name-wraper {
+    display: flex;
+    /* justify-content: space-between; */
+}
+
+.toolbar-profile .--favourite{
+  margin-left: 10px;
+  /* color: #FFD700; */
+  margin-top: 3px;
+}
+
 .search {
   position: relative;
 }
@@ -990,6 +1001,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   border: 0;
   background: transparent;
   position: relative;
+}
+
+.menu .menu__item .spinner-border{
+    font-size: 13px;
 }
 
 .menu .menu__item.active {
@@ -1800,11 +1815,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .comment-box-inline .audio-timeIndicate {
-  margin-top: -40px;
-}
-
-.comment-box-inline .audio-microPic {
-  margin-top: -20px;
+  margin-top: 5px;
 }
 
 /* Style for Safari */
@@ -2014,64 +2025,11 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   max-width: 100%;
 }
 
-.contacts {
-  height: calc(100% - 196px);
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
 .profile__name--toolbar {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1;
-}
-
-.contact__name,.contact__name span {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 0;
-  display: flex;
-  align-items: center;
-}
-
-.contact__name .icon-volume-mute {
-  display: none;
-  margin-right: 5px;
-}
-
-.contact__name span {
-  display: inline;
-}
-
-.js_li_list_user.mute .icon-volume-mute,.contact__name span.mute .icon-volume-mute {
-  display: inline-block;
-}
-
-.contact-list {
-  margin-bottom: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-.contact-list__item {
-  position: relative;
-  padding: 10px 15px 10px 15px;
-  cursor: pointer;
-  display: flex;
-}
-
-.contact-list__item.group .avatar {
-  border-radius: 10px;
-}
-
-.contact-list__item.active,.contact-list__item:hover {
-  background: rgba(0,0,0,0.2);
-}
-
-.contact-list__item .preview {
-  font-size: 0.75rem;
 }
 
 .badge {
@@ -2094,6 +2052,9 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .badge-orange {
+  position: absolute;
+  left: 40px;
+  top: 5px;
   color: #fff;
   background-color: #f60;
   box-shadow: 1px 1px 3px black;
@@ -2658,12 +2619,13 @@ body.body_fz_18 {
   top: -126px;
 }
 
-.mess-comment-box .mess-fw-box .audio-microPic{
-  margin-top: -30px;
+.audio-number .icon-microphoneVoice,.icon-microphoneVoiceBlue{
+  font-size: 25px;
+  display: block;
+  margin-bottom: -40px;
 }
-
-.mess-comment-box .mess-fw-box .audio-timeIndicate{
-  margin-top: -45px;
+.mess-comment-box .mess-fw-box .icon-microphoneVoice,.icon-microphoneVoiceBlue{
+  margin-top: 5px;
 }
 
 /* Style for Safari */
@@ -3236,10 +3198,16 @@ body.body_fz_18 {
 
 #alert-wrapper {
   position: fixed;
-  top: 15px;
-  right: 15px;
-  width: 30%;
+  top: 5px;
+  right: 5px;
+  /* width: 30%; */
   z-index: 99999;
+}
+
+@media screen and (max-width: 768px) {
+  #alert-wrapper {
+    top: 45px;
+  }
 }
 
 #alert-wrapper .alert {
@@ -3814,6 +3782,10 @@ body.body_fz_18 {
     background: rgba(0,0,0,0.4);
   }
 
+  #frame .sidebar.mobile .profile {
+    background: rgba(0, 0, 0, 0);
+  }
+
   #frame .contacts {
     height: calc(100% - 288px);
     -ms-overflow-style: none;  /* IE and Edge */
@@ -3827,6 +3799,16 @@ body.body_fz_18 {
   #frame.indent .content {
     right: -200px;
   }
+
+  /* Mobile */
+  #frame.indent .content.mobile {
+    right: -100vw;
+  }
+
+  #frame.indent .sidebar.mobile {
+    width: 100%;
+  }
+  /* End mobile */
 
   #frame.indent .contacts {
     height: calc(100% - 196px);
@@ -3940,14 +3922,6 @@ body.body_fz_18 {
     height: 82px;
   }
 
-  /* Voice chat for mobile */
-  .btn__voice-chat{
-    margin-right: 5px !important;
-  }
-  /* .btn__voice-chat-picture{
-    width: 25px;
-  } */
-
   .btn__attach{
     left:-2px;
   }
@@ -3955,21 +3929,6 @@ body.body_fz_18 {
     left:0;
     z-index: 99;
   }
-
-  .btn-voice-chat-description{
-    transition: none;
-    -webkit-transition-property: none;
-    -moz-transition-property: none;
-    -o-transition-property: none;
-    transition-property: none;
-    z-index: 2 !important;
-    text-align: center;
-  }
-
-  .btn-voice-chat-description .cancel-voice-record{
-      right:250px;
-  }
-   /* End Voice chat for mobile */
 }
 
 @media screen and (max-width:575px) {
@@ -4028,379 +3987,3 @@ body.body_fz_18 {
     width: calc(100% - 390px);
   }
 }
-
-
- /* ============= voice chat ============ */
- /* Init voice chat */
- .btn__voice-chat{
-  width: 40px;
-  border:none;
-  background-color: transparent;
-  border-radius: 5px;
-  height: 50px;
-  margin-right: 15px;
-
-  font-size: 30px;
-}
-
-/* .btn__voice-chat-picture{
-  width: 20px;
-  padding:0;
-  margin:0;
-} */
-
-/* -------------Recording button style --------------- */
-#voice-statusRecording{
-  position: absolute;
-  bottom: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  height:80px;
-}
-
-#voice-statusMessage{
-  position: absolute;
-  bottom: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  
-}
-.voice-statusMessage__details{
-  background-color: #fff;
-  box-shadow: 1px 2px 3px #00000029;
-  border-radius: 8px;
-  padding: 15px;
-  color: #0093FF;
-}
-
-/* --------voice audio main content  -----------*/
-
-.voice-button-group {
-  position:absolute;
-  bottom:45px;
-  left: 50%;
-  transform: translateX(-50%);
-  /* display: none; */
-}
-
-#record__start-stop__btn{ 
-  position: relative;
-  
-  border-radius: 100%;
-  width: 80px;
-  height: 80px;
-  opacity: 1;
-
-  border: none;
-  padding: 0;
-  margin: 0;
-
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-image: none;
-  z-index: 99 !important;
-}
-
-#record__start-stop__btn img{
-  touch-action: none;
-  pointer-events: none;
-}
-
-.record__start-stop-pulse-ring.active{
-  display: block !important
-}
-.record__start-stop-pulse-ring{
-  width: 90px;
-  height: 90px;
-  border: 5px solid #0093FF;
-  border-radius: 50%;
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  animation: pulsate infinite 1s;
-  display: none;
-}
-
-@-webkit-keyframes pulsate {
-  0% {
-    -webkit-transform: scale(1, 1);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: scale(1.2, 1.2);
-    opacity: 0;
-  }
-}
-
-.btn-voice-chat-description{
-  font-size: 18px;
-  display: none;
-  position:absolute;
-  bottom:10px;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: all 0.5s;
-  z-index: 2;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: center;
-}
-
-.btn-voice-chat-description .cancel-voice-record{
-  position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    /* margin-right: 100px; */
-    right:200px;
-    top:120px;
-    border: none;
-    background-color: #9D9D9D;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ----------- Waving Recording style * -------------/ */
-
-#bars {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.bar {
-  background: #0093FF;
-  bottom: 1px;
-  height: 3px;
-  width: 10px;
-  margin: 0px 4px;
-  border-radius: 5px;
-  animation: sound 0ms -600ms linear infinite alternate;
-}
-
-@keyframes sound {
-  0% {
-     opacity: .35;
-      height: 3px; 
-  }
-  100% {
-      opacity: 1;       
-      height: 50px;        
-  }
-}
-
-.bar:nth-child(1)  { left: 1px; animation-duration: 474ms; }
-.bar:nth-child(2)  { left: 15px; animation-duration: 433ms; }
-.bar:nth-child(3)  { left: 29px; animation-duration: 407ms; }
-.bar:nth-child(4)  { left: 43px; animation-duration: 458ms; }
-.bar:nth-child(5)  { left: 57px; animation-duration: 400ms; }
-.bar:nth-child(6)  { left: 71px; animation-duration: 427ms; }
-.bar:nth-child(7)  { left: 85px; animation-duration: 441ms; }
-.bar:nth-child(8)  { left: 99px; animation-duration: 419ms; }
-.bar:nth-child(9)  { left: 113px; animation-duration: 487ms; }
-.bar:nth-child(10) { left: 127px; animation-duration: 442ms; }
-
-
-/* ----------- Audio button Listening button style * ------------/ */
-.audio-main-content{
-  max-height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: default;
-  position: relative !important;
-}
-
-.clip{
-  display: none;
-  /* position: absolute; */
-  /* border: 1px solid red; */
-}
-
-.audio-controler{
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.audio-playStop{
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 100%;
-  border: none;
-  opacity: 1;
-  background: #FFFFFF;
-  box-shadow: 1px 2px 3px #00000029;
-  cursor: pointer;
-}
-
-.audio-playStop::before{
-  content:'';
-  position: absolute;
-  width: 67px;
-  height: 67px;
-  border: 2px solid #0000004D;
-  border-radius: 100%;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-}
-
-.audio-microPic{
-width: 17px;
-height: 25px;
-margin-top: -40px;
-}
-.audio-timeIndicate{
-color: #0093FF;
-font-size: 9px;
-margin-top:-60px;
-
-}
-
-
-/* ----------- Circle progress style button * ------------/ */
-
-
-
-.audio-circular{
-  height: 66px;
-  width: 66px;
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
-  pointer-events:none;
-}
-.audio-circular .audio-inner{
-  position: absolute;
-  z-index: 6;
-  top: 50%;
-  left: 50%;
-  height: 60px;
-  width: 60px;
-  margin: -30px 0 0 -30px;
-  background: #fff;
-  border-radius: 100%;
-  pointer-events:none;
-}
-.audio-circular .audio-number{
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
-  z-index:10;
-  max-height: 100px;
-  pointer-events:none;
-}
-
-.audio-circle{
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top:-168px;
-  pointer-events:none;
-}
-
-/* Style for Google Chrome */
-@media screen and (-webkit-min-device-pixel-ratio:0){
-  .audio-circle{
-    top: -168px;
-  }  
-}
-
-/* Style for Firefox */
-@-moz-document url-prefix() {
-  .audio-circle{
-      top: -120px;
-    }
-  }
-
-/* Style for Safari */
-/* Safari 11+ */
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-  .audio-circle{
-    top: -120px;
-  }
-}}
-
-/* Safari 10.1 */
-@media not all and (min-resolution:.001dpcm){ 
-@supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
-  .audio-circle{
-    top: -120px;
-  }
-}}
-
-.audio-circle .audio-right {
-  position: absolute;
-  transform: rotate(180deg);
-  z-index:3;
-  top:0;
-}
-
-.audio-circle .audio-left {
-  position: absolute;
-  top:0;
-  pointer-events:none;
-}
-
-.audio-circular .audio-bar{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background: #fff;
-  -webkit-border-radius: 100%;
-  clip: rect(0px, 66px, 66px, 33px);
-  pointer-events:none;
-  
-}
-.audio-circle .audio-bar .audio-progress{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  border-radius: 100%;
-  clip: rect(0px, 33px, 66px, 0px);
-  background: #0093FF;
-  pointer-events:none;
-}
-
-.audio-circle .audio-left .audio-progress{
-  z-index:1;
-  animation: 0s linear both;
-  top:0;
-}
-@keyframes left{
-  100%{
-    transform: rotate(180deg);
-  }
-}
-
-.audio-circle .audio-right .audio-progress{
-  animation: 0s linear both;
-  animation-delay:0s;
-  top:0;
-}
-@keyframes right{
-  100%{
-    transform: rotate(180deg);
-  }
-}
-
-/* ============== End voice chat ======= */

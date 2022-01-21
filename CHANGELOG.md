@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.15] - 2022-01-21
+### Add
+- Now it is possible to mark a chat as a favorite, so you can filter your chats list and see only your fav chats. Just move your cursor over the chat list and you'll see the favorite icon. If you're using XM on a mobile device, please slide the chat to the left and you'll see the fav option.
+### Fix
+- Auto mute/unmute when someone call on conference.
+- Fix bug with invite conference link.
+### Update
+- Other small UI/UX improvements.
+
 ### [4.14] - 2022-01-06
 ### Update
 - Mute/unmute chats now works with mobile notifications.

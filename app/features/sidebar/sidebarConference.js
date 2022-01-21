@@ -39,6 +39,8 @@ define([
     let roomId;
     let sharedRoomId;
 
+    let mainChatContent;
+
     const conferenceBtnGroupTemplate = (language) => `
     <div class="hover-toggle-area">
         <div class="conference-content-iframe-buttons text-center">
@@ -63,7 +65,7 @@ define([
     };
 
     const copyToClipBoard = () => {
-        const body = document.querySelector('body');
+        // const body = document.querySelector('body');
         const div = document.createElement('div');
         div.setAttribute('class', 'alert__invite alert alert-success');
 
@@ -92,19 +94,19 @@ define([
 
             setTimeout(() => {
                 sidebarLeftBarComp.onSwitchToChat();
-                body.append(div);
+                mainChatContent.append(div);
                 copyAndShareBtn.textContent = GLOBAL.getLangJson().INVITE_PEOPLE;
 
                 closeAlert = document.querySelector('.close-alert');
 
                 if (document.querySelector('.alert__invite')) { 
-                    closeAlertFunc(body, div);
+                    closeAlertFunc(mainChatContent, div);
                 }
             }, 1000);
 
             setTimeout(() => {
                 if (document.querySelector('.alert__invite')) {
-                    body.removeChild(div);
+                    mainChatContent.removeChild(div);
                 }
             }, 12000);
         });
@@ -125,27 +127,34 @@ define([
         }
     };
 
+    const removeAllDivTemplate = () => {
+        const divTemp = document.querySelectorAll('.divTemplate');
+        divTemp.forEach(devTempItem => {
+            conferenceContent.removeChild(devTempItem);
+        });
+    };
+
     const initJitsiConference = (inviteID) => {
         while (iframeConferenceWraper.firstChild) {
             iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
         }
 
         if (isOpening === true) { 
-            const divTemp = document.querySelector('#divTemplate');
+            jitsiApi.dispose();
             iframeConferenceWraper.style.display = 'none';
-            conferenceContent.removeChild(divTemp);
+            removeAllDivTemplate();
         }  
 
         const divTemplate = document.createElement('div');
         divTemplate.innerHTML = conferenceBtnGroupTemplate(GLOBAL.getLangJson());
-        divTemplate.id = 'divTemplate';
+        divTemplate.classList.add('divTemplate');
 
         startConfContainer.style.display = 'none';
         xmConferenceLoading.style.display = 'block';
 
         API.get('conference').then((res) => {
             domain = process.env.NODE_ENV === 'production' ? window.location.hostname + constant.ROUTE.meeting : `xm.iptp.dev${constant.ROUTE.meeting}`;
-            if (inviteID === undefined || inviteID === null || inviteID === '') {
+            if (!inviteID) {
                 roomId = (+new Date()).toString(16).toUpperCase();
             } else {
                 roomId = inviteID;
@@ -226,10 +235,16 @@ define([
                 copyToClipBoard();
             }, true);
             jitsiApi.addListener('readyToClose', () => {
+                jitsiApi.dispose();
                 jitsiApi._frame.remove();
                 startConfContainer.style.display = 'block';
                 iframeConferenceWraper.style.display = 'none';
-                conferenceContent.removeChild(divTemplate);
+                removeAllDivTemplate();
+
+                while (iframeConferenceWraper.firstChild) {
+                    iframeConferenceWraper.removeChild(iframeConferenceWraper.firstChild);
+                }
+                
                 isOpening = false;
             });
         }).catch((err) => {
@@ -256,11 +271,11 @@ define([
         });
     };
 
-    const initConferencePage = (inviteID) => {
+    const initConferencePage = () => {
         slideCarouselOnMobile();
 
         conferenceBtn.addEventListener('click', () => {
-            initJitsiConference(inviteID);
+            initJitsiConference();
         });
 
         joinExistingRoomInput.addEventListener('keyup', () => {
@@ -277,7 +292,7 @@ define([
             div.setAttribute('class', 'alert__joinExitingRoom alert alert-danger');
 
             const existingRoomId = joinExistingRoomInput.value;
-            if (existingRoomId === '' || existingRoomId === undefined || existingRoomId.trim().length !== 11) {
+            if (!existingRoomId || existingRoomId.trim().length !== 11) {
                 div.innerHTML = alertTemplate(GLOBAL.getLangJson().WRONG_ROOM_ID_FORMAT);
 
                 body.append(div);
@@ -317,9 +332,27 @@ define([
 
             joinExistingRoomInput = document.querySelector('.join-existing-room__input');
 
+            mainChatContent = document.querySelector('.main-right');
+
             initConferencePage();
         },
 
-        onInitConferencePage: (inviteID) => initJitsiConference(inviteID)
+        onInitConferencePage: (inviteID) => initJitsiConference(inviteID),
+
+        toggleMuteConfCall: (audio) => {
+            if (audio === 'off') {
+                jitsiApi.isAudioMuted().then(muted => {
+                    if (!muted) jitsiApi.executeCommand('toggleAudio');
+                });
+            }
+
+            if (audio === 'on') {
+                jitsiApi.isAudioMuted().then(muted => {
+                    if (muted) jitsiApi.executeCommand('toggleAudio');
+                });
+            }
+        },
+
+        getConfIsOpen: () => isOpening
     };
 });
