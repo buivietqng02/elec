@@ -165,8 +165,9 @@ define([
  
          setSliderPosition();
 
-         isTouched = false;
-         isDrag = false;
+        isTouched = false;
+        isDrag = false;
+        startPos = 0;
      };    
      
     const sliderChatMenu = (roomID) => {
@@ -407,6 +408,7 @@ define([
 
     ob.moveRoomUp = (room) => {
         $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
+        const roomContainer = selectedSliderContainerFunc(room.id)
 
         $chatsItem = $('#leftbar .lbi-chats');
         $chatsItemNoti = $('.lbi-chats__newMess-noti');
@@ -418,7 +420,9 @@ define([
 
         if ($room.length) {
             $room.remove();
+            roomContainer.remove();
             getWrapper().prepend(ob.renderRoom(room));
+            sliderChatMenu(room.id);
         }
 
         if($chatsItemNoti.hasClass('hidden') && !$chatsItem.hasClass('active')) {

@@ -5,7 +5,8 @@ define([
     'features/chatbox/chatboxInput',
     'features/modal/modalForwardMessage',
     'features/modal/modalMessageInfo',
-    'features/modal/modalRemoveMessage'
+    'features/modal/modalRemoveMessage',
+    'features/modal/modalBookmarkMessage'
 ], (
     GLOBAL,
     ALERT,
@@ -13,7 +14,8 @@ define([
     chatboxInputComp,
     modalForwardMessageComp,
     modalMessageInfoComp,
-    modalRemoveMessage
+    modalRemoveMessage,
+    modalBookmarkMessageComp
 ) => {
     const message = {};
     let $message;
@@ -69,6 +71,11 @@ define([
     const onRemove = () => {
         offEventClickOutside();
         modalRemoveMessage.onInit($message);
+    };
+
+    const onBookmark = () => {
+        offEventClickOutside();
+        modalBookmarkMessageComp.onInit($message);
     };
 
     const onCopyText = () => {
@@ -161,6 +168,7 @@ define([
             $removeBtn = $('.js-menu-messages-remove');
             $copyTextBtn = $('.js-menu-messages-copytext');
             $messageInfoBtn = $('.js-menu-messages-info');
+            $bookmarkMessBtn = $('.js-menu-messages-bookmark');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
@@ -168,6 +176,7 @@ define([
             $removeBtn.off().click(onRemove);
             $copyTextBtn.off().click(onCopyText);
             $messageInfoBtn.off().click(onInfo);
+            $bookmarkMessBtn.off().click(onBookmark);
         },
 
         onShow: (e) => {
