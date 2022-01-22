@@ -190,9 +190,6 @@ define([
             }
 
             $iconFavorites.attr('favourites-id', roomInfo.id);
-            if (roomInfo.channel) {
-                $callOptionsBtn.hide();
-            }
             if (roomInfo.group) {
                 $image.attr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP, roomInfo.id);
                 $image.attr('src', getAvatar(roomInfo.id, true));
@@ -209,6 +206,7 @@ define([
                     $internalBtn.show();
                     $removeBtn.hide();
                 } else if (roomInfo.channel) {
+                    $callOptionsBtn.hide();
                     if (roomInfo.owner) {
                         $editBtn.show();
                         $leaveBtn.hide();
@@ -255,6 +253,9 @@ define([
                         }).catch(err => { console.log(err); });
                     }
                 });
+            }
+            if (roomInfo.channel) {
+                $callOptionsBtn.hide();
             }
         },
 
