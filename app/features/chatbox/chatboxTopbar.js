@@ -267,6 +267,11 @@ define([
                     }
                 });
             }
+
+            // This is added because there are channels that are not a group
+            if (roomInfo.channel) {
+                $callOptionsBtn.hide();
+            }
         },
 
         onRenderTimeActivity: (time) => {
