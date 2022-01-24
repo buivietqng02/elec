@@ -63,6 +63,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             signup: '/signup'
         },
         FAVOURITES_ROOMS: 'favourites_rooms',
+        LAST_SYNCED_AT: 'LAST_SYNCED_AT',
     };
 
     return Object.freeze(obj);

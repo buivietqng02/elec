@@ -29,7 +29,8 @@ define([
     let isInit = false;
     let isBlinkTitleBrowser = false;
     const {
-        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID, ATTRIBUTE_SIDEBAR_ROOM
+        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID, ATTRIBUTE_SIDEBAR_ROOM,
+        LAST_SYNCED_AT
     } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
@@ -494,6 +495,9 @@ define([
         }
         data.onBackground = document.hidden;
 
+        if (!data.lastSyncedAt) {
+            data.lastSyncedAt = functions.getDataToLocalApplication(LAST_SYNCED_AT) ?? 0;
+        }
         if (data[SESSION_ID]) {
             API.get('sync', data).then(res => {
                 if (!isLogin()) {
@@ -502,6 +506,11 @@ define([
 
                 if ((functions.getRouter()?.current || [])[0]?.url) {
                     return;
+                }
+
+                if (res?.lastSyncedAt) {
+                    data.lastSyncedAt = res?.lastSyncedAt;
+                    functions.setDataToLocalApplication(LAST_SYNCED_AT, res?.lastSyncedAt);
                 }
 
                 onSync();
