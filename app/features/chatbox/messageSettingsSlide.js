@@ -27,6 +27,7 @@ define([
     let $editBtn;
     let $removeBtn;
     let $copyTextBtn;
+    let $textBookmarkBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -127,6 +128,7 @@ define([
     const handleOptionsByUser = () => {
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
+        const isBookmark = $message.hasClass('bookmark');
 
         if (isActiveUser) {
             if ($message.find('.--mess.fwme').length) {
@@ -149,6 +151,12 @@ define([
         } else {
             $copyTextBtn.show();
         }
+
+        if (isBookmark) {
+            $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
+        } else {
+            $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
+        }
     };
 
     const handleClickOutside = () => $(document).on('click.hideMessageSettings', (e) => {
@@ -169,6 +177,7 @@ define([
             $copyTextBtn = $('.js-menu-messages-copytext');
             $messageInfoBtn = $('.js-menu-messages-info');
             $bookmarkMessBtn = $('.js-menu-messages-bookmark');
+            $textBookmarkBtn = $('.js-menu-messages-bookmark lang');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
@@ -182,7 +191,7 @@ define([
         onShow: (e) => {
             e.preventDefault();
             e.stopPropagation();
-
+          
             if (!isShow) {
                 const $this = $(e.currentTarget);
                 $message = $this.closest('.js_li_list_mess');

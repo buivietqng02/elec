@@ -447,6 +447,45 @@ define([
         });
     };
 
+    /**
+     * Method to reactionEvents (bookmark a chat)
+     * @param {*} reactionEvents 
+     */
+    const handleReactionMessageEvent = (reactionEvents) => {
+        reactionEvents.forEach(reactionEvent => {
+            console.log(reactionEvent);
+            const roomId = reactionEvent.chatId;
+            const messId = reactionEvent.messageId;
+            const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
+            // const $textNotiBtn = $('.js-menu-messages').
+            // find('.js-menu-messages-bookmark').find('lang');
+
+            // Bookmark message
+            if (roomId === GLOBAL.getCurrentRoomId()) {
+                const currentRoomList = getRoomById(roomId);
+
+                if (reactionEvent.starred) {
+                    $message.addClass('bookmark');
+                    // $textNotiBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
+                } else {
+                    $message.removeClass('bookmark');
+                    // $textNotiBtn.html(GLOBAL.getLangJson().BOOKMARK);
+                }
+
+                // update to storeRoomById
+                const updatedRoomList = currentRoomList.map((item) => {
+                    if (item.id.messageId === messId) {
+                        const tempItem = { ...item };
+                        tempItem.starred = reactionEvent.starred;
+                        return tempItem;
+                    } 
+                    return item;
+                });
+                storeRoomById(roomId, updatedRoomList);
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -466,7 +505,7 @@ define([
                 }
 
                 onSync();
-
+                
                 if (res?.messages?.length) {
                     const messages = functions.sortBy(res.messages, 'msgDate');
                     handleRealTimeMessage(messages);
@@ -494,6 +533,10 @@ define([
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                     chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+                }
+
+                if (res?.reactionEvents?.length) {
+                    handleReactionMessageEvent(res.reactionEvents);
                 }
 
                 isInit = true;

@@ -1,6 +1,47 @@
-.--content {
-    .message-bookmark-icon{
-        position: absolute;
+.view-bookmark-status-bar {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.664);
+    position: absolute;
+    top: 60px;
+    z-index: 999;
+    padding: 5px 10px;
+    overflow: hidden;
+    transition: all .3s;
+    color: white;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+
+    .close-bookmark-view-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.705);
+        color: rgba(0, 0, 0, 0.842);
+        margin-left: 20px;
     }
 }
+
+
+.js_li_list_mess {
+    .--content {
+        position: relative;
+        .message-bookmark-icon{
+            position: absolute;
+            top: -2px;
+            right: 5px;
+            display: none;
+        }
+    }
+}
+
+.js_li_list_mess.bookmark {
+    .message-bookmark-icon{
+        display: block !important;
+    }
+}
+
 

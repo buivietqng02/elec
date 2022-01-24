@@ -202,7 +202,8 @@ define([
                 file,
                 updated,
                 deleted,
-                readByAllPartners
+                readByAllPartners,
+                starred
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -264,12 +265,15 @@ define([
 
             // Render in case share conference link
             const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
-            
+
+            const confLink = `${enviroment}${constant.ROUTE.meeting}`;
+
             if (text.includes(`${enviroment}${constant.ROUTE.meeting}`) && text.length > 30) {
                 isConferenceLink = true;
-                
                 const positionOfLinkConf = text.search(`${enviroment}${constant.ROUTE.meeting}`);
-                conferenceLink = text.substring(positionOfLinkConf + 28, positionOfLinkConf + 39);
+                const startIndexRoomId = positionOfLinkConf + confLink.length + 1;
+                const endIndexRoomId = positionOfLinkConf + confLink.length + 12;
+                conferenceLink = text.substring(startIndexRoomId, endIndexRoomId);
             } else {
                 isConferenceLink = false;
             }
@@ -288,7 +292,7 @@ define([
             data.hide_when_removed = deleted ? 'hidden' : '';
             data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
-
+            data.bookmark = starred ? 'bookmark' : '';
             data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
             data.confRoom_chat_Id = conferenceLink;
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;

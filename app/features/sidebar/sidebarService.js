@@ -167,13 +167,12 @@ define([
 
         isTouched = false;
         isDrag = false;
-        startPos = 0;
+        // startPos = 0;
      };    
      
     const sliderChatMenu = (roomID) => {
+        if(!roomID) return;
         const jsListUser = document.querySelector(`[data-room-id="${roomID}"]`);
-        const jsListUserContainer = selectedSliderContainerFunc(roomID);
-        const jsFavorMobileBtn = jsListUserContainer.querySelector('.favourite-mb-btn');
 
         // Touch mobile event
         jsListUser.addEventListener('touchstart', touchStart);

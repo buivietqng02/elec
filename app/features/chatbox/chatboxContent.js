@@ -11,7 +11,8 @@ define([
     'features/chatbox/messageSettingsSlide',
     'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
-    'features/sidebar/sidebarLeftBar'
+    'features/sidebar/sidebarLeftBar',
+    'features/modal/modalBookmarkMessage'
 
 ], (
     constant,
@@ -26,7 +27,8 @@ define([
     messageSettingsSlideComp,
     voiceChatComp,
     sidebarConferenceComp,
-    sidebarLeftBarComp
+    sidebarLeftBarComp,
+    modalBookmarkMessage
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -295,8 +297,8 @@ define([
     }
 
     const onWrapperScroll = (event) => {
-        // If is finding media and files
-        if(isFindingMediaFiles) return
+        // If is finding media and files or viewing bookmark list
+        if(isFindingMediaFiles || modalBookmarkMessage.onGetIsViewingBookmark()) return
 
         // Show scroll to bottom button
         if (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight < 1) {
@@ -831,6 +833,12 @@ define([
             document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
            
             hideJumptoBottomBtn()
+        },
+
+        onViewBookmarks: (bookmarkList) => {
+            const messagesHtml = bookmarkList.map(mess => renderMessage(mess));
+            isSearchMode = true;
+            $messageList.html(messagesHtml);
         }
     };
 });

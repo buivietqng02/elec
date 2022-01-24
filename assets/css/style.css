@@ -554,15 +554,15 @@ body {
   margin-right: 16px;
 }
 
-.toolbar-profile .--name-wraper {
-    display: flex;
+.toolbar-profile .--avatar-wraper {
+    position: relative;
     /* justify-content: space-between; */
 }
 
 .toolbar-profile .--favourite{
-  margin-left: 10px;
-  /* color: #FFD700; */
-  margin-top: 3px;
+  position: absolute;
+  bottom: -10px;
+  left: 5px;
 }
 
 .search {
