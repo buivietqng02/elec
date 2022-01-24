@@ -490,14 +490,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
-
-                            <!--
                             <button class="--viewBookmark menu__item">
                                 <i class="xm icon-bookmarks" aria-hidden="true"></i>
                                 <lang data-language="VIEW_BOOKMARK"></lang>
                             </button>
-                            -->
-
                             <button class="--internal menu__item">
                                 <i class="xm icon-comments"></i>
                                 <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
@@ -585,13 +581,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-close"></i>
                                 <lang data-language="REMOVE"></lang>
                             </button>
-
-                            <!--
                             <button class="--bm menu__item js-menu-messages-bookmark">
                                 <i class="xm icon-bookmarks"></i>
                                 <lang data-language="BOOKMARK"></lang>
                             </button>
-                            -->
                         </div>
                     </div>
                     <div class="dropzone">

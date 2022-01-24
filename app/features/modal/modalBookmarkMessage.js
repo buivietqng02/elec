@@ -120,15 +120,18 @@ define([
 
         messageList = document.querySelector('.messages__list');
 
-        const chatboxContentComp = require('features/chatbox/chatboxContent');
         wrapper = document.querySelector('.js_con_list_mess');
         viewingBookmarksStatusBar = document.querySelector('.view-bookmark-status-bar')
         viewingBookmarksStatusBar.addEventListener('click', onCloseViewBookmarksAndReloadMess, {once: true})
 
         callAPIListBookmarkMess(lastOffset).then((res) => {
+            const messagesHtml = res.messages.reverse().map(mess => renderMessage(mess));
+            isSearchMode = true;
+            messageList.innerHTML = messagesHtml;
+
             isViewingBookmark = true;
             viewingBookmarksStatusBar.classList.remove('hidden');
-            chatboxContentComp.onViewBookmarks(res.messages.reverse());
+
             processing = false;
 
             wrapper.addEventListener('scroll', onWrapperScroll);

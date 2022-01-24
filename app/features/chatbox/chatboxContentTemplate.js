@@ -134,11 +134,9 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                         <div class="xm icon-bars --bars --menu p-cur btn-message-settings {hide_when_removed}"></div>
                     </div>
 
-                    <!--
                     <div class="message-bookmark-icon">
                         <i class="icon-bookmarks"></i>
                     </div>
-                    -->
                 </div>
             </li>
         `
