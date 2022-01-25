@@ -115,7 +115,11 @@ define([
      const touchStart = (e) => {
         const frame = document.querySelector('#frame');
         // Prevent slide after collapse
-        if (!frame.classList.contains('indent')) currentTranslate = 0
+        if (!frame.classList.contains('indent')) {
+            currentTranslate = 0;
+            startPos = getPositionX(e);
+            return;
+        } 
 
          startPos = getPositionX(e);
 
@@ -167,7 +171,7 @@ define([
 
         isTouched = false;
         isDrag = false;
-        // startPos = 0;
+        startPos = 0;
      };    
      
     const sliderChatMenu = (roomID) => {

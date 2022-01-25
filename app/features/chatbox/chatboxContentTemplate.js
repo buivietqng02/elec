@@ -138,6 +138,12 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                         <i class="icon-bookmarks"></i>
                     </div>
                 </div>
+
+                <div class="show_origin_mess hidden">
+                    <button type="button" class="show_origin_btn btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message" sequence_number="{messSequence}">
+                        <i class="icon-comment-o"></i>
+                    </button>
+                </div>
             </li>
         `
     };

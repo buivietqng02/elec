@@ -7,6 +7,7 @@ define([
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxContentChatList',
     'features/chatbox/chatboxTopbar',
+    'features/chatbox/messageSettingsSlide',
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
     'shared/alert',
@@ -20,6 +21,7 @@ define([
     chatboxContentComp,
     chatboxContentChatListComp,
     chatboxTopbarComp,
+    messageSettingsSlideComp,
     notificationComp,
     modalPhoneRequest,
     ALERT,
@@ -454,24 +456,25 @@ define([
      */
     const handleReactionMessageEvent = (reactionEvents) => {
         reactionEvents.forEach(reactionEvent => {
-            console.log(reactionEvent);
             const roomId = reactionEvent.chatId;
             const messId = reactionEvent.messageId;
             const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
-            // const $textNotiBtn = $('.js-menu-messages').
-            // find('.js-menu-messages-bookmark').find('lang');
 
             // Bookmark message
             if (roomId === GLOBAL.getCurrentRoomId()) {
                 const currentRoomList = getRoomById(roomId);
+                const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
+                const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
 
                 if (reactionEvent.starred) {
                     $message.addClass('bookmark');
-                    // $textNotiBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
                 } else {
                     $message.removeClass('bookmark');
-                    // $textNotiBtn.html(GLOBAL.getLangJson().BOOKMARK);
                 }
+
+                pulseBookmarkBtn.classList.add('hidden');
+                bookmarkBtn.disabled = false;
+                messageSettingsSlideComp.offEventClickOutside();
 
                 // update to storeRoomById
                 const updatedRoomList = currentRoomList.map((item) => {

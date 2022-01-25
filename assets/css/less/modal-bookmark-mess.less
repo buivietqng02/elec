@@ -22,11 +22,13 @@
         background-color: rgba(255, 255, 255, 0.705);
         color: rgba(0, 0, 0, 0.842);
         margin-left: 20px;
+        cursor: pointer;
     }
 }
 
 
-.js_li_list_mess {
+.messages__item {
+    position: relative;
     .--content {
         position: relative;
         .message-bookmark-icon{
@@ -36,12 +38,53 @@
             display: none;
         }
     }
+
+    .show_origin_mess {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        // display: inline;
+        
+        .show_origin_btn{
+            border-radius: 100%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
 }
 
-.js_li_list_mess.bookmark {
+.messages__item.you {
+    .show_origin_mess {
+        right: unset;
+        left: 20px;
+    }
+}
+
+.messages__item.bookmark {
     .message-bookmark-icon{
         display: block !important;
     }
 }
 
+.--viewBookmark {
+    .pulse {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+}
+
+.--menu-item{
+    .--bm {
+        .pulse {
+            width: 20px;
+            height: 20px;
+            margin-right: 1px;
+        }
+    }
+}
 

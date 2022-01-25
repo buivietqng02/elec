@@ -99,7 +99,7 @@ define([
 
     const initViewBookmark = () => {
         modalBookmarkMessageComp.onClickViewBookmarks();
-        offEventClickOutside();
+        // offEventClickOutside();
     };
 
     const updateInternalMessage = () => {

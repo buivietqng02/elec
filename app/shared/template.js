@@ -491,7 +491,8 @@ define(['shared/icon'], (ICON) => ({
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
                             <button class="--viewBookmark menu__item">
-                                <i class="xm icon-bookmarks" aria-hidden="true"></i>
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-bookmarks-empty" aria-hidden="true"></i>
                                 <lang data-language="VIEW_BOOKMARK"></lang>
                             </button>
                             <button class="--internal menu__item">
@@ -541,7 +542,6 @@ define(['shared/icon'], (ICON) => ({
                                 <span class="unread-message-scroll">0</span> 
                                 <lang data-language="NEW_MESSAGE"></lang>
                             </p>
-                           
                         </a>
 
                         <button class="jump-to-bottom hidden">
@@ -582,7 +582,8 @@ define(['shared/icon'], (ICON) => ({
                                 <lang data-language="REMOVE"></lang>
                             </button>
                             <button class="--bm menu__item js-menu-messages-bookmark">
-                                <i class="xm icon-bookmarks"></i>
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-bookmarks-empty"></i>
                                 <lang data-language="BOOKMARK"></lang>
                             </button>
                         </div>

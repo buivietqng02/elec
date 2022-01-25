@@ -75,7 +75,6 @@ define([
     };
 
     const onBookmark = () => {
-        offEventClickOutside();
         modalBookmarkMessageComp.onInit($message);
     };
 
@@ -203,6 +202,8 @@ define([
             } else {
                 offEventClickOutside();
             }
-        }
+        },
+
+        offEventClickOutside
     };
 });

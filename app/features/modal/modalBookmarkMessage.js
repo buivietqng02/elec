@@ -11,27 +11,20 @@ define([
     ALERT,
     contentFunc
 ) => {
-    
+    let wrapper;
+    let messageList;
     let $bookmarkMessage;
     let messageId;
     let currentRoomId;
-   
-    let isBookmark = false;
     let viewingBookmarksStatusBar;
-
+    let viewingBookmarkStatusBarText;
+    let isBookmark = false;
     let isViewingBookmark = false;
 
-    let isLoadingBookmark = false;
-    let isLoadingViewBookmark = false;
-
     let lastOffset = 0;
-
     let isTouchLastMess = false;
     let isToPosition = false;
     let processing = false;
-
-    let wrapper;
-    let messageList;
 
     const { ATTRIBUTE_MESSAGE_ID } = constant;
     const { getCurrentRoomId } = GLOBAL;
@@ -40,7 +33,6 @@ define([
     const onCloseViewBookmarks = () => {
         isViewingBookmark = false;
         wrapper.removeEventListener('scroll', onWrapperScroll);
-        console.log('close');
         viewingBookmarksStatusBar.classList.add('hidden');
     };
 
@@ -59,28 +51,45 @@ define([
         
     };
 
-    const onGetMoreMessageByScrolling = () => {
+    const onShowOriginMessage = (id, sequence) => {
+        const chatboxContentComp = require('features/chatbox/chatboxContent');
+        onCloseViewBookmarksAndReloadMess();
 
+        setTimeout(() => {
+            chatboxContentComp.onShowExactOriginMessage(id, sequence);
+        }, 500)
+    };
+
+    const showOriginMessageEventListener = () => {
+        document.querySelectorAll('.js_li_list_mess').forEach(item => {
+            const showOriginMess = item.querySelector('.show_origin_mess');
+            const showOriginMessBtn = item.querySelector('.show_origin_btn');
+            const sequence = showOriginMessBtn.getAttribute('sequence_number');
+            const id = item.getAttribute(ATTRIBUTE_MESSAGE_ID);
+
+            showOriginMess.classList.remove('hidden');
+            showOriginMess.addEventListener('click',() => onShowOriginMessage(id, sequence))
+        })
+    }
+
+    const onGetMoreMessageByScrolling = () => {
         callAPIListBookmarkMess(lastOffset).then(res => {
             let messagesHtml = '';
             let moreMessages = [];
 
-            const pos = wrapper.scrollHeight + wrapper.scrollTop;
-            
+            const pos = wrapper.scrollHeight + wrapper.scrollTop;       
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
+            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess) + '<hr style="width:100%">')).join('');     
 
-            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
-          
             messageList.innerHTML = messagesHtml +  messageList.innerHTML;
-
-            wrapper.scrollTop = wrapper.scrollHeight - pos;
-            
+            wrapper.scrollTop = wrapper.scrollHeight - pos;     
             processing = false;
+
+            showOriginMessageEventListener();
         })
     };
 
     const onWrapperScroll = () => {
-        console.log(`Slide position: ${wrapper.scrollTop}`)
         if (wrapper.scrollTop < 100) {
             isToPosition = true;
         } else {
@@ -90,7 +99,6 @@ define([
         if (processing || isTouchLastMess || !isToPosition) {
             return;
         }
-
         onGetMoreMessageByScrolling();
     };
 
@@ -103,37 +111,55 @@ define([
             
         };
         const res =  await API.get('messages', params) 
-        console.log(res);
         lastOffset = res.messages[res.messages.length - 1]?.sequence;
-        console.log(`Last offset: ${lastOffset}`);
-
         if (res.messages.length < 20) isTouchLastMess = true;
-        console.log(`Is touch last mess ${isTouchLastMess}`);
 
         return res;
     }
 
     const onClickViewBookmarks = () => {
+        const chatboxTopbarComp = require('features/chatbox/chatboxTopbar');
+        const viewBookmarksBtn = document.querySelector('#chatbox-group-option .--viewBookmark');
+        const pulseViewBookmark = viewBookmarksBtn.querySelector('.pulse')
+
+        viewBookmarksBtn.disabled = true;
         currentRoomId = getCurrentRoomId()
         lastOffset = 0;
         isTouchLastMess = false;
 
-        messageList = document.querySelector('.messages__list');
+        pulseViewBookmark.classList.remove('hidden');
 
+        messageList = document.querySelector('.messages__list');
         wrapper = document.querySelector('.js_con_list_mess');
-        viewingBookmarksStatusBar = document.querySelector('.view-bookmark-status-bar')
+        viewingBookmarksStatusBar = document.querySelector('.view-bookmark-status-bar');
+        viewingBookmarkStatusBarText = viewingBookmarksStatusBar.querySelector('lang');
         viewingBookmarksStatusBar.addEventListener('click', onCloseViewBookmarksAndReloadMess, {once: true})
 
         callAPIListBookmarkMess(lastOffset).then((res) => {
-            const messagesHtml = res.messages.reverse().map(mess => renderMessage(mess));
-            isSearchMode = true;
-            messageList.innerHTML = messagesHtml;
+            let messagesHtml = ''
+            pulseViewBookmark.classList.add('hidden');
+            viewingBookmarksStatusBar.classList.remove('hidden');
+            chatboxTopbarComp.onOffEventClickOutside();
+
+            if(res.messages.length <= 0) {
+                viewingBookmarkStatusBarText.textContent = GLOBAL.getLangJson().NO_BOOKMARKS_FOUND;
+            } else {
+                viewingBookmarkStatusBarText.textContent = GLOBAL.getLangJson().IS_VIEWING_BOOKMARK_LIST;
+            }
 
             isViewingBookmark = true;
-            viewingBookmarksStatusBar.classList.remove('hidden');
-
             processing = false;
+            viewBookmarksBtn.disabled = false;
+            
+            res.messages.reverse().map(mess => {
+                messagesHtml += `${renderMessage(mess)} <hr style="width:100%">`
+            });
+            
+            messageList.innerHTML = messagesHtml;
 
+            wrapper.scrollTo(0, wrapper.scrollHeight);
+
+            showOriginMessageEventListener();
             wrapper.addEventListener('scroll', onWrapperScroll);
         }).catch((err) => {
             console.log(err);
@@ -144,7 +170,10 @@ define([
         onClickViewBookmarks,
 
         onInit: (message) => {
-            isLoadingBookmark = true;
+            const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
+            const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
+            pulseBookmarkBtn.classList.remove('hidden');
+            bookmarkBtn.disabled = true;
             
             messageId = message[0].dataset.chatId;
             currentRoomId = getCurrentRoomId()
@@ -160,11 +189,8 @@ define([
                     // Add Bookmark 
                     ALERT.show(GLOBAL.getLangJson().ALREADY_ADD_BOOKMARK, 'success');
                 }
-                isLoadingBookmark = false;
-
             }).catch((err) => {
                 console.log(err);
-                isLoadingBookmark = false;
             });
         },
 

@@ -122,7 +122,7 @@ define([
     }
     // ======== End Scroll to origin position ===========
 
-    // ======== Handle View Media and Files scroll to origin message ===========
+    // ======== Handle scroll to origin message ===========
     let numberOfOffset = 0;
     let isFindingMediaFiles = false;;
     let isProcessScrollDown = false;;
@@ -130,7 +130,7 @@ define([
     let lastOffsetScrollDown = 0;;
     let ultiLastOffSet = 0;
 
-    const resetAfterSearchMediaAndFiles = () => {
+    const resetAfterShowOriginMessage = () => {
         numberOfOffset = 0;
         isFindingMediaFiles = false;
         isProcessScrollDown = false;
@@ -183,7 +183,7 @@ define([
                 if (lastOffsetScrollDown >= ultiLastOffSet) {
                     isTouchLastMessBottom = true;
                    
-                    // resetAfterSearchMediaAndFiles();
+                    // resetAfterShowOriginMessage();
                     document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown);
 
                     hideJumptoBottomBtn()
@@ -267,11 +267,11 @@ define([
         }, 200)
     }
 
-    const handleViewMediaAndFiles = (offset, roomInfo, messageId) => {
+    const handleShowOriginMessage = (offset, roomInfo, messageId) => {
         $loadingOfNew.show();
 
         currentViewMediaFilesRoomInfo = {...roomInfo};
-        resetAfterSearchMediaAndFiles();
+        resetAfterShowOriginMessage();
 
         document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
 
@@ -284,6 +284,29 @@ define([
         getOffsetListMessages(roomInfo, parseInt(offset) + 10, messageId);
 
         jumpFastToBottomBtn.addEventListener('click', jumpToBottom)
+    };
+
+    const showExactOriginMessage = (id, sequence) => {
+        const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
+        if (originMessageEle) {
+            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            originMessageEle.classList.add('activeScrollTo');
+
+            setTimeout(() => {
+                originMessageEle.classList.remove('activeScrollTo');
+            }, 5000);
+        } else {
+            let roomInfo = GLOBAL.getRooms().filter((room) => {
+                if (String(room.id) === String(GLOBAL.getCurrentRoomId())) {
+                    return true;
+                }
+    
+                return false;
+            })[0] || {};
+            roomInfo = JSON.parse(JSON.stringify(roomInfo));
+
+            handleShowOriginMessage(sequence, roomInfo, id);
+        }
     };
     // ======== End Handle View Media and Files scroll to origin message ===========
 
@@ -656,6 +679,7 @@ define([
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
+            let isViewBookmarkMode = modalBookmarkMessage.onGetIsViewingBookmark();
             const mess = messList[0];
             let id = GLOBAL.getCurrentRoomId();
 
@@ -668,7 +692,7 @@ define([
             if (
                 (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 &&
                 GLOBAL.getInfomation().id !== mess.sender.id &&
-                !isSearchMode
+                !isSearchMode && !isViewBookmarkMode
             ) {
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
@@ -679,7 +703,7 @@ define([
                 $scrollToMess.show();
             }
 
-            if (!isSearchMode) {
+            if (!isSearchMode && !isViewBookmarkMode) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
@@ -695,7 +719,7 @@ define([
 
              // Update ultiLastOffSet when receive new message
             if(GLOBAL.getInfomation().id !== mess.sender.id &&
-            !isSearchMode) {
+            !isSearchMode && !isViewBookmarkMode) {
                 if(mess.id.messageId) ultiLastOffSet++;
                 // console.log(ultiLastOffSet)
             }
@@ -827,18 +851,12 @@ define([
             }
         },
 
-        onHandleViewMediaAndFiles: (offset, roomInfo, messageId) => handleViewMediaAndFiles(offset, roomInfo, messageId),
+        onShowExactOriginMessage: (id, sequence) => showExactOriginMessage(id, sequence),
 
         onSwitchRoomWhileShowMessMediaAndFiles: () => {
             document.querySelector('.js_con_list_mess').removeEventListener('scroll',handleLoadNewMessOnScrollDown)
            
             hideJumptoBottomBtn()
-        },
-
-        onViewBookmarks: (bookmarkList) => {
-            const messagesHtml = bookmarkList.map(mess => renderMessage(mess));
-            isSearchMode = true;
-            $messageList.html(messagesHtml);
         }
     };
 });

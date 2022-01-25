@@ -12,7 +12,7 @@ define([
     ) => {
     require('bootstrap/js/dist/tab');
     
-    const { API_URL, ATTRIBUTE_MESSAGE_ID } = constant;
+    const { API_URL } = constant;
     const {
         humanFileSize,
         convertMessagetime
@@ -144,28 +144,9 @@ define([
 
     /* eslint-disable no-use-before-define */
     const showMessagesPosition = (id, sequence) => {
+        const chatboxContentComp = require('features/chatbox/chatboxContent');
         closeModal();
-        const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
-        if (originMessageEle) {
-            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            originMessageEle.classList.add('activeScrollTo');
-
-            setTimeout(() => {
-                originMessageEle.classList.remove('activeScrollTo');
-            }, 5000);
-        } else {
-            const chatboxContentComp = require('features/chatbox/chatboxContent');
-            let roomInfo = GLOBAL.getRooms().filter((room) => {
-                if (String(room.id) === String(GLOBAL.getCurrentRoomId())) {
-                    return true;
-                }
-    
-                return false;
-            })[0] || {};
-            roomInfo = JSON.parse(JSON.stringify(roomInfo));
-
-            chatboxContentComp.onHandleViewMediaAndFiles(sequence, roomInfo, id);
-        }
+        chatboxContentComp.onShowExactOriginMessage(id, sequence);
     };
 
     const loadMoreOnScroll = () => {

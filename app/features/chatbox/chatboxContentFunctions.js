@@ -203,7 +203,8 @@ define([
                 updated,
                 deleted,
                 readByAllPartners,
-                starred
+                starred,
+                sequence
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -297,6 +298,7 @@ define([
             data.confRoom_chat_Id = conferenceLink;
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
             data.JOIN = GLOBAL.getLangJson().JOIN;
+            data.messSequence = sequence;
 
             // render with case of comment
             if (quotedMessage && !deleted) {
