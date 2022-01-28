@@ -735,6 +735,7 @@ define([
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
             $message.find('.conference-link').hide();
+            $message.removeClass('bookmark');
         },
 
         onSyncUpdate: (message) => {
