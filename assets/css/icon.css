@@ -31,7 +31,7 @@
 }
 .icon-bookmarks:before {
   content: "\e901";
-  color: #DC143C;
+  color: #ff6600;
 }
 .icon-zoom-out:before {
   content: "\e902";
