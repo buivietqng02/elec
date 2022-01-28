@@ -174,6 +174,7 @@ define([
             const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
             pulseBookmarkBtn.classList.remove('hidden');
             bookmarkBtn.disabled = true;
+            $('.js-menu-messages-bookmark lang').html(GLOBAL.getLangJson().LOADING);
             
             messageId = message[0].dataset.chatId;
             currentRoomId = getCurrentRoomId()
