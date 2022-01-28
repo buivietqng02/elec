@@ -573,6 +573,11 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-info-circle"></i>
                                 <lang data-language="INFO"></lang>
                             </button>
+                            <button class="--bm menu__item js-menu-messages-bookmark">
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-bookmarks-empty"></i>
+                                <lang data-language="BOOKMARK"></lang>
+                            </button>
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>
@@ -580,11 +585,6 @@ define(['shared/icon'], (ICON) => ({
                             <button class="--remove menu__item js-menu-messages-remove">
                                 <i class="xm icon-close"></i>
                                 <lang data-language="REMOVE"></lang>
-                            </button>
-                            <button class="--bm menu__item js-menu-messages-bookmark">
-                                <div class="pulse hidden"></div>
-                                <i class="xm icon-bookmarks-empty"></i>
-                                <lang data-language="BOOKMARK"></lang>
                             </button>
                         </div>
                     </div>
