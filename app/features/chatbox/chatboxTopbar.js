@@ -9,7 +9,8 @@ define([
     'features/modal/modalEditRoom',
     'features/modal/modalRemoveGroup',
     'features/modal/modalLeaveGroup',
-    'features/modal/modalMediaAndFiles'
+    'features/modal/modalMediaAndFiles',
+    'features/modal/modalBookmarkMessage'
 ], (
     moment,
     constant,
@@ -21,7 +22,8 @@ define([
     modalEditRoomComp,
     modalRemoveGroupComp,
     modalLeaveGroupComp,
-    modalMediaAndFiles
+    modalMediaAndFiles,
+    modalBookmarkMessageComp
 ) => {
     const { getAvatar } = functions;
     let $groupOptionsBtn;
@@ -40,8 +42,8 @@ define([
     let $timeActivity;
     let $typing;
     let $roomInfo;
-
     let $iconFavorites;
+    let $viewBookmarks;
 
     const offEventClickOutside = () => {
         $slide.hide();
@@ -87,9 +89,18 @@ define([
     };
 
     const initMediaAndFiles = () => {
+        if (modalBookmarkMessageComp.onGetIsViewingBookmark()) {
+            modalBookmarkMessageComp.onCloseViewBookmarksAndReloadMess();
+        }
+
         modalMediaAndFiles.onInit();
         offEventClickOutside();
-    }
+    };
+
+    const initViewBookmark = () => {
+        modalBookmarkMessageComp.onClickViewBookmarks();
+        // offEventClickOutside();
+    };
 
     const updateInternalMessage = () => {
         const roomId = GLOBAL.getCurrentRoomId();
@@ -148,7 +159,8 @@ define([
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
             $typing = $('.js_info_parnter .toolbar-name .--typing');
-            $iconFavorites = $('.js_info_parnter .toolbar-name .--favourite')
+            $iconFavorites = $('.js_info_parnter .--avatar-wraper .--favourite')
+            $viewBookmarks = $slide.find('.--viewBookmark');
 
             $groupOptionsBtn.off().click(showSlide);
             $callOptionsBtn.off().click(showCallSlide);
@@ -157,7 +169,8 @@ define([
             $removeBtn.off().click(removeGroup);
             $notificationBtn.off().click(updateNotification);
             $internalBtn.off().click(updateInternalMessage);
-            $mediaAndFilesBtn.off().click(initMediaAndFiles)
+            $mediaAndFilesBtn.off().click(initMediaAndFiles);
+            $viewBookmarks.off().click(initViewBookmark);
             $image.off().click(modalEditRoomComp.onInit);
         },
 

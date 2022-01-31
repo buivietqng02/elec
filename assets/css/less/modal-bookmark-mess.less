@@ -1,6 +1,90 @@
-.--content {
-    .message-bookmark-icon{
+.view-bookmark-status-bar {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.664);
+    position: absolute;
+    top: 60px;
+    z-index: 999;
+    padding: 5px 10px;
+    overflow: hidden;
+    transition: all .3s;
+    color: white;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+
+    .close-bookmark-view-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.705);
+        color: rgba(0, 0, 0, 0.842);
+        margin-left: 20px;
+        cursor: pointer;
+    }
+}
+
+
+.messages__item {
+    position: relative;
+    .--content {
+        position: relative;
+        .message-bookmark-icon{
+            position: absolute;
+            top: -2px;
+            right: 5px;
+            display: none;
+        }
+    }
+
+    .show_origin_mess {
         position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        // display: inline;
+        
+        .show_origin_btn{
+            border-radius: 100%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.messages__item.you {
+    .show_origin_mess {
+        right: unset;
+        left: 20px;
+    }
+}
+
+.messages__item.bookmark {
+    .message-bookmark-icon{
+        display: block !important;
+    }
+}
+
+.--viewBookmark {
+    .pulse {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+}
+
+.--menu-item{
+    .--bm {
+        .pulse {
+            width: 20px;
+            height: 20px;
+            margin-right: 1px;
+        }
     }
 }
 

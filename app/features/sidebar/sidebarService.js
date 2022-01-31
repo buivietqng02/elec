@@ -35,6 +35,15 @@ define([
     let search = '';
     let filter = 1;
 
+    // Slide to show menu
+    let isTouched = false;
+    let isDrag = false;
+    let startPos = 0;
+    let currentTranslate = 0;
+    let animationID;
+    let currentSlideRoomID;
+    let isShowMenu = false;
+
     const template = `
         <div class="js_li_list_user-container">
             <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute} {isFavourite} slide-menu" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
@@ -63,16 +72,6 @@ define([
             </div>
         </div>
     `;
-
-     // Slide to show menu
-     let isTouched = false;
-    let isDrag = false;
-     let startPos = 0;
-     let currentTranslate = 0;
-     let animationID;
-     let currentSlideRoomID;
- 
-     let isShowMenu = false;
 
      ob.setCurrentTranslate = (value) => currentTranslate = value;
  
@@ -115,7 +114,11 @@ define([
      const touchStart = (e) => {
         const frame = document.querySelector('#frame');
         // Prevent slide after collapse
-        if (!frame.classList.contains('indent')) currentTranslate = 0
+        if (!frame.classList.contains('indent')) {
+            currentTranslate = 0;
+            startPos = getPositionX(e);
+            return;
+        } 
 
          startPos = getPositionX(e);
 
@@ -172,10 +175,7 @@ define([
      
     const sliderChatMenu = (roomID) => {
         if(!roomID) return;
-
         const jsListUser = document.querySelector(`[data-room-id="${roomID}"]`);
-        const jsListUserContainer = selectedSliderContainerFunc(roomID);
-        const jsFavorMobileBtn = jsListUserContainer.querySelector('.favourite-mb-btn');
 
         // Touch mobile event
         jsListUser.addEventListener('touchstart', touchStart);

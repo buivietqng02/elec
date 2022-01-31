@@ -4,6 +4,17 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.16] - 2022-01-31
+### Add
+- Adds the option to "bookmark" a message.
+- Added 'last synced at' param to the sync method.
+### Update
+- Change the color of the "new messages alert".
+- Other small UI/UX improvements.
+### Fix
+- Remove the animation of the "new messages" alert.
+- Fix some issues with slide menu on mobile devices.
+
 ### [4.15] - 2022-01-21
 ### Add
 - Now it is possible to mark a chat as a favorite, so you can filter your chats list and see only your fav chats. Just move your cursor over the chat list and you'll see the favorite icon. If you're using XM on a mobile device, please slide the chat to the left and you'll see the fav option.

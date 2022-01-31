@@ -49,9 +49,6 @@ define([
                     $toggleFavouritesRoomBtn.disabled = isLoading;
                    
                     const roomElement = document.querySelector(`[data-room-id="${roomID}"]`);
-                     // Icon star desktop
-                    const iconFavouriteFull = roomElement.querySelector('.favouriteBtn .icon-star-full');
-                    const iconFavouriteEmpty = roomElement.querySelector('.favouriteBtn .icon-star-empty');
                     // Icon star mobile
                     const iconFavouriteFullMb = roomElement.querySelector('.contact__name .icon-star-full');
                     const iconStarMbBtn = selectedSliderContainerFunc(roomID).querySelector('.favourite-mb-btn i');
@@ -59,11 +56,7 @@ define([
                     
                     if (indexExistRoomId > -1) {
                         // After Remove
-                        if (type === 'desktop') {
-                            iconFavouriteFull.style.display = 'none';
-                            iconFavouriteEmpty.style.display = 'none';
-                        }
-                       
+                        roomElement.classList.remove('favourites');
                         if (type === 'mobile') {
                             iconFavouriteFullMb.style.display = 'none';
                             iconStarMbBtn.classList.replace('icon-star-empty', 'icon-star-full');
@@ -74,16 +67,12 @@ define([
                         ALERT.show(GLOBAL.getLangJson().REMOVE_FROM_FAVOURITES, 'warning');
                     } else {
                         // After Add
-                        if (type === 'desktop') {
-                            iconFavouriteFull.style.display = 'block';
-                            iconFavouriteEmpty.style.display = 'none';
-                        }
-    
+                        roomElement.classList.add('favourites');
                         if (type === 'mobile') {
                             iconFavouriteFullMb.style.display = 'block';
                             iconStarMbBtn.classList.replace('icon-star-full', 'icon-star-empty');
                             textFavorMbBtn.textContent = GLOBAL.getLangJson().REMOVE_FAVOURITES;
-                        } 
+                        }
     
                         $iconFavoritesTopBar.removeClass('hidden');
                         ALERT.show(GLOBAL.getLangJson().ADD_TO_FAVOURITES, 'success');

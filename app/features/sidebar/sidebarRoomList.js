@@ -9,7 +9,8 @@ define([
     'features/chatbox/chatboxAttach',
     'features/chatbox/chatboxSearch',
     'features/modal/modalAcceptInvitation',
-    'features/modal/modalMediaAndFiles'
+    'features/modal/modalMediaAndFiles',
+    'features/modal/modalBookmarkMessage'
 
 ], (
     constant,
@@ -22,10 +23,11 @@ define([
     chatboxAttachComp,
     chatboxSearchComp,
     modalAcceptInvitationComp,
-    viewMediaAndFilesComp
+    viewMediaAndFilesComp,
+    modalBookmarkMessage
 
 ) => {
-    const { getRooms, initScroll } = services;
+    const { getRooms, initScroll, setCurrentTranslate } = services;
     let $caption;
     let $chatbox;
     let mediaFilesWraper;
@@ -52,6 +54,7 @@ define([
          if (sidebar.classList.contains('mobile')) {
              $frame.removeClass('indent');
              $lCollapse.removeClass('indent');
+             setCurrentTranslate(0);
          } 
 
         // Handle when the user has not accepted the invitation yet
@@ -104,12 +107,15 @@ define([
         chatboxContentComp.onLoadMessage(roomInfo);
 
         // Close view media and files comp when click on sidebar
-       
         if (!mediaFilesWraper.classList.contains('hidden')) {
             viewMediaAndFilesComp.closeMediaAndFilesModal();
         } 
-
         chatboxContentComp.onSwitchRoomWhileShowMessMediaAndFiles();
+
+        // Close view bookmark message list when click other room
+        if (modalBookmarkMessage.onGetIsViewingBookmark()) {
+            modalBookmarkMessage.onCloseViewBookmarks();
+        }
     };
 
     const onInit = () => {

@@ -7,6 +7,7 @@ define([
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxContentChatList',
     'features/chatbox/chatboxTopbar',
+    'features/chatbox/messageSettingsSlide',
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
     'shared/alert',
@@ -20,6 +21,7 @@ define([
     chatboxContentComp,
     chatboxContentChatListComp,
     chatboxTopbarComp,
+    messageSettingsSlideComp,
     notificationComp,
     modalPhoneRequest,
     ALERT,
@@ -29,7 +31,8 @@ define([
     let isInit = false;
     let isBlinkTitleBrowser = false;
     const {
-        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID, ATTRIBUTE_SIDEBAR_ROOM
+        SESSION_ID, ACCESS_TOKEN, USER_ID, ATTRIBUTE_MESSAGE_ID, ATTRIBUTE_SIDEBAR_ROOM,
+        LAST_SYNCED_AT
     } = constant;
     const { handleSyncData } = chatboxContentChatListComp;
     const data = {
@@ -447,6 +450,46 @@ define([
         });
     };
 
+    /**
+     * Method to reactionEvents (bookmark a chat)
+     * @param {*} reactionEvents 
+     */
+    const handleReactionMessageEvent = (reactionEvents) => {
+        reactionEvents.forEach(reactionEvent => {
+            const roomId = reactionEvent.chatId;
+            const messId = reactionEvent.messageId;
+            const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
+
+            // Bookmark message
+            if (roomId === GLOBAL.getCurrentRoomId()) {
+                const currentRoomList = getRoomById(roomId);
+                const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
+                const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
+
+                if (reactionEvent.starred) {
+                    $message.addClass('bookmark');
+                } else {
+                    $message.removeClass('bookmark');
+                }
+
+                pulseBookmarkBtn.classList.add('hidden');
+                bookmarkBtn.disabled = false;
+                messageSettingsSlideComp.offEventClickOutside();
+
+                // update to storeRoomById
+                const updatedRoomList = currentRoomList.map((item) => {
+                    if (item.id.messageId === messId) {
+                        const tempItem = { ...item };
+                        tempItem.starred = reactionEvent.starred;
+                        return tempItem;
+                    } 
+                    return item;
+                });
+                storeRoomById(roomId, updatedRoomList);
+            }
+        });
+    };
+
     const onSync = () => {
         const currentRoomId = GLOBAL.getCurrentRoomId();
         data[SESSION_ID] = functions.getDataToLocalApplication(SESSION_ID);
@@ -455,6 +498,9 @@ define([
         }
         data.onBackground = document.hidden;
 
+        if (!data.lastSyncedAt) {
+            data.lastSyncedAt = functions.getDataToLocalApplication(LAST_SYNCED_AT) ?? 0;
+        }
         if (data[SESSION_ID]) {
             API.get('sync', data).then(res => {
                 if (!isLogin()) {
@@ -465,8 +511,13 @@ define([
                     return;
                 }
 
-                onSync();
+                if (res?.lastSyncedAt) {
+                    data.lastSyncedAt = res?.lastSyncedAt;
+                    functions.setDataToLocalApplication(LAST_SYNCED_AT, res?.lastSyncedAt);
+                }
 
+                onSync();
+                
                 if (res?.messages?.length) {
                     const messages = functions.sortBy(res.messages, 'msgDate');
                     handleRealTimeMessage(messages);
@@ -494,6 +545,10 @@ define([
 
                 if (currentRoomId === GLOBAL.getCurrentRoomId()) {
                     chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
+                }
+
+                if (res?.reactionEvents?.length) {
+                    handleReactionMessageEvent(res.reactionEvents);
                 }
 
                 isInit = true;

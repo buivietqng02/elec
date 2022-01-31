@@ -453,13 +453,13 @@ define(['shared/icon'], (ICON) => ({
                 </div>
                 <div class="js_wrap_mess wrap-messages" style="display: none;">
                     <div class="js_info_parnter toolbar-profile">
-                        <img class="--img avatar" src="" alt="" style="cursor: pointer;" />
+                        <div class="--avatar-wraper">
+                            <img class="--img avatar" src="" alt="" style="cursor: pointer;" />
+                            <div class="--favourite hidden"><i class="xm icon-star-full" aria-hidden="true"></i></div>
+                        </div>
+
                         <div class="toolbar-name">
-                            <div class="--name-wraper">
-                                <div class="--name"></div> 
-                                <div class="--favourite hidden"><i class="xm icon-star-full" aria-hidden="true"></i></div>
-                            </div>
-                           
+                            <div class="--name"></div> 
                             <div class="--online"></div>
                             <div class="--typing"></div>
                         </div>
@@ -482,17 +482,19 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>
                             </button>
-
                             <button class="btn-toggle-search-box menu__item">
                                 <i class="xm icon-search"></i>
                                 <lang data-language="SEARCH_PLACEHOLDER"></lang>
                             </button>
-
                             <button class="--mediaAndFile menu__item">
                                 <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
-
+                            <button class="--viewBookmark menu__item">
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-bookmarks-empty" aria-hidden="true"></i>
+                                <lang data-language="VIEW_BOOKMARK"></lang>
+                            </button>
                             <button class="--internal menu__item">
                                 <i class="xm icon-comments"></i>
                                 <span data-language="ENABLE_INTERNAL_MESSAGES"></span>
@@ -522,6 +524,14 @@ define(['shared/icon'], (ICON) => ({
                             Close
                         </div>
                     </div>
+
+                    <div class="view-bookmark-status-bar hidden">
+                        <lang data-language="IS_VIEWING_BOOKMARK_LIST"></lang>
+                        <div class="close-bookmark-view-btn">
+                            <i class="icon-close"></i>
+                        </div>
+                    </div>
+
                     <div class="js_con_list_mess messages scroll__wrap">
                         <div class="--load-mess">
                             <div class="pulse"></div>
@@ -532,7 +542,6 @@ define(['shared/icon'], (ICON) => ({
                                 <span class="unread-message-scroll">0</span> 
                                 <lang data-language="NEW_MESSAGE"></lang>
                             </p>
-                           
                         </a>
 
                         <button class="jump-to-bottom hidden">
@@ -564,14 +573,11 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-info-circle"></i>
                                 <lang data-language="INFO"></lang>
                             </button>
-
-                            <!--
-                            <button class="--fw menu__item js-menu-messages-bookmark">
-                                <i class="xm icon-bookmarks"></i>
+                            <button class="--bm menu__item js-menu-messages-bookmark">
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-bookmarks-empty"></i>
                                 <lang data-language="BOOKMARK"></lang>
                             </button>
-                            -->
-
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm icon-edit"></i>
                                 <lang data-language="EDIT"></lang>

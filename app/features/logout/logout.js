@@ -19,7 +19,8 @@ define([
         USER_ID,
         ROUTE,
         API_URL,
-        RANDOM_ID_REFRESH_TOKEN
+        RANDOM_ID_REFRESH_TOKEN,
+        LAST_SYNCED_AT
     } = constant;
 
     const getHeaderJson = () => ({
@@ -46,6 +47,7 @@ define([
         removeDataInLocalApplication(USER_ID);
         removeDataInLocalApplication(REFRESH_TOKEN);
         removeDataInLocalApplication(RANDOM_ID_REFRESH_TOKEN);
+        removeDataInLocalApplication(LAST_SYNCED_AT);
         navigate(ROUTE.login);
     };
 
