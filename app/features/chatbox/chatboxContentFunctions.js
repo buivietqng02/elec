@@ -98,12 +98,12 @@ define([
         const {
             sender,
             message,
-            file
+            file,
+            originSequence
         } = quotedMessage;
-        // console.log(quotedMessage);
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message))).split('__').pop();
 
         if (file) {
             text = handleMessCointainFile(file);
@@ -111,7 +111,7 @@ define([
 
         // console.log(text);
 
-        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${originSequence}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {
@@ -212,7 +212,9 @@ define([
                 idLocal
             };
 
-            let text = htmlEncode(decodeStringBase64(message));
+            const decodedMessage = htmlEncode(decodeStringBase64(message));
+            let text = decodedMessage.split('__').pop();
+            const originSequence = decodedMessage.split('__')[0].split(':')[1];
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -302,6 +304,7 @@ define([
 
             // render with case of comment
             if (quotedMessage && !deleted) {
+                quotedMessage.originSequence = originSequence;
                 data.comment = renderComment(quotedMessage);
             }
 

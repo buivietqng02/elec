@@ -223,7 +223,7 @@ define([
             isDelete: deleteState,
             text,
             params: {
-                message: encodeStringBase64(text),
+                message: encodeStringBase64(`commentOriginSequence:${commentState.origin_sequence}__${text}`),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId
             }
@@ -301,11 +301,14 @@ define([
             $btnCloseCommentBox.off().click(onHideCommentBox);
         },
 
-        onUpdate: (id, value) => {
+        onUpdate: (id, value, originalSequence) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
             $input.val(text);
             $input.focus();
             messageId = id;
+
+            // If edit comment message, this allow scroll to origin mess
+            if(originalSequence) commentState = {origin_sequence: originalSequence};
             handleInputAutoExpand();
         },
 
@@ -318,14 +321,15 @@ define([
         onComment: (object) => {
             commentState = {
                 chatId: object.chatId,
-                mess: object.mess,
+                mess: object.mess.split('__').pop(),
                 name: object.officiallyName,
-                userId: object.userId
+                userId: object.userId,
+                origin_sequence: object.origin_sequence
             };
-
+           
             $input.focus();
             $commentWrapper.show();
-            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(object.mess)}</span>`);
+            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(commentState.mess)}</span>`);
         },
 
         onAddEmoji: (emoji) => {

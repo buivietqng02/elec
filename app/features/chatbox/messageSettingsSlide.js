@@ -37,6 +37,7 @@ define([
         const { useridName, userOfficiallyName } = $name.data();
         let mess = functions.stripTags(messHtml);
         let hasFile = 0;
+        const sequence = $message.find('.show_origin_btn').attr('sequence_number')
 
         if ($message.hasClass('have-file')) {
             hasFile = 1;
@@ -50,7 +51,8 @@ define([
             mess,
             name,
             hasFile,
-            officiallyName: userOfficiallyName
+            officiallyName: userOfficiallyName,
+            origin_sequence: sequence
         });
     };
 
@@ -64,9 +66,10 @@ define([
     const onEdit = () => {
         const { chatId } = $message.data();
         const value = $message.find('.--mess').html();
+        const originalSequence = $message.find('.comment-box-inline').attr('quoted-original-sequence');
 
         offEventClickOutside();
-        chatboxInputComp.onUpdate(chatId, value);
+        chatboxInputComp.onUpdate(chatId, value, originalSequence);
     };
 
     const onRemove = () => {

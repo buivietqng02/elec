@@ -154,7 +154,7 @@ define([
         const renderLastMessSideBar = () => {
             if (message.id.messageId === lastMessage) {
                 const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+                const text = htmlEncode(stripTags(decodeStringBase64(message.message))).split('__').pop();
                 sidebarItem[0].querySelector('.preview').textContent = text;
             } 
         };
