@@ -54,6 +54,25 @@ img {
 	font-weight: 400
 }
 
+.login__name {
+	position: relative;
+}
+.login__header .learn-more {
+	font-size: 0.8em;
+	font-style: oblique;
+	position: absolute;
+	right:0;
+	top: 2em;
+	color: #fff;
+	text-decoration: underline;
+}
+
+.login__header .learn-more:hover {
+	text-shadow: 0 0 10px;
+	color: #fff;
+	cursor: pointer;
+}
+
 .login__form {
 	display: flex;
 	justify-content: space-between;

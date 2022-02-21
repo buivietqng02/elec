@@ -154,7 +154,7 @@ define([
         const renderLastMessSideBar = () => {
             if (message.id.messageId === lastMessage) {
                 const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-                const text = htmlEncode(stripTags(decodeStringBase64(message.message))).split('__').pop();
+                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
                 sidebarItem[0].querySelector('.preview').textContent = text;
             } 
         };
@@ -267,6 +267,7 @@ define([
     });
 
     const handleRealTimeMessage = (messages) => {
+        console.log(messages);
         let rooms = GLOBAL.getRooms();
         let roomsMove = [];
         let isPushNotification = false;

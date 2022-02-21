@@ -4,7 +4,7 @@ define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
         const editMessage = message.updated ? ' (Edited message)' : '';
 
         const title = room.group ? room.subject : message.sender.name;
-        const decodedMessage = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, '')).split('__').pop();
+        const decodedMessage = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
         const text = `${room.group ? `${message.sender.name}: ${decodedMessage}` : decodedMessage}`;
 
         const notification = new Notification(title + editMessage, {

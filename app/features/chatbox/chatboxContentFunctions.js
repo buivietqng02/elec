@@ -99,11 +99,11 @@ define([
             sender,
             message,
             file,
-            originSequence
+            sequence
         } = quotedMessage;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message))).split('__').pop();
+        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
 
         if (file) {
             text = handleMessCointainFile(file);
@@ -111,7 +111,7 @@ define([
 
         // console.log(text);
 
-        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${originSequence}">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${sequence}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {
@@ -212,9 +212,7 @@ define([
                 idLocal
             };
 
-            const decodedMessage = htmlEncode(decodeStringBase64(message));
-            let text = decodedMessage.split('__').pop();
-            const originSequence = decodedMessage.split('__')[0].split(':')[1];
+            let text = htmlEncode(decodeStringBase64(message));
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -301,10 +299,10 @@ define([
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
             data.JOIN = GLOBAL.getLangJson().JOIN;
             data.messSequence = sequence;
+            data.pinned = starred ? 'pinned' : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
-                quotedMessage.originSequence = originSequence;
                 data.comment = renderComment(quotedMessage);
             }
 

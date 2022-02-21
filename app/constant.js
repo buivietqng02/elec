@@ -64,6 +64,8 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         },
         FAVOURITES_ROOMS: 'favourites_rooms',
         LAST_SYNCED_AT: 'LAST_SYNCED_AT',
+        PINNED_MESS_ID: 'pinned-message-id',
+        PINNED_SEQUENCE: 'pinned-sequence'
     };
 
     return Object.freeze(obj);

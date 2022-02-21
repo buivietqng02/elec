@@ -19,7 +19,6 @@ define([
     'features/chatbox/chatboxContent',
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxAttach',
-    'features/chatbox/chatboxSearch',
     'features/chatbox/emoji',
     'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
@@ -46,7 +45,6 @@ define([
     chatboxContentComp,
     chatboxInputComp,
     chatboxAttachComp,
-    chatboxSearchComp,
     emojiComp,
     voiceChatComp,
     modalShowImageFullComp,
@@ -147,7 +145,6 @@ define([
         chatboxContentComp.onInit();
         chatboxInputComp.onInit();
         chatboxAttachComp.onInit();
-        chatboxSearchComp.onInit();
         emojiComp.onInit();
 
         // Voice message

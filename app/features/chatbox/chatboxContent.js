@@ -12,8 +12,8 @@ define([
     'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar',
-    'features/modal/modalBookmarkMessage'
-
+    'features/modal/modalBookmarkMessage',
+    'features/modal/modalPinMessage',
 ], (
     constant,
     API,
@@ -28,7 +28,8 @@ define([
     voiceChatComp,
     sidebarConferenceComp,
     sidebarLeftBarComp,
-    modalBookmarkMessage
+    modalBookmarkMessage,
+    modalPinMessage
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -62,7 +63,6 @@ define([
     let unreadScrollNum = 0;
     let processing = false;
     let isTouchLastMess = false;
-    let isSearchMode = false;
     let isInit = false;
     let $btnScrollToBottom;
     let $scrollToMess;
@@ -298,7 +298,7 @@ define([
         // condition 2: If message number gets from API have length small than 20, this action will skip
         // condition 3: When scroll to near bottom, get more messages
         const isToPosition = isMobile ? $wrapper.scrollTop() > 1 : $wrapper.scrollTop() > 700
-        if (processing || isTouchLastMess || isToPosition || isSearchMode) {
+        if (processing || isTouchLastMess || isToPosition) {
             return;
         }
 
@@ -372,8 +372,6 @@ define([
             messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
             lastOffset = moreMessages[0]?.sequence;
 
-            // console.log(lastOffset);
-
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
                 storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             }
@@ -420,56 +418,11 @@ define([
         return cloneArray;
     }
 
-    const findUltiLastOffSet = (arrayMess) => {
-        // Update ultiLastOffSet whenever reload loadMessages function
-        let ultiLastOffSet = 0;
-        let addedSequenceMessList = [];
-        if (arrayMess.length > 0) {
-            //  console.log(`Before set ultiOffset: ${ultiLastOffSet}`)
-            //  get last sequence number (Receive new messages or send new message --> sequence is null, therefore have to use below method to get sequence)
-            let nullIndex = 0;
-
-            const checkNullSequence = (element, index) => {
-                if (element.sequence === null || element.sequence === undefined) {
-                    nullIndex = index;
-                    return true
-                }
-            }
-            const isNullSequence = arrayMess.some(checkNullSequence);
-
-            if (nullIndex > 0) {
-                addedSequenceMessList = arrayMess.map((item, index) => {
-                    if (index >= nullIndex) {
-                        item.sequence = arrayMess[index - 1].sequence + 1;
-                    } 
-                    return item;
-                })
-            }
-
-            if(isNullSequence) {
-            // In case newly created group
-                if(nullIndex === 0) {
-                    ultiLastOffSet = arrayMess.length;
-                } else {
-                    ultiLastOffSet = arrayMess[nullIndex - 1].sequence + (arrayMess.length - nullIndex)
-                }
-            } else {
-                if(ultiLastOffSet < arrayMess[arrayMess.length - 1].sequence) ultiLastOffSet = arrayMess[arrayMess.length - 1].sequence
-            }
-        }
-
-        return {
-            ultiLastOffSet: ultiLastOffSet, 
-            addedSequenceMessList: addedSequenceMessList
-        };
-    }
-
     const handleDataFromGetMess = (messages, roomInfo) => {
         let messagesHtml = '';
         let isShowUnread = roomInfo.unreadMessages > 0 && roomInfo.unreadMessages < 16;
         let idUnread = null;
         const timeWait = isMobile ? 300 : 50;
-        let ultiLastOffsetAndSequenceList = {}; 
 
         // Mark when got all messages in this chat room
         if (messages.length < 20) {
@@ -491,21 +444,10 @@ define([
         lastOffset = messages[0]?.sequence;
 
         // Remove dupplidate messageID in Array when bad connection
-        // console.log(messages)
+        // console.log(messages)    
         const cloneArray = removeRepeatedMess(messages);
-       
-        // Update ultiLastOffSet whenever reload loadMessages function
-        ultiLastOffsetAndSequenceList =  findUltiLastOffSet(cloneArray);
 
-        // If not scrolling to origin message, reassign ultiLastOffSet
-        if(jumpFastToBottomBtn.classList.contains('hidden')) ultiLastOffSet = ultiLastOffsetAndSequenceList.ultiLastOffSet;
-
-        addedSequenceMessList = ultiLastOffsetAndSequenceList.addedSequenceMessList
-        if (addedSequenceMessList.length > 0) {
-            messages = [...addedSequenceMessList]
-        } else {
-            messages = [...cloneArray]
-        }
+        messages = [...cloneArray];
 
         messagesHtml = messages.map((mess, i, messArr) => (
             renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
@@ -519,10 +461,7 @@ define([
             $wrapper.scrollTop($wrapper[0].scrollHeight);
         }
 
-        if(jumpFastToBottomBtn.classList.contains('hidden')){
-            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
-        }
-
+        $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         $loadingOfNew.hide();
 
         setTimeout(() => {
@@ -541,12 +480,17 @@ define([
 
         messages = (res?.messages || []).reverse();
 
-        ultiLastOffSet = messages[messages.length - 1].sequence;
-        // Update time activity to top bar
+        ultiLastOffSet = messages[messages?.length - 1]?.sequence;
+        // If edit or remove massage but not yet load messages from the room yet, don't need to render below
         if(!roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
+             // Update time activity to top bar
             chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
 
+            // Render messages
             handleDataFromGetMess(messages, roomInfo);
+
+            // Show pinned messages
+            modalPinMessage.renderPinnedMess({messId: 'FSDF123124' ,name: 'Phuong', message: 'Lorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issum', sequence: 123})
         }
 
          // Assign message to store
@@ -576,7 +520,6 @@ define([
         $unreadScroll.hide();
         unreadScrollNum = 0;
         processing = true;
-        isSearchMode = false;
         isTouchLastMess = false;
 
         if(jumpFastToBottomBtn.classList.contains('hidden')){
@@ -586,9 +529,14 @@ define([
 
     const loadMessages = async (roomInfo) => {
         onRefresh();
-
+       
         let messagesListLoadFirstTime;
+        
         if (getRoomById(roomInfo.id) && isInit) {
+            const messList = getRoomById(roomInfo.id);
+            ultiLastOffSet = messList[messList?.length - 1]?.sequence;
+            console.log(ultiLastOffSet);
+
             onGetMessageFromCache(roomInfo);
 
             // update chat last read time
@@ -626,7 +574,6 @@ define([
             unreadScrollNum = 0;
             processing = false;
             isTouchLastMess = false;
-            isSearchMode = false;
             isInit = false;
 
             $btnScrollToBottom = $('.scroll-to__bottom');
@@ -650,7 +597,9 @@ define([
             $(document).off('.btnVoiceMessPlayStop').on('click.btnVoiceMessPlayStop', '.audio-playStop', (e) => voiceChatComp.audioPlayStopFunc(e))
 
             // Scroll to origin quoted message
-            $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e))
+            $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e));
+
+            modalPinMessage.onInit();
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
@@ -659,7 +608,7 @@ define([
             let isViewBookmarkMode = modalBookmarkMessage.onGetIsViewingBookmark();
             const mess = messList[0];
             let id = GLOBAL.getCurrentRoomId();
-
+            
             // Prevent duplicate message
             if ($(`[${ATTRIBUTE_MESSAGE_ID} = "${mess?.id?.messageId}"]`).length) {
                 return;
@@ -667,9 +616,7 @@ define([
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
-                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 &&
-                GLOBAL.getInfomation().id !== mess.sender.id &&
-                !isSearchMode && !isViewBookmarkMode
+                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 && GLOBAL.getInfomation().id !== mess.sender.id && !isViewBookmarkMode
             ) {
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
@@ -680,18 +627,13 @@ define([
                 $scrollToMess.show();
             }
 
-            // Update ultiLastOffSet when receive new message
-            if(GLOBAL.getInfomation().id !== mess.sender.id &&
-            !isSearchMode && !isViewBookmarkMode) {
-                if(mess.id.messageId) ultiLastOffSet++;
-            }
+            // Update ultiLastOffSet when send/ receive new message
+            ultiLastOffSet = messList[0].sequence;
 
-            if (!isSearchMode && !isViewBookmarkMode) {
+            if (!isViewBookmarkMode && jumpFastToBottomBtn.classList.contains('hidden')) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
-                mess.sequence = ultiLastOffSet;
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
-
                 $messageList.append(messagesHtml);
 
                 // Check if chatbox scrolled to the bottom
@@ -718,23 +660,14 @@ define([
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))).split('__').pop());
+            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));
             $message.find('.--edited').removeClass('hidden');
         },
 
-        onSearch: (searchMessageList, search) => {
-            const messagesHtml = searchMessageList.map(mess => renderMessage(mess, search));
-            isSearchMode = true;
-            $messageList.html(messagesHtml);
-            $wrapper.scrollTop($wrapper.get(0).scrollHeight);
-            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
-        },
-
         onFinishPostMessage: (data) => {
-            // Update ultiLastOffSet when send new mess
-            ultiLastOffSet++; 
             const $mess = $(`[data-id-local="${data.idLocal}"]`);
             const messages = getRoomById(data.chatId);
+            ultiLastOffSet++;
 
             storeRoomById(data.chatId, messages.map(mess => {
                 if (data.idLocal === mess.idLocal) {
@@ -817,19 +750,19 @@ define([
                 if (!jumpFastToBottomBtn.classList.contains('hidden')) jumpToBottom();
             }
 
+            storeRoomById(rid, messages.concat(mess));
+
+            if (!jumpFastToBottomBtn.classList.contains('hidden')) return;
+
             if (messages?.length) {
                 messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
             } else {
                 messagesHtml = renderMessage(mess);
             }
 
-            storeRoomById(rid, messages.concat(mess));
-
-            if (!isSearchMode) {
-                $messageList.append(messagesHtml);
-                $wrapper.scrollTop(wrapperHtml.scrollHeight);
-                $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
-            }
+            $messageList.append(messagesHtml);
+            $wrapper.scrollTop(wrapperHtml.scrollHeight);
+            $messageList.find(IMAGE_CLASS).on('load', onLoadImage);
         },
 
         onShowExactOriginMessage: (id, sequence) => showExactOriginMessage(id, sequence),

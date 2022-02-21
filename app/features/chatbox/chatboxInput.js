@@ -2,12 +2,15 @@ define([
     'app/constant',
     'shared/functions',
     'shared/api',
-    'shared/data'
+    'shared/data',
+    'features/modal/modalTagPerson'
 ], (
     constant,
     functions,
     API,
-    GLOBAL
+    GLOBAL,
+    modalTagPerson
+   
 ) => {
     const {
         htmlDecode,
@@ -77,7 +80,7 @@ define([
         }, 10);
     };
 
-    const onKeydown = (e) => {
+    const onKeyUp = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
 
         if (enterKeyIsNewLine) {
@@ -99,6 +102,8 @@ define([
         }
 
         handleInputAutoExpand();
+
+        modalTagPerson.onRenderTagModal(e);
     };
 
     const onPaste = () => handleInputAutoExpand();
@@ -161,19 +166,8 @@ define([
         awaitProcessClone.map((item, index) => {
             if( item?.idLocal === data?.idLocal) {
                 count = count + 1
-            } 
-            // else {
-            //     if(awaitProcessClone.length === 1){
-            //         count = 0;
-            //     }
-            // }
+            }
         })
-
-        // console.log('clone await array', awaitProcessClone); 
-        // console.log('data input', data);
-        // console.log('response ID', responseID)  
-        // console.log("new array", newArray)
-        // console.log(count)
 
         // Fixing repeating messages
         if(count > 1){
@@ -223,7 +217,7 @@ define([
             isDelete: deleteState,
             text,
             params: {
-                message: encodeStringBase64(`commentOriginSequence:${commentState.origin_sequence}__${text}`),
+                message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId
             }
@@ -295,20 +289,19 @@ define([
             commentState = false;
             messageId = 0;
 
-            $input.off('keydown').keydown(onKeydown);
+            $input.off('keyup').keyup(onKeyUp);
             $input.off('paste').bind('paste', onPaste);
             $btnSend.off().click(onSendMessage);
             $btnCloseCommentBox.off().click(onHideCommentBox);
+
+            modalTagPerson.onInit();
         },
 
-        onUpdate: (id, value, originalSequence) => {
+        onUpdate: (id, value) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
             $input.val(text);
             $input.focus();
             messageId = id;
-
-            // If edit comment message, this allow scroll to origin mess
-            if(originalSequence) commentState = {origin_sequence: originalSequence};
             handleInputAutoExpand();
         },
 
@@ -321,10 +314,10 @@ define([
         onComment: (object) => {
             commentState = {
                 chatId: object.chatId,
-                mess: object.mess.split('__').pop(),
+                mess: object.mess,
                 name: object.officiallyName,
                 userId: object.userId,
-                origin_sequence: object.origin_sequence
+                origin_sequence: object.sequence
             };
            
             $input.focus();

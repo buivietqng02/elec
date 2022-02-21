@@ -10,7 +10,8 @@ define([
     'features/modal/modalRemoveGroup',
     'features/modal/modalLeaveGroup',
     'features/modal/modalMediaAndFiles',
-    'features/modal/modalBookmarkMessage'
+    'features/modal/modalBookmarkMessage',
+    'features/modal/modalSearchMessage',
 ], (
     moment,
     constant,
@@ -23,7 +24,8 @@ define([
     modalRemoveGroupComp,
     modalLeaveGroupComp,
     modalMediaAndFiles,
-    modalBookmarkMessageComp
+    modalBookmarkMessageComp,
+    modalSearchMessage
 ) => {
     const { getAvatar } = functions;
     let $groupOptionsBtn;
@@ -97,6 +99,11 @@ define([
         offEventClickOutside();
     };
 
+    const initSearchMessage = () => {
+        modalSearchMessage.onInit();
+        offEventClickOutside();
+    }
+ 
     const initViewBookmark = () => {
         modalBookmarkMessageComp.onClickViewBookmarks();
         // offEventClickOutside();
@@ -155,6 +162,8 @@ define([
             $leaveBtn = $slide.find('.--leave');
             $removeBtn = $slide.find('.--remove');
             $mediaAndFilesBtn = $slide.find('.--mediaAndFile');
+            $searchMessage = $slide.find('.--viewSearch');
+
             $name = $('.js_info_parnter .toolbar-name .--name');
             $image = $('.js_info_parnter .--img.avatar');
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
@@ -171,6 +180,7 @@ define([
             $internalBtn.off().click(updateInternalMessage);
             $mediaAndFilesBtn.off().click(initMediaAndFiles);
             $viewBookmarks.off().click(initViewBookmark);
+            $searchMessage.off().click(initSearchMessage);
             $image.off().click(modalEditRoomComp.onInit);
         },
 

@@ -105,7 +105,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
                 <div class="--content">
                     <div class="--heading">
                         <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
@@ -132,6 +132,10 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                             <span class="--edited {show_edited}">(Edited)</span>
                         </div>
                         <div class="xm icon-bars --bars --menu p-cur btn-message-settings {hide_when_removed}"></div>
+                    </div>
+
+                    <div class="pin-mess-icon">
+                        <i class="icon-pin"></i>
                     </div>
 
                     <div class="message-bookmark-icon">
