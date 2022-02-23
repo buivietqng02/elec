@@ -317,7 +317,8 @@ define([
             subject,
             sender,
             lastMessage,
-            muted
+            muted,
+            type
         } = room;
         let data = {};
         let src = '';
@@ -362,6 +363,14 @@ define([
             mess = 'Invite: not accepted';
             src = getAvatar(partner?.id);
             status = '';
+        }
+
+        if (type === 9) {
+            mess = `Pin message: ${mess}`;
+        }
+
+        if (type === 8) {
+            mess = `Unpin message: ${mess}`;
         }
 
         // Favourite Room

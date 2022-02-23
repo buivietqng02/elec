@@ -11,7 +11,8 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
     'shared/alert',
-    'features/modal/modalLogout'
+    'features/modal/modalLogout',
+    'features/modal/modalPinMessage'
 ], (
     constant,
     API,
@@ -25,7 +26,8 @@ define([
     notificationComp,
     modalPhoneRequest,
     ALERT,
-    modalLogout
+    modalLogout,
+    modalPinMessage
 ) => {
     let timeout;
     let isInit = false;
@@ -88,6 +90,7 @@ define([
 
         if (!messages[lastNum].updated && !messages[lastNum].deleted) {
             newRoom.lastMessage = messages[messages.length - 1].message;
+            newRoom.type = messages[messages.length - 1].type;
         }
 
         if (currentRoomId !== room.id) {
@@ -267,7 +270,6 @@ define([
     });
 
     const handleRealTimeMessage = (messages) => {
-        console.log(messages);
         let rooms = GLOBAL.getRooms();
         let roomsMove = [];
         let isPushNotification = false;
@@ -286,6 +288,7 @@ define([
                     isPushNotification = true;
                     if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
+                        console.log(messagesResponse);
                         notificationComp.pushNotificationForMessage(messagesResponse[0], room);
                     }
                 }
@@ -550,6 +553,10 @@ define([
 
                 if (res?.reactionEvents?.length) {
                     handleReactionMessageEvent(res.reactionEvents);
+                }
+
+                if (res?.pinEvents.length) {
+                    modalPinMessage.handlePinMessageOnSync(res);
                 }
 
                 isInit = true;

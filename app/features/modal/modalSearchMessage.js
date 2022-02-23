@@ -15,19 +15,20 @@ define([
    
     ) => {
     const { debounce, convertMessagetime } = functions;
-    let messSearchBox;
     let inputSearch;
-    let searchingMess;
     let searchingMessContent;
     let searchContent;
     let searchLobbyText;
     let searchWraper;
     let closeSearchViewBtn;
+    let cancelSearchBtn;
+
     let lastOffset = 0;
     let isTouchLastMess = false;
     let isProcessing = false;
     let isToPosition = false;
     let isShowOriginMess = false;
+    let isCancelSearch = false;
     
     let isSearchMode = false;
     let valueKeywords = '';
@@ -40,6 +41,7 @@ define([
     } = contentFunc;
 
     const onRenderSearchResult = (searchMessageList, search) => {
+        isCancelSearch = false;
         let textHTML = '';
         searchMessageList.map(mess => {
             textHTML += `<div class="separate-date text-center"><hr><span>${convertMessagetime(mess.msgDate, GLOBAL.getLangJson(), !!search)}</span></div> ${renderMessage(mess, search)}`;
@@ -54,7 +56,6 @@ define([
         let res;
         try {
             isProcessing = true;
-            searchingMess.classList.remove('hidden');
             searchingMessContent.classList.remove('hidden');
 
             const params = {
@@ -70,7 +71,6 @@ define([
             isProcessing = false;
             if (res.messages.length) isToPosition = false;
 
-            searchingMess.classList.add('hidden');
             searchingMessContent.classList.add('hidden');
             searchLobbyText.classList.add('hidden');
     
@@ -78,7 +78,6 @@ define([
         } catch (error) {
             console.log(error);
             isProcessing = false;
-            searchingMess.classList.add('hidden');
             searchingMessContent.classList.add('hidden');
             ALERT.show('Something wrong, please search again!', 'danger');
         }
@@ -104,17 +103,28 @@ define([
         isSearchMode = false;
         isShowOriginMess = false;
 
-        console.log(isSearchMode);
-
         searchContentTemp = searchContent.innerHTML;
         inputSearchTemp = inputSearch.value;
         searchContent.innerHTML = '';
         inputSearch.value = '';
     };
 
+    const onCancelSearch = () => {
+        resetScroll();
+        isCancelSearch = true;
+        valueKeywords = '';
+        searchContentTemp = '';
+        inputSearchTemp = '';
+        searchContent.innerHTML = '';
+        inputSearch.value = '';
+        searchLobbyText.classList.remove('hidden');
+        cancelSearchBtn.classList.add('hidden');
+    };
+
     const closeModalAndResetScroll = () => {
         closeModal();
         resetScroll();
+        if (cancelSearchBtn) cancelSearchBtn.classList.add('hidden');
     };
 
     const onShowOriginMessage = (id, sequence) => {
@@ -142,6 +152,12 @@ define([
     const onSearch = debounce(() => {
         valueKeywords = inputSearch.value;
         resetScroll();
+
+        if (valueKeywords.length > 0) {
+            cancelSearchBtn.classList.remove('hidden');
+        } else {
+            cancelSearchBtn.classList.add('hidden');
+        }
 
         if (valueKeywords.length < 3) {   
             return;
@@ -195,7 +211,7 @@ define([
 
         console.log(isProcessing, isTouchLastMess, isToPosition);
 
-        if (isProcessing || isTouchLastMess || !isToPosition || !isSearchMode) {
+        if (isProcessing || isTouchLastMess || !isToPosition || !isSearchMode || isCancelSearch) {
             return;
         }
         onGetMoreMessageByScrolling();
@@ -205,6 +221,7 @@ define([
         closeSearchViewBtn.removeEventListener('click', closeModalAndResetScroll);
         inputSearch.removeEventListener('keyup', onSearch);
         searchContent.removeEventListener('scroll', onWrapperScroll);
+        cancelSearchBtn.removeEventListener('click', onCancelSearch);
     };
 
     const openModal = () => {
@@ -233,16 +250,12 @@ define([
         onInit: () => {
             searchWraper = document.querySelector('.view-search-wraper');
             closeSearchViewBtn = document.querySelector('.search-close');
+            cancelSearchBtn = document.querySelector('.cancel-search-btn');
 
             console.log(lastOffset, isTouchLastMess, isProcessing);
-         
-            console.log('test');
 
-            messSearchBox = document.querySelector('.mess-search-box');
             inputSearch = document.querySelector('#msbg-input');
             searchContent = document.querySelector('.search-content');
-
-            searchingMess = messSearchBox.querySelector('.pulse');
             searchingMessContent = document.querySelector('.pulse-loading');
             searchLobbyText = document.querySelector('.search-lobby-text');
 
@@ -250,6 +263,7 @@ define([
             closeSearchViewBtn.addEventListener('click', closeModalAndResetScroll);
             inputSearch.addEventListener('keyup', onSearch);
             searchContent.addEventListener('scroll', onWrapperScroll);
+            cancelSearchBtn.addEventListener('click', onCancelSearch);
     
             openModal();
         },

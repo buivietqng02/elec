@@ -35,6 +35,14 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                 </div>
             </li>
         `,
+        pinMessage: `
+            <li class="js_li_list_mess" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" type="{type}">
+                <div class="messages__pin-unpin-chat">
+                    {who}
+                </div>
+            </li>
+        `,
+
         file: `<i class="xm icon-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
         quotedFile: `<i class="xm icon-download"></i> <b>{fileName}</b> {fileSize}`,
 

@@ -57,7 +57,9 @@ define([
     } = contentFunc;
     const {
         getRoomById,
-        storeRoomById
+        storeRoomById,
+        storePinnedMessRoomsById,
+        getPinnedMessRoomsById
     } = chatboxContentChatListComp;
     let lastOffset = 0;
     let unreadScrollNum = 0;
@@ -474,6 +476,16 @@ define([
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
         // Handle when user switch room but the request has not finished yet
         let messages;
+        const pinnedMess = res?.pinnedMessage;
+        let pinnedObjToStore;
+
+        pinnedMess ? pinnedObjToStore = {
+                        messId: pinnedMess?.id.messageId,
+                        pinname: pinnedMess?.sender.name, 
+                        message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
+                        pinSequence: pinnedMess?.sequence
+                    } : null
+
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
             return;
         }
@@ -485,17 +497,16 @@ define([
         if(!roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
              // Update time activity to top bar
             chatboxTopbarComp.onRenderTimeActivity(res?.partnerLastTimeActivity);
-
+             // Show pinned messages
+             modalPinMessage.renderPinnedMess(pinnedMess);
             // Render messages
             handleDataFromGetMess(messages, roomInfo);
-
-            // Show pinned messages
-            modalPinMessage.renderPinnedMess({messId: 'FSDF123124' ,name: 'Phuong', message: 'Lorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issumLorem issum', sequence: 123})
         }
 
          // Assign message to store
          setChatsById(roomInfo.id, messages);
          storeRoomById(roomInfo.id, messages);
+         storePinnedMessRoomsById(roomInfo.id, pinnedObjToStore)
 
         return messages;
         
@@ -531,13 +542,17 @@ define([
         onRefresh();
        
         let messagesListLoadFirstTime;
+        modalPinMessage.removePinBar();
         
         if (getRoomById(roomInfo.id) && isInit) {
             const messList = getRoomById(roomInfo.id);
+            const pinnedObj = getPinnedMessRoomsById(roomInfo.id);
+
             ultiLastOffSet = messList[messList?.length - 1]?.sequence;
             console.log(ultiLastOffSet);
 
             onGetMessageFromCache(roomInfo);
+            modalPinMessage.renderPinnedMess(pinnedObj, true);
 
             // update chat last read time
             API.post(`chats/${roomInfo.id}/read`).then(() => { })

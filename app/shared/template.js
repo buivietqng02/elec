@@ -766,7 +766,10 @@ define(['shared/icon'], (ICON) => ({
                             <div class="mess-search-box">
                                 <i class="xm icon-search"></i>
                                 <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
-                                <div class="pulse hidden"></div>
+                               
+                                <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Cancel search">
+                                    <i class="icon-close"></i>
+                                </button>
                             </div>
                         </div>
 

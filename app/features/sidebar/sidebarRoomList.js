@@ -139,6 +139,8 @@ define([
     };
 
     return {
-        onInit
+        onInit,
+
+        getRoomInfoOnClick: () => roomInfo
     };
 });

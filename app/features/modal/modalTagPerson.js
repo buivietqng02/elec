@@ -1,18 +1,15 @@
-/* eslint no-underscore-dangle: 0 */
 define([
     'app/constant', 
     'shared/data',
     'shared/api',
     'shared/functions'
-    // 'shared/alert', 
-    // 'features/chatbox/chatboxContentChatList'
+    // 'shared/alert',
 ], (
     constant, 
     GLOBAL,
     API,
     functions
     // ALERT, 
-    // chatboxContentChatListComp
     ) => {
         console.log('tag');
     let rId;
@@ -30,6 +27,8 @@ define([
     let letterBeforeLast;
     let tagPersonContainer;
     let isLoading = false;
+    let membersList = [];
+    let isMatch = false;
     
     const { 
         render, getAvatar, htmlEncode 
@@ -42,9 +41,25 @@ define([
     </div>
     `;
 
-    const renderTemplate = (members) => {
+    const closeModalTag = () => {
+        isOpenTag = false;
+        tagPersonContainer.innerHTML = '';
+    };
+
+    const renderTemplate = (search) => {
         let arrMemberHTML = '';
-        members.forEach(member => {
+        const filteredList = membersList.filter(mem => mem.user.name.includes(search));
+        console.log(filteredList);
+        let renderList = [];
+
+        if (filteredList.length === 0) {
+            renderList = [...membersList];
+            isMatch = false;
+        } else {
+            renderList = [...filteredList];
+            isMatch = true;
+        }
+        renderList.forEach(member => {
             const arrItem = {
                 id: member.user.id,
                 currentName: htmlEncode(member.user.name),
@@ -65,32 +80,41 @@ define([
             if (res.members) {
                 isLoading = false;
                 console.log(res);
-                renderTemplate(res.members);
+                membersList = res.members;
+                renderTemplate();
             }
         });
     };
 
     const toggleTagModal = (e) => { 
         const text = e.target.value;
+        console.log(text.substring(1, text.length));
 
         letterBeforeDelete = lastLetter;
         lastLetter = text.charAt(text.length - 1);
         letterBeforeLast = text.charAt(text.length - 2);
         
-        console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, letterBeforeLast: ${letterBeforeLast}`);
+        console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, letterBeforeLast: ${letterBeforeLast}, isMatch: ${isMatch}, isOpenTag: ${isOpenTag}`);
        
         if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) {
+            const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
+            const roomInfo = sidebarRoomListComp.getRoomInfoOnClick();
+           
+            if (!roomInfo.group || roomInfo.channel) return;
+
             console.log('open modal');
             isOpenTag = true;
             tagPersonContainer.innerHTML = tagModal;
             getGroupMembers();
         }
         
-        if (((letterBeforeDelete === '@' && e.keyCode === 8) || lastLetter.trim() === '') && isOpenTag) {
+        if (((letterBeforeDelete === '@' && e.keyCode === 8) || (lastLetter !== '@' && !isMatch))
+         && isOpenTag) {
             console.log('close modal');
-            isOpenTag = false;
-            tagPersonContainer.innerHTML = '';
+            closeModalTag();
         }
+        
+        if (isOpenTag) renderTemplate(text.substring(1, text.length));
     };
 
     return {

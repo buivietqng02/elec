@@ -10,7 +10,6 @@ define([
     API,
     GLOBAL,
     modalTagPerson
-   
 ) => {
     const {
         htmlDecode,

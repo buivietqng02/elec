@@ -204,7 +204,8 @@ define([
                 deleted,
                 readByAllPartners,
                 starred,
-                sequence
+                sequence,
+                pinned
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -250,6 +251,24 @@ define([
                     data.who = `${sender.name} <b>removed</b> ${text}`;
                 }
                 return render(template.leftGroup, data);
+            }
+
+            // unpin message
+            if (type === 8) {
+                const lastComma = text.lastIndexOf(',');
+                text = `${text.substring(0, lastComma)} ${text.substring(lastComma + 1)}`;
+                    
+                data.who = `<span class="unpin">${sender.name} <b>unpinned: </b> <span class="text">${text}</span></span>`;
+                return render(template.pinMessage, data);
+            }
+
+            // pin message
+            if (type === 9) {
+                const lastComma = text.lastIndexOf(',');
+                text = `${text.substring(0, lastComma)} ${text.substring(lastComma + 1)}`;
+                
+                data.who = `<span class="pin">${sender.name} <b>pinned: </b> <span class="text">${text}</span></span>`;
+                return render(template.pinMessage, data);
             }
 
             // render with calling
@@ -299,7 +318,7 @@ define([
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
             data.JOIN = GLOBAL.getLangJson().JOIN;
             data.messSequence = sequence;
-            data.pinned = starred ? 'pinned' : '';
+            data.pinned = pinned ? 'pinned' : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
