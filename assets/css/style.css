@@ -3071,7 +3071,7 @@ body.body_fz_18 {
 #inviteModal .modal-dialog,
 #sendErpModal .modal-dialog,
 #removeMessageModal .modal-dialog {
-  width: 320px;
+   width: 420px;
   max-width: calc(100% - 16px);
 }
 
