@@ -795,7 +795,6 @@ define(['shared/icon'], (ICON) => ({
                 <img class="login__logo" src="/assets/images/icon.png" alt="Cross messenger logo">
                 <div class="login__name">
                     <h1 class="login__title" data-language="CROSS_MESSENGER"></h1>
-                    <a class="learn-more" target="_blank" href="https://www.iptp.net/xm/">Learn more</a>
                 </div>
                 
                 <div class="language-select" id="change-lang-btn">
@@ -912,9 +911,10 @@ define(['shared/icon'], (ICON) => ({
         </div>
 
         <div class="download-app"></div>
-
         <!-- Version -->
         <div class="xm-current-version"></div>
+        <!-- learn more -->
+        <div class="learn-more"><a target="_blank" href="https://www.iptp.net/xm/">Learn more</a></div>
     </div>
     `,
     signup: `

@@ -196,17 +196,19 @@ define([
     };
 
     const updateToStoreRoomById = (roomId, pinMessObj) => {
-         // update to storeRoomById
-         const currentRoomList = getRoomById(roomId);
-         const updatedRoomList = currentRoomList.map((item) => {
-            const ite = { ...item };
-            if (ite.id.messageId === pinMessObj.id.messageId) {
-                ite.pinned = pinMessObj.pinned;
-            }
-            
-            return ite;
-         });
-        storeRoomById(roomId, updatedRoomList);
+        // update to storeRoomById
+        const currentRoomList = getRoomById(roomId);
+        if (currentRoomList) {
+            const updatedRoomList = currentRoomList.map((item) => {
+                const ite = { ...item };
+                if (ite.id.messageId === pinMessObj.id.messageId) {
+                    ite.pinned = pinMessObj.pinned;
+                }
+                
+                return ite;
+            });
+            storeRoomById(roomId, updatedRoomList);
+        }
     };
 
     const pinMess = (pinEventsList, indx) => {

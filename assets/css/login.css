@@ -57,18 +57,19 @@ img {
 .login__name {
 	position: relative;
 }
-.login__header .learn-more {
-	font-size: 0.8em;
+.wrap-login .learn-more {
 	font-style: oblique;
-	position: absolute;
-	right:0;
-	top: 2em;
-	color: #fff;
+	text-align: center;
 	text-decoration: underline;
 }
 
-.login__header .learn-more:hover {
-	text-shadow: 0 0 10px;
+.wrap-login .learn-more a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.wrap-login .learn-more a:hover {
+	text-shadow: 0 0 15px;
 	color: #fff;
 	cursor: pointer;
 }
@@ -326,7 +327,7 @@ img {
 	color: rgb(255, 255, 255);
 	font-size: 13px;	
 	text-align: center;
-	padding: 4px;
+	padding-top: 4px;
 	font-weight: bold;
 }
 
