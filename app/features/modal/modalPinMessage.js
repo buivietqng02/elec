@@ -50,7 +50,16 @@ define([
         });
     };
 
-    const unpinMessAPI = () => {
+    const unpinMessAPIFromMenu = () => {
+        const currRoomId = GLOBAL.getCurrentRoomId();
+        API.delete(`chats/${currRoomId}/messages/unpin`).then(() => {
+            ALERT.show(GLOBAL.getLangJson().UNPINNED_MESSAGE, 'dark');
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
+    const unpinMessAPIFromModalConfirm = () => {
         const currRoomId = GLOBAL.getCurrentRoomId();
         $confirmUnpin.prop('disabled', true);
         $spinner.show();
@@ -60,7 +69,7 @@ define([
             $btnCancel.click();
             $spinner.hide();
 
-            ALERT.show(GLOBAL.getLangJson().UNPINNED_MESSAGE, 'alert');
+            ALERT.show(GLOBAL.getLangJson().UNPINNED_MESSAGE, 'dark');
         }).catch((err) => {
             console.log(err);
         });
@@ -71,13 +80,14 @@ define([
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h2 data-language="UNPIN_MESSAGE">
-                            ${langJson.UNPIN_MESSAGE}
-                        </h2>
-                        <p data-language="WOULD_YOU_LIKE_TO_UNPIN_THIS_MESS">
-                            ${langJson.WOULD_YOU_LIKE_TO_UNPIN_THIS_MESS}
+                        <h5 data-language="ARE_YOU_SURE_UNPIN_MESSAGE">
+                            ${langJson.ARE_YOU_SURE_UNPIN_MESSAGE}
+                        </h5>
+                        <p data-language="ARE_YOU_SURE_UNPIN_MESSAGE_DETAILS">
+                            ${langJson.ARE_YOU_SURE_UNPIN_MESSAGE_DETAILS}
                         </p>
-                        <button type="button" class="confirm-unpin-btn btn btn-outline-primary btn-small float-right" disabled>
+                        <br />
+                        <button type="button" class="confirm-unpin-btn btn btn-secondary btn-small float-right" disabled>
                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                             <lang data-language="UNPIN_MESSAGE">${langJson.UNPIN_MESSAGE}</lang>
                         </button>
@@ -103,7 +113,7 @@ define([
 
         $spinner.hide();
         $confirmUnpin.prop('disabled', false);
-        $confirmUnpin.off().click(unpinMessAPI);
+        $confirmUnpin.off().click(unpinMessAPIFromModalConfirm);
     };
 
     const scrollToOriginMess = (e) => {
@@ -295,7 +305,7 @@ define([
             isPinned = $pinnedMessage.hasClass('pinned');
             
             if (isPinned) {
-                popupModalConfirmUnpin();
+                unpinMessAPIFromMenu();
             } else {
                 pinMessAPI(GLOBAL.getCurrentRoomId(), messageId);
             }
