@@ -558,7 +558,7 @@ define([
                     handleReactionMessageEvent(res.reactionEvents);
                 }
 
-                if (res?.pinEvents.length) {
+                if (res?.pinEvents?.length) {
                     modalPinMessage.handlePinMessageOnSync(res);
                 }
 
