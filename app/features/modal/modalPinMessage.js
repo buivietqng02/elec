@@ -244,6 +244,11 @@ define([
 
     const handlePinMessageOnSync = (syncRes) => {
         console.log(syncRes);
+        const currRoomId = GLOBAL.getCurrentRoomId();
+        const roomOnSyncId = syncRes?.pinEvents[0]?.message?.id?.chatId;
+
+        if (roomOnSyncId !== currRoomId) return;
+
         const messageSettingsSlideComp = require('features/chatbox/messageSettingsSlide');
         const pinEventsList = syncRes.pinEvents;
         isLoading = false;
