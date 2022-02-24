@@ -36,13 +36,15 @@ define([
 
     const {
         ATTRIBUTE_SIDEBAR_ROOM,
-        ATTRIBUTE_MESSAGE_ID
+        ATTRIBUTE_MESSAGE_ID,
+        PINNED_MESS_ID
     } = constant;
     const {
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        getAvatar
     } = functions;
     const {
         getChatById,
@@ -483,7 +485,8 @@ define([
                         messId: pinnedMess?.id.messageId,
                         pinname: pinnedMess?.sender.name, 
                         message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
-                        pinSequence: pinnedMess?.sequence
+                        pinSequence: pinnedMess?.sequence,
+                        avatar: getAvatar(pinnedMess.sender.id)
                     } : null
 
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
@@ -675,8 +678,24 @@ define([
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-            $message.find('.--mess').html(transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message))));
+            const text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message)));
+
+            const $pinMessTopbar = $('.pin-message-status-bar');
+            const $pinText = $pinMessTopbar.find('.pin-text');
+            let $pinDetails = $pinMessTopbar.find('.pin-mess-details');
+            let pinMessId;
+
+            $message.find('.--mess').html(text);
             $message.find('.--edited').removeClass('hidden');
+            
+            // Update pin topbar when edit message
+            pinMessId = $pinDetails?.attr(PINNED_MESS_ID);
+            
+            if (!$pinDetails || pinMessId !== id) return;
+            const pinnedObjByRoom = getPinnedMessRoomsById(message.id.chatId);
+            pinnedObjByRoom.message = text
+            storePinnedMessRoomsById(message.id.chatId, pinnedObjByRoom)
+            $pinText.html(text);
         },
 
         onFinishPostMessage: (data) => {

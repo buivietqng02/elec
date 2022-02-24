@@ -366,11 +366,11 @@ define([
         }
 
         if (type === 9) {
-            mess = `Pin message: ${mess}`;
+            mess = `Pin: ${mess}`;
         }
 
         if (type === 8) {
-            mess = `Unpin message: ${mess}`;
+            mess = `Unpin: ${mess}`;
         }
 
         // Favourite Room

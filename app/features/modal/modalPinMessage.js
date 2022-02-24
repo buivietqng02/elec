@@ -23,14 +23,17 @@ define([
     let pinMessBar;
     let $pinnedMessage;
     let isPinned;
-    let pulseCancel;
     let isLoading = false;
+    let $confirmUnpin;
+    let $btnCancel;
+    let $spinner;
 
     const { PINNED_MESS_ID, PINNED_SEQUENCE, ATTRIBUTE_MESSAGE_ID } = constant;
     const {
         transformLinkTextToHTML,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        getAvatar
     } = functions;
 
     const {
@@ -47,20 +50,60 @@ define([
         });
     };
 
-    const unpinMessAPI = (currRoomId) => {
+    const unpinMessAPI = () => {
+        const currRoomId = GLOBAL.getCurrentRoomId();
+        $confirmUnpin.prop('disabled', true);
+        $spinner.show();
+
         API.delete(`chats/${currRoomId}/messages/unpin`).then(() => {
-            ALERT.show(GLOBAL.getLangJson().UNPIN_MESSAGE, 'alert');
+            $confirmUnpin.prop('disabled', false);
+            $btnCancel.click();
+            $spinner.hide();
+
+            ALERT.show(GLOBAL.getLangJson().UNPINNED_MESSAGE, 'alert');
         }).catch((err) => {
             console.log(err);
         });
     };
 
-    const unpinTopbar = () => {
-        pulseCancel = pinMessBar.querySelector('.pulse');
-        pulseCancel.classList.remove('hidden');
-        unpinMessBtn.disabled = true;
+    const modalConfirmUnpinMessage = (langJson) => `
+        <div class="modal fade" id="unpinMessModal" tabindex="-1" role="dialog" data-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h2 data-language="UNPIN_MESSAGE">
+                            ${langJson.UNPIN_MESSAGE}
+                        </h2>
+                        <p data-language="WOULD_YOU_LIKE_TO_UNPIN_THIS_MESS">
+                            ${langJson.WOULD_YOU_LIKE_TO_UNPIN_THIS_MESS}
+                        </p>
+                        <button type="button" class="confirm-unpin-btn btn btn-outline-primary btn-small float-right" disabled>
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            <lang data-language="UNPIN_MESSAGE">${langJson.UNPIN_MESSAGE}</lang>
+                        </button>
+                        <button data-language="CANCEL" type="button" data-dismiss="modal" aria-label="Close" class="btn btn-outline-secondary btn-small float-right mr-1">
+                            ${langJson.CANCEL}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
 
-        unpinMessAPI(GLOBAL.getCurrentRoomId());
+    const popupModalConfirmUnpin = () => {
+        let $modal = $('#unpinMessModal');
+        if (!$modal.length) {
+            $('body').append(modalConfirmUnpinMessage(GLOBAL.getLangJson()));
+            $modal = $('#unpinMessModal');
+        }
+        $confirmUnpin = $modal.find('.confirm-unpin-btn');
+        $btnCancel = $modal.find('.btn-outline-secondary');
+        $spinner = $modal.find('.spinner-grow');
+
+        $modal.modal('show');
+
+        $spinner.hide();
+        $confirmUnpin.prop('disabled', false);
+        $confirmUnpin.off().click(unpinMessAPI);
     };
 
     const scrollToOriginMess = (e) => {
@@ -74,9 +117,9 @@ define([
         }, 200);
     };
 
-    const addEventToClosePinBtn = () => {
+    const addEventToUnpinTopbarBtn = () => {
         unpinMessBtn = pinMessBar.querySelector('.unpin-mess-btn');
-        unpinMessBtn.addEventListener('click', unpinTopbar);
+        unpinMessBtn.addEventListener('click', popupModalConfirmUnpin);
     };
 
     const addEventToscrollOriginMess = () => {
@@ -89,16 +132,17 @@ define([
         if (!pinMessBar.classList.contains('hidden')) pinMessBar.classList.add('hidden');
     };
 
-    const topBarPinTemplate = (messId, pinSequence, pinname, message) => (
+    const topBarPinTemplate = (messId, pinSequence, pinname, message, avatar) => (
         `<div class="pin-mess-details" pinned-message-id="${messId}" pinned-sequence="${pinSequence}">
-            <div>
-                <i class="icon-pin"></i>
-            </div>
+            <i class="icon-pin"></i>
+           
             <div class="latest-pinned-message">
-                <div><lang data-language="">${GLOBAL.getLangJson().PINNED_MESSAGE}</lang></div>
+                <div>
+                    <img class="--img avatar" src="${avatar}"></img>
+                    <span class="pin-name">${pinname}</span>:
+                </div>
             
-                <span class="pin-name">${pinname}</span>:
-                <span class="pin-text">"${message}"</span>
+                <span class="pin-text">${message}</span>
             </div>
         </div>
 
@@ -106,8 +150,6 @@ define([
             <button class="btn btn-secondary unpin-mess-btn" data-toggle="tooltip" data-placement="bottom" title="${GLOBAL.getLangJson().UNPIN_MESSAGE}">
                 <i class="icon-close"></i>
             </button>
-
-            <div class="pulse hidden"></div>
         </div>
         `);
 
@@ -116,6 +158,7 @@ define([
         let pinname;
         let message;
         let pinSequence;
+        let avatar;
         removePinBar();
         if (!pinnedObj) return;
 
@@ -124,19 +167,21 @@ define([
                 messId, 
                 pinname, 
                 message, 
-                pinSequence 
+                pinSequence,
+                avatar
             } = pinnedObj);
         } else {
             messId = pinnedObj.id.messageId;
             pinname = pinnedObj.sender.name;
             message = transformLinkTextToHTML(htmlEncode(decodeStringBase64(pinnedObj.message)));
             pinSequence = pinnedObj.sequence;
+            avatar = getAvatar(pinnedObj.sender.id);
         }
 
         pinMessBar.classList.remove('hidden');
 
-        pinMessBar.innerHTML = topBarPinTemplate(messId, pinSequence, pinname, message);
-        addEventToClosePinBtn();
+        pinMessBar.innerHTML = topBarPinTemplate(messId, pinSequence, pinname, message, avatar);
+        addEventToUnpinTopbarBtn();
         addEventToscrollOriginMess();
     };
 
@@ -150,13 +195,13 @@ define([
         pinMessBtn.disabled = true;
     };
 
-    const updateToStoreRoomById = (roomId, pinEventsList, indx) => {
+    const updateToStoreRoomById = (roomId, pinMessObj) => {
          // update to storeRoomById
          const currentRoomList = getRoomById(roomId);
          const updatedRoomList = currentRoomList.map((item) => {
             const ite = { ...item };
-            if (ite.id.messageId === pinEventsList[indx].id.messageId) {
-                ite.pinned = pinEventsList[indx].pinned;
+            if (ite.id.messageId === pinMessObj.id.messageId) {
+                ite.pinned = pinMessObj.pinned;
             }
             
             return ite;
@@ -164,62 +209,61 @@ define([
         storeRoomById(roomId, updatedRoomList);
     };
 
+    const pinMess = (pinEventsList, indx) => {
+        const pinMessObj = pinEventsList[indx]?.message;
+        const pinnedObj = {
+            messId: pinMessObj.id.messageId,
+            pinname: pinMessObj.sender.name, 
+            message: htmlEncode(decodeStringBase64(pinMessObj.message)),
+            pinSequence: pinMessObj.sequence,
+            avatar: getAvatar(pinMessObj.sender.id)
+        };
+        renderPinnedMess(pinnedObj, true);
+
+        storePinnedMessRoomsById(pinMessObj.id.chatId, pinnedObj);
+        updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);
+
+        pinMessElement = listMessWraper.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${pinMessObj.id.messageId}"]`);
+
+        if (pinMessElement) pinMessElement.classList.add('pinned');
+    };
+
+    const unpinMess = (pinEventsList, indx) => {
+        const pinMessObj = pinEventsList[indx]?.message;
+        renderPinnedMess();
+
+        storePinnedMessRoomsById(pinMessObj.id.chatId, null);
+        updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);
+
+        pinMessElement = listMessWraper.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${pinMessObj.id.messageId}"]`);
+        
+        if (pinMessElement) pinMessElement.classList.remove('pinned');
+    };
+
     const handlePinMessageOnSync = (syncRes) => {
         console.log(syncRes);
         const messageSettingsSlideComp = require('features/chatbox/messageSettingsSlide');
-        const messList = syncRes.messages;
         const pinEventsList = syncRes.pinEvents;
         isLoading = false;
 
         enableBtn();
         messageSettingsSlideComp.offEventClickOutside();
-       
-        const pinMess = (indx) => {
-            const pinnedObj = {
-                messId: pinEventsList[indx]?.id.messageId,
-                pinname: messList[indx]?.sender.name, 
-                message: htmlEncode(decodeStringBase64(messList[indx]?.message)),
-                pinSequence: pinEventsList[indx]?.sequence
-            };
-            renderPinnedMess(pinnedObj, true);
 
-            storePinnedMessRoomsById(pinEventsList[indx]?.id.chatId, pinnedObj);
-            updateToStoreRoomById(pinEventsList[indx]?.id.chatId, pinEventsList, indx);
-
-            pinMessElement = listMessWraper.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${pinEventsList[indx]?.id.messageId}"]`);
-    
-            if (pinMessElement) pinMessElement.classList.add('pinned');
-        };
-
-        const unpinMess = (indx) => {
-            renderPinnedMess();
-
-            storePinnedMessRoomsById(pinEventsList[indx]?.id.chatId, null);
-            updateToStoreRoomById(pinEventsList[indx]?.id.chatId, pinEventsList, indx);
-
-            pinMessElement = listMessWraper.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${pinEventsList[indx]?.id.messageId}"]`);
-            
-            if (pinMessElement) pinMessElement.classList.remove('pinned');
-        };
-
-        const replacePin = () => {
-            unpinMess(0);
-            pinMess(1);
-        };
-
-        const purelyPinUnpin = () => {
-            if (messList[0].type === 8) unpinMess(0);
-            if (messList[0].type === 9) pinMess(0);
-        };
-
-        // case 1: Purely pin/ unpin
-        if (messList.length === 1) {
-            purelyPinUnpin();
+        if (pinEventsList.length === 1) {
+            if (pinEventsList[0].pinned) {
+                // Pin
+                pinMess(pinEventsList, 0);
+            } else {
+                // Unpin
+                unpinMess(pinEventsList, 0);
+            }
         }
 
-        // case 2: replace pin 
-        if (messList.length === 2) {
-            replacePin();
+        if (pinEventsList.length === 2) {
+            // Unpin
+            unpinMess(pinEventsList, 0);
+            // Pin
+            pinMess(pinEventsList, 1);
         }
     };
 
@@ -244,7 +288,7 @@ define([
             isPinned = $pinnedMessage.hasClass('pinned');
             
             if (isPinned) {
-                unpinMessAPI(GLOBAL.getCurrentRoomId());
+                popupModalConfirmUnpin();
             } else {
                 pinMessAPI(GLOBAL.getCurrentRoomId(), messageId);
             }

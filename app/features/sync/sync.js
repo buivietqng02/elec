@@ -288,8 +288,11 @@ define([
                     isPushNotification = true;
                     if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
-                        console.log(messagesResponse);
                         notificationComp.pushNotificationForMessage(messagesResponse[0], room);
+
+                        if (messagesResponse.length === 2) {
+                            notificationComp.pushNotificationForMessage(messagesResponse[1], room);
+                        } 
                     }
                 }
 
@@ -561,6 +564,7 @@ define([
 
                 isInit = true;
             }).catch((err) => {
+                console.log(err);
                 if (err.message !== 'Error refreshing token') {
                     // console.log(isLogin(), err.response?.status);
                     if (err.response?.status === 404 && isLogin()) {

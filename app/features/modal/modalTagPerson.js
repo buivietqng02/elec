@@ -88,13 +88,14 @@ define([
 
     const toggleTagModal = (e) => { 
         const text = e.target.value;
-        console.log(text.substring(1, text.length));
+        // console.log(text.substring(1, text.length));
 
         letterBeforeDelete = lastLetter;
         lastLetter = text.charAt(text.length - 1);
         letterBeforeLast = text.charAt(text.length - 2);
         
-        console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, letterBeforeLast: ${letterBeforeLast}, isMatch: ${isMatch}, isOpenTag: ${isOpenTag}`);
+        // console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, 
+        // letterBeforeLast: ${letterBeforeLast}, isMatch: ${isMatch}, isOpenTag: ${isOpenTag}`);
        
         if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) {
             const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');

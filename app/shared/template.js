@@ -551,13 +551,6 @@ define(['shared/icon'], (ICON) => ({
                             </li>
                         </ul>
                         <div class="--menu-item menu js-menu-messages">
-
-                            <button class="--pin menu__item js-menu-messages-pinmess">
-                                <div class="pulse hidden"></div>
-                                <i class="xm icon-pin-outline"></i>
-                                <lang data-language="PIN_MESSAGE"></lang>
-                            </button>
-
                             <button class="--cmt menu__item js-menu-messages-cmt">
                                 <i class="xm icon-comment-o"></i>
                                 <lang data-language="COMMENT"></lang>
@@ -578,6 +571,11 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty"></i>
                                 <lang data-language="BOOKMARK"></lang>
+                            </button>
+                            <button class="--pin menu__item js-menu-messages-pinmess">
+                                <div class="pulse hidden"></div>
+                                <i class="xm icon-pin-outline"></i>
+                                <lang data-language="PIN_MESSAGE"></lang>
                             </button>
                             <button class="--update menu__item js-menu-messages-edit">
                                 <i class="xm icon-edit"></i>

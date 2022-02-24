@@ -41,17 +41,26 @@
             overflow: hidden;
             text-overflow: ellipsis;
 
-            div:first-child {
-                font-style:oblique;
-                font-size: 12px;
-            }
+            display: inline-flex;
+            align-items: center;
 
-            .pin-name {
-                color:#0093FF;
+            div {
+                display: flex;
+                align-items: center;
+                margin-right: 5px; 
+                .avatar {
+                    margin-right: 5px;
+                }
+    
+                .pin-name {
+                    color:#0093FF;
+                }
             }
-
+        
             .pin-text {
-
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             } 
         }
 
@@ -70,14 +79,6 @@
             align-items: center;
             border-radius: 100%;
             margin-right: 0.5em;
-        }
-
-        .pulse {
-            position: absolute;
-            width: 31px;
-            height: 31px;
-            top: 20%;
-            right: 21px;
         }
     }
 }

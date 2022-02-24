@@ -288,7 +288,7 @@ define([
             commentState = false;
             messageId = 0;
 
-            $input.off('keyup').keyup(onKeyUp);
+            $input.off('keydown').keydown(onKeyUp);
             $input.off('paste').bind('paste', onPaste);
             $btnSend.off().click(onSendMessage);
             $btnCloseCommentBox.off().click(onHideCommentBox);
