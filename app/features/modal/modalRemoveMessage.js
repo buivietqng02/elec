@@ -9,7 +9,13 @@ define(['shared/data', 'features/chatbox/chatboxInput'], (GLOBAL, chatboxInputCo
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <p><lang data-language="LEAVING_GROUP_CHAT">${langJson.ARE_YOU_SURE_REMOVE_MESSAGE}</lang></p>
+                        <h5 data-language="ARE_YOU_SURE_REMOVE_MESSAGE">
+                            ${langJson.ARE_YOU_SURE_REMOVE_MESSAGE}
+                        </h5>
+                        <p>
+                            <lang data-language="ACTION_CANT_BE_UNDONE">${langJson.ACTION_CANT_BE_UNDONE}</lang>
+                        </p>
+                        <br />
                         <button style="margin-left: 10px" type="button" class="btn btn-danger btn-small float-right">
                             ${langJson.REMOVE}
                         </button>

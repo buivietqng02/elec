@@ -2,6 +2,7 @@
     "A": "__________________________________",
     "ABOUT": "关于",
     "ACCEPT": "接受",
+    "ACTION_CANT_BE_UNDONE": "This action cannot be undone.",
     "ADD_TO_FAVOURITES": "Added to favourites",
     "ARE_YOU_SURE_REMOVE_MESSAGE": "你确定要删除这条消息吗？",
     "ARE_YOU_SURE_UNPIN_MESSAGE": "Are you sure you want to unpin this message?",

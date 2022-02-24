@@ -2,6 +2,7 @@
     "A": "__________________________________",
     "ABOUT": "Acerca de",
     "ACCEPT": "Aceptar",
+    "ACTION_CANT_BE_UNDONE": "Esta acción no se puede deshacer.",
     "ARE_YOU_SURE": "Estas seguro?",
     "ARE_YOU_SURE_SEND_FILE": "¿Estás seguro de que quieres enviar este archivo?",
     "ARE_YOU_SURE_REMOVE_MESSAGE": "¿Estás seguro de que deseas eliminar este mensaje?",
