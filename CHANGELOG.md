@@ -4,6 +4,17 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.17] - 2022-02-24
+### Add
+- Enhanced search tool.
+- New functionality: Pin a message. When you pin a message it shows up at the top of the conversation. To pin a message, just click on the three-line menu at the bottom-right of any message and select "Pin message".
+### Update
+- Enables play/stop of voice messages.
+### Fix
+- Fixes the issue that didn't show the year in date when the message was from a different year.
+- Fixes the issues with scrolling to previous messages.
+- Small UI fixes.
+
 ### [4.16] - 2022-01-31
 ### Add
 - Adds the option to "bookmark" a message.
