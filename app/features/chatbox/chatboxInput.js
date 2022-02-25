@@ -79,7 +79,7 @@ define([
         }, 10);
     };
 
-    const onKeyUp = (e) => {
+    const onKeyDown = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
 
         if (enterKeyIsNewLine) {
@@ -101,9 +101,9 @@ define([
         }
 
         handleInputAutoExpand();
-
-        modalTagPerson.onRenderTagModal(e);
     };
+
+    // const onTagPerson = (e) =>  modalTagPerson.onRenderTagModal(e);
 
     const onPaste = () => handleInputAutoExpand();
 
@@ -288,12 +288,13 @@ define([
             commentState = false;
             messageId = 0;
 
-            $input.off('keydown').keydown(onKeyUp);
+            $input.off('keydown').keydown(onKeyDown);
             $input.off('paste').bind('paste', onPaste);
             $btnSend.off().click(onSendMessage);
             $btnCloseCommentBox.off().click(onHideCommentBox);
 
-            modalTagPerson.onInit();
+            // modalTagPerson.onInit();
+            // $input.off('keyup').keyup(onTagPerson);
         },
 
         onUpdate: (id, value) => {

@@ -29,6 +29,11 @@ define([
     let isLoading = false;
     let membersList = [];
     let isMatch = false;
+    let tagPersonItem;
+    
+    let input;
+
+    // let selectedTagList = [];
     
     const { 
         render, getAvatar, htmlEncode 
@@ -42,11 +47,38 @@ define([
     `;
 
     const closeModalTag = () => {
+        console.log('close modal');
         isOpenTag = false;
         tagPersonContainer.innerHTML = '';
     };
 
+    const selectTagPerson = (e) => {
+        // console.log(e.currentTarget);
+        const tagPerson = e.currentTarget;
+        const namePerson = tagPerson.querySelector('span').textContent;
+        closeModalTag();
+        // console.log(namePerson);
+        // console.log(currentInputText);
+
+        console.log(input.value.lastIndexOf(' @'));
+
+        const replaceText = input.value.substring(0, input.value.lastIndexOf(' @') + 2);
+        console.log(replaceText);
+        const newValue = replaceText.concat(namePerson);
+
+        const startPosition = input.value.lastIndexOf(' @');
+        const lengthName = namePerson.length;
+
+        console.log(lengthName);
+        console.log(startPosition);
+        console.log(input.value.substring(startPosition, startPosition + lengthName));
+
+        input.value = newValue;
+    };
+
     const renderTemplate = (search) => {
+        tagPersonContainer.innerHTML = '';
+
         let arrMemberHTML = '';
         const filteredList = membersList.filter(mem => mem.user.name.includes(search));
         console.log(filteredList);
@@ -54,9 +86,11 @@ define([
 
         if (filteredList.length === 0) {
             renderList = [...membersList];
+            console.log('not match');            
             isMatch = false;
         } else {
             renderList = [...filteredList];
+            console.log('match');
             isMatch = true;
         }
         renderList.forEach(member => {
@@ -70,9 +104,16 @@ define([
 
             tagPersonContainer.innerHTML = arrMemberHTML;
         });
+
+        tagPersonItem = document.querySelectorAll('.tag-person-item');
+        tagPersonItem.forEach(item => {
+            item.addEventListener('click', selectTagPerson);
+        });
     };
     
     const getGroupMembers = () => {
+        console.log('call API');
+
         isLoading = true;
         rId = GLOBAL.getCurrentRoomId();
 
@@ -88,7 +129,8 @@ define([
 
     const toggleTagModal = (e) => { 
         const text = e.target.value;
-        // console.log(text.substring(1, text.length));
+
+        const searchText = text.substring(text.lastIndexOf(' @') + 2, text.length);
 
         letterBeforeDelete = lastLetter;
         lastLetter = text.charAt(text.length - 1);
@@ -96,8 +138,12 @@ define([
         
         // console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, 
         // letterBeforeLast: ${letterBeforeLast}, isMatch: ${isMatch}, isOpenTag: ${isOpenTag}`);
-       
+        // console.log(searchText);
+        
+        // Open tag modal
         if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) {
+            if (!text.includes('@')) return;
+            
             const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
             const roomInfo = sidebarRoomListComp.getRoomInfoOnClick();
            
@@ -109,13 +155,16 @@ define([
             getGroupMembers();
         }
         
-        if (((letterBeforeDelete === '@' && e.keyCode === 8) || (lastLetter !== '@' && !isMatch))
-         && isOpenTag) {
-            console.log('close modal');
+        // close tag modal
+        if (((letterBeforeDelete === '@' && e.keyCode === 8) || (!isMatch && lastLetter !== '@' && searchText.length > 1)) && isOpenTag) {
             closeModalTag();
         }
-        
-        if (isOpenTag) renderTemplate(text.substring(1, text.length));
+
+        if (text === '' && e.keyCode === 8) closeModalTag();
+
+        if (isOpenTag && letterBeforeDelete !== '@') {
+            renderTemplate(searchText);
+        }
     };
 
     return {
@@ -124,6 +173,7 @@ define([
             tagPersonContainer = document.querySelector('.js-tag-person');
             isLoading = false;
             isOpenTag = false;
+            input = document.querySelector('.js_endter_mess');
             console.log(isLoading);
         },
 
