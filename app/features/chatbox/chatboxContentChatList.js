@@ -5,6 +5,7 @@ define([
 ) => {
     const ob = {};
     let rooms = {};
+    const pinnedMessRooms = {};
 
     ob.getRoomById = (id) => rooms[id];
 
@@ -15,6 +16,12 @@ define([
     ob.removeRoomById = (id) => {
         const { [id]: _, ...newRooms } = rooms;
         rooms = newRooms;
+    };
+
+    ob.getPinnedMessRoomsById = (id) => pinnedMessRooms[id];
+
+    ob.storePinnedMessRoomsById = (id, value) => {
+        pinnedMessRooms[id] = value;
     };
 
     ob.handleSyncData = (messObject, id) => {

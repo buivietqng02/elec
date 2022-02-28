@@ -5,7 +5,7 @@ define(['shared/data'], (GLOBAL) => {
                 <div class="modal-content">
                     <div class="modal-body">
                         <img src="assets/images/icon.png" alt="Cross messenger">
-                        <h2 data-language="CROSS_MESSENGER">${langJson.CROSS_MESSENGER}</h2>
+                        <h2 data-language="CROSS_MESSENGER" >${langJson.CROSS_MESSENGER}</h2>
                         <p>
                             xm-support@iptp.net
                         </p>
@@ -14,6 +14,9 @@ define(['shared/data'], (GLOBAL) => {
                         </p>
                         <p>
                             <lang data-language="SERVER_VERSION">${langJson.SERVER_VERSION}</lang>: ${version}
+                        </p>
+                        <p class="learn-more">
+                            <a href="https://www.iptp.net/xm/" target="_blank">Learn more</a>
                         </p>
                     </div>
                 </div>

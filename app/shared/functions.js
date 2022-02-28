@@ -82,8 +82,14 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         const timeMessage = moment(time);
         const today = moment();
         const yesterday = moment().subtract(1, 'days');
+        const messageYear = timeMessage._d.getFullYear();
+        const currentYear = today._d.getFullYear();
         let dateFormat = 'D MMM';
         if (isSearch) {
+            dateFormat = 'D MMM YYYY';
+        }
+
+        if (messageYear !== currentYear) {
             dateFormat = 'D MMM YYYY';
         }
 

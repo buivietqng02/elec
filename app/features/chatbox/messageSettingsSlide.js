@@ -6,7 +6,8 @@ define([
     'features/modal/modalForwardMessage',
     'features/modal/modalMessageInfo',
     'features/modal/modalRemoveMessage',
-    'features/modal/modalBookmarkMessage'
+    'features/modal/modalBookmarkMessage',
+    'features/modal/modalPinMessage'
 ], (
     GLOBAL,
     ALERT,
@@ -15,7 +16,8 @@ define([
     modalForwardMessageComp,
     modalMessageInfoComp,
     modalRemoveMessage,
-    modalBookmarkMessageComp
+    modalBookmarkMessageComp,
+    modalPinMessageComp
 ) => {
     const message = {};
     let $message;
@@ -37,6 +39,7 @@ define([
         const { useridName, userOfficiallyName } = $name.data();
         let mess = functions.stripTags(messHtml);
         let hasFile = 0;
+        const sequence = $message.find('.show_origin_btn').attr('sequence_number')
 
         if ($message.hasClass('have-file')) {
             hasFile = 1;
@@ -50,7 +53,8 @@ define([
             mess,
             name,
             hasFile,
-            officiallyName: userOfficiallyName
+            officiallyName: userOfficiallyName,
+            origin_sequence: sequence
         });
     };
 
@@ -128,6 +132,7 @@ define([
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
         const isBookmark = $message.hasClass('bookmark');
+        const isPinned = $message.hasClass('pinned');
 
         if (isActiveUser) {
             if ($message.find('.--mess.fwme').length) {
@@ -151,10 +156,18 @@ define([
             $copyTextBtn.show();
         }
 
+        // If bookmark message
         if (isBookmark) {
             $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
         } else {
             $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
+        }
+
+        // If pinned message
+        if (isPinned) {
+            $textPinBtn.html(GLOBAL.getLangJson().UNPIN_MESSAGE);
+        } else {
+            $textPinBtn.html(GLOBAL.getLangJson().PIN_MESSAGE);
         }
     };
 
@@ -163,6 +176,11 @@ define([
             offEventClickOutside();
         }
     });
+
+    const onPinMessage = () => {
+        modalPinMessageComp.onPinMess($message);
+        // offEventClickOutside();
+    }
 
     return {
         onInit: () => {
@@ -177,6 +195,8 @@ define([
             $messageInfoBtn = $('.js-menu-messages-info');
             $bookmarkMessBtn = $('.js-menu-messages-bookmark');
             $textBookmarkBtn = $('.js-menu-messages-bookmark lang');
+            $pinMessBtn = $('.js-menu-messages-pinmess');
+            $textPinBtn = $('.js-menu-messages-pinmess lang');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
@@ -185,6 +205,7 @@ define([
             $copyTextBtn.off().click(onCopyText);
             $messageInfoBtn.off().click(onInfo);
             $bookmarkMessBtn.off().click(onBookmark);
+            $pinMessBtn.off().click(onPinMessage);
         },
 
         onShow: (e) => {

@@ -2,12 +2,14 @@ define(['shared/data', 'shared/functions'], (GLOBAL, functions) => {
     const pushNotificationForMessage = (message, room) => {
         // Notification for edit message
         const editMessage = message.updated ? ' (Edited message)' : '';
+        const unpinMessage = message.type === 8 ? ' (Unpinned message)' : '';
+        const pinMessage = message.type === 9 ? ' (Pinned message)' : '';
 
         const title = room.group ? room.subject : message.sender.name;
         const decodedMessage = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
         const text = `${room.group ? `${message.sender.name}: ${decodedMessage}` : decodedMessage}`;
 
-        const notification = new Notification(title + editMessage, {
+        const notification = new Notification(title + editMessage + unpinMessage + pinMessage, {
             body: text.replace(/<[^>]+>/g, ''),
             icon: '/assets/images/icon.png'
         });

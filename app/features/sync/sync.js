@@ -11,7 +11,8 @@ define([
     'features/notification/notification',
     'features/modal/modalPhoneRequest',
     'shared/alert',
-    'features/modal/modalLogout'
+    'features/modal/modalLogout',
+    'features/modal/modalPinMessage'
 ], (
     constant,
     API,
@@ -25,7 +26,8 @@ define([
     notificationComp,
     modalPhoneRequest,
     ALERT,
-    modalLogout
+    modalLogout,
+    modalPinMessage
 ) => {
     let timeout;
     let isInit = false;
@@ -88,6 +90,7 @@ define([
 
         if (!messages[lastNum].updated && !messages[lastNum].deleted) {
             newRoom.lastMessage = messages[messages.length - 1].message;
+            newRoom.type = messages[messages.length - 1].type;
         }
 
         if (currentRoomId !== room.id) {
@@ -286,6 +289,10 @@ define([
                     if (messages[messages.length - 1].type !== 6
                         && messages[messages.length - 1].type !== 7) {
                         notificationComp.pushNotificationForMessage(messagesResponse[0], room);
+
+                        if (messagesResponse.length === 2) {
+                            notificationComp.pushNotificationForMessage(messagesResponse[1], room);
+                        } 
                     }
                 }
 
@@ -551,8 +558,13 @@ define([
                     handleReactionMessageEvent(res.reactionEvents);
                 }
 
+                if (res?.pinEvents?.length) {
+                    modalPinMessage.handlePinMessageOnSync(res);
+                }
+
                 isInit = true;
             }).catch((err) => {
+                console.log(err);
                 if (err.message !== 'Error refreshing token') {
                     // console.log(isLogin(), err.response?.status);
                     if (err.response?.status === 404 && isLogin()) {

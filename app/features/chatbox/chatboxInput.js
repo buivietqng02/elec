@@ -2,12 +2,14 @@ define([
     'app/constant',
     'shared/functions',
     'shared/api',
-    'shared/data'
+    'shared/data',
+    'features/modal/modalTagPerson'
 ], (
     constant,
     functions,
     API,
-    GLOBAL
+    GLOBAL,
+    modalTagPerson
 ) => {
     const {
         htmlDecode,
@@ -77,7 +79,7 @@ define([
         }, 10);
     };
 
-    const onKeydown = (e) => {
+    const onKeyDown = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
 
         if (enterKeyIsNewLine) {
@@ -100,6 +102,8 @@ define([
 
         handleInputAutoExpand();
     };
+
+    // const onTagPerson = (e) =>  modalTagPerson.onRenderTagModal(e);
 
     const onPaste = () => handleInputAutoExpand();
 
@@ -161,19 +165,8 @@ define([
         awaitProcessClone.map((item, index) => {
             if( item?.idLocal === data?.idLocal) {
                 count = count + 1
-            } 
-            // else {
-            //     if(awaitProcessClone.length === 1){
-            //         count = 0;
-            //     }
-            // }
+            }
         })
-
-        // console.log('clone await array', awaitProcessClone); 
-        // console.log('data input', data);
-        // console.log('response ID', responseID)  
-        // console.log("new array", newArray)
-        // console.log(count)
 
         // Fixing repeating messages
         if(count > 1){
@@ -295,10 +288,13 @@ define([
             commentState = false;
             messageId = 0;
 
-            $input.off('keydown').keydown(onKeydown);
+            $input.off('keydown').keydown(onKeyDown);
             $input.off('paste').bind('paste', onPaste);
             $btnSend.off().click(onSendMessage);
             $btnCloseCommentBox.off().click(onHideCommentBox);
+
+            // modalTagPerson.onInit();
+            // $input.off('keyup').keyup(onTagPerson);
         },
 
         onUpdate: (id, value) => {
@@ -320,12 +316,13 @@ define([
                 chatId: object.chatId,
                 mess: object.mess,
                 name: object.officiallyName,
-                userId: object.userId
+                userId: object.userId,
+                origin_sequence: object.sequence
             };
-
+           
             $input.focus();
             $commentWrapper.show();
-            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(object.mess)}</span>`);
+            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(commentState.mess)}</span>`);
         },
 
         onAddEmoji: (emoji) => {

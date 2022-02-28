@@ -2,7 +2,7 @@
   "name": "Cross Messenger",
   "short_name": "XM",
   "lang": "en-US",
-  "start_url": "index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "icons": [

@@ -33,6 +33,10 @@ define(['shared/functions'], (functions) => {
                 params.class = 'alert-success';
             }
 
+            if (type === 'dark') {
+                params.class = 'alert-dark';
+            }
+
             const $alert = $(render(template, params));
             $wrapper.prepend($alert);
 

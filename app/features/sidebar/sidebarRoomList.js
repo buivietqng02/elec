@@ -7,7 +7,7 @@ define([
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxTopbar',
     'features/chatbox/chatboxAttach',
-    'features/chatbox/chatboxSearch',
+    'features/modal/modalSearchMessage',
     'features/modal/modalAcceptInvitation',
     'features/modal/modalMediaAndFiles',
     'features/modal/modalBookmarkMessage'
@@ -21,7 +21,7 @@ define([
     chatboxInputComp,
     chatboxTopbarComp,
     chatboxAttachComp,
-    chatboxSearchComp,
+    modalSearchMessage,
     modalAcceptInvitationComp,
     viewMediaAndFilesComp,
     modalBookmarkMessage
@@ -101,7 +101,6 @@ define([
         $this.addClass('active');
 
         chatboxInputComp.onClear();
-        chatboxSearchComp.onCloseSearchBox();
         // chatboxAttachComp.markPhone(roomInfo.group);
         chatboxTopbarComp.onRenderInfomation(roomInfo);
         chatboxContentComp.onLoadMessage(roomInfo);
@@ -110,6 +109,10 @@ define([
         if (!mediaFilesWraper.classList.contains('hidden')) {
             viewMediaAndFilesComp.closeMediaAndFilesModal();
         } 
+
+        // Close search view when click on sidebar
+        modalSearchMessage.closeViewSearch();
+
         chatboxContentComp.onSwitchRoomWhileShowMessMediaAndFiles();
 
         // Close view bookmark message list when click other room
@@ -136,6 +139,8 @@ define([
     };
 
     return {
-        onInit
+        onInit,
+
+        getRoomInfoOnClick: () => roomInfo
     };
 });

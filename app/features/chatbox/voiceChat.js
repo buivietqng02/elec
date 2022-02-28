@@ -69,7 +69,7 @@ define([
 
         let countDownTimmer;
         const audioMicroPic = document.querySelector(`#btn-${id} .icon-mic-js`);
-        const isPlaying = playStopBtn.getAttribute('isPlaying');
+        const isPlaying = playStopBtn.getAttribute('isplaying');
         const audioTime = document.querySelector(`#btn-${id} .audio-timeIndicate`);
         const audioBar = document.querySelectorAll(`#btn-${id} .audio-bar`);
 
@@ -85,7 +85,7 @@ define([
         const durationAudio = parseFloat(audio.getAttribute('duration'));
 
         if (isPlaying === 'true') {
-            playStopBtn.setAttribute('isPlaying', false);
+            playStopBtn.setAttribute('isplaying', false);
             audio.pause();
             audioMicroPic.classList.replace('icon-microphoneVoiceBlue', 'icon-microphoneVoice');
             clearInterval(countDownTimmer);
@@ -114,7 +114,7 @@ define([
                     audioProgress[1].style.animationDuration = `${durationAudio / 2}s`;
                     audioProgress[1].style.animationDelay = `${durationAudio / 2}s`;
 
-                    playStopBtn.setAttribute('isPlaying', true);
+                    playStopBtn.setAttribute('isplaying', true);
                 })
                     .catch(error => {
                         console.log(error);
@@ -126,7 +126,7 @@ define([
 
         audio.addEventListener('ended', () => {
             audioMicroPic.classList.replace('icon-microphoneVoiceBlue', 'icon-microphoneVoice');
-            playStopBtn.setAttribute('isPlaying', false);
+            playStopBtn.setAttribute('isplaying', false);
             clearInterval(countDownTimmer);
 
             audioTime.textContent = timeConvert(durationAudio);
@@ -137,7 +137,7 @@ define([
     };
 
     const audioPlayStopFunc = (e) => {
-        e.target.setAttribute('isPlaying', false);
+        if (!e.target.getAttribute('isplaying')) e.target.setAttribute('isplaying', false);
         addEventListenerToAudioRecorder(getAudioID(e.target.id));
     };
 
