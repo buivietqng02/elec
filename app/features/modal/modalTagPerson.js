@@ -35,7 +35,10 @@ define([
     const tagModal = `
     <div class="tag-person-item" tabindex="-1" role="dialog">
         <img class="--img avatar" src="{src}">
-        <span ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</span>
+        <div class="tag-info">
+            <div ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</div>
+            <small class="tag-email">{email}</small>
+        </div>
     </div>
     `;
 
@@ -138,7 +141,8 @@ define([
             const arrItem = {
                 id: member.user.id,
                 currentName: htmlEncode(member.user.name),
-                src: getAvatar(member.user.id)
+                src: getAvatar(member.user.id),
+                email: member.user.email
             };
 
             arrMemberHTML += render(tagModal, arrItem);

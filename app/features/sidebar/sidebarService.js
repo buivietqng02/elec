@@ -377,7 +377,7 @@ define([
         }
 
         // In case last message contains tag person
-        mess = chatboxContentFunctions.renderTag(mess);
+        mess = chatboxContentFunctions.renderTag(mess, true);
 
         // Favourite Room
         const listFavouritesRooms = GLOBAL.getFavouritesRooms()

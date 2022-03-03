@@ -185,7 +185,7 @@ define([
         return '';
     };
 
-    ob.renderTag = (text) => {
+    ob.renderTag = (text, isSidebar) => {
         let newTextTag = text;
         if (text.includes('@[user:') && text.length > 22) {
             const tagArr = [];
@@ -200,7 +200,12 @@ define([
             tagArr.forEach((item) => {
                 const userid = item.split(', ')[0];
                 const name = item.split(', ')[1];
-                newTextTag = newTextTag.replace(`@[user:${item}]`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
+
+                if (isSidebar) {
+                    newTextTag = newTextTag.replace(`@[user:${item}]`, `<span userid="${userid}">@${name}</span>`) || text;
+                } else {
+                    newTextTag = newTextTag.replace(`@[user:${item}]`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
+                }
             }); 
         }
 
