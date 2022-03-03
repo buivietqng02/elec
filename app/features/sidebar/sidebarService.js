@@ -4,12 +4,14 @@ define([
     'shared/functions',
     // 'shared/api',
     // 'shared/alert'
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     GLOBAL,
     functions,
     // API,
     // ALERT
+    chatboxContentFunctions
     
 ) => {
     const contactHeight = $('.contacts').eq(0).height() || 1000;
@@ -49,6 +51,7 @@ define([
             <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute} {isFavourite} slide-menu" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
                 <img ${ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
                 <div class="badge badge-orange">{unread}</div>
+                <div class="badge-tag hidden">@</div>
                 <div class="p-pl-10 meta">
                     <div class="--name contact__name p-1-line">
                         <i class="xm icon-volume-mute" aria-hidden="true"></i>
@@ -372,6 +375,9 @@ define([
         if (type === 8) {
             mess = `Unpin: ${mess}`;
         }
+
+        // In case last message contains tag person
+        mess = chatboxContentFunctions.renderTag(mess);
 
         // Favourite Room
         const listFavouritesRooms = GLOBAL.getFavouritesRooms()

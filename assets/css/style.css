@@ -1847,14 +1847,32 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 
 .messages__input {
   position: relative;
-  top: 4px;
-  width: calc(100% - 50px);
+  /* top: 4px; */
+  max-width: calc(100% - 50px);
   border: 0;
   background: transparent;
-  height: 43px;
+  height: 48px;
   padding: 0.5rem 1rem 0.5rem 3rem;
   resize: none;
+
+  -moz-appearance: textfield-multiline;
+  -webkit-appearance: textarea;
+ 
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  caret-color: #08c;
 }
+
+.messages__input[placeholder]:empty:before {
+  content: attr(placeholder);
+  color: rgba(85, 85, 85, 0.712); 
+}
+
+.messages__input[placeholder]:empty:focus:before {
+  content: "";
+}
+
 .messages__input.de-active{
   height: 43px;
   display: none !important;

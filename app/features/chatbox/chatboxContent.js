@@ -14,6 +14,7 @@ define([
     'features/sidebar/sidebarLeftBar',
     'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
+    'features/modal/modalTagPerson'
 ], (
     constant,
     API,
@@ -29,7 +30,8 @@ define([
     sidebarConferenceComp,
     sidebarLeftBarComp,
     modalBookmarkMessage,
-    modalPinMessage
+    modalPinMessage,
+    modalTagPerson
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -243,6 +245,10 @@ define([
         if (originMessageEle) {
             originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
             originMessageEle.classList.add('activeScrollTo');
+
+            setTimeout(() => {
+                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 2000)
 
             setTimeout(() => {
                 originMessageEle.classList.remove('activeScrollTo');
@@ -616,6 +622,9 @@ define([
 
             // Scroll to origin quoted message
             $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e));
+
+            // View tagged profile
+            $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person', (e) => modalTagPerson.handleViewTagProfile(e));
 
             modalPinMessage.onInit();
         },

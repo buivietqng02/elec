@@ -4,14 +4,16 @@ define([
     'shared/api',
     'shared/alert',
     'shared/functions',
-    'features/chatbox/chatboxContentChatList'
+    'features/chatbox/chatboxContentChatList',
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     GLOBAL,
     API, 
     ALERT,
     functions,
-    chatboxContentChatListComp
+    chatboxContentChatListComp,
+    chatboxContentFunctions
 ) => {
     let listMessWraper;
     let pinMessElement;
@@ -121,7 +123,7 @@ define([
         const selectedPinEle = e.currentTarget;
         const messId = selectedPinEle.getAttribute(PINNED_MESS_ID);
         const sequence = selectedPinEle.getAttribute(PINNED_SEQUENCE);
-        console.log(messId, sequence);
+        // console.log(messId, sequence);
         setTimeout(() => {
             chatboxContentComp.onShowExactOriginMessage(messId, sequence);
         }, 200);
@@ -187,6 +189,9 @@ define([
             pinSequence = pinnedObj.sequence;
             avatar = getAvatar(pinnedObj.sender.id);
         }
+
+        // Render if tagged message
+        message = chatboxContentFunctions.renderTag(message);
 
         pinMessBar.classList.remove('hidden');
 

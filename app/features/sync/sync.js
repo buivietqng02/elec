@@ -12,7 +12,8 @@ define([
     'features/modal/modalPhoneRequest',
     'shared/alert',
     'features/modal/modalLogout',
-    'features/modal/modalPinMessage'
+    'features/modal/modalPinMessage',
+    'features/modal/modalTagPerson'
 ], (
     constant,
     API,
@@ -27,7 +28,8 @@ define([
     modalPhoneRequest,
     ALERT,
     modalLogout,
-    modalPinMessage
+    modalPinMessage,
+    modalTagPerson
 ) => {
     let timeout;
     let isInit = false;
@@ -560,6 +562,11 @@ define([
 
                 if (res?.pinEvents?.length) {
                     modalPinMessage.handlePinMessageOnSync(res);
+                }
+
+                // Tag event
+                if (res?.tagEvents?.length) {
+                    modalTagPerson.onSyncTag(res.tagEvents);
                 }
 
                 isInit = true;

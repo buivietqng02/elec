@@ -119,6 +119,10 @@ define([
         if (modalBookmarkMessage.onGetIsViewingBookmark()) {
             modalBookmarkMessage.onCloseViewBookmarks();
         }
+
+        // Remove tag badge on room click
+        const badgeTag = e.currentTarget.querySelector('.badge-tag');
+        if (!badgeTag.classList.contains('active')) badgeTag.classList.add('hidden');
     };
 
     const onInit = () => {

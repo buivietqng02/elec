@@ -610,7 +610,7 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="mess-fw-box"></div>
                                 <i class="xm icon-close mess-fw-box-close" role="button" tabindex="0"></i>
                             </div>
-                            <textarea class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..."></textarea>
+                            <div class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..." contenteditable="true"></div>
 
                             <!-- Voice & send group button --> 
                             <div class="input-wrap-group-btn">
