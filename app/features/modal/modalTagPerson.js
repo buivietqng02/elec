@@ -36,7 +36,7 @@ define([
     <div class="tag-person-item" tabindex="-1" role="dialog">
         <img class="--img avatar" src="{src}">
         <div class="tag-info">
-            <div ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</div>
+            <div class="tag-name" ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</div>
             <small class="tag-email">{email}</small>
         </div>
     </div>
@@ -86,9 +86,9 @@ define([
             tagPerson = value;
         }
 
-        const namePerson = tagPerson.querySelector('span').textContent;
+        const namePerson = tagPerson.querySelector('.tag-name').textContent;
 
-        const userId = tagPerson.querySelector('span').getAttribute('data-userid-name');
+        const userId = tagPerson.querySelector('.tag-name').getAttribute('data-userid-name');
         closeModalTag();
     
         const selectedPerson = {
