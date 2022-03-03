@@ -214,7 +214,7 @@ define([
         if (modalTagPerson.getPossibleEnter()) return;
 
         tagList.forEach(item => {
-            text = text.replace(`@${item.innerText}`, `@[user:${item.getAttribute('userid')}, ${item.innerText}]`)
+            text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
             userIdTagList.push(item.getAttribute('userid'));
         })
 

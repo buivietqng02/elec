@@ -187,24 +187,27 @@ define([
 
     ob.renderTag = (text, isSidebar) => {
         let newTextTag = text;
-        if (text.includes('@[user:') && text.length > 22) {
+        if (text.includes('@{[user:') && text.length > 23) {
             const tagArr = [];
-            const splitText = text.split('@[user:');
+            const splitText = text.split('@{[user:');
+            console.log(splitText);
             splitText.forEach(item => {
-                const indexBracket = item.indexOf(']');
+                const indexBracket = item.indexOf(']}');
                 if (indexBracket >= 0 && item.indexOf(',') >= 0) {
                     tagArr.push(item.substring(0, indexBracket));
                 }
             });
-           
+            
+            console.log(tagArr);
+
             tagArr.forEach((item) => {
                 const userid = item.split(', ')[0];
                 const name = item.split(', ')[1];
 
                 if (isSidebar) {
-                    newTextTag = newTextTag.replace(`@[user:${item}]`, `<span userid="${userid}">@${name}</span>`) || text;
+                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span userid="${userid}">@${name}</span>`) || text;
                 } else {
-                    newTextTag = newTextTag.replace(`@[user:${item}]`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
+                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
                 }
             }); 
         }
