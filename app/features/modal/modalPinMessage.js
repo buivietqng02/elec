@@ -191,7 +191,7 @@ define([
         }
 
         // Render if tagged message
-        message = chatboxContentFunctions.renderTag(message);
+        message = chatboxContentFunctions.renderTag(message, true);
 
         pinMessBar.classList.remove('hidden');
 
@@ -258,7 +258,6 @@ define([
     };
 
     const handlePinMessageOnSync = (syncRes) => {
-        console.log(syncRes);
         const currRoomId = GLOBAL.getCurrentRoomId();
         const roomOnSyncId = syncRes?.pinEvents[0]?.message?.id?.chatId;
 

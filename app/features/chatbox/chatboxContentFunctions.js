@@ -241,6 +241,8 @@ define([
             };
 
             let text = htmlEncode(decodeStringBase64(message));
+            // Render in case message includes tag person
+            text = ob.renderTag(text);
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -351,9 +353,6 @@ define([
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-
-            // Render in case message includes tag person
-            text = ob.renderTag(text);
            
             data.mess = transformLinkTextToHTML(text);
 
