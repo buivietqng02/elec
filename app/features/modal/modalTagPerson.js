@@ -179,7 +179,7 @@ define([
     const getGroupMembers = () => {
         console.log('call API');
         rId = GLOBAL.getCurrentRoomId();
-
+        console.log(rId);
         API.get(`chats/${rId}`).then((res) => {
             if (res.members) {
                 isLoading = false;
@@ -228,7 +228,7 @@ define([
 
             console.log('open modal');
             isOpenTag = true;
-            tagPersonContainer.innerHTML = tagModal;
+            // tagPersonContainer.innerHTML = tagModal;
             getGroupMembers();
 
             isLoading = true;
