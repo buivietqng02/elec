@@ -190,15 +190,12 @@ define([
         if (text.includes('@{[user:') && text.length > 23) {
             const tagArr = [];
             const splitText = text.split('@{[user:');
-            console.log(splitText);
             splitText.forEach(item => {
                 const indexBracket = item.indexOf(']}');
                 if (indexBracket >= 0 && item.indexOf(',') >= 0) {
                     tagArr.push(item.substring(0, indexBracket));
                 }
             });
-            
-            console.log(tagArr);
 
             tagArr.forEach((item) => {
                 const userid = item.split(', ')[0];

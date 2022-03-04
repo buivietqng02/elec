@@ -99,29 +99,39 @@ define([
         selectedTagList.push(selectedPerson);
 
         const inputText = input.textContent;
-    
+        
+         // Remove <br> tag for Firefox
+        if (navigator.userAgent.indexOf('Firefox') !== -1) {
+            const brs = input.getElementsByTagName('br');
+            for (let i = 0; i < brs.length; i += 1) { brs[i].parentNode.removeChild(brs[i]); }
+        }
+
         // Append tag
-        const findSpan = input.querySelector('span');
+        const findSpan = input.querySelector('.tagged');
         if (!findSpan) {
             const startPo = inputText.lastIndexOf(' @');
             input.innerText = input.innerText.substring(0, startPo + 2);
         } else {
             const textArr = input.querySelectorAll('.text');
-            const lastTextBeforeTag = textArr[textArr.length - 1].innerText;
-            let startPo = lastTextBeforeTag.lastIndexOf(' @');
-            startPo = startPo < 0 ? 0 : startPo;
-            console.log(startPo);
-            textArr[textArr.length - 1].innerText = lastTextBeforeTag.substring(0, startPo + 2);
+            // Fix bug for firefox
+            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+                let inputHTML = input.innerHTML;
+                const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
+                const afterAtSign = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
+                textArr[textArr.length - 1].innerText = ' ';
+                inputHTML = inputHTML.substring(0, inputHTML.length - afterAtSign.length);
+                input.innerHTML = inputHTML;
+            } else {
+                // Other browsers
+                const lastTextBeforeTag = textArr[textArr.length - 1].innerText;
+                let startPo = lastTextBeforeTag.lastIndexOf(' @');
+                startPo = startPo < 0 ? 0 : startPo;
+                textArr[textArr.length - 1].innerText = lastTextBeforeTag.substring(0, startPo + 2);
+            }
         }
 
         createNewSpan(selectedPerson, 'tagged', 'tag');
         createNewSpan('&nbsp;', 'text', 'text');
-        
-        // Remove <br> tag for Firefox
-        if (navigator.userAgent.indexOf('Firefox') !== -1) {
-            const brs = input.getElementsByTagName('br');
-            for (let i = 0; i < brs.length; i += 1) { brs[i].parentNode.removeChild(brs[i]); }
-        }
 
         isPossibleEnterTag = false;
 
@@ -179,7 +189,6 @@ define([
     const getGroupMembers = () => {
         console.log('call API');
         rId = GLOBAL.getCurrentRoomId();
-        console.log(rId);
         API.get(`chats/${rId}`).then((res) => {
             if (res.members) {
                 isLoading = false;
@@ -187,6 +196,9 @@ define([
                 
                 renderTemplate(membersList);
             }
+        }).catch(err => {
+            isLoading = false;
+            console.log(err);
         });
     };
 
@@ -197,25 +209,30 @@ define([
         let searchText = '';
         
         // Get search text
-        const findSpan = input.querySelector('span');
+        const findSpan = input.querySelector('.tagged');
         if (!findSpan) {
             const startPo = text.lastIndexOf(' @');
             searchText = text.substring(startPo + 2, text.length);
         } else {
             const textArr = input.querySelectorAll('.text');
-            const lastTextBeforeTag = textArr[textArr.length - 1]?.innerText;
-            let startPo = lastTextBeforeTag?.lastIndexOf(' @');
-            startPo = startPo < 0 ? 0 : startPo;
-            searchText = lastTextBeforeTag?.substring(startPo + 2, lastTextBeforeTag?.length);
+
+            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+                // Fix bug for firefox
+                const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
+                searchText = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
+            } else {
+                // Other browsers
+                const lastTextBeforeTag = textArr[textArr.length - 1]?.innerText;
+                let startPo = lastTextBeforeTag?.lastIndexOf(' @');
+                startPo = startPo < 0 ? 0 : startPo;
+                searchText = lastTextBeforeTag?.substring(startPo + 2, lastTextBeforeTag?.length) || '';
+            }
         }
 
         // console.log(text.charAt(text.length - 1));
         letterBeforeDelete = lastLetter;
         lastLetter = text.charAt(text.length - 1);
         letterBeforeLast = text.charAt(text.length - 2);
-        
-        // console.log(`letterBeforeDelete: ${letterBeforeDelete}, lastLetter: ${lastLetter}, 
-        // letterBeforeLast: ${letterBeforeLast}, isOpenTag: ${isOpenTag}`);
         
         // Open tag modal
         if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) {
@@ -226,20 +243,20 @@ define([
            
             if (!roomInfo.group || roomInfo.channel) return;
 
-            console.log('open modal');
             isOpenTag = true;
-            // tagPersonContainer.innerHTML = tagModal;
-            getGroupMembers();
-
             isLoading = true;
+            getGroupMembers();
         }
 
+        // Delete all will close tag
         if (text === '' && e.keyCode === 8) closeModalTag();
         
+        // Search name
         if (isOpenTag && e.keyCode !== 13) {
             renderFilter(searchText?.trim()?.toLowerCase());
         }
 
+        // Enter to tag
         if (isPossibleEnterTag && e.keyCode === 13) {
             selectTagPerson(tagPersonContainer.querySelector('.tag-person-item'), 'enter');
         } 
@@ -262,9 +279,6 @@ define([
         });
 
         if (selectedTagList.length === 0 || newArr.length === 0) return;
-
-        // console.log(selectedTagList);
-        // console.log(newArr);
 
         // Remove not match
         selectedTagList.forEach((ite, index) => {
@@ -376,7 +390,6 @@ define([
             isLoading = false;
             isOpenTag = false;
             input = document.querySelector('.js_endter_mess');
-            console.log(isLoading);
         },
 
         onRenderTagModal: (e) => {
