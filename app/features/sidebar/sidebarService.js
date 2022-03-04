@@ -325,7 +325,7 @@ define([
         let status = !id ? 'p_disabled' : '';
         const numUnRead = unreadMessages || '';
         let name = group ? subject : (obRoomEdited[partner?.id]?.user_name || partner?.name);
-        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage))) : '';
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replaceAll('::code::','')) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
         let isFavourite = false;

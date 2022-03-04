@@ -654,6 +654,15 @@ define(['shared/icon'], (ICON) => ({
                                 </div>
                             </div>
 
+                            <div class="wrap-emoji-codes">
+                                <div class="--head">
+                                    <lang data-language="EMOJI_CODES">ЭМОДЗИ, НАЗВАНИЯ КОТОРЫХ СОДЕРЖАТ</lang> <span class="emoji-code"></span>
+                                </div>
+                                <div class="--list">
+
+                                </div>
+                            </div>
+
                             <div class="chatbox-progress-upload">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                                     <path fill="none" stroke-width="2" stroke-linecap="square" d="M10,1A9,9 0 1 1 1,10A9,9 0 0 1 10,1" stroke-dasharray="56.548667764616276" stroke-dashoffset="56.548667764616276" transform="rotate(0 10 10)"></path>

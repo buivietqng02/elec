@@ -20,6 +20,7 @@ define([
     'features/chatbox/chatboxInput',
     'features/chatbox/chatboxAttach',
     'features/chatbox/emoji',
+    'features/chatbox/emojiCode',
     'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
     'features/notification/notification'
@@ -46,6 +47,7 @@ define([
     chatboxInputComp,
     chatboxAttachComp,
     emojiComp,
+    emojiCodeComp,
     voiceChatComp,
     modalShowImageFullComp,
     notificationComp
@@ -146,6 +148,7 @@ define([
         chatboxInputComp.onInit();
         chatboxAttachComp.onInit();
         emojiComp.onInit();
+        emojiCodeComp.onInit();
 
         // Voice message
         voiceChatComp.onInit();

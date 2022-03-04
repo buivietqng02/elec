@@ -283,6 +283,11 @@ define([
                 text = highlightText(text, decodeStringBase64(search));
             }
 
+            // Change text in case send code
+            if (text.includes('::code::')) {
+                text = text.replaceAll(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
+            } 
+
             // Render in case share conference link
             const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
 

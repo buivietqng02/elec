@@ -331,6 +331,12 @@ define([
             handleInputAutoExpand();
         },
 
+        onAddEmojiFromCode: (emoji) => {
+            $input.val($input.val().replace(/::(.+)/g, emoji));
+            $input.focus();
+            handleInputAutoExpand();
+        },
+
         onClear,
 
         onHandleDraft: (currentId) => {
