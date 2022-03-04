@@ -111,7 +111,7 @@ img {
 }
 
 .thirdparty-login-btn {
-	background-color: #484848;
+	background-color: black;
 	width: 55px;
 	height: 55px;
 	border-radius: 50%;
@@ -155,10 +155,6 @@ img {
 .thirdparty-login-btn.google svg {
 	position: relative;
 	left: 1px;
-}
-
-.thirdparty-login-btn.apple{
-	background-color: black;
 }
 
 .thirdparty-login-btn.lagblaster{
