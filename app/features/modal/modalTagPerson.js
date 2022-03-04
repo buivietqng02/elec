@@ -27,6 +27,7 @@ define([
     let input;
     let selectedTagList = [];
     let isPossibleEnterTag = false;
+    let isDeleting = false;
     
     const { 
         render, getAvatar, htmlEncode 
@@ -139,8 +140,8 @@ define([
     };
 
     const renderTemplate = (list) => {
-        if (!input.textContent.includes('@')) return;
-
+        if (!input.textContent.includes('@') || isDeleting) return;
+        
         tagPersonContainer.innerHTML = '';
 
         tagPersonContainer.classList.add('active');
@@ -168,9 +169,8 @@ define([
 
     const renderFilter = (search) => {
         if (membersList.length === 0) return;
-       
         const filteredList = membersList.filter(
-            mem => mem.user.name.trim().toLowerCase().includes(search)
+            mem => mem?.user?.name?.trim()?.toLowerCase()?.includes(search)
         );
         
         if (filteredList.length === 0) {
@@ -243,6 +243,7 @@ define([
            
             if (!roomInfo.group || roomInfo.channel) return;
 
+            isDeleting = false;
             isOpenTag = true;
             isLoading = true;
             getGroupMembers();
@@ -264,6 +265,7 @@ define([
         // close tag modal
         if (((letterBeforeDelete === '@' && e.keyCode === 8) || e.keyCode === 13) && isOpenTag) {
             closeModalTag();
+            isDeleting = true;
         }
     };
 
