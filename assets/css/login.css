@@ -157,6 +157,10 @@ img {
 	left: 1px;
 }
 
+.thirdparty-login-btn.apple{
+	background-color: black;
+}
+
 .thirdparty-login-btn.lagblaster{
 	display: none;
 }

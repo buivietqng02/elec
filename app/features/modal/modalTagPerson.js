@@ -139,7 +139,7 @@ define([
     };
 
     const renderTemplate = (list) => {
-        if (!document.querySelector('.js_endter_mess').textContent.includes('@')) return;
+        if (!input.textContent.includes('@')) return;
 
         tagPersonContainer.innerHTML = '';
 
@@ -203,7 +203,7 @@ define([
     };
 
     const toggleTagModal = (e) => { 
-        const text = document.querySelector('.js_endter_mess').textContent; 
+        const text = input.textContent; 
         // console.log(text);
 
         let searchText = '';
