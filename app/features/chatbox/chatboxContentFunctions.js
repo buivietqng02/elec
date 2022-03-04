@@ -185,6 +185,33 @@ define([
         return '';
     };
 
+    ob.renderTag = (text, isSidebar) => {
+        let newTextTag = text;
+        if (text.includes('@{[user:') && text.length > 23) {
+            const tagArr = [];
+            const splitText = text.split('@{[user:');
+            splitText.forEach(item => {
+                const indexBracket = item.indexOf(']}');
+                if (indexBracket >= 0 && item.indexOf(',') >= 0) {
+                    tagArr.push(item.substring(0, indexBracket));
+                }
+            });
+
+            tagArr.forEach((item) => {
+                const userid = item.split(', ')[0];
+                const name = item.split(', ')[1];
+
+                if (isSidebar) {
+                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span userid="${userid}">@${name}</span>`) || text;
+                } else {
+                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
+                }
+            }); 
+        }
+
+        return newTextTag;
+    };
+
     ob.renderMessage = (messObject, search) => {
         try {
             const info = GLOBAL.getInfomation();
@@ -214,6 +241,8 @@ define([
             };
 
             let text = htmlEncode(decodeStringBase64(message));
+            // Render in case message includes tag person
+            text = ob.renderTag(text);
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -329,7 +358,7 @@ define([
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-
+           
             data.mess = transformLinkTextToHTML(text);
 
             // render with case of file

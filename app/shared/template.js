@@ -610,7 +610,7 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="mess-fw-box"></div>
                                 <i class="xm icon-close mess-fw-box-close" role="button" tabindex="0"></i>
                             </div>
-                            <textarea class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..."></textarea>
+                            <div class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..." contenteditable="true"></div>
 
                             <!-- Voice & send group button --> 
                             <div class="input-wrap-group-btn">
@@ -833,6 +833,10 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                     </button>
                     <button type="button" class="thirdparty-login-btn google">${ICON.GOOGLE_LOGO}</button>
+   
+                    <button type="button" class="thirdparty-login-btn apple">
+                        <img src="/assets/images/apple_button.png">
+                    </button>
 
                     <button type="button" class="thirdparty-login-btn lagblaster">
                         ${ICON.LAGBLASTER_LOGO}

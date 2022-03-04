@@ -1,19 +1,57 @@
 .tag-person-content {
     position:absolute;
     width: 100%;
+    max-height: 0px;
     bottom: 50px;
     background-color: white;
     z-index: 11;
+    overflow-y: auto;
+
+    transition: all 0.5s;
     .tag-person-item {
-        padding: 8px;
-        border: 1px solid gray;
-        cursor: pointer;
-        .avatar {
-            display: inline-flex;
+        display: none;
+        align-items: center;
+        padding: 5px;
+        border-top: 1px solid gray;
+        cursor: pointer;  
+
+        .tag-info {
+            .tag-email {
+                font-size: 12px;
+                color: gray;
+            }
         }
 
-        span {
-            
+        .avatar {
+            display: inline-flex;
+            align-items: center;
+        };
+
+        &:hover {
+            background-color: rgba(230, 230, 230, 0.644);
         }
+    }
+}
+
+.tag-person-content.active {
+    // height: unset;
+    max-height: 250px;
+
+    .tag-person-item {
+        display: flex;
+    }
+}
+
+.tagged {
+    color: #08c;
+    padding: 3px;
+    background-color: rgba(1, 18, 77, 0.295);
+    border-radius: 5px;
+}
+
+.main-right {
+    .tagged-person{
+        color: #08c;
+        cursor: pointer;
     }
 }

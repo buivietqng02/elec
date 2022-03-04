@@ -39,6 +39,7 @@ define([
     let messageId = 0;
     let timeOfLastTypingEvent;
     let timeOfLastSentTypingEvent;
+    let $tagPersonContainer;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -59,7 +60,7 @@ define([
         const isBottom = wrapperMessages.scrollTop + wrapperMessages.clientHeight >= wrapperMessages.scrollHeight;
 
         setTimeout(() => {
-            if ($input.val().replace(/[\s\n]/g, '')) {
+            if ($input.text().replace(/[\s\n]/g, '')) {
                 $btnSend.show();
                 // $btnAttach.hide();
                 $initVoiceMessageBtn.hide();
@@ -74,6 +75,9 @@ define([
 
             const height = Math.min(window.outerHeight / 5, input.scrollHeight);
             input.style.cssText = `height: ${height}px`;
+
+            $tagPersonContainer.get(0).style.cssText = `bottom: ${height}px`;
+           
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
             isBottom && wrapperMessages.scrollTo(0, wrapperMessages.scrollHeight);
         }, 10);
@@ -81,6 +85,12 @@ define([
 
     const onKeyDown = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
+        
+        // If tag someone and enter --> prevent default
+        if (modalTagPerson.getPossibleEnter() && e.keyCode === 13) {
+            e.preventDefault();
+            return;
+        };
 
         if (enterKeyIsNewLine) {
             if (e.keyCode === 13 && e.shiftKey) {
@@ -103,9 +113,16 @@ define([
         handleInputAutoExpand();
     };
 
-    // const onTagPerson = (e) =>  modalTagPerson.onRenderTagModal(e);
+    const onPaste = (e) => {
+        handleInputAutoExpand();
 
-    const onPaste = () => handleInputAutoExpand();
+        // Paste as plain text
+        e.preventDefault();
+        // Get the copied text from the clipboard
+        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        // insert text manually
+        document.execCommand("insertHTML", false, text);
+    };
 
     const onClear = () => {
         const roomDraft = GLOBAL.getRoomDraft();
@@ -118,12 +135,13 @@ define([
         $commentWrapper.hide();
 
         if (roomDraft[rid]) {
-            $input.val(roomDraft[rid]);
+            $input.html(roomDraft[rid]);
         } else {
-            $input.val('');
+            $input.html('');
         }
 
         handleInputAutoExpand();
+        modalTagPerson.setSelectedTagList([]);
     };
 
     const onErrFetch = (err) => {
@@ -192,15 +210,22 @@ define([
                 }
             }).catch(onErrFetch);
         }
-        
     };
 
     const onSendMessage = () => {
         const chatboxContentComp = require('features/chatbox/chatboxContent');
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const roomId = GLOBAL.getCurrentRoomId();
-        let text = $input.val();
+        let text = $input.get(0).innerText;
         let data = {};
+        const tagList = $input.get(0).querySelectorAll('.tagged');
+        const userIdTagList = [];
+
+
+        tagList.forEach(item => {
+            text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
+            userIdTagList.push(item.getAttribute('userid'));
+        })
 
         // console.log(obRoomEdited, roomId, text, data);
 
@@ -218,7 +243,8 @@ define([
             params: {
                 message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
-                quotedMessageId: commentState.chatId
+                quotedMessageId: commentState.chatId,
+                taggedUsers: userIdTagList
             }
         };
 
@@ -273,6 +299,12 @@ define([
             .catch(onErrFetch);
     }
 
+    const fakePlacehoder = () => {
+        const element = $(this);        
+        if (!element.text().replace(" ", "").length) {
+            element.empty();
+        }
+    }
     return {
         onInit: () => {
             $input = $('.js_endter_mess');
@@ -283,6 +315,8 @@ define([
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
             $initVoiceMessageBtn = $('#init-voiceChat')
+
+            $tagPersonContainer = $('.js-tag-person');
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;
@@ -293,13 +327,16 @@ define([
             $btnSend.off().click(onSendMessage);
             $btnCloseCommentBox.off().click(onHideCommentBox);
 
-            // modalTagPerson.onInit();
-            // $input.off('keyup').keyup(onTagPerson);
+            $input.off('focusout').focusout(fakePlacehoder);
+
+            modalTagPerson.onInit();
+
+            $input.off('keyup').keyup(modalTagPerson.onRenderTagModal);
         },
 
         onUpdate: (id, value) => {
             const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-            $input.val(text);
+            $input.get(0).innerText = text;
             $input.focus();
             messageId = id;
             handleInputAutoExpand();
@@ -326,7 +363,7 @@ define([
         },
 
         onAddEmoji: (emoji) => {
-            $input.val($input.val() + emoji);
+            $input.html($input.text() + emoji);
             $input.focus();
             handleInputAutoExpand();
         },
@@ -340,7 +377,7 @@ define([
         onClear,
 
         onHandleDraft: (currentId) => {
-            const value = $input.val() || '';
+            const value = $input.text() || '';
             const roomDraft = GLOBAL.getRoomDraft();
 
             if (value) {
@@ -349,6 +386,9 @@ define([
 
             roomDraft[currentId] = value;
             GLOBAL.setRoomDraft(roomDraft);
+
+            // Remove tag model
+            modalTagPerson.closeTagModalAndReset();
         }
     };
 });
