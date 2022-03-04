@@ -136,6 +136,11 @@ define([
         window.location.assign(`xm/oauth2/authorize/google?redirect_uri=${redirectUri}/oauth2`);
     };
 
+    const loginApple = () => {
+        const redirectUri = `${window.location.protocol}//${window.location.host}`;
+        window.location.assign(`xm/oauth2/authorize/apple?redirect_uri=${redirectUri}/oauth2`);
+    };
+
     ob.onInit = () => {
         loading = false;
         $loginERPForm = $('.erp-login-form');
@@ -147,6 +152,7 @@ define([
         $loginForm.find('.erp').off('.loginERP').on('click.loginERP', loginERP);
         $loginForm.find('.lagblaster').off('.loginLagblaster').on('click.loginLagblaster', loginLagblaster);
         $loginForm.find('.google').off('.loginGoogle').on('click.loginGoogle', loginGoogle);
+        $loginForm.find('.apple').off('.loginApple').on('click.loginApple', loginApple);
 
         $loginERPForm.find('.erp-cancel-btn').off('.cancelERP').on('click.cancelERP', leaveERPLoginForm);
         $loginLBForm.find('.lagblaster-cancel-btn').off('.cancelLBlogin').on('click.cancelLBlogin', leaveLBLoginForm);
