@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.18] - 2022-03-04
+### Add
+- Add "Sign in with Apple" functionality.
+
 ### [4.17] - 2022-02-24
 ### Add
 - Enhanced search tool.
