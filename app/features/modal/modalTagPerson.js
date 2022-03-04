@@ -33,6 +33,10 @@ define([
         render, getAvatar, htmlEncode 
     } = functions;
 
+    const {
+        ENTER_KEY_PREFERENCES
+    } = constant;
+
     const tagModal = `
     <div class="tag-person-item" tabindex="-1" role="dialog">
         <img class="--img avatar" src="{src}">
@@ -259,6 +263,16 @@ define([
 
         // Enter to tag
         if (isPossibleEnterTag && e.keyCode === 13) {
+            const enterNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
+
+            // If user choose enter is new line, remove div
+            if (enterNewLine) {
+                const divs = input.getElementsByTagName('div');
+                for (let i = 0; i < divs.length; i += 1) { 
+                    divs[i].parentNode.removeChild(divs[i]); 
+                }
+            }
+
             selectTagPerson(tagPersonContainer.querySelector('.tag-person-item'), 'enter');
         } 
 
