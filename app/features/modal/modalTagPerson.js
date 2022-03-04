@@ -28,14 +28,10 @@ define([
     let selectedTagList = [];
     let isPossibleEnterTag = false;
     let isDeleting = false;
-    
+    let isUsingFirefox = false;
     const { 
         render, getAvatar, htmlEncode 
     } = functions;
-
-    const {
-        ENTER_KEY_PREFERENCES
-    } = constant;
 
     const tagModal = `
     <div class="tag-person-item" tabindex="-1" role="dialog">
@@ -106,7 +102,7 @@ define([
         const inputText = input.textContent;
         
          // Remove <br> tag for Firefox
-        if (navigator.userAgent.indexOf('Firefox') !== -1) {
+        if (isUsingFirefox) {
             const brs = input.getElementsByTagName('br');
             for (let i = 0; i < brs.length; i += 1) { brs[i].parentNode.removeChild(brs[i]); }
         }
@@ -119,7 +115,7 @@ define([
         } else {
             const textArr = input.querySelectorAll('.text');
             // Fix bug for firefox
-            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+            if (isUsingFirefox) {
                 let inputHTML = input.innerHTML;
                 const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
                 const afterAtSign = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
@@ -220,7 +216,7 @@ define([
         } else {
             const textArr = input.querySelectorAll('.text');
 
-            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+            if (isUsingFirefox) {
                 // Fix bug for firefox
                 const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
                 searchText = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
@@ -263,16 +259,6 @@ define([
 
         // Enter to tag
         if (isPossibleEnterTag && e.keyCode === 13) {
-            const enterNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
-
-            // If user choose enter is new line, remove div
-            if (enterNewLine) {
-                const divs = input.getElementsByTagName('div');
-                for (let i = 0; i < divs.length; i += 1) { 
-                    divs[i].parentNode.removeChild(divs[i]); 
-                }
-            }
-
             selectTagPerson(tagPersonContainer.querySelector('.tag-person-item'), 'enter');
         } 
 
@@ -400,12 +386,15 @@ define([
         }); 
     };
 
+    const checkIfUsingFirefox = () => navigator.userAgent.indexOf('Firefox') !== -1;
+    
     return {
         onInit: () => {
             tagPersonContainer = document.querySelector('.js-tag-person');
             isLoading = false;
             isOpenTag = false;
             input = document.querySelector('.js_endter_mess');
+            isUsingFirefox = checkIfUsingFirefox();
         },
 
         onRenderTagModal: (e) => {

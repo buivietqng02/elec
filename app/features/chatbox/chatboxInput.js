@@ -39,6 +39,7 @@ define([
     let messageId = 0;
     let timeOfLastTypingEvent;
     let timeOfLastSentTypingEvent;
+    let $tagPersonContainer;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -74,6 +75,9 @@ define([
 
             const height = Math.min(window.outerHeight / 5, input.scrollHeight);
             input.style.cssText = `height: ${height}px`;
+
+            $tagPersonContainer.get(0).style.cssText = `bottom: ${height}px`;
+           
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
             isBottom && wrapperMessages.scrollTo(0, wrapperMessages.scrollHeight);
         }, 10);
@@ -81,6 +85,12 @@ define([
 
     const onKeyDown = (e) => {
         let enterKeyIsNewLine = GLOBAL.getEnterKeyPreference() === ENTER_KEY_PREFERENCES[0].value;
+        
+        // If tag someone and enter --> prevent default
+        if (modalTagPerson.getPossibleEnter() && e.keyCode === 13) {
+            e.preventDefault();
+            return;
+        };
 
         if (enterKeyIsNewLine) {
             if (e.keyCode === 13 && e.shiftKey) {
@@ -211,7 +221,6 @@ define([
         const tagList = $input.get(0).querySelectorAll('.tagged');
         const userIdTagList = [];
 
-        if (modalTagPerson.getPossibleEnter()) return;
 
         tagList.forEach(item => {
             text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
@@ -306,6 +315,8 @@ define([
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
             $initVoiceMessageBtn = $('#init-voiceChat')
+
+            $tagPersonContainer = $('.js-tag-person');
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;
