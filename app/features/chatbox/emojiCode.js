@@ -1,6 +1,6 @@
 define([
     'features/chatbox/chatboxInput',
-    'features/chatbox/emojis.json'
+    'assets/json/emojis.json'
 ], (
     chatboxInputComp,
     emojis
@@ -35,7 +35,7 @@ define([
 
     // Change shortcode caret is on to emoji
     const changeWord = (pos, emoji) => {
-        const str = $input.val();
+        const str = $input[0].textContent;
         let i = 0;
         const strLen = str.length;
         let start = 0;
@@ -52,32 +52,23 @@ define([
         }
         let end = strLen - 1;
         if (i) end = i;
-        $input.val(`${str.substring(a, start)} ${emoji} ${str.substring(end, b)}`);
+        $input[0].textContent = `${str.substring(a, start)} ${emoji} ${str.substring(end, b)}`;
         return 0;
     };
 
     // Get caret position in input
-    const getCaretPos = (el) => {
-        if (el.selectionStart) { 
-            return el.selectionStart; 
-        } 
-        if (document.selection) {
-            el.focus(); 
-            const range = document.selection.createRange(); 
-            if (range == null) { return 0; } 
-            const textRange = el.createTextRange();
-            const textRangeCopy = textRange.duplicate(); 
-            textRange.moveToBookmark(range.getBookmark()); 
-            textRangeCopy.setEndPoint('EndToStart', textRange); 
-            return textRangeCopy.text.length; 
-        }  
-        return 0; 
+    const getCaretPos = (elem) => {
+        const selection = document.getSelection();
+        const range = document.createRange();
+        range.setStart(elem, 0);
+        range.setEnd(selection.anchorNode, selection.anchorOffset);
+        return range.toString().length;
     };
 
     // Get indexes of repeated codes
     const getIdRepeat = (code) => {
         const indexes = [];
-        const lowerCaseTextString = $input.val().toLowerCase();
+        const lowerCaseTextString = $input[0].textContent.toLowerCase();
         const lowerCaseWord = code.toLowerCase();
         let index = 0;
 
@@ -174,8 +165,8 @@ define([
 
     // Change shortcode to emoji
     const changeCode = () => {
-        if ($input.val().match(/::[A-z0-9]+::/)) {
-            const codes = $input.val().match(/::[A-z0-9]+::/g);
+        if ($input[0].textContent.match(/::[A-z0-9]+::/)) {
+            const codes = $input[0].textContent.match(/::[A-z0-9]+::/g);
             let change = false;
             codes.forEach((code, id) => {
                 if (code === '::code::') {
@@ -191,10 +182,10 @@ define([
                     if (emojis.emojis[code.replace(/::/g, '')]) {
                         if (id < codes.length - 1) {
                             // Change before code field
-                            $input.val($input.val().replace(new RegExp(`^${code}`), emojis.emojis[code.replace(/::/g, '')].emoji, ''));
+                            $input[0].textContent = $input[0].textContent.replace(new RegExp(`^${code}`), emojis.emojis[code.replace(/::/g, '')].emoji, '');
                         } else {
                             // Change after code field
-                            $input.val($input.val().replace(new RegExp(`${code}$`), emojis.emojis[code.replace(/::/g, '')].emoji, ''));
+                            $input[0].textContent = $input[0].textContent.replace(new RegExp(`${code}$`), emojis.emojis[code.replace(/::/g, '')].emoji, '');
                         }
                         cleanWrapper();
                     }
@@ -205,7 +196,7 @@ define([
 
     const codesHelper = () => {
         const caretPos = getCaretPos($input[0]) - 1;
-        const word = findWord($input.val(), caretPos);
+        const word = findWord($input[0].textContent, caretPos);
         try {
             const code = word.match(/::[A-z0-9]+/g)[0];
             const codeFieldRange = getIdRepeat(shortcodeForCodeField);
@@ -245,7 +236,7 @@ define([
             $wrapper = $('.wrap-emoji-codes');
             $header = $wrapper.find('.emoji-code');
             $list = $wrapper.find('.--list');
-            $input.off('input change keyup click').on('input change keyup click', onChange);
+            $input.off('input change keyup click', onChange).on('input change keyup click', onChange);
             $(document).off('.emojiCode').on('click.emojiCode', '[data-em-code]', addEmojiToInput);
         }
     };
