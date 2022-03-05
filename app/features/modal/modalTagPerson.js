@@ -26,15 +26,16 @@ define([
     let tagPersonItem;
     let input;
     let selectedTagList = [];
-    let isPossibleEnterTag = false;
     let isDeleting = false;
     let isUsingFirefox = false;
+    let selectedIndex = 0;
+
     const { 
         render, getAvatar, htmlEncode 
     } = functions;
 
     const tagModal = `
-    <div class="tag-person-item" tabindex="-1" role="dialog">
+    <div class="tag-person-item {selected}" tabindex="-1" role="dialog">
         <img class="--img avatar" src="{src}">
         <div class="tag-info">
             <div class="tag-name" ${constant.ATTRIBUTE_CHANGE_NAME}="{id}">{currentName}</div>
@@ -48,6 +49,7 @@ define([
         isOpenTag = false;
         tagPersonContainer.innerHTML = '';
         tagPersonContainer.classList.remove('active');
+        selectedIndex = 0;
     };
 
     const createNewSpan = (value, className, type) => {
@@ -66,6 +68,35 @@ define([
         input.append(newSpan);
     };
 
+    const selectTagWithArrowKey = (e) => {
+        const selectedList = tagPersonContainer.querySelectorAll('.tag-person-item');
+        // Arrow down
+        if (e.keyCode === 40) {
+            if (selectedIndex < selectedList.length - 1) {
+                selectedIndex += 1;
+            } else {
+                selectedIndex = 0;
+            }
+        }
+
+        // Arrow up
+        if (e.keyCode === 38) {
+            if (selectedIndex > 0) {
+                selectedIndex -= 1;
+            } else {
+                selectedIndex = selectedList.length - 1;
+            }
+        }
+
+        selectedList.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add('selected');
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    };
+
     const setCursorEndOfText = (el) => {
         const selection = window.getSelection();  
         const range = document.createRange();  
@@ -74,6 +105,32 @@ define([
         range.collapse(false);  
         selection.addRange(range);  
         el.focus();
+    };
+
+    const appendedSelectedTag = (inputText) => {
+        // Append tag
+        const findSpan = input.querySelector('.tagged');
+        if (!findSpan) {
+            const startPo = inputText.lastIndexOf(' @');
+            input.innerText = input.innerText.substring(0, startPo + 2);
+        } else {
+            const textArr = input.querySelectorAll('.text');
+            if (isUsingFirefox) {
+                // Fix bug for firefox
+                let inputHTML = input.innerHTML;
+                const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
+                const afterAtSign = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
+                textArr[textArr.length - 1].innerText = ' ';
+                inputHTML = inputHTML.substring(0, inputHTML.length - afterAtSign.length);
+                input.innerHTML = inputHTML;
+            } else {
+                // Other browsers
+                const lastTextBeforeTag = textArr[textArr.length - 1].innerText;
+                let startPo = lastTextBeforeTag.lastIndexOf(' @');
+                startPo = startPo < 0 ? 0 : startPo;
+                textArr[textArr.length - 1].innerText = lastTextBeforeTag.substring(0, startPo + 2);
+            }
+        }
     };
 
     const selectTagPerson = (value, type) => {
@@ -108,34 +165,9 @@ define([
         }
 
         // Append tag
-        const findSpan = input.querySelector('.tagged');
-        if (!findSpan) {
-            const startPo = inputText.lastIndexOf(' @');
-            input.innerText = input.innerText.substring(0, startPo + 2);
-        } else {
-            const textArr = input.querySelectorAll('.text');
-            // Fix bug for firefox
-            if (isUsingFirefox) {
-                let inputHTML = input.innerHTML;
-                const nextSiblingText = textArr[textArr.length - 1]?.nextSibling?.data;
-                const afterAtSign = nextSiblingText?.substring(nextSiblingText.indexOf(' @') + 2, nextSiblingText.length) || '';
-                textArr[textArr.length - 1].innerText = ' ';
-                inputHTML = inputHTML.substring(0, inputHTML.length - afterAtSign.length);
-                input.innerHTML = inputHTML;
-            } else {
-                // Other browsers
-                const lastTextBeforeTag = textArr[textArr.length - 1].innerText;
-                let startPo = lastTextBeforeTag.lastIndexOf(' @');
-                startPo = startPo < 0 ? 0 : startPo;
-                textArr[textArr.length - 1].innerText = lastTextBeforeTag.substring(0, startPo + 2);
-            }
-        }
-
+        appendedSelectedTag(inputText);
         createNewSpan(selectedPerson, 'tagged', 'tag');
         createNewSpan('&nbsp;', 'text', 'text');
-
-        isPossibleEnterTag = false;
-
         setCursorEndOfText(input);
     };
 
@@ -148,12 +180,13 @@ define([
 
         let arrMemberHTML = '';
 
-        list.forEach(member => {
+        list.forEach((member, index) => {
             const arrItem = {
                 id: member.user.id,
                 currentName: htmlEncode(member.user.name),
                 src: getAvatar(member.user.id),
-                email: member.user.email
+                email: member.user.email,
+                selected: index === selectedIndex ? 'selected' : ''
             };
 
             arrMemberHTML += render(tagModal, arrItem);
@@ -174,20 +207,15 @@ define([
         );
         
         if (filteredList.length === 0) {
-            closeModalTag();
-        }
-
-        if (filteredList.length === 1) {
-            isPossibleEnterTag = true;
-        } else {
-            isPossibleEnterTag = false;
+            // closeModalTag();
+            tagPersonContainer.innerHTML = '';
+            tagPersonContainer.classList.remove('active');
         }
         
         renderTemplate(filteredList);
     };
     
     const getGroupMembers = () => {
-        console.log('call API');
         rId = GLOBAL.getCurrentRoomId();
         API.get(`chats/${rId}`).then((res) => {
             if (res.members) {
@@ -202,12 +230,23 @@ define([
         });
     };
 
-    const toggleTagModal = (e) => { 
-        const text = input.textContent; 
-        // console.log(text);
+    const openModaltag = (text) => {
+        if (!text.includes('@') || isLoading) return;
+            
+        const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
+        const roomInfo = sidebarRoomListComp.getRoomInfoOnClick();
+       
+        if (!roomInfo.group || roomInfo.channel) return;
 
-        let searchText = '';
-        
+        isDeleting = false;
+        isOpenTag = true;
+        isLoading = true;
+       
+        getGroupMembers();
+    };
+
+    const getSearchText = (text) => {
+        let searchText;
         // Get search text
         const findSpan = input.querySelector('.tagged');
         if (!findSpan) {
@@ -229,43 +268,49 @@ define([
             }
         }
 
-        // console.log(text.charAt(text.length - 1));
+        return searchText;
+    };
+
+    const toggleTagModal = (e) => { 
+        const text = input.textContent; 
+        // console.log(text);
+
+        let searchText = '';
+
+        // Get search text
+        searchText = getSearchText(text);
+
         letterBeforeDelete = lastLetter;
         lastLetter = text.charAt(text.length - 1);
         letterBeforeLast = text.charAt(text.length - 2);
         
         // Open tag modal
-        if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) {
-            if (!text.includes('@') || isLoading) return;
-            
-            const sidebarRoomListComp = require('features/sidebar/sidebarRoomList');
-            const roomInfo = sidebarRoomListComp.getRoomInfoOnClick();
-           
-            if (!roomInfo.group || roomInfo.channel) return;
-
-            isDeleting = false;
-            isOpenTag = true;
-            isLoading = true;
-            getGroupMembers();
-        }
-
+        if (lastLetter === '@' && letterBeforeLast.trim() === '' && !isOpenTag) openModaltag(text);
+        
         // Delete all will close tag
         if (text === '' && e.keyCode === 8) closeModalTag();
         
         // Search name
-        if (isOpenTag && e.keyCode !== 13) {
+        if (isOpenTag && e.keyCode !== 13 && e.keyCode !== 37 && e.keyCode !== 38
+            && e.keyCode !== 39 && e.keyCode !== 40) {
             renderFilter(searchText?.trim()?.toLowerCase());
         }
 
         // Enter to tag
-        if (isPossibleEnterTag && e.keyCode === 13) {
-            selectTagPerson(tagPersonContainer.querySelector('.tag-person-item'), 'enter');
+        if (isOpenTag && e.keyCode === 13) {
+            const selectedPersonEle = tagPersonContainer.querySelector('.tag-person-item.selected') || tagPersonContainer.querySelector('.tag-person-item');
+            selectTagPerson(selectedPersonEle, 'enter');
         } 
 
         // close tag modal
         if (((letterBeforeDelete === '@' && e.keyCode === 8) || e.keyCode === 13) && isOpenTag) {
             closeModalTag();
             isDeleting = true;
+        }
+
+        // select with arrow
+        if (isOpenTag && (e.keyCode === 40 || e.keyCode === 38)) {
+            selectTagWithArrowKey(e);
         }
     };
 
@@ -387,6 +432,12 @@ define([
     };
 
     const checkIfUsingFirefox = () => navigator.userAgent.indexOf('Firefox') !== -1;
+
+    // Hide selected on hover
+    const onHoverRemoveSelected = () => {
+        const selectedTag = tagPersonContainer.querySelector('.tag-person-item.selected');
+        if (selectedTag) selectedTag.classList.remove('selected');
+    };
     
     return {
         onInit: () => {
@@ -395,6 +446,7 @@ define([
             isOpenTag = false;
             input = document.querySelector('.js_endter_mess');
             isUsingFirefox = checkIfUsingFirefox();
+            tagPersonContainer.addEventListener('mouseover', onHoverRemoveSelected);
         },
 
         onRenderTagModal: (e) => {
@@ -413,7 +465,7 @@ define([
             membersList = [];
         },
 
-        getPossibleEnter: () => isPossibleEnterTag,
+        getPossibleEnter: () => isOpenTag,
 
         onSyncTag,
 
