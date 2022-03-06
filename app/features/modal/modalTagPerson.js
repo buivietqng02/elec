@@ -171,6 +171,13 @@ define([
         setCursorEndOfText(input);
     };
 
+     // Hide selected on hover
+     const onHoverRemoveSelected = (e) => {
+        const selectedTag = tagPersonContainer.querySelector('.tag-person-item.selected');
+        if (selectedTag) selectedTag.classList.remove('selected');
+        e.currentTarget.classList.add('selected');
+    };
+
     const renderTemplate = (list) => {
         if (!input.textContent.includes('@') || isDeleting) return;
         
@@ -197,6 +204,7 @@ define([
         tagPersonItem = document.querySelectorAll('.tag-person-item');
         tagPersonItem.forEach(item => {
             item.addEventListener('click', (e) => selectTagPerson(e, 'click'));
+            item.addEventListener('mouseover', onHoverRemoveSelected);
         });
     };
 
@@ -298,7 +306,7 @@ define([
 
         // Enter to tag
         if (isOpenTag && e.keyCode === 13) {
-            const selectedPersonEle = tagPersonContainer.querySelector('.tag-person-item.selected') || tagPersonContainer.querySelector('.tag-person-item');
+            const selectedPersonEle = tagPersonContainer.querySelector('.tag-person-item.selected');
             selectTagPerson(selectedPersonEle, 'enter');
         } 
 
@@ -432,12 +440,6 @@ define([
     };
 
     const checkIfUsingFirefox = () => navigator.userAgent.indexOf('Firefox') !== -1;
-
-    // Hide selected on hover
-    const onHoverRemoveSelected = () => {
-        const selectedTag = tagPersonContainer.querySelector('.tag-person-item.selected');
-        if (selectedTag) selectedTag.classList.remove('selected');
-    };
     
     return {
         onInit: () => {
@@ -446,7 +448,6 @@ define([
             isOpenTag = false;
             input = document.querySelector('.js_endter_mess');
             isUsingFirefox = checkIfUsingFirefox();
-            tagPersonContainer.addEventListener('mouseover', onHoverRemoveSelected);
         },
 
         onRenderTagModal: (e) => {
