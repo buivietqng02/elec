@@ -825,9 +825,7 @@ define(['shared/icon'], (ICON) => ({
                     </button>
                     <button type="button" class="thirdparty-login-btn google">${ICON.GOOGLE_LOGO}</button>
 
-                    <button type="button" class="thirdparty-login-btn apple">
-                        <img src="/assets/images/apple_button.png">
-                    </button>
+                    <button type="button" class="thirdparty-login-btn apple">${ICON.APPLE_LOGO}</button>
 
                     <button type="button" class="thirdparty-login-btn lagblaster">
                         ${ICON.LAGBLASTER_LOGO}
