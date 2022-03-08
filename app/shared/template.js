@@ -833,10 +833,8 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                     </button>
                     <button type="button" class="thirdparty-login-btn google">${ICON.GOOGLE_LOGO}</button>
-   
-                    <button type="button" class="thirdparty-login-btn apple">
-                        <img src="/assets/images/apple_button.png">
-                    </button>
+
+                    <button type="button" class="thirdparty-login-btn apple">${ICON.APPLE_LOGO}</button>
 
                     <button type="button" class="thirdparty-login-btn lagblaster">
                         ${ICON.LAGBLASTER_LOGO}
@@ -923,7 +921,6 @@ define(['shared/icon'], (ICON) => ({
             </form>
         </div>
 
-        <div class="download-app"></div>
         <!-- Version -->
         <div class="xm-current-version"></div>
         <!-- learn more -->

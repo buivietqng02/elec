@@ -1,7 +1,54 @@
 stages:
+  - docker
   - build
   - deploy
   - switch
+
+build-image-dev:
+  stage: docker
+  when: manual
+  tags:
+    - docker
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.iptp.net
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/login.js
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - sed -i "s|#XM_VERSION|$version|g" sw.js
+    - docker build --no-cache -t registry.iptp.net/andre/xm-web:latest-dev -f Dockerfile .
+    - docker push registry.iptp.net/andre/xm-web:latest-dev
+    - docker tag registry.iptp.net/andre/xm-web:latest-dev registry.iptp.net/andre/xm-web:4.19.$CI_PIPELINE_IID-dev
+    - docker push registry.iptp.net/andre/xm-web:4.19.$CI_PIPELINE_IID-dev
+  only:
+    - dev
+
+build-image-prod:
+  stage: docker
+  when: manual
+  tags:
+    - docker
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.iptp.net
+  script:
+    - sed -i "s|#CI_PID|$CI_PIPELINE_ID|g" VERSION
+    - sed -i "s|#CI_HASH|$CI_COMMIT_SHORT_SHA|g" VERSION
+    - sed -i "s|#CI_DATE|$(date -u +%d-%m-%Y)|g" VERSION
+    - version=$(<VERSION)
+    - sed -i "s|#XM_VERSION|$version|g" app/login.js
+    - sed -i "s|#XM_VERSION|$version|g" app/features/modal/modalVersion.js
+    - sed -i "s|#XM_VERSION|$version|g" sw.js
+    - sed -i "s|yarn run build|yarn run build:prod|g" Dockerfile
+    - docker build --no-cache -t registry.iptp.net/andre/xm-web:latest-dev -f Dockerfile .
+    - docker push registry.iptp.net/andre/xm-web:latest
+    - docker tag registry.iptp.net/andre/xm-web:latest registry.iptp.net/andre/xm-web:4.19.$CI_PIPELINE_IID
+    - docker push registry.iptp.net/andre/xm-web:4.19.$CI_PIPELINE_IID
+  only:
+    - master
+
 
 build:dev:
   stage: build

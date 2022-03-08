@@ -19,14 +19,11 @@ const urls = [
     '/source/clear.svg',
     '/source/flowers_bw03.png',
     '/assets/images/icon.png',
-    '/assets/images/google-play-badge.png',
-    '/assets/images/appstore-badge2.png',
     '/assets/images/favicon.ico',
     '/source/marble.png',
     '/source/shopping-cart.svg',
     '/assets/fonts/subset-RobotoCondensed-Light.woff2',
-    '/assets/fonts/subset-RobotoCondensed-Light.woff',
-    '/assets/images/apple_button.png'
+    '/assets/fonts/subset-RobotoCondensed-Light.woff'
 ];
 
 self.addEventListener('install', function (event) {
