@@ -25,8 +25,7 @@ const urls = [
     '/source/marble.png',
     '/source/shopping-cart.svg',
     '/assets/fonts/subset-RobotoCondensed-Light.woff2',
-    '/assets/fonts/subset-RobotoCondensed-Light.woff',
-    '/assets/images/apple_button.png'
+    '/assets/fonts/subset-RobotoCondensed-Light.woff'
 ];
 
 self.addEventListener('install', function (event) {

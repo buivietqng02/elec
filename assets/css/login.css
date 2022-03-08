@@ -120,6 +120,15 @@ img {
 	margin: 0 1rem;
 }
 
+.thirdparty-login-btn.apple svg{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 70px;
+	height: 70px;
+}
+
 .thirdparty-login-btn:hover {
 	box-shadow: 0 0 10px;
 	cursor: pointer;
