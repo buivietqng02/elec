@@ -7,6 +7,8 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### [4.19] - 2022-03-08
 ### Update
 - Fix "Sign in with Apple" button.
+- Remove "Get it on Google Play" and "Download on the Appstore" buttons from the login page.
+- Other minor changes.
 
 ### [4.18] - 2022-03-04
 ### Add
