@@ -7,6 +7,8 @@ stages:
 build-image-dev:
   stage: docker
   image: docker:latest
+  services:
+    - docker:dind
   when: manual
   tags:
     - docker
@@ -30,6 +32,8 @@ build-image-dev:
 build-image-prod:
   stage: docker
   image: docker:latest
+  services:
+    - docker:dind
   when: manual
   tags:
     - docker
