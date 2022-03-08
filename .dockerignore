@@ -1,11 +1,4 @@
 README.md
 CHANGELOG.MD
-package-lock.json 
-package.json 
-package-lock.json 
-webpack.common.js 
-webpack.dev.js  
-webpack.prod.js 
-yarn.lock
 docs/
 node_modules/
