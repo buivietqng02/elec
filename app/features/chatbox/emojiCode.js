@@ -156,7 +156,6 @@ define([
                 `;
             });
             $list.html(render);
-            console.log($wrapper);
             $input.off('keydown', onKeyDown).keydown({ strLen: Object.keys(data).length }, onKeyDown);
         } else {
             cleanWrapper();
