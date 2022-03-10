@@ -164,8 +164,8 @@ define([
 
     // Change shortcode to emoji
     const changeCode = () => {
-        if ($input[0].textContent.match(/::[A-z0-9]+::/)) {
-            const codes = $input[0].textContent.match(/::[A-z0-9]+::/g);
+        if ($input[0].textContent.match(/::[A-z0-9-]+::/)) {
+            const codes = $input[0].textContent.match(/::[A-z0-9-]+::/g);
             let change = false;
             codes.forEach((code, id) => {
                 if (code === '::code::') {
@@ -197,7 +197,7 @@ define([
         const caretPos = getCaretPos($input[0]) - 1;
         const word = findWord($input[0].textContent, caretPos);
         try {
-            const code = word.match(/::[A-z0-9]+/g)[0];
+            const code = word.match(/::[A-z0-9-]+/g)[0];
             const codeFieldRange = getIdRepeat(shortcodeForCodeField);
 
             // Check word is not shortcode for code field
