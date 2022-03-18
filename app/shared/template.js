@@ -769,14 +769,24 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="icon-chevron-left"></i>
                                 <lang data-language="BACK"></lang>
                             </button>
+                            <div class="mess-search-topright">
+                                <div class="mess-search-box">
+                                    <div class="msbg-input-container">
+                                        <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
+                                        <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
+                                            <i class="icon-close"></i>
+                                        </button>
+                                    </div>
+            
+                                    <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
+                                        <i class="xm icon-search"></i>
+                                    </button>
+                                </div>
 
-                            <div class="mess-search-box">
-                                <i class="xm icon-search"></i>
-                                <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
-                               
-                                <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Cancel search">
-                                    <i class="icon-close"></i>
-                                </button>
+                                <div class="search-all-rooms-container custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="search-all-rooms">
+                                    <label class="custom-control-label" for="search-all-rooms">Search all rooms</label>
+                                </div>
                             </div>
                         </div>
 

@@ -32,7 +32,8 @@ define(() => {
         updated: room.updated,
         sender: room.sender,
         owner: room.owner,
-        muted: room.muted
+        muted: room.muted,
+        taggedUsers: room.taggedUsers
     });
 
     const refresh = () => {

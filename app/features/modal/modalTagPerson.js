@@ -31,7 +31,7 @@ define([
     let selectedIndex = 0;
 
     const { 
-        render, getAvatar, htmlEncode 
+        render, getAvatar, htmlEncode, setCursorEndOfText 
     } = functions;
 
     const tagModal = `
@@ -91,20 +91,11 @@ define([
         selectedList.forEach((item, index) => {
             if (index === selectedIndex) {
                 item.classList.add('selected');
+                item.scrollIntoView({ block: 'center', behavior: 'smooth' });
             } else {
                 item.classList.remove('selected');
             }
         });
-    };
-
-    const setCursorEndOfText = (el) => {
-        const selection = window.getSelection();  
-        const range = document.createRange();  
-        selection.removeAllRanges();  
-        range.selectNodeContents(el);  
-        range.collapse(false);  
-        selection.addRange(range);  
-        el.focus();
     };
 
     const appendedSelectedTag = (inputText) => {
@@ -348,6 +339,7 @@ define([
     };
 
     const onSyncTag = (res) => {
+        // console.log(res);
         let roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(res[0].chat.id)) {
                 return true;
@@ -410,6 +402,7 @@ define([
     };
 
     const handleViewTagProfile = (e) => {
+        e.stopPropagation();
         const userid = e.currentTarget.getAttribute('userid');
         const roomId = GLOBAL.getCurrentRoomId();
 

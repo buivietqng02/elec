@@ -23,7 +23,8 @@ define([
     'features/chatbox/emojiCode',
     'features/chatbox/voiceChat',
     'features/modal/modalShowImageFull',
-    'features/notification/notification'
+    'features/notification/notification',
+    'features/modal/modalLogout',
 
 ], (
     API,
@@ -50,7 +51,8 @@ define([
     emojiCodeComp,
     voiceChatComp,
     modalShowImageFullComp,
-    notificationComp
+    notificationComp,
+    modalLogout
 ) => {
     const {
         setCookie,
@@ -74,6 +76,7 @@ define([
     let $notiBoard;
     let $sidebar;
     let $mainRight;
+    let failCounter = 0;
 
     // const onSetUpWebSocket = (userId) => {
     //     const client = new Stomp.Client({
@@ -206,9 +209,15 @@ define([
             onInitEventComponent(route);
             $notiBoard.removeClass('run');
             // onSetUpWebSocket(data[0].data.user.id);
+            failCounter = 0;
+
         }).catch((err) => {
             console.log(err);
             if (err === 19940402) {
+                if (failCounter > 2) {
+                    modalLogout.onInit('Somethings went wrong!');
+                    return
+                };
                 setTimeout(() => {
                     if (!isRunFristTime && GLOBAL.getNetworkStatus()) {
                         isRunFristTime = true;
@@ -224,6 +233,7 @@ define([
                     } else {
                         initInformationFromAPI(route);
                     }
+                    failCounter++;
                 }, 2500);
             }
         });
@@ -268,6 +278,7 @@ define([
     };
 
     const onInit = async (route) => {
+        failCounter = 0;
         isRunFristTime = false;
         $('.xm-page-loading').hide();
         $notiBoard = $('.notify-update-info');

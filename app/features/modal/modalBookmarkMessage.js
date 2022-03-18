@@ -32,6 +32,7 @@ define([
     
     const onCloseViewBookmarks = () => {
         isViewingBookmark = false;
+        messageList.classList.remove('viewingBookmark')
         wrapper.removeEventListener('scroll', onWrapperScroll);
         viewingBookmarksStatusBar.classList.add('hidden');
     };
@@ -150,6 +151,7 @@ define([
             isViewingBookmark = true;
             processing = false;
             viewBookmarksBtn.disabled = false;
+            messageList.classList.add('viewingBookmark')
             
             res.messages.reverse().map(mess => {
                 messagesHtml += `${renderMessage(mess)} <hr style="width:100%">`

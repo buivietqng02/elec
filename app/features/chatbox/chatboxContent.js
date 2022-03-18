@@ -132,7 +132,13 @@ define([
 
                 // Render message and append to chat list
                 moreMessages = moreMessages.concat(returnedMessages || []).reverse();
-                messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
+                messagesHtml = moreMessages.map((mess, i, messArr) => {
+
+                const currentSenderId = messArr[i].sender.id;
+                const previousSenderId = messArr[i - 1]?.sender?.id;
+
+                return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess, '', currentSenderId, previousSenderId))
+                }).join(''); 
                 $messageList.append(messagesHtml);
 
                 // If touch last message at bottom, stop call API, remove eventListner
@@ -270,8 +276,8 @@ define([
 
      // ======== Start Scroll to origin position ===========
     const handleScrollToOriginId = (e) => {
-        const originId = e.target.getAttribute('quoted-original-id').split('-')[1];
-        const sequenceNum =  e.target.getAttribute('quoted-original-sequence');
+        const originId = e.currentTarget.getAttribute('quoted-original-id').split('-')[1];
+        const sequenceNum =  e.currentTarget.getAttribute('quoted-original-sequence');
         showExactOriginMessage(originId, sequenceNum)
     }
      // ======== End Scroll to origin position ===========
@@ -379,7 +385,12 @@ define([
 
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
-            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
+            messagesHtml = moreMessages.map((mess, i, messArr) => {
+            const currentSenderId = messArr[i].sender.id;
+            const previousSenderId = messArr[i - 1]?.sender?.id;    
+            return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess, '', currentSenderId, previousSenderId))
+            }).join('');
+
             lastOffset = moreMessages[0]?.sequence;
 
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
@@ -459,9 +470,10 @@ define([
 
         messages = [...cloneArray];
 
-        messagesHtml = messages.map((mess, i, messArr) => (
-            renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
-        ).join('');
+        messagesHtml = messages.map((mess, i, messArr) => {
+        const currentSenderId = messArr[i].sender.id;
+        const previousSenderId = messArr[i - 1]?.sender?.id;    
+        return (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess, '', currentSenderId, previousSenderId))}).join('');
         $messageList.html(messagesHtml);
 
         // Handle scroll if message list have an unread message
@@ -486,13 +498,14 @@ define([
         let messages;
         const pinnedMess = res?.pinnedMessage;
         let pinnedObjToStore;
-
+ 
         pinnedMess ? pinnedObjToStore = {
                         messId: pinnedMess?.id.messageId,
                         pinname: pinnedMess?.sender.name, 
                         message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
                         pinSequence: pinnedMess?.sequence,
-                        avatar: getAvatar(pinnedMess.sender.id)
+                        avatar: getAvatar(pinnedMess.sender.id),
+                        taggedUsers: pinnedMess?.taggedUsers
                     } : null
 
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
@@ -558,7 +571,7 @@ define([
             const pinnedObj = getPinnedMessRoomsById(roomInfo.id);
 
             ultiLastOffSet = messList[messList?.length - 1]?.sequence;
-            console.log(ultiLastOffSet);
+            // console.log(ultiLastOffSet);
 
             onGetMessageFromCache(roomInfo);
             modalPinMessage.renderPinnedMess(pinnedObj, true);
@@ -584,7 +597,10 @@ define([
                 return;
             }
 
-            let messagesHtml = messagesChat.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
+            let messagesHtml = messages.map((mess, i, messArr) => {
+                const currentSenderId = messArr[i].sender.id;
+                const previousSenderId = messArr[i - 1]?.sender?.id;    
+                return (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess, '', currentSenderId, previousSenderId))}).join('');
             $messageList.html(messagesHtml);
             $loadingOfNew.hide();
             $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
@@ -624,7 +640,7 @@ define([
             $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e));
 
             // View tagged profile
-            $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person', (e) => modalTagPerson.handleViewTagProfile(e));
+            $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
 
             modalPinMessage.onInit();
         },
@@ -660,7 +676,10 @@ define([
             if (!isViewBookmarkMode && jumpFastToBottomBtn.classList.contains('hidden')) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
-                const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
+
+                const currentSenderId = mess.sender.id;
+                const previousSenderId = messages[messages.length - 2]?.sender?.id;
+                const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess, '', currentSenderId, previousSenderId);
                 $messageList.append(messagesHtml);
 
                 // Check if chatbox scrolled to the bottom
@@ -776,7 +795,8 @@ define([
                     email: info.email,
                     id: info.id,
                     name: info.name
-                }
+                },
+                taggedUsers: data?.taggedUsers
             };
 
             if (!isInit) {
@@ -797,10 +817,13 @@ define([
 
             if (!jumpFastToBottomBtn.classList.contains('hidden')) return;
 
+            const currentSenderId = mess.sender.id;
+            const previousSenderId = messages[messages.length - 1]?.sender?.id;
+            
             if (messages?.length) {
-                messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
+                messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess, '', currentSenderId, previousSenderId);
             } else {
-                messagesHtml = renderMessage(mess);
+                messagesHtml = renderMessage(mess, '', currentSenderId, previousSenderId);
             }
 
             $messageList.append(messagesHtml);

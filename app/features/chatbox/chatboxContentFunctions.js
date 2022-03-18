@@ -94,16 +94,47 @@ define([
     //     return messageTemp;
     // };
 
+    ob.renderTag = (message, tagArrs, isMessContent) => {
+        let newTextTag = message;
+        const regex = /@\[user:[a-z0-9]{12}]/g;
+
+        if (regex.test(newTextTag)) {
+            const tagArrInMessage = newTextTag.match(regex) || [];
+            
+            tagArrInMessage.forEach((item) => {
+                const userid = item.substring(7, item.length - 1);
+                if (!tagArrs) return;
+                if (tagArrs.length > 0) {
+                    const [cloneArr] = tagArrs;
+                    if (!cloneArr) return;
+                }
+                tagArrs.forEach(ite => {
+                    if (ite.id === userid) {
+                        if (isMessContent) {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person-js tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${ite.name}</span>`) || newTextTag;
+                        } else {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${ite.name}</span>`) || newTextTag;
+                        }
+                    }
+                });
+            }); 
+        }
+
+        return newTextTag;
+    };
+
     const renderComment = (quotedMessage) => {
         const {
             sender,
             message,
             file,
-            sequence
+            sequence,
+            taggedUsers
         } = quotedMessage;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
         let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        text = ob.renderTag(text, taggedUsers);
 
         if (file) {
             text = handleMessCointainFile(file);
@@ -185,34 +216,7 @@ define([
         return '';
     };
 
-    ob.renderTag = (text, isSidebar) => {
-        let newTextTag = text;
-        if (text.includes('@{[user:') && text.length > 23) {
-            const tagArr = [];
-            const splitText = text.split('@{[user:');
-            splitText.forEach(item => {
-                const indexBracket = item.indexOf(']}');
-                if (indexBracket >= 0 && item.indexOf(',') >= 0) {
-                    tagArr.push(item.substring(0, indexBracket));
-                }
-            });
-
-            tagArr.forEach((item) => {
-                const userid = item.split(', ')[0];
-                const name = item.split(', ')[1];
-
-                if (isSidebar) {
-                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span userid="${userid}">@${name}</span>`) || text;
-                } else {
-                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
-                }
-            }); 
-        }
-
-        return newTextTag;
-    };
-
-    ob.renderMessage = (messObject, search) => {
+    ob.renderMessage = (messObject, search, currentSenderId, previousSenderId) => {
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
@@ -232,7 +236,8 @@ define([
                 readByAllPartners,
                 starred,
                 sequence,
-                pinned
+                pinned,
+                taggedUsers
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -242,7 +247,8 @@ define([
 
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
-            text = ob.renderTag(text);
+           
+            text = ob.renderTag(text, taggedUsers, true);
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -353,6 +359,7 @@ define([
             data.JOIN = GLOBAL.getLangJson().JOIN;
             data.messSequence = sequence;
             data.pinned = pinned ? 'pinned' : '';
+            data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {

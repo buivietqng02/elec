@@ -20,9 +20,10 @@ define([
             title = room.group ? room.subject : message.sender.name;
             const decodedMessage = functions.decodeStringBase64(message.message.replace(/<[^>]+>/g, ''));
             text = `${room.group ? `${message.sender.name}: ${decodedMessage}` : decodedMessage}`;
-    
+            
+            const tagArray = message?.taggedUsers;
             // Render in case tag person
-            text = chatboxContentFunctions.renderTag(text);
+            text = chatboxContentFunctions.renderTag(text, tagArray);
         }
 
         const notification = new Notification(

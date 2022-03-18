@@ -321,7 +321,8 @@ define([
             sender,
             lastMessage,
             muted,
-            type
+            type,
+            taggedUsers
         } = room;
         let data = {};
         let src = '';
@@ -377,7 +378,7 @@ define([
         }
 
         // In case last message contains tag person
-        mess = chatboxContentFunctions.renderTag(mess, true);
+        mess = chatboxContentFunctions.renderTag(mess, taggedUsers);
 
         // Favourite Room
         const listFavouritesRooms = GLOBAL.getFavouritesRooms()
@@ -424,7 +425,7 @@ define([
     };
 
     ob.moveRoomUp = (room) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
         const roomContainer = selectedSliderContainerFunc(room.id)
 
         $chatsItem = $('#leftbar .lbi-chats');
@@ -456,7 +457,7 @@ define([
     };
 
     ob.lostRoom = (rid) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
 
         if ($room.length) {
             $room.remove();
