@@ -810,7 +810,10 @@ define([
                     mess.quotedMessage = quotedObject;
                 }
                 // If is finding origin message state, jump to bottom first
-                if (!jumpFastToBottomBtn.classList.contains('hidden')) jumpToBottom();
+                if (!jumpFastToBottomBtn.classList.contains('hidden')) {
+                    jumpToBottom();
+                    return;
+                } 
             }
 
             storeRoomById(rid, messages.concat(mess));
