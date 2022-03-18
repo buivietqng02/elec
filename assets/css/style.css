@@ -1896,6 +1896,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .messages__item .--heading .--img {
+  display: none;
   width: 30px;
   height: 30px;
   object-fit: cover;
