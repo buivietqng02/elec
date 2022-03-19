@@ -363,7 +363,7 @@ define([
             data.messSequence = sequence;
             data.pinned = pinned ? 'pinned' : '';
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
-            data.colorGroupUser = (colorGroupUser && data.beginChat) ? `${colorGroupUser}` : '';
+            data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
