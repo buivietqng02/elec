@@ -1713,6 +1713,33 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   flex-wrap: nowrap;
 }
 
+.cl-black .--name{
+  color: rgba(0, 0, 0, 0.877);
+}
+
+.cl-blue .--name{
+  color: #3263d5;
+} 
+.cl-green .--name{
+  color: #38b954;
+}
+
+.cl-yellow .--name {
+  color: orange;
+}
+
+.cl-red .--name{
+  color: #a8290f;
+}
+
+.cl-violet .--name{
+  color: #7225e6;
+}
+
+.cl-gray .--name{
+  color: #696969;
+}
+
 .messages__item.activeScrollTo {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: rgba(33, 136, 253, 0.678) ;

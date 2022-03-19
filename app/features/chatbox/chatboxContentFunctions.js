@@ -216,7 +216,7 @@ define([
         return '';
     };
 
-    ob.renderMessage = (messObject, search, currentSenderId, previousSenderId) => {
+    ob.renderMessage = (messObject, search) => {
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
@@ -237,7 +237,10 @@ define([
                 starred,
                 sequence,
                 pinned,
-                taggedUsers
+                taggedUsers,
+                colorGroupUser,
+                currentSenderId,
+                previousSenderId
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -360,6 +363,7 @@ define([
             data.messSequence = sequence;
             data.pinned = pinned ? 'pinned' : '';
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
+            data.colorGroupUser = (colorGroupUser && data.beginChat) ? `${colorGroupUser}` : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
