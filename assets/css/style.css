@@ -1713,8 +1713,8 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   flex-wrap: nowrap;
 }
 
-.cl-black .--name{
-  color: rgba(0, 0, 0, 0.877);
+.cl-brown .--name{
+  color: rgba(102, 22, 22, 0.849);
 }
 
 .cl-blue .--name{
@@ -1729,7 +1729,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .cl-red .--name{
-  color: #a8290f;
+  color: #c01010;
 }
 
 .cl-violet .--name{

@@ -69,22 +69,22 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
 
         COLOR_NAME_GROUP: [
         {
-            name: 'cl-black',
+            name: 'cl-violet',
+        },
+        {
+            name: 'cl-brown',
         },
         {
             name: 'cl-blue',
         }, 
         {
-            name: 'cl-red',
-        }, 
-        {
             name: 'cl-green',
         }, 
         {
-            name: 'cl-yellow',
-        },
+            name: 'cl-red',
+        }, 
         {
-            name: 'cl-violet',
+            name: 'cl-yellow',
         },
         {
             name: 'cl-gray',

@@ -18,8 +18,7 @@ define([
         decodeStringBase64,
         encodeStringBase64,
         transformLinkTextToHTML,
-        getDataToLocalApplication,
-        setCursorEndOfText
+        getDataToLocalApplication
     } = functions;
 
     const {
@@ -126,10 +125,7 @@ define([
         // Get the copied text from the clipboard
         const text = (e.originalEvent || e).clipboardData.getData('text/plain');
         // insert text manually
-        // document.execCommand("insertHTML", false, text);
-        $input.get(0).innerText = $input.get(0).innerText + text;
-
-        setCursorEndOfText($input.get(0));
+        document.execCommand("insertText", true, text);
     };
 
     const onClear = () => {

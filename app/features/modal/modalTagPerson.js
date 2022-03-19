@@ -29,6 +29,7 @@ define([
     let isDeleting = false;
     let isUsingFirefox = false;
     let selectedIndex = 0;
+    const NUMBER_LIMIT_TAGS = 10;
 
     const { 
         render, getAvatar, htmlEncode, setCursorEndOfText 
@@ -275,6 +276,9 @@ define([
         // console.log(text);
 
         let searchText = '';
+
+        const tagList = input.querySelectorAll('.tagged');
+        if (tagList.length > NUMBER_LIMIT_TAGS - 1) return;
 
         // Get search text
         searchText = getSearchText(text);
