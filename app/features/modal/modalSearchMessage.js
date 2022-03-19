@@ -55,8 +55,8 @@ define([
                     <hr>
                     <span>${convertMessagetime(mess.msgDate, GLOBAL.getLangJson(), !!search)}</span>
                 </div> 
-                ${renderMessage(mess, search)}
-                ${renderMessage(mess, search)}
+               <!-- ${renderMessage(mess, search)} -->
+               <!-- ${renderMessage(mess, search)} -->
                 ${renderMessage(mess, search)}
             `;
             return textHTML;
@@ -172,7 +172,7 @@ define([
 
         callAPI(roomId, lastOffset, valueKeywords).then(res => {
             searchBtn.disabled = false;
-            console.log(res);
+            // console.log(res);
             if (!res?.messages?.length) {
                 searchContent.innerHTML = `<div class="not-found-mess text-center">${GLOBAL.getLangJson().MESSAGE_NOT_FOUND}</div>`;
                 return;
@@ -206,7 +206,7 @@ define([
 
     const onGetMoreMessageByScrolling = () => {
         callAPI(roomId, lastOffset, valueKeywords).then(res => {
-            console.log(res);
+            // console.log(res);
             let messagesHtml = '';
             let moreMessages = [];
 
@@ -220,8 +220,8 @@ define([
                     <hr>
                     <span>${convertMessagetime(mess.msgDate, GLOBAL.getLangJson(), true)}</span>
                 </div> 
-                ${renderMessage(mess, valueKeywords)}
-                ${renderMessage(mess, valueKeywords)}
+                <!-- ${renderMessage(mess, valueKeywords)} -->
+                <!-- ${renderMessage(mess, valueKeywords)} -->
                 ${renderMessage(mess, valueKeywords)}
                 `;
                 return messagesHtml;
@@ -241,7 +241,7 @@ define([
             isToPosition = false;
         }
 
-        console.log(isProcessing, isTouchLastMess, isToPosition);
+        // console.log(isProcessing, isTouchLastMess, isToPosition);
 
         if (isProcessing || isTouchLastMess || !isToPosition || !isSearchMode || isCancelSearch) {
             return;
