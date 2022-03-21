@@ -4,14 +4,16 @@ define([
     'shared/api',
     'shared/alert',
     'shared/functions',
-    'features/chatbox/chatboxContentChatList'
+    'features/chatbox/chatboxContentChatList',
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     GLOBAL,
     API, 
     ALERT,
     functions,
-    chatboxContentChatListComp
+    chatboxContentChatListComp,
+    chatboxContentFunctions
 ) => {
     let listMessWraper;
     let pinMessElement;
@@ -121,7 +123,7 @@ define([
         const selectedPinEle = e.currentTarget;
         const messId = selectedPinEle.getAttribute(PINNED_MESS_ID);
         const sequence = selectedPinEle.getAttribute(PINNED_SEQUENCE);
-        console.log(messId, sequence);
+        // console.log(messId, sequence);
         setTimeout(() => {
             chatboxContentComp.onShowExactOriginMessage(messId, sequence);
         }, 200);
@@ -169,6 +171,7 @@ define([
         let message;
         let pinSequence;
         let avatar;
+        let taggedUsers;
         removePinBar();
         if (!pinnedObj) return;
 
@@ -178,7 +181,8 @@ define([
                 pinname, 
                 message, 
                 pinSequence,
-                avatar
+                avatar,
+                taggedUsers
             } = pinnedObj);
         } else {
             messId = pinnedObj.id.messageId;
@@ -186,7 +190,12 @@ define([
             message = transformLinkTextToHTML(htmlEncode(decodeStringBase64(pinnedObj.message)));
             pinSequence = pinnedObj.sequence;
             avatar = getAvatar(pinnedObj.sender.id);
+            taggedUsers = pinnedObj?.taggedUsers;
         }
+
+        // Render if tagged message
+       
+        message = chatboxContentFunctions.renderTag(message, taggedUsers);
 
         pinMessBar.classList.remove('hidden');
 
@@ -221,16 +230,17 @@ define([
         }
     };
 
-    const pinMess = (pinEventsList, indx) => {
+    const pinMess = (pinEventsList, indx, isDifferentRoom) => {
         const pinMessObj = pinEventsList[indx]?.message;
         const pinnedObj = {
             messId: pinMessObj.id.messageId,
             pinname: pinMessObj.sender.name, 
             message: htmlEncode(decodeStringBase64(pinMessObj.message)),
             pinSequence: pinMessObj.sequence,
-            avatar: getAvatar(pinMessObj.sender.id)
+            avatar: getAvatar(pinMessObj.sender.id),
+            taggedUsers: pinMessObj?.taggedUsers
         };
-        renderPinnedMess(pinnedObj, true);
+        if (!isDifferentRoom) renderPinnedMess(pinnedObj, true);
 
         storePinnedMessRoomsById(pinMessObj.id.chatId, pinnedObj);
         updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);
@@ -240,9 +250,9 @@ define([
         if (pinMessElement) pinMessElement.classList.add('pinned');
     };
 
-    const unpinMess = (pinEventsList, indx) => {
+    const unpinMess = (pinEventsList, indx, isDifferentRoom) => {
         const pinMessObj = pinEventsList[indx]?.message;
-        renderPinnedMess();
+        if (!isDifferentRoom) renderPinnedMess();
 
         storePinnedMessRoomsById(pinMessObj.id.chatId, null);
         updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);
@@ -253,11 +263,16 @@ define([
     };
 
     const handlePinMessageOnSync = (syncRes) => {
-        console.log(syncRes);
+        // console.log(syncRes);
         const currRoomId = GLOBAL.getCurrentRoomId();
         const roomOnSyncId = syncRes?.pinEvents[0]?.message?.id?.chatId;
+        let isDifferentRoom;
 
-        if (roomOnSyncId !== currRoomId) return;
+        if (roomOnSyncId !== currRoomId) {
+            isDifferentRoom = true;
+        } else {
+            isDifferentRoom = false;
+        }
 
         const messageSettingsSlideComp = require('features/chatbox/messageSettingsSlide');
         const pinEventsList = syncRes.pinEvents;
@@ -269,18 +284,18 @@ define([
         if (pinEventsList.length === 1) {
             if (pinEventsList[0].pinned) {
                 // Pin
-                pinMess(pinEventsList, 0);
+                pinMess(pinEventsList, 0, isDifferentRoom);
             } else {
                 // Unpin
-                unpinMess(pinEventsList, 0);
+                unpinMess(pinEventsList, 0, isDifferentRoom);
             }
         }
 
         if (pinEventsList.length === 2) {
             // Unpin
-            unpinMess(pinEventsList, 0);
+            unpinMess(pinEventsList, 0, isDifferentRoom);
             // Pin
-            pinMess(pinEventsList, 1);
+            pinMess(pinEventsList, 1, isDifferentRoom);
         }
     };
 

@@ -35,11 +35,20 @@ define([
     let $frame;
     let $lCollapse;
     let sidebar;
+    let $wrapMess;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
         const $this = $(e.currentTarget);
         const roomId = $this.attr('data-room-id');
+        const isGroup = $this.attr('data-is-group');
+
+        if (isGroup === 'true') {
+            $wrapMess.addClass('group');
+        } else {
+            $wrapMess.removeClass('group');
+        }
+
         roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
                 return true;
@@ -119,13 +128,17 @@ define([
         if (modalBookmarkMessage.onGetIsViewingBookmark()) {
             modalBookmarkMessage.onCloseViewBookmarks();
         }
+
+        // Remove tag badge on room click
+        const badgeTag = e.currentTarget.querySelector('.badge-tag');
+        if (!badgeTag.classList.contains('active')) badgeTag.classList.add('hidden');
     };
 
     const onInit = () => {
         $caption = $('.js_caption');
         $chatbox = $('.js_wrap_mess');
         mediaFilesWraper = document.querySelector('.view-media-files-wraper');
-
+        $wrapMess = $('.js_wrap_mess');
         $frame = $('#frame');
         $lCollapse = $('.lbog-collapse');
 

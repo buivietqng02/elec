@@ -46,7 +46,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
         file: `<i class="xm icon-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
         quotedFile: `<i class="xm icon-download"></i> <b>{fileName}</b> {fileSize}`,
 
-        image: '<img class="p-cur --click-show-popup-up-img" src="{src}">',
+        image: '<div class="image-wraper"><img class="p-cur --click-show-popup-up-img" src="{src}"><a class="download-img" href="{src}" download target="_blank"><i class="icon-download"></i></a></div>',
         quotedImage: '<img class="p-cur" src="{src}">',
         // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
 
@@ -113,7 +113,10 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned} {beginChat} {colorGroupUser}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
+                <div class="user-avatar">
+                    <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
+                </div>
                 <div class="--content">
                     <div class="--heading">
                         <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">

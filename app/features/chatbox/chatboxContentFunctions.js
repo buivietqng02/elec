@@ -22,7 +22,8 @@ define([
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        stripTags
     } = functions;
     const { API_URL } = constant;
 
@@ -94,16 +95,48 @@ define([
     //     return messageTemp;
     // };
 
+    ob.renderTag = (message, tagArrs, isMessContent) => {
+        let newTextTag = message;
+        const regex = /@\[user:[a-z0-9]{12}]/g;
+
+        if (regex.test(newTextTag)) {
+            const tagArrInMessage = newTextTag.match(regex) || [];
+            
+            tagArrInMessage.forEach((item) => {
+                const userid = item.substring(7, item.length - 1);
+                if (!tagArrs) return;
+                if (tagArrs.length > 0) {
+                    const [cloneArr] = tagArrs;
+                    if (!cloneArr) return;
+                }
+                tagArrs.forEach(ite => {
+                    const userName = stripTags(ite.name);
+                    if (ite.id === userid) {
+                        if (isMessContent) {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person-js tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
+                        } else {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
+                        }
+                    }
+                });
+            }); 
+        }
+
+        return newTextTag;
+    };
+
     const renderComment = (quotedMessage) => {
         const {
             sender,
             message,
             file,
-            sequence
+            sequence,
+            taggedUsers
         } = quotedMessage;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
         let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        text = ob.renderTag(text, taggedUsers);
 
         if (file) {
             text = handleMessCointainFile(file);
@@ -205,15 +238,23 @@ define([
                 readByAllPartners,
                 starred,
                 sequence,
-                pinned
+                pinned,
+                taggedUsers,
+                colorGroupUser,
+                currentSenderId,
+                previousSenderId
             } = messObject;
             const data = {
                 id: id?.messageId,
                 chatType: type,
                 idLocal
             };
+            sender.name = stripTags(sender.name);
 
             let text = htmlEncode(decodeStringBase64(message));
+            // Render in case message includes tag person
+           
+            text = ob.renderTag(text, taggedUsers, true);
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -283,6 +324,11 @@ define([
                 text = highlightText(text, decodeStringBase64(search));
             }
 
+            // Change text in case send code
+            if (text.includes('::code::')) {
+                text = text.replaceAll(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
+            } 
+
             // Render in case share conference link
             const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
 
@@ -299,8 +345,8 @@ define([
             }
 
             data.src = getAvatar(sender?.id);
-            data.name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-            data.officially_name = htmlEncode(sender?.name);
+            data.name = htmlEncode(stripTags(roomEdited[sender?.id]?.user_name || sender?.name));
+            data.officially_name = htmlEncode(stripTags(sender?.name));
             data.userId = sender?.id;
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
@@ -319,12 +365,14 @@ define([
             data.JOIN = GLOBAL.getLangJson().JOIN;
             data.messSequence = sequence;
             data.pinned = pinned ? 'pinned' : '';
+            data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
+            data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-
+           
             data.mess = transformLinkTextToHTML(text);
 
             // render with case of file

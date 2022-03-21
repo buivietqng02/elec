@@ -110,6 +110,7 @@ define(['shared/icon'], (ICON) => ({
         
         <!-- LagBlaster content --> 
 
+        <!--
         <div id="lagblaster-content">
             <div class="lb-tab-content" id="lb-tabContent">
                 <div class="lb-content show" id="lb-home-content" role="tabpanel"> 
@@ -232,6 +233,7 @@ define(['shared/icon'], (ICON) => ({
             </ul>
            
         </div>
+        -->
 
         <!-- Lag Blater end content -->
         <div id="cart-packages" style="display: none">
@@ -610,7 +612,7 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="mess-fw-box"></div>
                                 <i class="xm icon-close mess-fw-box-close" role="button" tabindex="0"></i>
                             </div>
-                            <textarea class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..."></textarea>
+                            <div class="js_endter_mess messages__input" data-language="WRITE_A_MESSAGE" data-lang-type="placeholder" placeholder="Write a message..." contenteditable="true"></div>
 
                             <!-- Voice & send group button --> 
                             <div class="input-wrap-group-btn">
@@ -651,6 +653,15 @@ define(['shared/icon'], (ICON) => ({
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="wrap-emoji-codes">
+                                <div class="--head">
+                                    <lang data-language="EMOJI_CODES">ЭМОДЗИ, НАЗВАНИЯ КОТОРЫХ СОДЕРЖАТ</lang> <span class="emoji-code"></span>
+                                </div>
+                                <div class="--list">
+
                                 </div>
                             </div>
 
@@ -760,14 +771,24 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="icon-chevron-left"></i>
                                 <lang data-language="BACK"></lang>
                             </button>
+                            <div class="mess-search-topright">
+                                <div class="mess-search-box">
+                                    <div class="msbg-input-container">
+                                        <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
+                                        <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
+                                            <i class="icon-close"></i>
+                                        </button>
+                                    </div>
+            
+                                    <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
+                                        <i class="xm icon-search"></i>
+                                    </button>
+                                </div>
 
-                            <div class="mess-search-box">
-                                <i class="xm icon-search"></i>
-                                <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
-                               
-                                <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Cancel search">
-                                    <i class="icon-close"></i>
-                                </button>
+                                <div class="search-all-rooms-container custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="search-all-rooms">
+                                    <label class="custom-control-label" for="search-all-rooms">Search all rooms</label>
+                                </div>
                             </div>
                         </div>
 

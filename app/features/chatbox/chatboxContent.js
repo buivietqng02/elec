@@ -14,6 +14,7 @@ define([
     'features/sidebar/sidebarLeftBar',
     'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
+    'features/modal/modalTagPerson'
 ], (
     constant,
     API,
@@ -29,7 +30,8 @@ define([
     sidebarConferenceComp,
     sidebarLeftBarComp,
     modalBookmarkMessage,
-    modalPinMessage
+    modalPinMessage,
+    modalTagPerson
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -37,7 +39,8 @@ define([
     const {
         ATTRIBUTE_SIDEBAR_ROOM,
         ATTRIBUTE_MESSAGE_ID,
-        PINNED_MESS_ID
+        PINNED_MESS_ID,
+        COLOR_NAME_GROUP
     } = constant;
     const {
         transformLinkTextToHTML,
@@ -83,6 +86,10 @@ define([
     let lastOffsetScrollDown = 0;;
     let ultiLastOffSet = 0;
     let currentViewOriginMessRoomInfo;
+    let colorByUserid = {};
+    let colorIndex = 0;
+    let yourId;
+    let isGroup;
 
     // ======== Handle scroll to origin message ===========
 
@@ -112,6 +119,25 @@ define([
         jumpFastToBottomBtn.removeEventListener('click', jumpToBottom)
     }
 
+    const insertColorHeader = (currentSenderId, yourId, isGroup) => {
+        let colorGroupUser;
+        if (isGroup && yourId !== currentSenderId) {
+            const colorUser = colorByUserid[currentSenderId];
+           
+            if (!colorUser) {
+                colorByUserid[currentSenderId] = COLOR_NAME_GROUP[colorIndex].name;
+                if (colorIndex > COLOR_NAME_GROUP.length - 1) {
+                    colorIndex = 0;
+                } else {
+                    colorIndex++;
+                }
+            }
+            colorGroupUser = colorByUserid[currentSenderId];
+        }
+
+        return colorGroupUser;
+    }
+
     const handleLoadNewMessOnScrollDown = () => {
         if( $wrapper.scrollTop() + $wrapper.height() >= $wrapper[0].scrollHeight - 1 && !isProcessScrollDown && !isTouchLastMessBottom){    
             isProcessScrollDown = true;
@@ -130,7 +156,13 @@ define([
 
                 // Render message and append to chat list
                 moreMessages = moreMessages.concat(returnedMessages || []).reverse();
-                messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join(''); 
+                messagesHtml = moreMessages.map((mess, i, messArr) => {
+                mess.currentSenderId = messArr[i].sender.id;
+                mess.previousSenderId = messArr[i - 1]?.sender?.id;
+
+                mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+
+                return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))}).join(''); 
                 $messageList.append(messagesHtml);
 
                 // If touch last message at bottom, stop call API, remove eventListner
@@ -245,6 +277,10 @@ define([
             originMessageEle.classList.add('activeScrollTo');
 
             setTimeout(() => {
+                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }, 2000)
+
+            setTimeout(() => {
                 originMessageEle.classList.remove('activeScrollTo');
             }, 5000);
         } else {
@@ -264,8 +300,8 @@ define([
 
      // ======== Start Scroll to origin position ===========
     const handleScrollToOriginId = (e) => {
-        const originId = e.target.getAttribute('quoted-original-id').split('-')[1];
-        const sequenceNum =  e.target.getAttribute('quoted-original-sequence');
+        const originId = e.currentTarget.getAttribute('quoted-original-id').split('-')[1];
+        const sequenceNum =  e.currentTarget.getAttribute('quoted-original-sequence');
         showExactOriginMessage(originId, sequenceNum)
     }
      // ======== End Scroll to origin position ===========
@@ -373,7 +409,14 @@ define([
 
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
-            messagesHtml = moreMessages.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))).join('');
+            messagesHtml = moreMessages.map((mess, i, messArr) => {
+            mess.currentSenderId = messArr[i].sender.id;
+            mess.previousSenderId = messArr[i - 1]?.sender?.id;
+            mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+
+            return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))
+            }).join('');
+
             lastOffset = moreMessages[0]?.sequence;
 
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
@@ -452,10 +495,13 @@ define([
         const cloneArray = removeRepeatedMess(messages);
 
         messages = [...cloneArray];
+   
+        messagesHtml = messages.map((mess, i, messArr) => {
+            mess.currentSenderId = messArr[i].sender.id;
+            mess.previousSenderId = messArr[i - 1]?.sender?.id;
+            mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
 
-        messagesHtml = messages.map((mess, i, messArr) => (
-            renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))
-        ).join('');
+            return (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))}).join('');
         $messageList.html(messagesHtml);
 
         // Handle scroll if message list have an unread message
@@ -472,7 +518,6 @@ define([
             updateRoomInfo(roomInfo);
             processing = false;
         }, timeWait);
-
     };
 
     const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
@@ -480,13 +525,14 @@ define([
         let messages;
         const pinnedMess = res?.pinnedMessage;
         let pinnedObjToStore;
-
+ 
         pinnedMess ? pinnedObjToStore = {
                         messId: pinnedMess?.id.messageId,
                         pinname: pinnedMess?.sender.name, 
                         message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
                         pinSequence: pinnedMess?.sequence,
-                        avatar: getAvatar(pinnedMess.sender.id)
+                        avatar: getAvatar(pinnedMess.sender.id),
+                        taggedUsers: pinnedMess?.taggedUsers
                     } : null
 
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
@@ -535,6 +581,8 @@ define([
         unreadScrollNum = 0;
         processing = true;
         isTouchLastMess = false;
+        colorByUserid = {};
+        colorIndex = 0;
 
         if(jumpFastToBottomBtn.classList.contains('hidden')){
             ultiLastOffSet = 0;
@@ -543,7 +591,8 @@ define([
 
     const loadMessages = async (roomInfo) => {
         onRefresh();
-       
+        
+        isGroup = roomInfo.group;
         let messagesListLoadFirstTime;
         modalPinMessage.removePinBar();
         
@@ -552,7 +601,7 @@ define([
             const pinnedObj = getPinnedMessRoomsById(roomInfo.id);
 
             ultiLastOffSet = messList[messList?.length - 1]?.sequence;
-            console.log(ultiLastOffSet);
+            // console.log(ultiLastOffSet);
 
             onGetMessageFromCache(roomInfo);
             modalPinMessage.renderPinnedMess(pinnedObj, true);
@@ -578,7 +627,12 @@ define([
                 return;
             }
 
-            let messagesHtml = messagesChat.map((mess, i, messArr) => (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))).join('');
+            let messagesHtml = messages.map((mess, i, messArr) => {
+                mess.currentSenderId = messArr[i].sender.id;
+                mess.previousSenderId = messArr[i - 1]?.sender?.id;
+                mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+
+                return (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))}).join('');
             $messageList.html(messagesHtml);
             $loadingOfNew.hide();
             $(`[${ATTRIBUTE_SIDEBAR_ROOM} = "${roomInfo.id}"]`).find('.badge').html('');
@@ -593,6 +647,7 @@ define([
             processing = false;
             isTouchLastMess = false;
             isInit = false;
+            yourId =  GLOBAL.getInfomation()?.id;
 
             $btnScrollToBottom = $('.scroll-to__bottom');
             $scrollToMess = $('.scroll-to__message');
@@ -616,6 +671,9 @@ define([
 
             // Scroll to origin quoted message
             $(document).off('.scrollToOriginMess').on('click.scrollToOriginMess', '.comment-box-inline', (e) => handleScrollToOriginId(e));
+
+            // View tagged profile
+            $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
 
             modalPinMessage.onInit();
         },
@@ -651,6 +709,11 @@ define([
             if (!isViewBookmarkMode && jumpFastToBottomBtn.classList.contains('hidden')) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
+
+                mess.currentSenderId = mess?.sender?.id;
+                mess.previousSenderId = messages[messages?.length - 2]?.sender?.id || null;
+                mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
                 $messageList.append(messagesHtml);
 
@@ -767,7 +830,8 @@ define([
                     email: info.email,
                     id: info.id,
                     name: info.name
-                }
+                },
+                taggedUsers: data?.taggedUsers
             };
 
             if (!isInit) {
@@ -781,13 +845,20 @@ define([
                     mess.quotedMessage = quotedObject;
                 }
                 // If is finding origin message state, jump to bottom first
-                if (!jumpFastToBottomBtn.classList.contains('hidden')) jumpToBottom();
+                if (!jumpFastToBottomBtn.classList.contains('hidden')) {
+                    jumpToBottom();
+                    return;
+                } 
             }
 
             storeRoomById(rid, messages.concat(mess));
 
             if (!jumpFastToBottomBtn.classList.contains('hidden')) return;
 
+            mess.currentSenderId = mess.sender.id;
+            mess.previousSenderId = messages[messages.length - 1]?.sender?.id;
+            mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+            
             if (messages?.length) {
                 messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
             } else {

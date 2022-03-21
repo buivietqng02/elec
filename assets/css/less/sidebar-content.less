@@ -15,7 +15,23 @@
                     padding: 10px 15px 10px 15px;
                     cursor: pointer;
                     display: flex;
-    
+                    
+                    .badge-tag {
+                        display: inline-block;
+                        padding: 0.25em 0.4em;
+                        font-size: 75%;
+                        font-weight: 700;
+                        line-height: 1;
+                        text-align: center;
+                        white-space: nowrap;
+                        vertical-align: baseline;
+                        border-radius: 0.25rem;
+                        position: absolute;
+                        left: 6px;
+                        top: 3px;
+                        background-color: #0093FF;
+                    }
+
                     .contact__name {
                         white-space: nowrap;
                         overflow: hidden;
@@ -57,6 +73,18 @@
     
                 .contact-list__item .preview {
                     font-size: 0.75rem;
+
+                    .tagged-person{
+                        .avatar {
+                            width: 14px;
+                            height: 14px;
+                            display: inline-flex;
+                            min-width: unset;
+                            min-height: unset;
+                            margin-right: 3px;
+                            margin-bottom: 3px;
+                        }
+                    }
                 }
             }
         }

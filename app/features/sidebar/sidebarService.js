@@ -4,12 +4,14 @@ define([
     'shared/functions',
     // 'shared/api',
     // 'shared/alert'
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     GLOBAL,
     functions,
     // API,
     // ALERT
+    chatboxContentFunctions
     
 ) => {
     const contactHeight = $('.contacts').eq(0).height() || 1000;
@@ -49,6 +51,7 @@ define([
             <li class="js_li_list_user contact-list__item p-cur {status} {live} {mute} {isFavourite} slide-menu" ${ATTRIBUTE_SIDEBAR_ROOM}="{id}" {isGroup} {inviteId}>
                 <img ${ATTRIBUTE_CHANGE_IMAGE_GROUP}="{id}" class="--img avatar {classImg}" src="{src}" {handleImageErr} />
                 <div class="badge badge-orange">{unread}</div>
+                <div class="badge-tag hidden">@</div>
                 <div class="p-pl-10 meta">
                     <div class="--name contact__name p-1-line">
                         <i class="xm icon-volume-mute" aria-hidden="true"></i>
@@ -318,14 +321,15 @@ define([
             sender,
             lastMessage,
             muted,
-            type
+            type,
+            taggedUsers
         } = room;
         let data = {};
         let src = '';
         let status = !id ? 'p_disabled' : '';
         const numUnRead = unreadMessages || '';
-        let name = group ? subject : (obRoomEdited[partner?.id]?.user_name || partner?.name);
-        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage))) : '';
+        let name = group ? subject : stripTags(obRoomEdited[partner?.id]?.user_name || partner?.name);
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replaceAll('::code::','')) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
         let isFavourite = false;
@@ -373,6 +377,9 @@ define([
             mess = `Unpin: ${mess}`;
         }
 
+        // In case last message contains tag person
+        mess = chatboxContentFunctions.renderTag(mess, taggedUsers);
+
         // Favourite Room
         const listFavouritesRooms = GLOBAL.getFavouritesRooms()
         if(listFavouritesRooms.indexOf(id) > -1) {
@@ -418,7 +425,7 @@ define([
     };
 
     ob.moveRoomUp = (room) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
         const roomContainer = selectedSliderContainerFunc(room.id)
 
         $chatsItem = $('#leftbar .lbi-chats');
@@ -450,7 +457,7 @@ define([
     };
 
     ob.lostRoom = (rid) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
 
         if ($room.length) {
             $room.remove();

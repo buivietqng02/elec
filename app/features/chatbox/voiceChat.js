@@ -364,7 +364,7 @@ define([
             initVoiceButton.style.display = 'none';
             btnVoiceChatDescription.style.display = 'none';
             inputTextChat.classList.remove('de-active');
-            inputTextChat.style.height = '43px';
+            inputTextChat.style.height = '48px';
             attachBtn.style.display = 'block';
             isVoiceInit = false;
             initVoiceChat.setAttribute('isUsingVoiceMess', false);

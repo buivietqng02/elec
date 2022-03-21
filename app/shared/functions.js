@@ -192,8 +192,12 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         }
 
         const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
+        const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
         const content = string.replace(regexp, url => {
-            const html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+            let html = url;
+            if (!url.match(avatarLink)) {
+                html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+            }
 
             return html;
         });
@@ -287,5 +291,15 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         return indexedArray;
     },
 
-    render: (html, data) => $.templates(convertToJSView(html)).render(data)
+    render: (html, data) => $.templates(convertToJSView(html)).render(data),
+
+    setCursorEndOfText: (el) => {
+        const selection = window.getSelection();  
+        const range = document.createRange();  
+        selection.removeAllRanges();  
+        range.selectNodeContents(el);  
+        range.collapse(false);  
+        selection.addRange(range);  
+        el.focus();
+    }
 }));
