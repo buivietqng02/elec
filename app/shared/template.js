@@ -110,6 +110,7 @@ define(['shared/icon'], (ICON) => ({
         
         <!-- LagBlaster content --> 
 
+        <!--
         <div id="lagblaster-content">
             <div class="lb-tab-content" id="lb-tabContent">
                 <div class="lb-content show" id="lb-home-content" role="tabpanel"> 
@@ -232,6 +233,7 @@ define(['shared/icon'], (ICON) => ({
             </ul>
            
         </div>
+        -->
 
         <!-- Lag Blater end content -->
         <div id="cart-packages" style="display: none">

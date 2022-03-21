@@ -711,7 +711,7 @@ define([
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
 
                 mess.currentSenderId = mess?.sender?.id;
-                mess.previousSenderId = messages[messages?.length - 2]?.sender?.id;
+                mess.previousSenderId = messages[messages?.length - 2]?.sender?.id || null;
                 mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
 
                 const messagesHtml = renderRangeDate(mess, 1, [].concat(messages[messages.length - 1], mess)) + renderMessage(mess);
