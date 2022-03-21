@@ -22,7 +22,8 @@ define([
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        stripTags
     } = functions;
     const { API_URL } = constant;
 
@@ -109,11 +110,12 @@ define([
                     if (!cloneArr) return;
                 }
                 tagArrs.forEach(ite => {
+                    const userName = stripTags(ite.name);
                     if (ite.id === userid) {
                         if (isMessContent) {
-                            newTextTag = newTextTag.replace(item, `<span class="tagged-person-js tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${ite.name}</span>`) || newTextTag;
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person-js tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
                         } else {
-                            newTextTag = newTextTag.replace(item, `<span class="tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${ite.name}</span>`) || newTextTag;
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
                         }
                     }
                 });
@@ -247,6 +249,7 @@ define([
                 chatType: type,
                 idLocal
             };
+            sender.name = stripTags(sender.name);
 
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
@@ -342,8 +345,8 @@ define([
             }
 
             data.src = getAvatar(sender?.id);
-            data.name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-            data.officially_name = htmlEncode(sender?.name);
+            data.name = htmlEncode(stripTags(roomEdited[sender?.id]?.user_name || sender?.name));
+            data.officially_name = htmlEncode(stripTags(sender?.name));
             data.userId = sender?.id;
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';

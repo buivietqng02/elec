@@ -32,7 +32,7 @@ define([
     const NUMBER_LIMIT_TAGS = 10;
 
     const { 
-        render, getAvatar, htmlEncode, setCursorEndOfText 
+        render, getAvatar, htmlEncode, setCursorEndOfText, stripTags
     } = functions;
 
     const tagModal = `
@@ -136,7 +136,7 @@ define([
             tagPerson = value;
         }
 
-        const namePerson = tagPerson.querySelector('.tag-name').textContent;
+        const namePerson = stripTags(tagPerson.querySelector('.tag-name').textContent);
 
         const userId = tagPerson.querySelector('.tag-name').getAttribute('data-userid-name');
         closeModalTag();
@@ -182,7 +182,7 @@ define([
         list.forEach((member, index) => {
             const arrItem = {
                 id: member.user.id,
-                currentName: htmlEncode(member.user.name),
+                currentName: htmlEncode(stripTags(member.user.name)),
                 src: getAvatar(member.user.id),
                 email: member.user.email,
                 selected: index === selectedIndex ? 'selected' : ''

@@ -13,7 +13,7 @@ define([
     GLOBAL,
     functions
 ) => {
-    const { getAvatar } = functions;
+    const { getAvatar, stripTags } = functions;
     const {
         API_URL, ATTRIBUTE_CHANGE_NAME, ATTRIBUTE_CHANGE_IMAGE
     } = constant;
@@ -123,7 +123,7 @@ define([
         isProcessing = true;
         $save.addClass('loading-btn');
 
-        API.post('saveprofile', { name: `${$name.val() || info.name}` }).then(() => {
+        API.post('saveprofile', { name: `${stripTags($name.val()) || info.name}` }).then(() => {
             if ($name.val()) {
                 info.name = $name.val();
                 $(`[${ATTRIBUTE_CHANGE_NAME}="${info.id}"]`).text($name.val());

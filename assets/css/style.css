@@ -808,7 +808,7 @@ video {
   position: absolute;
   bottom: 0px;
   right: 2px;
-  font-size: 22px;
+  font-size: 17px;
   padding: 0 5px;
   color: rgba(255, 255, 255, 0.842);
   background-color: rgba(0, 0, 0, 0.432);
@@ -1955,19 +1955,19 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 0.75rem;
+  margin-top: 0.4rem;
   position: relative;
 }
 
 .messages__bottom .--date {
   color: #00000080;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-style: italic;
 }
 
 .messages__bottom .--edited {
   color: #00000080;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-style: italic;
   text-align: left;
 }
