@@ -4,7 +4,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
-### [4.20] - 2022-03-18
+### [4.20] - 2022-03-21
 ### Add
 - Log out when can not load API
 - Update new chat interface (remove unecessary space, avatar, name, group the chat by same user, shortern quotedMess)
@@ -15,6 +15,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 - Fix bug draft message not delete when send
 - Update new forward message, chat list will not show up all at once, scroll more to load
 - Front-end for new search tool (NOT finished)
+- Each member in a chat room has a different color for their names.
 
 
 ### [4.19] - 2022-03-08
