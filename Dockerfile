@@ -13,6 +13,6 @@ FROM nginx:latest
 
 WORKDIR /usr/share/nginx/html/
 
-COPY --from=builder . .
+COPY --from=builder /var/xm/ .
 RUN ls -l 
 
