@@ -125,12 +125,13 @@ define([
             const colorUser = colorByUserid[currentSenderId];
            
             if (!colorUser) {
-                colorByUserid[currentSenderId] = COLOR_NAME_GROUP[colorIndex].name;
                 if (colorIndex > COLOR_NAME_GROUP.length - 1) {
                     colorIndex = 0;
                 } else {
                     colorIndex++;
                 }
+
+                colorByUserid[currentSenderId] = COLOR_NAME_GROUP[colorIndex]?.name;
             }
             colorGroupUser = colorByUserid[currentSenderId];
         }
