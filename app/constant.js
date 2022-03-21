@@ -68,28 +68,28 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         PINNED_SEQUENCE: 'pinned-sequence',
 
         COLOR_NAME_GROUP: [
-        {
-            name: 'cl-violet',
-        },
-        {
-            name: 'cl-brown',
-        },
-        {
-            name: 'cl-blue',
-        }, 
-        {
-            name: 'cl-green',
-        }, 
-        {
-            name: 'cl-red',
-        }, 
-        {
-            name: 'cl-yellow',
-        },
-        {
-            name: 'cl-gray',
-        }
-    ],
+            {
+                name: 'cl-violet',
+            },
+            {
+                name: 'cl-brown',
+            },
+            {
+                name: 'cl-blue',
+            }, 
+            {
+                name: 'cl-green',
+            }, 
+            {
+                name: 'cl-red',
+            }, 
+            {
+                name: 'cl-yellow',
+            },
+            {
+                name: 'cl-gray',
+            }
+        ],
     };
 
     return Object.freeze(obj);

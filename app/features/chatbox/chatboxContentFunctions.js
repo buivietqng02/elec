@@ -249,7 +249,7 @@ define([
                 chatType: type,
                 idLocal
             };
-            sender.name = stripTags(sender.name);
+            sender.name = stripTags(sender?.name);
 
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
