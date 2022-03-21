@@ -2594,8 +2594,16 @@ body.body_theme_blue .sidebar {
   background: linear-gradient(180deg,#1e4fab,#21768a,#396a9c) no-repeat center/cover;
 }
 
+body.body_theme_blue .messages__item.you .--content {
+    background-color: #d2eefd;
+}
+
 body.body_theme_green {
   background: linear-gradient(#00e75f,rgba(0,205,131,0.78),rgba(76,255,135,0.4)),url(assets/images/flowers_bw03.png) no-repeat center/cover;
+}
+
+body.body_theme_green .messages__item.you .--content {
+  background-color: #d3fcd0;
 }
 
 body.body_theme_black {
@@ -2626,12 +2634,20 @@ body.body_theme_black .messages__first {
   color: rgba(255,255,255,0.5);
 }
 
+body.body_theme_black .messages__item.you .--content {
+  background-color: #e8e8e8;
+}
+
 body.body_theme_gray {
   background: linear-gradient(rgba(255,255,255,0.35),rgba(198,235,255,0.58),rgba(255,255,255,0)),url(assets/images/700-scaled.jpg) no-repeat center/cover;
 }
 
 body.body_theme_gray .messages__time-chat {
   color: rgba(0,0,0,0.6);
+}
+
+body.body_theme_black .messages__item.you .--content {
+  background-color: #e8e8e8;
 }
 
 body.body_fz_12 {
