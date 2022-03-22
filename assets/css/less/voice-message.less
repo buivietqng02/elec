@@ -234,11 +234,18 @@
   }
   
   .audio-timeIndicate{
-  color: #0093FF;
-  font-size: 9px;
-  /* margin-top:-60px; */
-  
+    color: #0093FF;
+    font-size: 9px;
+    margin-top: 6px; 
   }
+
+  .mess-comment-box .mess-fw-box .audio-timeIndicate{
+    margin-top: -28px;
+  }
+
+  .comment-box-inline .audio-timeIndicate {
+    margin-top: -28px;
+}
   
   
   /* ----------- Circle progress style button * ------------/ */
@@ -274,46 +281,21 @@
     z-index:10;
     /* max-height: 100px; */
     pointer-events:none;
+
+    .icon-microphoneVoice, .icon-microphoneVoiceBlue {
+      font-size: 25px;
+      display: block;
+    }
   }
   
   .audio-circle{
     width: 100%;
     height: 100%;
-    position: relative;
-    top:-168px;
+    position: absolute;
+    top:0;
+    left:0;
     pointer-events:none;
   }
-  
-  /* Style for Google Chrome */
-  @media screen and (-webkit-min-device-pixel-ratio:0){
-    .audio-circle{
-      top: -168px;
-    }  
-  }
-  
-  /* Style for Firefox */
-  @-moz-document url-prefix() {
-    .audio-circle{
-        top: -120px;
-      }
-    }
-  
-  /* Style for Safari */
-  /* Safari 11+ */
-  @media not all and (min-resolution:.001dpcm)
-  { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-    .audio-circle{
-      top: -120px;
-    }
-  }}
-  
-  /* Safari 10.1 */
-  @media not all and (min-resolution:.001dpcm){ 
-  @supports (-webkit-appearance:none) and (not (stroke-color:transparent)) {
-    .audio-circle{
-      top: -120px;
-    }
-  }}
   
   .audio-circle .audio-right {
     position: absolute;

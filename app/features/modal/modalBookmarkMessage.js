@@ -26,6 +26,9 @@ define([
     let isToPosition = false;
     let processing = false;
 
+    let isShowingPinbar = false;
+    let pinMessStatusBar;
+
     const { ATTRIBUTE_MESSAGE_ID } = constant;
     const { getCurrentRoomId } = GLOBAL;
     const { renderMessage, renderRangeDate } = contentFunc;
@@ -40,6 +43,8 @@ define([
     const onCloseViewBookmarksAndReloadMess = () => {
         const chatboxContentComp = require('features/chatbox/chatboxContent');
         onCloseViewBookmarks();
+
+        if (isShowingPinbar) pinMessStatusBar.classList.remove('hidden');
 
         let roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(currentRoomId)) {
@@ -121,7 +126,13 @@ define([
     const onClickViewBookmarks = () => {
         const chatboxTopbarComp = require('features/chatbox/chatboxTopbar');
         const viewBookmarksBtn = document.querySelector('#chatbox-group-option .--viewBookmark');
-        const pulseViewBookmark = viewBookmarksBtn.querySelector('.pulse')
+        const pulseViewBookmark = viewBookmarksBtn.querySelector('.pulse');
+        pinMessStatusBar = document.querySelector('.pin-message-status-bar');
+
+        if (!pinMessStatusBar.classList.contains('hidden')) {
+            isShowingPinbar = true;
+            pinMessStatusBar.classList.add('hidden');
+        }
 
         viewBookmarksBtn.disabled = true;
         currentRoomId = getCurrentRoomId()

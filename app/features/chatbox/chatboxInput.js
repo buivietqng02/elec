@@ -125,7 +125,23 @@ define([
         // Get the copied text from the clipboard
         const text = (e.originalEvent || e).clipboardData.getData('text/plain');
         // insert text manually
-        document.execCommand("insertText", true, text);
+
+        if (document.queryCommandSupported('insertText')) {
+            document.execCommand('insertText', false, text);
+        } else {
+            // Insert text at the current position of caret
+            const range = document.getSelection().getRangeAt(0);
+            range.deleteContents();
+    
+            const textNode = document.createTextNode(text);
+            range.insertNode(textNode);
+            range.selectNodeContents(textNode);
+            range.collapse(false);
+    
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     };
 
     const onClear = () => {

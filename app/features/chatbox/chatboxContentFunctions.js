@@ -133,6 +133,7 @@ define([
             sequence,
             taggedUsers
         } = quotedMessage;
+        let shorternText;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
         let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
@@ -140,11 +141,14 @@ define([
 
         if (file) {
             text = handleMessCointainFile(file);
+            shorternText = '';
+        } else {
+            shorternText = 'comment-text-shortern';
         }
 
         // console.log(text);
 
-        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${sequence}">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline ${shorternText}" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${sequence}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {

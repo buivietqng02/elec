@@ -123,9 +123,8 @@ define([
         let colorGroupUser;
         if (isGroup && yourId !== currentSenderId) {
             const colorUser = colorByUserid[currentSenderId];
-           
             if (!colorUser) {
-                if (colorIndex > COLOR_NAME_GROUP.length - 1) {
+                if (colorIndex >= COLOR_NAME_GROUP.length - 1) {
                     colorIndex = 0;
                 } else {
                     colorIndex++;

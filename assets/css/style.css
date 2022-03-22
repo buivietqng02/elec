@@ -1740,6 +1740,18 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #696969;
 }
 
+.cl-gray .--cyan{
+  color: rgb(0, 255, 213);
+}
+
+.cl-gray .--cream{
+  color: #C0B27C;
+}
+
+.cl-gray .--min{
+  color: #42897B;
+}
+
 .messages__item.activeScrollTo {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: rgba(33, 136, 253, 0.678) ;
@@ -1793,7 +1805,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .--mess {
-  white-space: pre-wrap;
+  white-space: normal;
 }
 
 .--message-removed {
@@ -1830,12 +1842,14 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   cursor:pointer;
   transition: box-shadow 0.5s;
   background-color: #fff;
+}
 
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  max-height: 50px;
-  overflow: hidden;
+.comment-box-inline.comment-text-shortern {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 50px;
+    overflow: hidden;
 }
 
 .comment-box-inline:hover{
@@ -1845,35 +1859,6 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 .comment-box-inline .p-cur{
   width: 100px;
   height: 100px;
-}
-
-.comment-box-inline .audio-main-content{
-    top: 0px;
-}
-
-.comment-box-inline .audio-circle {
-  top: -133px;
-}
-
-.comment-box-inline .audio-timeIndicate {
-  margin-top: 5px;
-}
-
-/* Style for Safari */
-/* Safari 11+ */
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-  
-.comment-box-inline .audio-circle {
-  top: -95px;
-}
-}}
-
-/* Style for Firefox */
-@-moz-document url-prefix() {
-  .comment-box-inline .audio-circle {
-    top: -96px;
-  }
 }
 
 .messages__item .--content {
@@ -2697,35 +2682,6 @@ body.body_fz_18 {
 
 .mess-comment-box .comment-box-inline {
   display: inline-block;
-}
-
-.mess-comment-box .mess-fw-box .audio-circle{
-  top: -126px;
-}
-
-.audio-number .icon-microphoneVoice,.icon-microphoneVoiceBlue{
-  font-size: 25px;
-  display: block;
-  margin-bottom: -40px;
-}
-.mess-comment-box .mess-fw-box .icon-microphoneVoice,.icon-microphoneVoiceBlue{
-  margin-top: 5px;
-}
-
-/* Style for Safari */
-/* Safari 11+ */
-@media not all and (min-resolution:.001dpcm)
-{ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
-    .mess-comment-box .mess-fw-box .audio-circle{
-      top: -90px;
-    }
-}}
-
-/* Style for Firefox */
-@-moz-document url-prefix() {
-  .mess-comment-box .mess-fw-box .audio-circle{
-    top: -90px;
-  }
 }
 
 .chatbox-progress-upload {
