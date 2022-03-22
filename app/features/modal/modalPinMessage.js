@@ -231,6 +231,8 @@ define([
     };
 
     const pinMess = (pinEventsList, indx, isDifferentRoom) => {
+        const isNotViewingBookmark = document.querySelector('.view-bookmark-status-bar').classList.contains('hidden');
+
         const pinMessObj = pinEventsList[indx]?.message;
         const pinnedObj = {
             messId: pinMessObj.id.messageId,
@@ -240,7 +242,7 @@ define([
             avatar: getAvatar(pinMessObj.sender.id),
             taggedUsers: pinMessObj?.taggedUsers
         };
-        if (!isDifferentRoom) renderPinnedMess(pinnedObj, true);
+        if (!isDifferentRoom && isNotViewingBookmark) renderPinnedMess(pinnedObj, true);
 
         storePinnedMessRoomsById(pinMessObj.id.chatId, pinnedObj);
         updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);
