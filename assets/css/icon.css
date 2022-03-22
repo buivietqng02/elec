@@ -53,6 +53,7 @@
 }
 .icon-keyboard-dark:before {
   content: "\e908";
+  color: #0093ff;
 }
 .icon-keyboard:before {
   content: "\e909";
