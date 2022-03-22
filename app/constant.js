@@ -88,6 +88,15 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             },
             {
                 name: 'cl-gray',
+            },
+            {
+                name: 'cl-cyan',
+            },
+            {
+                name: 'cl-cream',
+            },
+            {
+                name: 'cl-min',
             }
         ],
     };

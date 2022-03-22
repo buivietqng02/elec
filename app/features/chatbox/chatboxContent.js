@@ -123,9 +123,8 @@ define([
         let colorGroupUser;
         if (isGroup && yourId !== currentSenderId) {
             const colorUser = colorByUserid[currentSenderId];
-           
             if (!colorUser) {
-                if (colorIndex > COLOR_NAME_GROUP.length - 1) {
+                if (colorIndex >= COLOR_NAME_GROUP.length - 1) {
                     colorIndex = 0;
                 } else {
                     colorIndex++;
@@ -418,6 +417,8 @@ define([
             return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))
             }).join('');
 
+            console.log(colorByUserid);
+
             lastOffset = moreMessages[0]?.sequence;
 
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
@@ -504,6 +505,8 @@ define([
 
             return (renderRangeDate(mess, i, messArr) + renderUnread(mess) + renderMessage(mess))}).join('');
         $messageList.html(messagesHtml);
+
+        console.log(colorByUserid);
 
         // Handle scroll if message list have an unread message
         if (isShowUnread) {

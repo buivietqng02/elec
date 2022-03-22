@@ -1740,6 +1740,18 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #696969;
 }
 
+.cl-gray .--cyan{
+  color: rgb(0, 255, 213);
+}
+
+.cl-gray .--cream{
+  color: #C0B27C;
+}
+
+.cl-gray .--min{
+  color: #42897B;
+}
+
 .messages__item.activeScrollTo {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   background-color: rgba(33, 136, 253, 0.678) ;
