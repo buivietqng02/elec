@@ -330,7 +330,7 @@ define([
 
             // Change text in case send code
             if (text.includes('::code::')) {
-                text = text.replaceAll(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
+                text = text.replace(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
             } 
 
             // Render in case share conference link
