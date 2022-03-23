@@ -329,7 +329,7 @@ define([
         let status = !id ? 'p_disabled' : '';
         const numUnRead = unreadMessages || '';
         let name = group ? subject : stripTags(obRoomEdited[partner?.id]?.user_name || partner?.name);
-        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replaceAll('::code::','')) : '';
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replace(/::code::/g,'')) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
         let isFavourite = false;
