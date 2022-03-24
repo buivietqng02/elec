@@ -1740,15 +1740,15 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   color: #696969;
 }
 
-.cl-gray .--cyan{
+.cl-cyan .--name{
   color: rgb(0, 255, 213);
 }
 
-.cl-gray .--cream{
+.cl-cream .--name{
   color: #C0B27C;
 }
 
-.cl-gray .--min{
+.cl-min .--name{
   color: #42897B;
 }
 
@@ -1805,7 +1805,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 }
 
 .--mess {
-  white-space: normal;
+  white-space: pre-wrap;
 }
 
 .--message-removed {
