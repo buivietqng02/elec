@@ -29,7 +29,6 @@ define([
     let $editBtn;
     let $removeBtn;
     let $copyTextBtn;
-    let $textBookmarkBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -79,6 +78,7 @@ define([
     };
 
     const onBookmark = () => {
+        offEventClickOutside();
         modalBookmarkMessageComp.onInit($message);
     };
 
@@ -131,7 +131,6 @@ define([
     const handleOptionsByUser = () => {
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
-        const isBookmark = $message.hasClass('bookmark');
         const isPinned = $message.hasClass('pinned');
 
         if (isActiveUser) {
@@ -154,13 +153,6 @@ define([
             $copyTextBtn.hide();
         } else {
             $copyTextBtn.show();
-        }
-
-        // If bookmark message
-        if (isBookmark) {
-            $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
-        } else {
-            $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
         }
 
         // If pinned message
@@ -194,7 +186,6 @@ define([
             $copyTextBtn = $('.js-menu-messages-copytext');
             $messageInfoBtn = $('.js-menu-messages-info');
             $bookmarkMessBtn = $('.js-menu-messages-bookmark');
-            $textBookmarkBtn = $('.js-menu-messages-bookmark lang');
             $pinMessBtn = $('.js-menu-messages-pinmess');
             $textPinBtn = $('.js-menu-messages-pinmess lang');
 
