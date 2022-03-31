@@ -175,7 +175,7 @@ define([
                     startWithVideoMuted: true,
                     toolbarButtons: [
                         'camera',
-                        //    'chat',
+                        'chat',
                         'closedcaptions',
                         'desktop',
                         'download',
