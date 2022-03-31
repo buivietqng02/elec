@@ -578,6 +578,7 @@ define(['shared/icon'], (ICON) => ({
                                 <lang data-language="INFO"></lang>
                             </button>
                             <button class="--bm menu__item js-menu-messages-bookmark">
+                                <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty"></i>
                                 <lang data-language="BOOKMARK"></lang>
                             </button>
