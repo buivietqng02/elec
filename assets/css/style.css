@@ -1972,6 +1972,35 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   right: 0;
 }
 
+.message-reactions {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.message-reactions .message-reaction {
+  width: fit-content;
+  background-color: rgba(0,136,204,0.3);
+  padding: 5px 8px;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.message-reactions .message-reaction.--selected {
+  background-color: rgba(0,136,204,0.5);
+}
+
+.message-reactions .message-reaction .--count {
+  font-size: 0.6rem;
+}
+
+.js_li_list_mess .message-reactions .message-reaction:hover {
+  background-color: rgba(0,136,204,0.5);
+}
+
 .messages__input {
   position: relative;
   /* top: 4px; */
@@ -2975,6 +3004,24 @@ body.body_fz_18 {
   padding: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   margin-bottom: 0;
+}
+
+#messageReactionListModal .--reaction-by .mim-member{
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+#messageReactionListModal .--reaction-by .mim-member:hover{
+  background-color: rgba(0,0,0,0.1);
+}
+
+#messageReactionListModal .--reaction-by .mim-member .--name{
+  margin: auto 0;
+}
+
+#messageReactionListModal .--reaction-by .mim-member .--reaction{
+  margin: auto 5px auto auto;
 }
 
 #forwardMessageModal .fmm-room,

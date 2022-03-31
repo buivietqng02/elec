@@ -187,6 +187,12 @@
 .icon-poll-h:before {
   content: "\e934";
 }
+.icon-reaction:before {
+  content: "\e939";
+}
+.icon-reaction-list:before {
+  content: "\e93c";
+}
 .icon-search:before {
   content: "\e935";
 }

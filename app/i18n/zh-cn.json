@@ -114,6 +114,8 @@
     "PINNED_MESSAGE": "Pinned messages",
     "Q": "__________________________________",
     "R": "__________________________________",
+    "REACTION": "Reaction",
+    "REACTION_LIST": "Reaction list",
     "REMOVE": "删除",
     "REMOVE_BOOKMARK": "Remove bookmark",
     "RELEASE_TO_SEND": "松开按钮发送",

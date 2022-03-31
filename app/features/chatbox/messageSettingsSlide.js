@@ -7,7 +7,9 @@ define([
     'features/modal/modalMessageInfo',
     'features/modal/modalRemoveMessage',
     'features/modal/modalBookmarkMessage',
-    'features/modal/modalPinMessage'
+    'features/modal/modalPinMessage',
+    'features/modal/modalMessageReaction',
+    'features/modal/modalMessageReactionList'
 ], (
     GLOBAL,
     ALERT,
@@ -17,7 +19,9 @@ define([
     modalMessageInfoComp,
     modalRemoveMessage,
     modalBookmarkMessageComp,
-    modalPinMessageComp
+    modalPinMessageComp,
+    modalMessageReactionComp,
+    modalMessageReactionListComp
 ) => {
     const message = {};
     let $message;
@@ -104,6 +108,20 @@ define([
         modalMessageInfoComp.onInit(chatId, messageDate);
     };
 
+    const onReaction = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
+        const messageId = $message.data().chatId;
+        offEventClickOutside();
+        modalMessageReactionComp.onModal(chatId, messageId);
+    }
+
+    const onReactionList = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
+        const messageId = $message.data().chatId;
+        offEventClickOutside();
+        modalMessageReactionListComp.onInit(chatId, messageId);
+    }
+
     const locatePosition = ($element) => {
         const winWidth = $(window).width();
         const winHeight = $(window).height();
@@ -112,7 +130,7 @@ define([
         const left = elementPos.left - ($wrapper.offset().left + 132);
         let top = elementPos.top + 20;
 
-        if (slideHiehgt + top + 100 > winHeight) {
+        if (slideHiehgt + top > winHeight) {
             top = elementPos.top - slideHiehgt - 20;
         }
         $slide.css({
@@ -129,10 +147,20 @@ define([
     };
 
     const handleOptionsByUser = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
         const isBookmark = $message.hasClass('bookmark');
         const isPinned = $message.hasClass('pinned');
+        const haveReactions = $message.hasClass('have-reactions');
+        const roomInfo = GLOBAL.getRooms().filter((room) => {
+            if (String(room.id) === String(chatId)) {
+                return true;
+            }
+
+            return false;
+        })[0] || {};
+        const isChannel = roomInfo.channel;
 
         if (isActiveUser) {
             if ($message.find('.--mess.fwme').length) {
@@ -143,7 +171,9 @@ define([
 
             $removeBtn.show();
             $messageInfoBtn.show();
+            $messageReactionBtn.show();
         } else {
+            $messageReactionBtn.show();
             $editBtn.hide();
             $removeBtn.hide();
             $messageInfoBtn.hide();
@@ -154,6 +184,12 @@ define([
             $copyTextBtn.hide();
         } else {
             $copyTextBtn.show();
+        }
+        
+        if (haveReactions && !isChannel) {
+            $messageReactionListBtn.show();
+        } else {
+            $messageReactionListBtn.hide();
         }
 
         // If bookmark message
@@ -197,6 +233,8 @@ define([
             $textBookmarkBtn = $('.js-menu-messages-bookmark lang');
             $pinMessBtn = $('.js-menu-messages-pinmess');
             $textPinBtn = $('.js-menu-messages-pinmess lang');
+            $messageReactionBtn = $('.js-menu-messages-rcn');
+            $messageReactionListBtn = $('.js-menu-messages-rcn-list');
 
             $cmtBtn.off().click(onComment);
             $forwardBtn.off().click(onForward);
@@ -206,6 +244,8 @@ define([
             $messageInfoBtn.off().click(onInfo);
             $bookmarkMessBtn.off().click(onBookmark);
             $pinMessBtn.off().click(onPinMessage);
+            $messageReactionBtn.off().click(onReaction);
+            $messageReactionListBtn.off().click(onReactionList);
         },
 
         onShow: (e) => {

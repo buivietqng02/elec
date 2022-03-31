@@ -14,7 +14,8 @@ define([
     'features/sidebar/sidebarLeftBar',
     'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/modal/modalMessageReaction'
 ], (
     constant,
     API,
@@ -31,7 +32,8 @@ define([
     sidebarLeftBarComp,
     modalBookmarkMessage,
     modalPinMessage,
-    modalTagPerson
+    modalTagPerson,
+    modalMessageReaction
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -674,6 +676,9 @@ define([
 
             // View tagged profile
             $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
+
+            // Reaction buttons
+            $(document).off('.messageReaction').on('click.messageReaction', '.message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
 
             modalPinMessage.onInit();
         },
