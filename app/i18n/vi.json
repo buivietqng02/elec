@@ -141,6 +141,8 @@
     "PINNED_MESSAGE": "Đã ghim tin nhắn",
     "Q": "__________________________________",
     "R": "__________________________________",
+    "REACTION": "Reaction",
+    "REACTION_LIST": "Reaction list",
     "REGISTER_NEW_ACCOUNT": "Đăng ký tài khoản mới",
     "REMOVE": "Xóa",
     "REMOVING_ADMINISTRATOR": "Xóa quyền quản trị viên",

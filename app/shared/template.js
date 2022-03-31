@@ -551,6 +551,14 @@ define(['shared/icon'], (ICON) => ({
                             </li>
                         </ul>
                         <div class="--menu-item menu js-menu-messages">
+                            <button class="--rcn menu__item js-menu-messages-rcn-list">
+                                <i class="xm icon-reaction-list"></i>
+                                <lang data-language="REACTION_LIST"></lang>
+                            </button>
+                            <button class="--rcn menu__item js-menu-messages-rcn">
+                                <i class="xm icon-reaction"></i>
+                                <lang data-language="REACTION"></lang>
+                            </button>
                             <button class="--cmt menu__item js-menu-messages-cmt">
                                 <i class="xm icon-comment-o"></i>
                                 <lang data-language="COMMENT"></lang>
@@ -638,9 +646,10 @@ define(['shared/icon'], (ICON) => ({
                                 <div class="emojis-tab-content">
                                     <div class="wrap-emoji active wrap-emojis-calc">
                                         <div class="--menu">
-                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-1" class="active">😄</a>
-                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-2">🙏</a>
-                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-3">➡</a>
+                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-1" class="active">🕓</a>
+                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-2">😄</a>
+                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-3">🙏</a>
+                                            <a href="javascript:void(0)" data-em-tab-btn="--tab-4">➡</a>
                                         </div>
                                         <div class="--list">
                                             <div data-em-tab-content="--tab-1" class="--tab active">
@@ -648,6 +657,8 @@ define(['shared/icon'], (ICON) => ({
                                             <div data-em-tab-content="--tab-2" class="--tab">
                                             </div>
                                             <div data-em-tab-content="--tab-3" class="--tab">
+                                            </div>
+                                            <div data-em-tab-content="--tab-4" class="--tab">
                                             </div>
                                         </div>
                                     </div>

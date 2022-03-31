@@ -212,6 +212,34 @@ define([
         return newTextTag;
     };
 
+    ob.renderReactions = (reactions) => {
+        const infoId = GLOBAL.getInfomation().id;
+        let reactionElements = '';
+        const reaction = {};
+        reactions.forEach((item) => {
+            if (reaction[item.reaction] != null && reaction[item.reaction].count >= 1) {
+                reaction[item.reaction].count += 1;
+            } else {
+                reaction[item.reaction] = {
+                    count: 1,
+                    fromMe: false
+                };
+            }
+            if (item.user.id === infoId) {
+                reaction[item.reaction].fromMe = true;
+            }
+        });
+        Object.keys(reaction).forEach((item) => {
+            reactionElements += `
+                <div class="message-reaction ${reaction[item].fromMe ? '--selected' : ''}" data-re-content="${item}">
+                    <span class="--reaction">${item}</span>
+                    <span class="--count">${reaction[item].count}</span>
+                </div>`;
+        });
+        
+        return reactionElements;
+    };
+
     ob.renderMessage = (messObject, search) => {
         try {
             const info = GLOBAL.getInfomation();
@@ -232,14 +260,14 @@ define([
                 readByAllPartners,
                 starred,
                 sequence,
-                pinned
+                pinned,
+                reactions
             } = messObject;
             const data = {
                 id: id?.messageId,
                 chatType: type,
                 idLocal
             };
-
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
             text = ob.renderTag(text);
@@ -316,6 +344,12 @@ define([
             if (text.includes('::code::')) {
                 text = text.replaceAll(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
             } 
+            
+            // render reactions
+            if (reactions) {
+                data.reactions = ob.renderReactions(reactions);
+                data.haveReactions = 'have-reactions';
+            }
 
             // Render in case share conference link
             const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';

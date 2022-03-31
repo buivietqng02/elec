@@ -147,6 +147,8 @@
     "PINNED_MESSAGE": "Pinned messages",
     "Q": "__________________________________",
     "R": "__________________________________",
+    "REACTION": "Reaction",
+    "REACTION_LIST": "Reaction list",
     "REGISTER_NEW_ACCOUNT": "Register New Account",
     "REMOVE": "Remove",
     "REMOVING_ADMINISTRATOR": "Removing administrator permissions",
