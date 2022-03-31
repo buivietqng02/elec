@@ -12,6 +12,7 @@ define([
     let hdImg;
     let mediaFilesWraper;
     let loadingHigherResCap;
+    let downloadImg;
 
     const renderTemplate = `
         <div class="modal fade" id="showImageFull" tabindex="-1" role="dialog">
@@ -30,6 +31,12 @@ define([
                             </div>
                             <div class="ibo-zoom-down">
                                 <i class="icon-zoom-out"></i>
+                            </div>
+
+                            <div data-toggle="tooltip" data-placement="top" title="Download image">
+                                <a class="img-download" download target="_blank">
+                                    <i class="icon-download"></i>
+                                </a>
                             </div>
 
                             <!-- View All image -->
@@ -90,6 +97,8 @@ define([
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             $img.src = e.target.src;
+            downloadImg.href = e.target.src;
+
             $img.addEventListener('load', () => {
                 // $img.style.visibility = 'visible';
                 $img.style.display = 'block';
@@ -98,6 +107,8 @@ define([
                 setTimeout(() => {
                     hdImg = document.createElement('img');
                     hdImg.src = e.target.src.replace('&small=1', '&small=0');
+                    downloadImg.href = hdImg.src; 
+
                     hdImg.id = 'icw-hd-image';
                     hdImg.classList.add('inactive');
                     $frame.append(hdImg);
@@ -129,6 +140,8 @@ define([
 
                 $frame = document.getElementById('image-caption-wrap');
                 loadingHigherResCap = document.querySelector('.loading-hd-img');
+
+                downloadImg = document.querySelector('.img-download');
                 
                 $(document).off('.showFullImage').on('click.showFullImage', '.--click-show-popup-up-img', showImage);
                

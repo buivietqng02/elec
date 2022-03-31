@@ -65,7 +65,40 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         FAVOURITES_ROOMS: 'favourites_rooms',
         LAST_SYNCED_AT: 'LAST_SYNCED_AT',
         PINNED_MESS_ID: 'pinned-message-id',
-        PINNED_SEQUENCE: 'pinned-sequence'
+        PINNED_SEQUENCE: 'pinned-sequence',
+
+        COLOR_NAME_GROUP: [
+            {
+                name: 'cl-violet',
+            },
+            {
+                name: 'cl-brown',
+            },
+            {
+                name: 'cl-blue',
+            }, 
+            {
+                name: 'cl-green',
+            }, 
+            {
+                name: 'cl-red',
+            }, 
+            {
+                name: 'cl-yellow',
+            },
+            {
+                name: 'cl-gray',
+            },
+            {
+                name: 'cl-cyan',
+            },
+            {
+                name: 'cl-cream',
+            },
+            {
+                name: 'cl-min',
+            }
+        ],
     };
 
     return Object.freeze(obj);

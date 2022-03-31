@@ -93,6 +93,7 @@ define([
         if (!messages[lastNum].updated && !messages[lastNum].deleted) {
             newRoom.lastMessage = messages[messages.length - 1].message;
             newRoom.type = messages[messages.length - 1].type;
+            newRoom.taggedUsers = messages[messages.length - 1].taggedUsers;
         }
 
         if (currentRoomId !== room.id) {
@@ -562,9 +563,6 @@ define([
                     data.lastSyncedAt = res?.lastSyncedAt;
                     functions.setDataToLocalApplication(LAST_SYNCED_AT, res?.lastSyncedAt);
                 }
-
-                onSync();
-                
                 if (res?.messages?.length) {
                     const messages = functions.sortBy(res.messages, 'msgDate');
                     handleRealTimeMessage(messages);
@@ -607,6 +605,8 @@ define([
                     modalTagPerson.onSyncTag(res.tagEvents);
                 }
                 isInit = true;
+    
+                onSync();
             }).catch((err) => {
                 console.log(err);
                 if (err.message !== 'Error refreshing token') {

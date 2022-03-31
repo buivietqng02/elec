@@ -54,22 +54,26 @@ define([
         }
     };
 
+    const hanldeToggleSendBtn = () => {
+        if ($input.text().replace(/[\s\n]/g, '')) {
+            $btnSend.show();
+            // $btnAttach.hide();
+            $initVoiceMessageBtn.hide();
+        } else {
+            removeDraft();
+            $btnSend.hide();
+            // $btnAttach.show();
+            $initVoiceMessageBtn.show();
+        }
+    };
+
     const handleInputAutoExpand = () => {
         const input = $input.get(0);
         const wrapperMessages = $wrapperMessages.get(0);
         const isBottom = wrapperMessages.scrollTop + wrapperMessages.clientHeight >= wrapperMessages.scrollHeight;
 
         setTimeout(() => {
-            if ($input.text().replace(/[\s\n]/g, '')) {
-                $btnSend.show();
-                // $btnAttach.hide();
-                $initVoiceMessageBtn.hide();
-            } else {
-                removeDraft();
-                $btnSend.hide();
-                // $btnAttach.show();
-                $initVoiceMessageBtn.show();
-            }
+            hanldeToggleSendBtn();
 
             input.style.cssText = '';
 
@@ -121,7 +125,23 @@ define([
         // Get the copied text from the clipboard
         const text = (e.originalEvent || e).clipboardData.getData('text/plain');
         // insert text manually
-        document.execCommand("insertHTML", false, text);
+
+        if (document.queryCommandSupported('insertText')) {
+            document.execCommand('insertText', false, text);
+        } else {
+            // Insert text at the current position of caret
+            const range = document.getSelection().getRangeAt(0);
+            range.deleteContents();
+    
+            const textNode = document.createTextNode(text);
+            range.insertNode(textNode);
+            range.selectNodeContents(textNode);
+            range.collapse(false);
+    
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     };
 
     const onClear = () => {
@@ -157,7 +177,7 @@ define([
     let count = 0;
 
     const postMessage = (data) => {
-        if (data.isDelete) {
+        if (data?.isDelete) {
             API.delete(`chats/${data.chatId}/messages/${data.messageId}`).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -168,7 +188,7 @@ define([
             return;
         }
 
-        if (data.messageId) {
+        if (data?.messageId) {
             API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
@@ -191,7 +211,7 @@ define([
             return
         }
 
-        if(data.chatId) {
+        if(data?.chatId) {
             // console.log(data?.idLocal)
             API.post(`chats/${data.chatId}/messages`, data.params).then((res) => {
                 const chatboxContentComp = require('features/chatbox/chatboxContent');
@@ -213,6 +233,7 @@ define([
     };
 
     const onSendMessage = () => {
+        removeDraft();
         const chatboxContentComp = require('features/chatbox/chatboxContent');
         const obRoomEdited = GLOBAL.getRoomInfoWasEdited();
         const roomId = GLOBAL.getCurrentRoomId();
@@ -220,14 +241,15 @@ define([
         let data = {};
         const tagList = $input.get(0).querySelectorAll('.tagged');
         const userIdTagList = [];
-
+        let taggedUsers = [];
 
         tagList.forEach(item => {
-            text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
+            // text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
+            text = text.replace(`@${item.innerText}`, `@[user:${item.getAttribute('userid')}]`)
             userIdTagList.push(item.getAttribute('userid'));
-        })
 
-        // console.log(obRoomEdited, roomId, text, data);
+            taggedUsers.push({id: item.getAttribute('userid'), name: item.innerText})
+        })
 
         if (!text.replace(/[\s\n]/g, '') && !deleteState) {
             onClear();
@@ -244,12 +266,12 @@ define([
                 message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId,
-                taggedUsers: userIdTagList
+                taggedUserIds: userIdTagList
             }
         };
 
         if (!data.messageId) {
-            chatboxContentComp.onAddLocal(data);
+            chatboxContentComp.onAddLocal({...data, taggedUsers});
         }
 
         if (!deleteState) {
@@ -304,7 +326,13 @@ define([
         if (!element.text().replace(" ", "").length) {
             element.empty();
         }
-    }
+    };
+
+    const onKeyUp = (e) => {
+        hanldeToggleSendBtn();
+        modalTagPerson.onRenderTagModal(e)
+    };
+
     return {
         onInit: () => {
             $input = $('.js_endter_mess');
@@ -331,7 +359,7 @@ define([
 
             modalTagPerson.onInit();
 
-            $input.off('keyup').keyup(modalTagPerson.onRenderTagModal);
+            $input.off('keyup').keyup(onKeyUp);
         },
 
         onUpdate: (id, value) => {

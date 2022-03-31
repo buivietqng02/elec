@@ -19,51 +19,72 @@
             padding: 15px 0px 0px 10px;
         }
 
-        .mess-search-box {
-            position: relative;
-            overflow: hidden;
+        .mess-search-topright {
             transition: all .2s;
-            padding: 5px;
             margin-top: 5px;
             margin-right: 10px;
             float: right;
             width: 92%;
 
-            .cancel-search-btn {
-                position: absolute;
-                width: 25px;
-                height: 25px;
-                right: 15px;
-                top: 22%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            .mess-search-box {
+                width: 70%;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border-radius: 100%;
-            }
 
-            .icon-search {
-                position: absolute;
-                font-size: 22px;
-                color: black;
-                top: 50%;
-                left: 15px;
-                transform: translateY(-50%);
-            }
-
-            #msbg-input {
-                background: rgba(0,0,0,0.4);
-                color: #fff;
-                height: 34px;
-                border: 0;
-                padding: 0 38px;
-                width: 100%;
-                border-radius: 5px;
-
-                &::placeholder {
-                    color: #f5f5f5;
+                .msbg-input-container {
+                    background: rgba(0,0,0,0.5);
+                    width: 100%;
+                    padding: 0 10px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 5px 0px 0px 5px;
+    
+                    .cancel-search-btn {
+                        width: 25px;
+                        height: 25px;
+                        right: 15px;
+                        border: 1px solid white;
+    
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border-radius: 100%;
+                    }
+    
+                    #msbg-input {
+                        background: transparent;
+                        color: #fff;
+                        height: 43px;
+                        width: 100%;
+                        border: 0;
+        
+                        &::placeholder {
+                            color: #f5f5f5;
+                        }
+                    }
+                }     
+    
+                .search-mess-btn {
+                    height: 43px;
+                    border-radius: 0 5px 5px 0;
+                    .icon-search {
+                        font-size: 22px;
+                        color: white;
+                    }
                 }
             }
 
+            .search-all-rooms-container {
+                // Temporary hide
+                display: none;
+                margin-left: 20px;
+            }
         }
     }
 
@@ -77,15 +98,28 @@
 
         li {
             list-style: none;
-            margin: 30px 0;
+            margin: 10px 0;
             transition: all .5s;
             &:hover {
                 background-color: white;
+            }
+            .user-avatar {
+                display: none !important;
+            }
+            .--heading {
+                .--img {
+                    display: block;
+                }
+                display: flex;
             }
         }
 
         .separate-date{
             font-size: 14px;
+
+            hr {
+                background-color: black;
+            }
         }
 
         .not-found-mess {
@@ -153,22 +187,26 @@
             .search-close{
               
             }
-    
-            .mess-search-box {
-                .pulse {
-                   
+
+            .mess-search-topright {
+                flex-direction: column;
+                .mess-search-box {
+                    width: 90%;
+                    .msbg-input-container {
+                        width: 100%;
+                        #msbg-input {
+                            clear: both;
+                            font-size: 12px;
+                            width: 100%;
+                        }
+                    }
                 }
-    
-                .icon-search {
-                   
+
+                .search-all-rooms-container {
+                   position: absolute;
+                   top: 15px;
+                   right: 15px;
                 }
-    
-                #msbg-input {
-                    clear: both;
-                    font-size: 12px;
-                    width: 100%;
-                }
-    
             }
         }
     

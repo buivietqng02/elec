@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?olie4r');
-  src:  url('fonts/icomoon.eot?olie4r#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?olie4r') format('truetype'),
-    url('fonts/icomoon.woff?olie4r') format('woff'),
-    url('fonts/icomoon.svg?olie4r#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?cgkbkq');
+  src:  url('fonts/icomoon.eot?cgkbkq#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?cgkbkq') format('truetype'),
+    url('fonts/icomoon.woff?cgkbkq') format('woff'),
+    url('fonts/icomoon.svg?cgkbkq#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,10 +25,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-pin-outline:before {
+.icon-pin:before {
   content: "\e900";
 }
-.icon-pin:before {
+.icon-pin-outline:before {
   content: "\e901";
 }
 .icon-bookmarks-empty:before {
@@ -53,6 +53,7 @@
 }
 .icon-keyboard-dark:before {
   content: "\e908";
+  color: #0093ff;
 }
 .icon-keyboard:before {
   content: "\e909";
@@ -245,111 +246,3 @@
 .icon-star-empty:before {
   content: "\e945";
 }
-
-.icon-lb:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/lablogo.svg');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-payment:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-payment.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-payment-active:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-payment-active.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-home2:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-home2.svg');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-home2-active:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-home2-active.svg');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-user2:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-user2.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-} 
-
-.icon-user2-active:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-user2-active.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-} 
-
-.icon-add:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-add.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-} 
-
-.icon-renew:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-renew.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-} 
-
-.icon-change:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-change.png');
-  background-size: 25px 25px;
-  height: 25px;
-  width: 25px;
-}
-
-.icon-transaction-success:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-transaction-success.png');
-  background-size: 32px 32px;
-  height: 32px;
-  width: 32px;
-} 
-
-.icon-transaction-fail:before {
-  display: block;
-  content: ' ';
-  background-image: url('../images/icon-transaction-fail.png');
-  background-size: 32px 32px;
-  height: 32px;
-  width: 32px;
-} 

@@ -27,7 +27,7 @@ define([
     modalBookmarkMessageComp,
     modalSearchMessage
 ) => {
-    const { getAvatar } = functions;
+    const { getAvatar, stripTags } = functions;
     let $groupOptionsBtn;
     let $callOptionsBtn;
     let $slide;
@@ -253,7 +253,7 @@ define([
                 }
             } else {
                 const userId = roomInfo.partner.id;
-                const userName = GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.partner.name;
+                const userName = stripTags(GLOBAL.getRoomInfoWasEdited()[userId]?.user_name || roomInfo.partner.name);
 
                 $image.removeAttr(constant.ATTRIBUTE_CHANGE_IMAGE_GROUP);
                 $image.attr('src', getAvatar(roomInfo.partner?.id));

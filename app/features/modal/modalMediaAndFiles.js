@@ -72,6 +72,12 @@ define([
                                     <i class="icon-info-circle"></i>
                                     <span class="hovertext">${convertMessagetime(mess.msgDate, GLOBAL.getLangJson())}</span>
                                 </div>
+
+                                <div data-toggle="tooltip" data-placement="top" title="Download image">
+                                    <a class="ite__img__download" href="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}" download target="_blank">
+                                        <i class="icon-download"></i>
+                                    </a>
+                                </div>
                             </div>
                         </figure>
                 `;

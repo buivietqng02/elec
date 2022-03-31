@@ -321,14 +321,15 @@ define([
             sender,
             lastMessage,
             muted,
-            type
+            type,
+            taggedUsers
         } = room;
         let data = {};
         let src = '';
         let status = !id ? 'p_disabled' : '';
         const numUnRead = unreadMessages || '';
-        let name = group ? subject : (obRoomEdited[partner?.id]?.user_name || partner?.name);
-        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replaceAll('::code::','')) : '';
+        let name = group ? subject : stripTags(obRoomEdited[partner?.id]?.user_name || partner?.name);
+        let mess = lastMessage ? htmlEncode(stripTags(decodeStringBase64(lastMessage)).replace(/::code::/g,'')) : '';
         const live = (GLOBAL.getCurrentRoomId() === id) ? 'active' : '';
         const userId = group ? '' : partner?.id;
         let isFavourite = false;
@@ -377,7 +378,7 @@ define([
         }
 
         // In case last message contains tag person
-        mess = chatboxContentFunctions.renderTag(mess, true);
+        mess = chatboxContentFunctions.renderTag(mess, taggedUsers);
 
         // Favourite Room
         const listFavouritesRooms = GLOBAL.getFavouritesRooms()
@@ -424,7 +425,7 @@ define([
     };
 
     ob.moveRoomUp = (room) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${room.id}"]`);
         const roomContainer = selectedSliderContainerFunc(room.id)
 
         $chatsItem = $('#leftbar .lbi-chats');
@@ -456,7 +457,7 @@ define([
     };
 
     ob.lostRoom = (rid) => {
-        $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
+        const $room = $(`[${ATTRIBUTE_SIDEBAR_ROOM}="${rid}"]`);
 
         if ($room.length) {
             $room.remove();

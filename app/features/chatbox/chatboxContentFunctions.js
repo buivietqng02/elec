@@ -22,7 +22,8 @@ define([
         transformLinkTextToHTML,
         highlightText,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        stripTags
     } = functions;
     const { API_URL } = constant;
 
@@ -94,24 +95,60 @@ define([
     //     return messageTemp;
     // };
 
+    ob.renderTag = (message, tagArrs, isMessContent) => {
+        let newTextTag = message;
+        const regex = /@\[user:[a-z0-9]{12}]/g;
+
+        if (regex.test(newTextTag)) {
+            const tagArrInMessage = newTextTag.match(regex) || [];
+            
+            tagArrInMessage.forEach((item) => {
+                const userid = item.substring(7, item.length - 1);
+                if (!tagArrs) return;
+                if (tagArrs.length > 0) {
+                    const [cloneArr] = tagArrs;
+                    if (!cloneArr) return;
+                }
+                tagArrs.forEach(ite => {
+                    const userName = stripTags(ite.name);
+                    if (ite.id === userid) {
+                        if (isMessContent) {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person-js tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
+                        } else {
+                            newTextTag = newTextTag.replace(item, `<span class="tagged-person" userid="${userid}"><img src="${getAvatar(userid)}" class="--img avatar">${userName}</span>`) || newTextTag;
+                        }
+                    }
+                });
+            }); 
+        }
+
+        return newTextTag;
+    };
+
     const renderComment = (quotedMessage) => {
         const {
             sender,
             message,
             file,
-            sequence
+            sequence,
+            taggedUsers
         } = quotedMessage;
+        let shorternText;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
         let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        text = ob.renderTag(text, taggedUsers);
 
         if (file) {
             text = handleMessCointainFile(file);
+            shorternText = '';
+        } else {
+            shorternText = 'comment-text-shortern';
         }
 
         // console.log(text);
 
-        return `<div class="comment-box-inline" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${sequence}">${name}: ${text}</div>`;
+        return `<div class="comment-box-inline ${shorternText}" style="margin-left: 0;" quoted-original-id="origin-${quotedMessage.id.messageId}" quoted-original-sequence="${sequence}">${name}: ${text}</div>`;
     };
 
     ob.onHandleRoomWasDeleted = () => {
@@ -185,33 +222,6 @@ define([
         return '';
     };
 
-    ob.renderTag = (text, isSidebar) => {
-        let newTextTag = text;
-        if (text.includes('@{[user:') && text.length > 23) {
-            const tagArr = [];
-            const splitText = text.split('@{[user:');
-            splitText.forEach(item => {
-                const indexBracket = item.indexOf(']}');
-                if (indexBracket >= 0 && item.indexOf(',') >= 0) {
-                    tagArr.push(item.substring(0, indexBracket));
-                }
-            });
-
-            tagArr.forEach((item) => {
-                const userid = item.split(', ')[0];
-                const name = item.split(', ')[1];
-
-                if (isSidebar) {
-                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span userid="${userid}">@${name}</span>`) || text;
-                } else {
-                    newTextTag = newTextTag.replace(`@{[user:${item}]}`, `<span class="tagged-person" userid="${userid}">@${name}</span>`) || text;
-                }
-            }); 
-        }
-
-        return newTextTag;
-    };
-
     ob.renderReactions = (reactions) => {
         const infoId = GLOBAL.getInfomation().id;
         let reactionElements = '';
@@ -261,16 +271,23 @@ define([
                 starred,
                 sequence,
                 pinned,
-                reactions
+                reactions,
+                taggedUsers,
+                colorGroupUser,
+                currentSenderId,
+                previousSenderId
             } = messObject;
             const data = {
                 id: id?.messageId,
                 chatType: type,
                 idLocal
             };
+            sender.name = stripTags(sender?.name);
+
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
-            text = ob.renderTag(text);
+           
+            text = ob.renderTag(text, taggedUsers, true);
 
             let isConferenceLink = false;
             let conferenceLink = '';
@@ -342,7 +359,7 @@ define([
 
             // Change text in case send code
             if (text.includes('::code::')) {
-                text = text.replaceAll(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
+                text = text.replace(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
             } 
             
             // render reactions
@@ -367,8 +384,8 @@ define([
             }
 
             data.src = getAvatar(sender?.id);
-            data.name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-            data.officially_name = htmlEncode(sender?.name);
+            data.name = htmlEncode(stripTags(roomEdited[sender?.id]?.user_name || sender?.name));
+            data.officially_name = htmlEncode(stripTags(sender?.name));
             data.userId = sender?.id;
             data.show_internal = internal ? '' : 'hidden';
             data.who = info.id === sender?.id ? 'you' : '';
@@ -387,6 +404,8 @@ define([
             data.JOIN = GLOBAL.getLangJson().JOIN;
             data.messSequence = sequence;
             data.pinned = pinned ? 'pinned' : '';
+            data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
+            data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {

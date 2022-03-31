@@ -49,6 +49,7 @@ define([
         removeDataInLocalApplication(RANDOM_ID_REFRESH_TOKEN);
         removeDataInLocalApplication(LAST_SYNCED_AT);
         navigate(ROUTE.login);
+        window.location.reload();
     };
 
     return ob;

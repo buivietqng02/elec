@@ -29,9 +29,10 @@ define([
     let isDeleting = false;
     let isUsingFirefox = false;
     let selectedIndex = 0;
+    const NUMBER_LIMIT_TAGS = 10;
 
     const { 
-        render, getAvatar, htmlEncode 
+        render, getAvatar, htmlEncode, setCursorEndOfText, stripTags
     } = functions;
 
     const tagModal = `
@@ -91,20 +92,11 @@ define([
         selectedList.forEach((item, index) => {
             if (index === selectedIndex) {
                 item.classList.add('selected');
+                item.scrollIntoView({ block: 'center', behavior: 'smooth' });
             } else {
                 item.classList.remove('selected');
             }
         });
-    };
-
-    const setCursorEndOfText = (el) => {
-        const selection = window.getSelection();  
-        const range = document.createRange();  
-        selection.removeAllRanges();  
-        range.selectNodeContents(el);  
-        range.collapse(false);  
-        selection.addRange(range);  
-        el.focus();
     };
 
     const appendedSelectedTag = (inputText) => {
@@ -144,7 +136,7 @@ define([
             tagPerson = value;
         }
 
-        const namePerson = tagPerson.querySelector('.tag-name').textContent;
+        const namePerson = stripTags(tagPerson.querySelector('.tag-name').textContent);
 
         const userId = tagPerson.querySelector('.tag-name').getAttribute('data-userid-name');
         closeModalTag();
@@ -190,7 +182,7 @@ define([
         list.forEach((member, index) => {
             const arrItem = {
                 id: member.user.id,
-                currentName: htmlEncode(member.user.name),
+                currentName: htmlEncode(stripTags(member.user.name)),
                 src: getAvatar(member.user.id),
                 email: member.user.email,
                 selected: index === selectedIndex ? 'selected' : ''
@@ -285,6 +277,9 @@ define([
 
         let searchText = '';
 
+        const tagList = input.querySelectorAll('.tagged');
+        if (tagList.length > NUMBER_LIMIT_TAGS - 1) return;
+
         // Get search text
         searchText = getSearchText(text);
 
@@ -348,6 +343,7 @@ define([
     };
 
     const onSyncTag = (res) => {
+        // console.log(res);
         let roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(res[0].chat.id)) {
                 return true;
@@ -410,6 +406,7 @@ define([
     };
 
     const handleViewTagProfile = (e) => {
+        e.stopPropagation();
         const userid = e.currentTarget.getAttribute('userid');
         const roomId = GLOBAL.getCurrentRoomId();
 
