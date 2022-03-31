@@ -147,10 +147,19 @@ define([
     };
 
     const handleOptionsByUser = () => {
+        const chatId = GLOBAL.getCurrentRoomId();
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
         const isPinned = $message.hasClass('pinned');
         const haveReactions = $message.hasClass('have-reactions');
+        const roomInfo = GLOBAL.getRooms().filter((room) => {
+            if (String(room.id) === String(chatId)) {
+                return true;
+            }
+
+            return false;
+        })[0] || {};
+        const isChannel = roomInfo.channel;
 
         if (isActiveUser) {
             if ($message.find('.--mess.fwme').length) {
@@ -161,7 +170,7 @@ define([
 
             $removeBtn.show();
             $messageInfoBtn.show();
-            $messageReactionBtn.hide();
+            $messageReactionBtn.show();
         } else {
             $messageReactionBtn.show();
             $editBtn.hide();
@@ -175,8 +184,8 @@ define([
         } else {
             $copyTextBtn.show();
         }
-
-        if (haveReactions) {
+        
+        if (haveReactions && !isChannel) {
             $messageReactionListBtn.show();
         } else {
             $messageReactionListBtn.hide();

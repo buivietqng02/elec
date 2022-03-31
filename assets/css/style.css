@@ -1986,9 +1986,6 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   padding: 5px 8px;
   border-radius: 25px;
   font-size: 0.8rem;
-}
-
-.js_li_list_mess:not(.you) .message-reactions .message-reaction {
   cursor: pointer;
 }
 
@@ -1996,7 +1993,11 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   background-color: rgba(0,136,204,0.5);
 }
 
-.js_li_list_mess:not(.you) .message-reactions .message-reaction:hover {
+.message-reactions .message-reaction .--count {
+  font-size: 0.6rem;
+}
+
+.js_li_list_mess .message-reactions .message-reaction:hover {
   background-color: rgba(0,136,204,0.5);
 }
 

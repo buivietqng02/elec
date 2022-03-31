@@ -678,7 +678,7 @@ define([
             $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
 
             // Reaction buttons
-            $(document).off('.messageReaction').on('click.messageReaction', '.js_li_list_mess:not(.you) .message-reactions .message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
+            $(document).off('.messageReaction').on('click.messageReaction', '.message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
 
             modalPinMessage.onInit();
         },
