@@ -143,6 +143,8 @@
     "PINNED_MESSAGE": "Pinned messages",
     "Q": "__________________________________",
     "R": "__________________________________",
+    "REACTION": "Реакция",
+    "REACTION_LIST": "Список реакций",
     "REGISTER_NEW_ACCOUNT": "Создать учетную запись",
     "REMOVE": "Удалить",
     "REMOVING_ADMINISTRATOR": "Удаление прав администратора",

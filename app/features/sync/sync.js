@@ -262,6 +262,40 @@ define([
         return isNotMoveRoomUp;
     };
 
+    const renderMessageReaction = (reactions, messageId) => {
+        const infoId = GLOBAL.getInfomation().id;
+        const $message = $(`[${ATTRIBUTE_MESSAGE_ID}="${messageId}"]`);
+        const $messageReactions = $message.find('.message-reactions');
+        let reactionElements = '';
+        const reaction = {};
+        reactions.forEach((item) => {
+            if (reaction[item.reaction] != null && reaction[item.reaction].count >= 1) {
+                reaction[item.reaction].count += 1;
+            } else {
+                reaction[item.reaction] = {
+                    count: 1,
+                    fromMe: false
+                };
+            }
+            if (item.user.id === infoId) {
+                reaction[item.reaction].fromMe = true;
+            }
+        });
+        if (Object.keys(reaction).length > 0) {
+            $message.addClass('have-reactions');
+        } else {
+            $message.removeClass('have-reactions');
+        }
+        Object.keys(reaction).forEach((item) => {
+            reactionElements += `
+                <div class="message-reaction ${reaction[item].fromMe ? '--selected' : ''}" data-re-content="${item}">
+                    <span class="--reaction">${item}</span>
+                    <span class="--count">${reaction[item].count}</span>
+                </div>`;
+        });
+        $messageReactions.html(reactionElements);
+    };
+
     const getNewGroup = (message) => API.get('chats').then(chats => {
         try {
             const { length } = chats;
@@ -490,6 +524,11 @@ define([
                 }
 
                 // pulseBookmarkBtn.classList.add('hidden');
+
+                if (reactionEvent.reactions) {
+                    renderMessageReaction(reactionEvent.reactions, messId);
+                }
+
                 bookmarkBtn.disabled = false;
                 // messageSettingsSlideComp.offEventClickOutside();
 
@@ -573,7 +612,6 @@ define([
                 if (res?.tagEvents?.length) {
                     modalTagPerson.onSyncTag(res.tagEvents);
                 }
-
                 isInit = true;
     
                 onSync();

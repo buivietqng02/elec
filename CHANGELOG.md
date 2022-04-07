@@ -4,6 +4,15 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.22] - 2022-03-31
+### Add
+- New feature: You can now react to a specific message with emojis. To react to a message, just click on the three-line menu at the bottom-right of any message and select "Reaction".
+
+### [4.21] - 2022-03-31
+### Update
+- Show "chat" button in conference.
+- Update Jitsi external API.
+
 ### [4.20] - 2022-03-21
 ### Add
 - Log out when can not load API

@@ -13,7 +13,8 @@ define([
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar',
     'features/modal/modalPinMessage',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/modal/modalMessageReaction'
 ], (
     constant,
     API,
@@ -29,7 +30,8 @@ define([
     sidebarConferenceComp,
     sidebarLeftBarComp,
     modalPinMessage,
-    modalTagPerson
+    modalTagPerson,
+    modalMessageReaction
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -681,6 +683,9 @@ define([
 
             // Download file
             $(document).off('.downloadFile').on('click.downloadFile', '.download-file', downloadFile);
+
+            // Reaction buttons
+            $(document).off('.messageReaction').on('click.messageReaction', '.message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
 
             modalPinMessage.onInit();
         },

@@ -322,7 +322,6 @@ define([
                 }
             };
             jitsiApi = new JitsiMeetExternalAPI(domain, optionsCall);
-            jitsiApi.executeCommand('avatarUrl', process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}/${getAvatar(userInfo.id)}` : getAvatar(userInfo.id));
             jitsiApi.addListener('readyToClose', () => {
                 inCall = false;
                 onHangup();
@@ -341,6 +340,7 @@ define([
                 }
             });
             jitsiApi._frame.addEventListener('load', () => {
+                jitsiApi.executeCommand('avatarUrl', process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}/${getAvatar(userInfo.id)}` : getAvatar(userInfo.id));
                 if (!roomInfo.group && isAccept) {
                     switchState(isAccept, false);
                     $notifyForm.hide();
