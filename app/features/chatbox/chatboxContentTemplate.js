@@ -43,10 +43,13 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
             </li>
         `,
 
-        file: `<i class="xm icon-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+        // file: `<i class="xm icon-download"></i> <a class="download-file" href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+
+        file: `<i class="xm icon-download"></i> <span class="download-file" href="{src}">{fileName}</span> {fileSize}`,
+
         quotedFile: `<i class="xm icon-download"></i> <b>{fileName}</b> {fileSize}`,
 
-        image: '<div class="image-wraper"><img class="p-cur --click-show-popup-up-img" src="{src}"><a class="download-img" href="{src}" download target="_blank"><i class="icon-download"></i></a></div>',
+        image: '<div class="image-wraper"><img class="p-cur --click-show-popup-up-img" src="{src}"><button class="download-img" src="{src}" target="_blank"><i class="icon-download"></i></button></div>',
         quotedImage: '<img class="p-cur" src="{src}">',
         // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
 
@@ -125,7 +128,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                     </div>
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
-                    <div class="--mess {forward} {class_removed}">{mess}</div>
+                    <div class="--mess {forward} {class_removed}" tagged-users='{taggedUsersList}'>{mess}</div>
 
                     <div class="conference-link {is_conference_link} {hide_when_removed} text-right" confId="{confRoom_chat_Id}">
                         <small data-language="INVITE_CONFERENCE">{Invite_conference_call}: </small>

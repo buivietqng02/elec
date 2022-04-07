@@ -13,7 +13,8 @@ define([
     'shared/alert',
     'features/modal/modalLogout',
     'features/modal/modalPinMessage',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     API,
@@ -29,7 +30,8 @@ define([
     ALERT,
     modalLogout,
     modalPinMessage,
-    modalTagPerson
+    modalTagPerson,
+    contentFunc
 ) => {
     let timeout;
     let isInit = false;
@@ -52,6 +54,10 @@ define([
         htmlEncode,
         decodeStringBase64
     } = functions;
+
+    const {
+        renderTag
+    } = contentFunc;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -160,13 +166,14 @@ define([
         const renderLastMessSideBar = () => {
             if (message.id.messageId === lastMessage) {
                 const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
-                sidebarItem[0].querySelector('.preview').textContent = text;
+                let text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+                text = renderTag(text, message.taggedUsers);
+                sidebarItem[0].querySelector('.preview').innerHTML = text;
             } 
         };
 
         // If the "getRoomById()" is undefined (user has not click to the room), init onLoadMessage
-        if (!roomInfo?.owner && !getRoomById(message.id.chatId)) {
+        if (!getRoomById(message.id.chatId)) {
             roomInfo.isUpdateOrRemoveMessBeforeGetRoomById = true;
             chatboxContentComp.onLoadMessage(roomInfo).then((res) => {
                 lastMessage = res[res.length - 1].id.messageId;
@@ -474,7 +481,7 @@ define([
             if (roomId === GLOBAL.getCurrentRoomId()) {
                 const currentRoomList = getRoomById(roomId);
                 const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
-                const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
+                // const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
 
                 if (reactionEvent.starred) {
                     $message.addClass('bookmark');
@@ -482,9 +489,9 @@ define([
                     $message.removeClass('bookmark');
                 }
 
-                pulseBookmarkBtn.classList.add('hidden');
+                // pulseBookmarkBtn.classList.add('hidden');
                 bookmarkBtn.disabled = false;
-                messageSettingsSlideComp.offEventClickOutside();
+                // messageSettingsSlideComp.offEventClickOutside();
 
                 // update to storeRoomById
                 const updatedRoomList = currentRoomList.map((item) => {

@@ -67,9 +67,12 @@ define([
     const onEdit = () => {
         const { chatId } = $message.data();
         const value = $message.find('.--mess').html();
+        const taggedUsersAttribute = $message.find('.--mess').attr('tagged-users')
+        let taggedUsers = [];
+        if(taggedUsersAttribute) taggedUsers = JSON.parse(taggedUsersAttribute);
 
         offEventClickOutside();
-        chatboxInputComp.onUpdate(chatId, value);
+        chatboxInputComp.onUpdate(chatId, value, taggedUsers);
     };
 
     const onRemove = () => {

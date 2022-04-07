@@ -1,8 +1,10 @@
 define([
     'features/modal/modalMediaAndFiles',
+    'shared/functions',
     'assets/js/slick.min.js'
 ], (
-    modalMediaAndFiles
+    modalMediaAndFiles,
+    functions
 ) => {
     // const { API_URL } = constant;
     let $modal;
@@ -13,6 +15,10 @@ define([
     let mediaFilesWraper;
     let loadingHigherResCap;
     let downloadImg;
+
+    const {
+        downloadImage
+    } = functions;
 
     const renderTemplate = `
         <div class="modal fade" id="showImageFull" tabindex="-1" role="dialog">
@@ -33,10 +39,10 @@ define([
                                 <i class="icon-zoom-out"></i>
                             </div>
 
-                            <div data-toggle="tooltip" data-placement="top" title="Download image">
-                                <a class="img-download" download target="_blank">
+                            <div class="img-download-container" data-toggle="tooltip" data-placement="top" title="Download image">
+                                <button class="img-download">
                                     <i class="icon-download"></i>
-                                </a>
+                                </button>
                             </div>
 
                             <!-- View All image -->
@@ -97,7 +103,8 @@ define([
         setTimeout(() => {
             // eslint-disable-next-line prefer-destructuring
             $img.src = e.target.src;
-            downloadImg.href = e.target.src;
+            downloadImg.setAttribute('src', e.target.src);
+            downloadImg.addEventListener('click', downloadImage);
 
             $img.addEventListener('load', () => {
                 // $img.style.visibility = 'visible';

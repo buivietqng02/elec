@@ -91,10 +91,6 @@ define([
     };
 
     const initMediaAndFiles = () => {
-        if (modalBookmarkMessageComp.onGetIsViewingBookmark()) {
-            modalBookmarkMessageComp.onCloseViewBookmarksAndReloadMess();
-        }
-
         modalMediaAndFiles.onInit();
         offEventClickOutside();
     };

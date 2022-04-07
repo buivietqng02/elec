@@ -12,7 +12,6 @@ define([
     'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar',
-    'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
     'features/modal/modalTagPerson'
 ], (
@@ -29,7 +28,6 @@ define([
     voiceChatComp,
     sidebarConferenceComp,
     sidebarLeftBarComp,
-    modalBookmarkMessage,
     modalPinMessage,
     modalTagPerson
 ) => {
@@ -47,7 +45,9 @@ define([
         highlightText,
         htmlEncode,
         decodeStringBase64,
-        getAvatar
+        getAvatar,
+        downloadImage,
+        downloadFile
     } = functions;
     const {
         getChatById,
@@ -58,7 +58,8 @@ define([
         renderUnread,
         renderRangeDate,
         onErrNetWork,
-        onHandleRoomWasDeleted
+        onHandleRoomWasDeleted,
+        renderTag
     } = contentFunc;
     const {
         getRoomById,
@@ -317,7 +318,7 @@ define([
 
     const onWrapperScroll = (event) => {
         // If is finding media and files or viewing bookmark list
-        if(isScrollingToOriginMess || modalBookmarkMessage.onGetIsViewingBookmark()) return
+        if(isScrollingToOriginMess) return
 
         // Show scroll to bottom button
         // if(($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight < 1)
@@ -627,7 +628,7 @@ define([
                 return;
             }
 
-            let messagesHtml = messages.map((mess, i, messArr) => {
+            let messagesHtml = messagesChat.map((mess, i, messArr) => {
                 mess.currentSenderId = messArr[i].sender.id;
                 mess.previousSenderId = messArr[i - 1]?.sender?.id;
                 mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
@@ -675,13 +676,18 @@ define([
             // View tagged profile
             $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
 
+            // Download picture
+            $(document).off('.downloadImg').on('click.downloadImg', '.download-img', downloadImage);
+
+            // Download file
+            $(document).off('.downloadFile').on('click.downloadFile', '.download-file', downloadFile);
+
             modalPinMessage.onInit();
         },
 
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
-            let isViewBookmarkMode = modalBookmarkMessage.onGetIsViewingBookmark();
             const mess = messList[0];
             let id = GLOBAL.getCurrentRoomId();
             
@@ -692,7 +698,7 @@ define([
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
-                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 && GLOBAL.getInfomation().id !== mess.sender.id && !isViewBookmarkMode
+                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 && GLOBAL.getInfomation().id !== mess.sender.id
             ) {
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
@@ -706,7 +712,7 @@ define([
             // Update ultiLastOffSet when send/ receive new message
             ultiLastOffSet = messList[0].sequence;
 
-            if (!isViewBookmarkMode && jumpFastToBottomBtn.classList.contains('hidden')) {
+            if (jumpFastToBottomBtn.classList.contains('hidden')) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
 
@@ -741,7 +747,9 @@ define([
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-            const text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message)));
+            let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message)));
+            // Render in case edit a tag message
+            text = renderTag(text, message.taggedUsers, true);
 
             const $pinMessTopbar = $('.pin-message-status-bar');
             const $pinText = $pinMessTopbar.find('.pin-text');
@@ -750,6 +758,8 @@ define([
 
             $message.find('.--mess').html(text);
             $message.find('.--edited').removeClass('hidden');
+            // Update attribute if edit a tag message
+            if (message.taggedUsers.length > 0)  $message.find('.--mess').attr('tagged-users', JSON.stringify(message.taggedUsers))
             
             // Update pin topbar when edit message
             pinMessId = $pinDetails?.attr(PINNED_MESS_ID);
