@@ -1128,6 +1128,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
     display:inline-block;
 }
 
+.wrap-messages.group .messages__list:not(.viewingBookmark) .messages__item:not(.you):not([data-room-type='1']) .user-avatar .avatar{
+  cursor: pointer;
+}
+
 .wrap-messages.group .messages__item.beginChat .user-avatar{
   visibility: visible;
 }
@@ -3060,6 +3064,32 @@ body.body_fz_18 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+#userInfoModal .modal-dialog {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 320px;
+}
+#userInfoModal .modal-body {
+  height: 450px;
+  overflow-y: auto;
+}
+#userInfoModal .image-wrapper{
+  background-color: #cccccc;
+  border-radius: 50%;
+  position: relative;
+  margin: 0 auto 1rem;
+  display: block;
+  width: 92px;
+  height: 92px;
+}
+#userInfoModal .image-wrapper img{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* border: 0; */
 }
 
 #userInterfaceModal .modal-title {

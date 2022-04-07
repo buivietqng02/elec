@@ -113,7 +113,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned} {beginChat} {colorGroupUser} {haveReactions}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned} {beginChat} {colorGroupUser} {haveReactions}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}" data-room-type="{roomType}">
                 <div class="user-avatar">
                     <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
                 </div>

@@ -15,7 +15,8 @@ define([
     'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
     'features/modal/modalTagPerson',
-    'features/modal/modalMessageReaction'
+    'features/modal/modalMessageReaction',
+    'features/modal/modalUserInfo'
 ], (
     constant,
     API,
@@ -33,7 +34,8 @@ define([
     modalBookmarkMessage,
     modalPinMessage,
     modalTagPerson,
-    modalMessageReaction
+    modalMessageReaction,
+    modalUserInfo
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -679,6 +681,9 @@ define([
 
             // Reaction buttons
             $(document).off('.messageReaction').on('click.messageReaction', '.message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
+
+            // Open user profile in group chat
+            $(document).off('.openUserInfo').on('click.openUserInfo', '.messages__item:not(.you):not([data-room-type=1]) .user-avatar .avatar', (e) => modalUserInfo.onInit(e));
 
             modalPinMessage.onInit();
         },

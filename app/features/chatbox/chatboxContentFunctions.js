@@ -254,6 +254,8 @@ define([
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
+            const roomId = GLOBAL.getCurrentRoomId();
+            const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomId));
             const {
                 sender,
                 id,
@@ -282,6 +284,13 @@ define([
                 chatType: type,
                 idLocal
             };
+            if (roomInfo.group && roomInfo.channel) {
+                data.roomType = 1;
+            } else if (roomInfo.group) {
+                data.roomType = 2;
+            } else {
+                data.roomType = 3;
+            }
             sender.name = stripTags(sender?.name);
 
             let text = htmlEncode(decodeStringBase64(message));
