@@ -87,6 +87,7 @@ define([
 
     const onBookmark = () => {
         modalBookmarkMessageComp.onInit($message);
+        offEventClickOutside();
     };
 
     const onCopyText = () => {
@@ -153,7 +154,7 @@ define([
         const chatId = GLOBAL.getCurrentRoomId();
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
-        const isBookmark = $message.hasClass('bookmark');
+        // const isBookmark = $message.hasClass('bookmark');
         const isPinned = $message.hasClass('pinned');
         const haveReactions = $message.hasClass('have-reactions');
         const roomInfo = GLOBAL.getRooms().filter((room) => {
@@ -196,11 +197,11 @@ define([
         }
 
         // If bookmark message
-        if (isBookmark) {
-            $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
-        } else {
-            $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
-        }
+        // if (isBookmark) {
+        //     $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
+        // } else {
+        //     $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
+        // }
 
         // If pinned message
         if (isPinned) {

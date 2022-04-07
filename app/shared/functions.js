@@ -340,6 +340,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
             a.href = url;
             // the filename
             a.download = filename;
+            a.setAttribute('target', '_blank');
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
