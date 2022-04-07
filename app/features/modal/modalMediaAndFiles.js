@@ -15,7 +15,9 @@ define([
     const { API_URL } = constant;
     const {
         humanFileSize,
-        convertMessagetime
+        convertMessagetime,
+        downloadImage,
+        downloadFile
     } = functions;
     
     const TYPE_MEDIA = 'media';
@@ -52,8 +54,8 @@ define([
         isProcessing = { media: false, files: false };
     }; 
 
-    const renderImages = (imgagesArray) => {
-        if (imgagesArray.length === 0) {
+    const renderImages = (imgagesArray, loadMoreOnScroll) => {
+        if (imgagesArray.length === 0 && !loadMoreOnScroll) {
             mediaListContainer.innerHTML = '<div class="media__not__found">No image found</div>';
         } else {
             imgagesArray.forEach((mess) => {
@@ -74,9 +76,9 @@ define([
                                 </div>
 
                                 <div data-toggle="tooltip" data-placement="top" title="Download image">
-                                    <a class="ite__img__download" href="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}" download target="_blank">
+                                    <button class="ite__img__download" src="${API_URL}/image?id=${mess.file.id}&small=1" alt="${mess.file.filename}">
                                         <i class="icon-download"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </figure>
@@ -88,9 +90,9 @@ define([
         mediaList.prepend(mediaListContainer);
     };
 
-    const renderFiles = (filesArray) => {
+    const renderFiles = (filesArray, loadMoreOnScroll) => {
         // console.log(filesArray);
-        if (filesArray.length === 0) {
+        if (filesArray.length === 0 && !loadMoreOnScroll) {
             filesListContainer.innerHTML = '<div class="files__not__found">No files found</div>';
         } else {
             filesArray.forEach((mess) => {
@@ -100,7 +102,7 @@ define([
                         <div class="files__item" data-mess-id="${mess.id.messageId}" data-mess-sequence="${mess.sequence}">
                             <div class="files__item__link">
                                 <i class="xm icon-download"></i>
-                                <a href="${API_URL}/file?id=${mess.file.id}" target="_blank">${mess.file.filename}</a> ${fileSize}
+                                <span class="ite__file__download" href="${API_URL}/file?id=${mess.file.id}">${mess.file.filename}</span> ${fileSize}
                             </div>
                             
                             <div class="files__item__features">
@@ -177,12 +179,12 @@ define([
                 isProcessing[curenType] = false;
 
                 if (curenType === TYPE_MEDIA) {
-                    renderImages(res.messages);
+                    renderImages(res.messages, true);
                     mediaSpiner.classList.add('hidden');
                 }
         
                 if (curenType === TYPE_FILES) {
-                    renderFiles(res.messages);
+                    renderFiles(res.messages, true);
                     filesSpiner.classList.add('hidden');
                 }
 
@@ -192,10 +194,14 @@ define([
 
                         if (curenType === TYPE_MEDIA) {
                             elementItem.querySelector('.ite__img__showMess').addEventListener('click', () => showMessagesPosition(item.id.messageId, item.sequence));
+
+                            elementItem.querySelectorAll('.ite__img__download').forEach(ite => ite.addEventListener('click', downloadImage));
                         }
                 
                         if (curenType === TYPE_FILES) {
                             elementItem.querySelector('.ite__file__showMess').addEventListener('click', () => showMessagesPosition(item.id.messageId, item.sequence));
+
+                            elementItem.querySelectorAll('.ite__file__download').forEach(ite => ite.addEventListener('click', downloadFile));
                         }
                     });
                 }
@@ -251,6 +257,8 @@ define([
                     const sequence = item.parentNode.parentNode.getAttribute('data-mess-sequence');
                     showMessagesPosition(dataMessageId, sequence);
                 }));
+
+                document.querySelectorAll('.ite__img__download').forEach(item => item.addEventListener('click', downloadImage));
             }); 
 
             getImageFilesListAPI(TYPE_FILES).then(file => {
@@ -263,6 +271,8 @@ define([
                     const sequence = item.parentNode.parentNode.getAttribute('data-mess-sequence');
                     showMessagesPosition(dataMessageId, sequence);
                 }));
+
+                document.querySelectorAll('.ite__file__download').forEach(item => item.addEventListener('click', downloadFile));
             }); 
 
             mediaFileScrollWrap.addEventListener('scroll', loadMoreOnScroll);

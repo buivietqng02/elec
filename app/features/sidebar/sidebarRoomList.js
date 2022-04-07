@@ -126,7 +126,7 @@ define([
 
         // Close view bookmark message list when click other room
         if (modalBookmarkMessage.onGetIsViewingBookmark()) {
-            modalBookmarkMessage.onCloseViewBookmarks();
+            modalBookmarkMessage.closeModalViewBookmark();
         }
 
         // Remove tag badge on room click

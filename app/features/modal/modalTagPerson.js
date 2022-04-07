@@ -107,6 +107,7 @@ define([
             input.innerText = input.innerText.substring(0, startPo + 2);
         } else {
             const textArr = input.querySelectorAll('.text');
+            // console.log(textArr);
             if (isUsingFirefox) {
                 // Fix bug for firefox
                 let inputHTML = input.innerHTML;
@@ -117,8 +118,8 @@ define([
                 input.innerHTML = inputHTML;
             } else {
                 // Other browsers
-                const lastTextBeforeTag = textArr[textArr.length - 1].innerText;
-                let startPo = lastTextBeforeTag.lastIndexOf(' @');
+                const lastTextBeforeTag = textArr[textArr?.length - 1]?.innerText;
+                let startPo = lastTextBeforeTag?.lastIndexOf(' @');
                 startPo = startPo < 0 ? 0 : startPo;
                 textArr[textArr.length - 1].innerText = lastTextBeforeTag.substring(0, startPo + 2);
             }
@@ -324,10 +325,18 @@ define([
         }
 
         const newArr = [];
+        const reArrangedSelectedTagList = [];
+        // Rearrange the order of selectedTagList in the array (tagList in Get method not in order)
         document.querySelectorAll('.tagged').forEach((item) => {
             newArr.push(item);
+            selectedTagList.forEach(ite => {
+                if (item.getAttribute('userid') === ite.userId) {
+                    reArrangedSelectedTagList.push(ite);
+                }
+            });
         });
 
+        selectedTagList = [...reArrangedSelectedTagList];
         if (selectedTagList.length === 0 || newArr.length === 0) return;
 
         // Remove not match

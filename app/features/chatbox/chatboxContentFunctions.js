@@ -415,6 +415,7 @@ define([
             data.pinned = pinned ? 'pinned' : '';
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
             data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
+            data.taggedUsersList = taggedUsers ? JSON.stringify(taggedUsers) : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {

@@ -37,7 +37,6 @@
 }
 .icon-bookmarks:before {
   content: "\e903";
-  color: #ff6600;
 }
 .icon-zoom-out:before {
   content: "\e904";

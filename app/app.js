@@ -179,12 +179,14 @@ define([
         const enterKeyPreference = res?.enter_key_preference || ENTER_KEY_PREFERENCES[0].value;
         const roomInfo = res?.user_chat_info || {};
         const favouritesRooms = res?.favourites_rooms || [];
+        const labelsList = res?.lables_list || [];
 
         GLOBAL.setRoomInfoWasEdited(roomInfo);
         GLOBAL.setBodyBgTheme(theme);
         GLOBAL.setBodyFontSize(fontsize);
         GLOBAL.setEnterKeyPreference(enterKeyPreference);
         GLOBAL.setFavouritesRooms(favouritesRooms);
+        GLOBAL.setLabelsList(labelsList);
 
         setDataToLocalApplication(BODY_BG_THEME, theme);
         setDataToLocalApplication(BODY_FZ, fontsize);

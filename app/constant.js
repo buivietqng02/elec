@@ -97,8 +97,36 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
             },
             {
                 name: 'cl-min',
+            },
+            {
+                name: 'cl-brick',
+            },
+            {
+                name: 'cl-gold',
+            },
+            {
+                name: 'cl-sea',
+            },
+            {
+                name: 'cl-ice',
+            },
+            {
+                name: 'cl-lime',
             }
         ],
+
+        LABELS: {
+           1: '#ff0000',
+           2: '#ff9900',
+           3: '#339933',
+           4: '#3f70ff',
+           5: '#FFD93D',
+           6: '#cc33ff',
+           7: '#0099cc',
+           8: '#00ff00',
+           9: '#666699',
+           10: '#660033'
+        }
     };
 
     return Object.freeze(obj);

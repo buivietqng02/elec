@@ -517,15 +517,6 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                     </div>
 
-                    <div class="view-bookmark-status-bar hidden">
-                        <div>
-                            <lang data-language="IS_VIEWING_BOOKMARK_LIST"></lang>
-                        </div>
-                        <div class="close-bookmark-view-btn">
-                            <i class="icon-close"></i>
-                        </div>
-                    </div>
-
                     <div class="pin-message-status-bar hidden"></div>
 
                     <div class="js_con_list_mess messages scroll__wrap">
@@ -816,6 +807,25 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                     </div>
                     <!-- End View Search --> 
+
+                    <!-- Start View Bookmark -->
+                    <div class="view-bookmark-wraper hidden">
+                        <div class="view-bookmark-topbar">
+                            <button class="view-bookmark-topbar-close">
+                                <i class="icon-chevron-left"></i>
+                                <lang data-language="BACK"></lang>
+                            </button>
+                        </div>
+
+                        <div class="view-bookmark-content"></div>
+
+                        <div class="pulse-loading hidden">
+                            <div class="files__spiner spinner-grow text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End View Bookmark --> 
                 </div>
             </div>
         </div>

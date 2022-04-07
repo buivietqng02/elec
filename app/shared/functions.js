@@ -301,5 +301,53 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         range.collapse(false);  
         selection.addRange(range);  
         el.focus();
+    },
+
+    downloadImage: async (e) => {
+        const ALERT = require('shared/alert');
+
+        try {
+            console.log('download');
+            const imageSrc = e.currentTarget.getAttribute('src');
+            const image = await fetch(imageSrc)
+            const imageBlog = await image.blob()
+            const imageURL = URL.createObjectURL(imageBlog)
+            const link = document.createElement('a')
+            link.href = imageURL
+            link.download = 'XM image'
+            document.body.appendChild(link)
+            link.click()
+            ALERT.show('Download image', 'dark');
+            document.body.removeChild(link)
+        } catch (err) {
+            console.log(err);
+            ALERT.show('Can not download', 'dark');
+        }
+      
+    },
+
+    downloadFile: (e) => {
+        const ALERT = require('shared/alert');
+        const url = e.currentTarget.getAttribute('href');
+        const filename = e.currentTarget.textContent;
+
+        fetch(url)
+        .then(resp => resp.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            // the filename
+            a.download = filename;
+            a.setAttribute('target', '_blank');
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            ALERT.show('Download image', 'dark'); 
+            document.body.removeChild(a);
+        })
+        .catch(() => ALERT.show('Can not download', 'dark'));
     }
 }));
