@@ -59,6 +59,7 @@
     "jquery": "^3.6.0",
     "jquery-ui": "^1.13.0",
     "jsrender": "^1.0.11",
+    "markdown-it": "^12.3.2",
     "moment": "^2.29.1",
     "navigo": "^8.11.1",
     "popper.js": "^1.16.1",

@@ -13,6 +13,8 @@ define([
     functions,
     template
 ) => {
+    const MarkdownIt = require('markdown-it');
+
     const ob = {};
     const {
         render,
@@ -25,6 +27,7 @@ define([
         decodeStringBase64,
         stripTags
     } = functions;
+
     const { API_URL } = constant;
 
     const timeConvert = (time) => {
@@ -250,6 +253,12 @@ define([
         return reactionElements;
     };
 
+    const markDown = (text) => {
+        const md = new MarkdownIt();
+        const result = md.render(text);
+        return result;
+    };
+
     ob.renderMessage = (messObject, search) => {
         try {
             const info = GLOBAL.getInfomation();
@@ -295,7 +304,6 @@ define([
 
             let text = htmlEncode(decodeStringBase64(message));
             // Render in case message includes tag person
-           
             text = ob.renderTag(text, taggedUsers, true);
 
             let isConferenceLink = false;
@@ -421,7 +429,7 @@ define([
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-           
+            text = markDown(text);
             data.mess = transformLinkTextToHTML(text);
 
             // render with case of file

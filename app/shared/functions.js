@@ -187,8 +187,9 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     },
 
     transformLinkTextToHTML: (string) => {
-        if (!string) {
-            return '';
+        const markdownLink = /<p><a href="(www|ftp|http|https)/g;
+        if (!string || string.match(markdownLink)) {
+            return string;
         }
 
         const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
