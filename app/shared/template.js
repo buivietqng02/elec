@@ -732,8 +732,13 @@ define(['shared/icon'], (ICON) => ({
 
                                 <ul id="media-files-tab" class="nav nav-pills mb-3" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
+                                        <a class="nav-link active" id="images-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
                                             <lang data-language="IMAGES"></lang>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="videos-tab" data-toggle="pill" href="#videos-list" role="tab" aria-controls="videos-list" aria-selected="false">
+                                            <lang data-language="VIDEOS"></lang>
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -745,14 +750,20 @@ define(['shared/icon'], (ICON) => ({
                             </div>
 
                             <div class="media-files-content tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active view-media-list" id="media-list" role="tabpanel" aria-labelledby="media-tab">
-                                 
+                                <div class="tab-pane fade show active view-images-list" id="media-list" role="tabpanel" aria-labelledby="images-tab">    
                                     <div class="text-center">
-                                        <div class="media__spiner spinner-grow text-secondary hidden" role="status">
+                                        <div class="images__spiner spinner-grow text-secondary hidden" role="status">
                                         <span class="sr-only">Loading...</span>
                                         </div>
                                     </div>
-                                
+                                </div>
+
+                                <div class="tab-pane fade view-videos-list" id="videos-list" role="tabpanel" aria-labelledby="videos-tab">
+                                    <div class="text-center">
+                                        <div class="videos__spiner spinner-grow text-secondary hidden" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="tab-pane fade view-files-list" id="files-list" role="tabpanel" aria-labelledby="files-tab">
