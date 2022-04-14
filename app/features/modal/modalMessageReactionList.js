@@ -1,16 +1,15 @@
 define([
     'shared/api',
     'shared/data',
-    'shared/functions',
-    'moment'
+    'shared/functions'
 ], (
     API,
     GLOBAL,
-    functions,
-    moment
+    functions
 ) => {
     const {
-        getAvatar
+        getAvatar,
+        convertMessagetime
     } = functions;
     let $modal;
 
@@ -18,13 +17,12 @@ define([
         let memberElements = '';
         const $members = $('#messageReactionListModal').find('.mim-member-wrapper');
         reactions.forEach(item => {
-            const momentMessDate = moment(item.reactionDate);
-            const date = momentMessDate.format('MMMM DD, YYYY');
+            const dateConverted = convertMessagetime(item.reactionDate, GLOBAL.getLangJson());
             memberElements += `
             <div class="mim-member">
                 <img class="--img avatar" src="${getAvatar(item.user.id)}">
                 <span class="--name">${item.user.name}</span>
-                <span class="--date">${date}</span>
+                <span class="--date">${dateConverted}</span>
                 <span class="--reaction">${item.reaction}</span>
             </div>`;
         });
