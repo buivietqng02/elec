@@ -18,6 +18,11 @@ define(() => {
     let roomDraft = {};
     let favouritesRooms = [];
     let labelsList = [];
+    const DEFAULT_LABEL_LIST = [
+        { id: 'defaultId1', color: 1, descript: 'Default' },
+        { id: 'defaultId2', color: 2, descript: 'Important' },
+        { id: 'defaultId3', color: 3, descript: 'To do' }
+    ];
 
     const useAdapterForRoom = (room) => ({
         channel: room.channel,
@@ -156,6 +161,8 @@ define(() => {
         setRoomDraft: (value) => {
             roomDraft = value;
         },
+
+        getDefaultLabelList: () => DEFAULT_LABEL_LIST,
 
         refresh
     };

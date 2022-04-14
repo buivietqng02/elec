@@ -7,7 +7,7 @@ const urls = [
     '/manifest.json',
     // '/assets/js/socket.io.js',
     // '/assets/js/easyrtc.js',
-    '/assets/js/wheel-zoom.min.js',
+    // '/assets/js/wheel-zoom.min.js',
     '/source/index.bundle.js',
     '/source/232.bundle.js',
     '/source/styles.bundle.js',
