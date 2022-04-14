@@ -384,6 +384,7 @@ define(['shared/icon'], (ICON) => ({
                     </span>
                     <div class="search-mess-all-rooms hidden">
                         <button class="search-all-room-link">
+                            <i class="xm icon-search"></i>
                             <lang data-language="SEARCH_IN_ALL_ROOM_KEYWORD"></lang> <q class="search-all-room-text"></q> ...
                         </button>
                     </div>
