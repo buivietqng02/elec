@@ -28,6 +28,21 @@ const modalConfirmTemplate = (object) => `
     </div>
 `;
 
+const md = require('markdown-it')({
+    html: false, // Enable HTML tags in source
+    xhtmlOut: false, // Use '/' to close single tags (<br />).
+                                // This is only for full CommonMark compatibility.
+    breaks: false, // Convert '\n' in paragraphs into <br>
+    langPrefix: 'language-', // CSS language prefix for fenced blocks. Can be
+                                // useful for external highlighters.
+    linkify: true, // Autoconvert URL-like text to links
+  
+    // Enable some language-neutral replacement + quotes beautification
+    typographer: false,
+
+    quotes: '“”‘’',
+}).disable(['link', 'image']);
+
 define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     setCookie: (value, days) => {
         let expires = '';
@@ -186,24 +201,46 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         };
     },
 
-    transformLinkTextToHTML: (string) => {
-        const markdownLink = /<p><a href="(www|ftp|http|https)/g;
-        if (!string || string.match(markdownLink)) {
-            return string;
-        }
+    // transformLinkTextToHTML: (string) => {
+    //     if (!string) {
+    //         return '';
+    //     }
 
-        const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
-        const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
-        const content = string.replace(regexp, url => {
-            let html = url;
-            if (!url.match(avatarLink)) {
-                html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+    //     const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
+    //     const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
+    //     const content = string.replace(regexp, url => {
+    //         let html = url;
+    //         if (!url.match(avatarLink)) {
+    //             html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+    //         }
+
+    //         return html;
+    //     });
+
+    //     return content;
+    // },
+    
+    markDown: (text) => {
+        // Add target=_blank into link
+        const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+            return self.renderToken(tokens, idx, options);
+        };
+
+        md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+            // If you are sure other plugins can't add `target` - drop check below
+            var aIndex = tokens[idx].attrIndex('target');
+        
+            if (aIndex < 0) {
+            tokens[idx].attrPush(['target', '_blank']); // add new attribute
+            } else {
+            tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
             }
+            // pass token to default renderer.
+            return defaultRender(tokens, idx, options, env, self);
+        };
 
-            return html;
-        });
-
-        return content;
+        const result = md.render(text);
+        return result;
     },
 
     truncate: (string, numOfLetter = 1000) => {
@@ -236,7 +273,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
                 tokens.push(before);
             }
             lastIndex = regexp.lastIndex;
-            tokens.push(`<span class="highlight-text">${match[0]}</span>`);
+            tokens.push(`<span class='highlight-text'>${match[0]}</span>`);
         }
 
         const rest = text.slice(lastIndex);

@@ -126,7 +126,9 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
            8: '#00ff00',
            9: '#666699',
            10: '#660033'
-        }
+        },
+
+        SEARCH_ALL_ROOM: 'SEARCH_ALL_ROOM',
     };
 
     return Object.freeze(obj);

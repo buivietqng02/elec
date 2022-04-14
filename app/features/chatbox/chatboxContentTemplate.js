@@ -162,7 +162,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                 </div>
 
                 <div class="show_origin_mess hidden">
-                    <button type="button" class="show_origin_btn btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message" sequence_number="{messSequence}">
+                    <button type="button" class="show_origin_btn btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message" sequence_number="{messSequence}" room-id="{roomId}">
                         <i class="icon-comment-o"></i>
                     </button>
                 </div>

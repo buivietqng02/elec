@@ -13,19 +13,17 @@ define([
     functions,
     template
 ) => {
-    const MarkdownIt = require('markdown-it');
-
     const ob = {};
     const {
         render,
         getAvatar,
         convertMessagetime,
         humanFileSize,
-        transformLinkTextToHTML,
         highlightText,
         htmlEncode,
         decodeStringBase64,
-        stripTags
+        stripTags,
+        markDown
     } = functions;
 
     const { API_URL } = constant;
@@ -139,7 +137,7 @@ define([
         let shorternText;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        let text = htmlEncode(decodeStringBase64(message));
         text = ob.renderTag(text, taggedUsers);
 
         if (file) {
@@ -253,18 +251,14 @@ define([
         return reactionElements;
     };
 
-    const markDown = (text) => {
-        const md = new MarkdownIt();
-        const result = md.render(text);
-        return result;
-    };
-
-    ob.renderMessage = (messObject, search) => {
+    ob.renderMessage = (messObject, search, isSearchAllRoom) => {
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
-            const roomId = GLOBAL.getCurrentRoomId();
+            let roomId = GLOBAL.getCurrentRoomId();
+            if (isSearchAllRoom) roomId = messObject.id.chatId;
             const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomId));
+        
             const {
                 sender,
                 id,
@@ -303,6 +297,10 @@ define([
             sender.name = stripTags(sender?.name);
 
             let text = htmlEncode(decodeStringBase64(message));
+
+            // markdown
+            text = markDown(text);
+           
             // Render in case message includes tag person
             text = ob.renderTag(text, taggedUsers, true);
 
@@ -372,6 +370,20 @@ define([
             // highlight text if search exist
             if (search) {
                 text = highlightText(text, decodeStringBase64(search));
+                
+                // Fix link error when highlight link in search
+                const rgx1 = /<a href=".*?<span class='highlight-text'>/g;
+                const fullLinkRegex = /<a href=".*?" target="_blank">/g;
+                const rgx3 = /<\/span>.*?" target="_blank">/g;
+
+                if (text.match(fullLinkRegex)?.length > 0) {
+                    text.match(fullLinkRegex).forEach((item) => {
+                    if (!item.includes('highlight-text')) return;  
+                    const firstPart = item.match(rgx1)[0].slice(9, item.match(rgx1)[0].length - 29);
+                    const lastPart = item.match(rgx3)[0].slice(7, item.match(rgx3)[0].length - 18);
+                    text = text.replace(item, `<a href="${firstPart}${search}${lastPart}" target="_blank">`);
+                    });
+                }
             }
 
             // Change text in case send code
@@ -424,13 +436,13 @@ define([
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
             data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
             data.taggedUsersList = taggedUsers ? JSON.stringify(taggedUsers) : '';
+            data.mess = text;
+            data.roomId = isSearchAllRoom ? roomId : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-            text = markDown(text);
-            data.mess = transformLinkTextToHTML(text);
 
             // render with case of file
             if (file && !deleted) {

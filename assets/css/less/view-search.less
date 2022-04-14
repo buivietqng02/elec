@@ -80,11 +80,11 @@
                 }
             }
 
-            .search-all-rooms-container {
-                // Temporary hide
-                display: none;
-                margin-left: 20px;
-            }
+            // .search-all-rooms-container {
+            //     // Temporary hide
+            //     // display: none;
+            //     margin-left: 20px;
+            // }
         }
     }
 
@@ -99,10 +99,7 @@
         li {
             list-style: none;
             margin: 10px 0;
-            transition: all .5s;
-            &:hover {
-                background-color: white;
-            }
+            transition: all .5s;       
             .user-avatar {
                 display: none !important;
             }
@@ -122,10 +119,34 @@
             }
         }
 
+        .search-room-name {
+            text-align: center;
+            margin: 15px 0px;
+            span {
+                font-size: 1.2rem;
+                color: #0093ff;
+            }
+        }
+
         .not-found-mess {
             font-size: 30px;
             margin-top: 180px;
             color: gray;
+        }
+
+        .message-before-keywords {
+            -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+                from(rgba(0,0,0,0.2)), to(rgba(0,0,0,1)));
+        }
+
+        .message-contains-keywords {
+            opacity: 1;
+            background-color: rgba(211, 211, 211, 0.591);
+        }
+
+        .message-after-keywords {
+            -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, 
+                from(rgba(0,0,0,1)), to(rgba(0,0,0,0.2)));
         }
     }
 
@@ -202,16 +223,22 @@
                     }
                 }
 
-                .search-all-rooms-container {
-                   position: absolute;
-                   top: 15px;
-                   right: 15px;
-                }
+                // .search-all-rooms-container {
+                //    position: absolute;
+                //    top: 15px;
+                //    right: 15px;
+                // }
             }
         }
     
         .search-content{
-            height: calc(100vh - 180px);
+            height: calc(100vh - 75px);
+            .search-room-name {
+                margin: 8px 0px;
+                span {
+                    font-size: 1rem;
+                }
+            }
         }
     }
 }

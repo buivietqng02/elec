@@ -4,30 +4,32 @@ define([
     'shared/api',
     'shared/functions',
     'shared/alert',
-    'features/chatbox/chatboxContentFunctions'
+    'features/chatbox/chatboxContentFunctions',
+    'axios'
 ], (
     constant,
     GLOBAL,
     API,
     functions,
     ALERT,
-    contentFunc
+    contentFunc,
+    axios
    
     ) => {
+    const { API_URL, SEARCH_ALL_ROOM } = constant;
     const { convertMessagetime } = functions;
     let inputSearch;
-    let searchingMessContent;
+    let pulseLoading;
     let searchContent;
     let searchLobbyText;
     let searchWraper;
     let closeSearchViewBtn;
     let cancelSearchBtn;
-
-    let checkSearchAllRoom;
-
+    let searchMessTopBar;
     let searchBtn;
 
     let lastOffset = 0;
+    let timestamp = '';
     let isTouchLastMess = false;
     let isProcessing = false;
     let isToPosition = false;
@@ -35,7 +37,6 @@ define([
     let isCancelSearch = false;
     
     let isSearchMode = false;
-    let isSearchAllRooms = false;
 
     let valueKeywords = '';
     let roomId = 0;
@@ -46,53 +47,99 @@ define([
         renderMessage
     } = contentFunc;
 
-    const onRenderSearchResult = (searchMessageList, search) => {
-        isCancelSearch = false;
-        let textHTML = '';
-        searchMessageList.map(mess => {
-            textHTML += `
-                <div class="separate-date text-center">
-                    <hr>
-                    <span>${convertMessagetime(mess.msgDate, GLOBAL.getLangJson(), !!search)}</span>
-                </div> 
-               <!-- ${renderMessage(mess, search)} -->
-               <!-- ${renderMessage(mess, search)} -->
-                ${renderMessage(mess, search)}
-            `;
-            return textHTML;
-        });
-       
-        searchContent.innerHTML = textHTML;
-        searchContent.scrollTop = searchContent.scrollHeight;
+    const getRoomInfo = (roomIdInfo) => GLOBAL.getRooms().find(room => (room.id === roomIdInfo)); 
+
+    const showRoomName = (rId) => {
+        const roomInfo = getRoomInfo(rId);
+        let roomName;
+        if (roomInfo.subject) {
+            roomName = `${GLOBAL.getLangJson().GROUP}: ${roomInfo.subject}`;
+        } else {
+            roomName = `${GLOBAL.getLangJson().CHAT_WITH}: ${roomInfo.partner.name}`;
+        }
+        return `
+            <div class="search-room-name">
+                <span>${roomName}</span>
+            </div>
+        `;
     };
 
-    const callAPI = async (currentRoomId, lastOffsetParam, value) => {
+    const templateSearch = (messGroup, search, isSearchAllRoom) => `
+        <div class="separate-date text-center">
+            <hr>
+            <span>${convertMessagetime(messGroup[0].msgDate, GLOBAL.getLangJson(), !!search)}</span>
+        </div> 
+        
+        ${isSearchAllRoom ? showRoomName(messGroup[0].id.chatId) : ''}
+
+        <div class="message-before-keywords">${messGroup[-1] ? renderMessage(messGroup[-1], search, isSearchAllRoom) : ''}</div>
+        <div class="message-contains-keywords">${renderMessage(messGroup[0], search, isSearchAllRoom)}</div>
+        <div class="message-after-keywords">${messGroup[1] ? renderMessage(messGroup[1], search, isSearchAllRoom) : ''}</div>`;
+
+    const onRenderSearchResult = (searchMessageList, search, type) => {
+        isCancelSearch = false;
+        let textHTML = '';
+        let prevSearchMess = '';
+        let reArrangeSearchList = [];
+
+        searchMessageList.forEach((mess) => {
+            const currSearchMess = mess.searchMessage;
+            if (currSearchMess === prevSearchMess) {
+                reArrangeSearchList[reArrangeSearchList.length - 1][mess.searchIndex] = mess;
+            } else {
+                reArrangeSearchList.push({ [mess.searchIndex]: mess });
+            }
+            prevSearchMess = currSearchMess;
+        });
+
+        if (type === SEARCH_ALL_ROOM) {
+            reArrangeSearchList = reArrangeSearchList.map(messGroup => {
+                textHTML += templateSearch(messGroup, search, true);
+                return textHTML;
+            });
+        } else {
+            reArrangeSearchList = reArrangeSearchList.map(messGroup => {
+                textHTML += templateSearch(messGroup, search, false);
+                return textHTML;
+            });
+        }
+      
+        const pos = searchContent.scrollHeight + searchContent.scrollTop;  
+        searchContent.innerHTML = textHTML + searchContent.innerHTML;
+        searchContent.scrollTop = searchContent.scrollHeight - pos;
+    };
+
+    const callAPI = async (value, offsetTimestamp, currentRoomId) => {
         let res;
         try {
             isProcessing = true;
-            searchingMessContent.classList.remove('hidden');
+            pulseLoading.classList.remove('hidden');
 
-            const params = {
-                chatId: currentRoomId,
-                offset: lastOffsetParam,
-                search: value
-                
-            };
-            res = await API.get('messages', params);
-            lastOffset = res.messages[res.messages.length - 1]?.sequence;
-            if (res.messages.length < 20) isTouchLastMess = true;
+            if (currentRoomId) {
+                res = await axios.get(`${API_URL}/chats/${currentRoomId}/messages/search?keyword=${value}&offset=${offsetTimestamp}`);
+            } else {
+                res = await axios.get(`${API_URL}/messages/search?keyword=${value}&timestamp=${offsetTimestamp}`);
+            }
+
+            const listMessWithKeyword = res.filter(response => response.searchIndex === 0);
+
+            lastOffset = listMessWithKeyword[listMessWithKeyword.length - 1]?.sequence;
+            const lastMsgDate = listMessWithKeyword[listMessWithKeyword.length - 1]?.msgDate;
+            timestamp = new Date(lastMsgDate).getTime();
+         
+            if (listMessWithKeyword.length < 20) isTouchLastMess = true;
 
             isProcessing = false;
-            if (res.messages.length) isToPosition = false;
+            if (res.length) isToPosition = false;
 
-            searchingMessContent.classList.add('hidden');
+            pulseLoading.classList.add('hidden');
             searchLobbyText.classList.add('hidden');
     
             return res;
         } catch (error) {
             console.log(error);
             isProcessing = false;
-            searchingMessContent.classList.add('hidden');
+            pulseLoading.classList.add('hidden');
             ALERT.show('Something wrong, please search again!', 'danger');
         }
 
@@ -103,6 +150,7 @@ define([
         lastOffset = 0;
         isTouchLastMess = false;
         isToPosition = false;
+        timestamp = '';
     };
 
     const closeModal = () => {
@@ -116,14 +164,12 @@ define([
         }
         isSearchMode = false;
         isShowOriginMess = false;
-        isSearchAllRooms = false;
 
         searchContentTemp = searchContent.innerHTML;
         inputSearchTemp = inputSearch.value;
         searchContent.innerHTML = '';
         inputSearch.value = '';
         searchBtn.disabled = true;
-        checkSearchAllRoom.checked = false;
     };
 
     const onClearSearchInput = () => {
@@ -139,14 +185,19 @@ define([
         if (cancelSearchBtn) cancelSearchBtn.classList.add('hidden');
     };
 
-    const onShowOriginMessage = (id, sequence) => {
+    const onShowOriginMessage = (id, sequence, roomid) => {
         const chatboxContentComp = require('features/chatbox/chatboxContent');
         closeModal();
+        if (roomid) {
+            // Scroll to origin for search all room, load the room first
+            $(`.js_li_list_user[data-room-id="${roomid}"]`).click();
+        }
+        
         isShowOriginMess = true;
 
         setTimeout(() => {
             chatboxContentComp.onShowExactOriginMessage(id, sequence);
-        }, 500);
+        }, 600);
     };
 
     const showOriginMessageEventListener = () => {
@@ -155,9 +206,10 @@ define([
             const showOriginMessBtn = item.querySelector('.show_origin_btn');
             const sequence = showOriginMessBtn.getAttribute('sequence_number');
             const id = item.getAttribute(constant.ATTRIBUTE_MESSAGE_ID);
+            const roomid = showOriginMessBtn.getAttribute('room-id');
 
             showOriginMess.classList.remove('hidden');
-            showOriginMess.addEventListener('click', () => onShowOriginMessage(id, sequence));
+            showOriginMess.addEventListener('click', () => onShowOriginMessage(id, sequence, roomid));
         });
     };
 
@@ -170,10 +222,9 @@ define([
             return;
         }
 
-        callAPI(roomId, lastOffset, valueKeywords).then(res => {
+        callAPI(valueKeywords, lastOffset, roomId).then(res => {
             searchBtn.disabled = false;
-            // console.log(res);
-            if (!res?.messages?.length) {
+            if (!res?.length) {
                 searchContent.innerHTML = `<div class="not-found-mess text-center">${GLOBAL.getLangJson().MESSAGE_NOT_FOUND}</div>`;
                 return;
             }
@@ -182,7 +233,8 @@ define([
                 return;
             }
 
-            onRenderSearchResult(res.messages.reverse(), valueKeywords);
+            searchContent.innerHTML = '';
+            onRenderSearchResult(res.reverse(), valueKeywords);
 
             showOriginMessageEventListener();
         });
@@ -205,31 +257,18 @@ define([
     };
 
     const onGetMoreMessageByScrolling = () => {
-        callAPI(roomId, lastOffset, valueKeywords).then(res => {
-            // console.log(res);
-            let messagesHtml = '';
+        const offsetTimestamp = !roomId ? timestamp : lastOffset;
+        callAPI(valueKeywords, offsetTimestamp, roomId).then(res => {
+            console.log(res);
             let moreMessages = [];
+            moreMessages = moreMessages.concat(res || []).reverse();
 
-            const pos = searchContent.scrollHeight + searchContent.scrollTop;  
-
-            moreMessages = moreMessages.concat(res?.messages || []).reverse();
-
-            moreMessages.map(mess => {
-                messagesHtml += `
-                <div class="separate-date text-center">
-                    <hr>
-                    <span>${convertMessagetime(mess.msgDate, GLOBAL.getLangJson(), true)}</span>
-                </div> 
-                <!-- ${renderMessage(mess, valueKeywords)} -->
-                <!-- ${renderMessage(mess, valueKeywords)} -->
-                ${renderMessage(mess, valueKeywords)}
-                `;
-                return messagesHtml;
-            });
-
-            searchContent.innerHTML = messagesHtml + searchContent.innerHTML;
-            searchContent.scrollTop = searchContent.scrollHeight - pos;
-
+            if (!roomId) {
+                onRenderSearchResult(moreMessages, valueKeywords, SEARCH_ALL_ROOM);
+            } else {
+                onRenderSearchResult(moreMessages, valueKeywords);
+            }
+           
             showOriginMessageEventListener();
         });
     };
@@ -249,9 +288,42 @@ define([
         onGetMoreMessageByScrolling();
     };
 
-    const searchAllRooms = (e) => {
-        isSearchAllRooms = e.target.checked;
-        console.log(isSearchAllRooms);
+    const openModal = () => {
+        searchWraper.classList.remove('hidden');
+        searchWraper.classList.remove('slideOut');
+        searchWraper.classList.add('slideIn');
+    };
+
+    const openSearchAllRoomsModal = (value) => {
+        const searchAllRoomInitBtn = document.querySelector('.search-all-room-link');
+        resetScroll();
+        roomId = '';
+        valueKeywords = value;
+       
+        isSearchMode = true;
+        searchAllRoomInitBtn.disabled = true;
+        searchLobbyText.classList.remove('hidden');
+       
+        // If not yet open search modal;
+        if (searchWraper.classList.contains('hidden')) {
+            openModal();
+        } else {
+            searchContent.innerHTML = '';
+        }
+        searchMessTopBar.classList.add('hidden');
+
+        callAPI(value, timestamp).then(res => {
+            searchAllRoomInitBtn.disabled = false;
+            if (!res?.length) {
+                searchContent.innerHTML = `<div class="not-found-mess text-center">${GLOBAL.getLangJson().MESSAGE_NOT_FOUND}</div>`;
+                return;
+            }
+
+            searchContent.innerHTML = '';
+            onRenderSearchResult(res.reverse(), value, SEARCH_ALL_ROOM);
+
+            showOriginMessageEventListener();
+        });
     };
 
     const removeEventListenerEle = () => {
@@ -260,15 +332,12 @@ define([
         inputSearch.removeEventListener('keyup', onEnterSearch);
         searchContent.removeEventListener('scroll', onWrapperScroll);
         cancelSearchBtn.removeEventListener('click', onClearSearchInput);
-        checkSearchAllRoom.removeEventListener('change', searchAllRooms);
     };
 
-    const openModal = () => {
+    const openModalSearchOneRoom = () => {
         if (searchWraper.classList.contains('hidden')) {
-            searchWraper.classList.remove('hidden');
-            searchWraper.classList.remove('slideOut');
-            searchWraper.classList.add('slideIn');
-
+            openModal();
+            searchMessTopBar.classList.remove('hidden');
             roomId = GLOBAL.getCurrentRoomId();
             isSearchMode = true;
 
@@ -285,19 +354,21 @@ define([
         }
     };
 
+    const defineElementsSelector = () => {
+        searchWraper = document.querySelector('.view-search-wraper');
+        closeSearchViewBtn = document.querySelector('.search-close');
+        cancelSearchBtn = document.querySelector('.cancel-search-btn');
+        searchBtn = document.querySelector('.search-mess-btn');
+        inputSearch = document.querySelector('#msbg-input');
+        searchContent = document.querySelector('.search-content');
+        pulseLoading = searchWraper.querySelector('.pulse-loading');
+        searchLobbyText = document.querySelector('.search-lobby-text');
+        searchMessTopBar = document.querySelector('.mess-search-topright');
+    };
+
     return {
         onInit: () => {
-            searchWraper = document.querySelector('.view-search-wraper');
-            closeSearchViewBtn = document.querySelector('.search-close');
-            cancelSearchBtn = document.querySelector('.cancel-search-btn');
-            searchBtn = document.querySelector('.search-mess-btn');
-
-            inputSearch = document.querySelector('#msbg-input');
-            searchContent = document.querySelector('.search-content');
-            searchingMessContent = document.querySelector('.pulse-loading');
-            searchLobbyText = document.querySelector('.search-lobby-text');
-
-            checkSearchAllRoom = document.querySelector('#search-all-rooms');
+            defineElementsSelector();
 
             removeEventListenerEle();
             closeSearchViewBtn.addEventListener('click', closeModalAndResetScroll);
@@ -305,11 +376,20 @@ define([
             searchBtn.addEventListener('click', onSearch);
             searchContent.addEventListener('scroll', onWrapperScroll);
             cancelSearchBtn.addEventListener('click', onClearSearchInput);
-            checkSearchAllRoom.addEventListener('change', searchAllRooms);
     
-            openModal();
+            openModalSearchOneRoom();
         },
 
-        closeViewSearch: () => closeModalAndResetScroll()
+        closeViewSearch: () => closeModalAndResetScroll(),
+
+        onInitSearchAllRooms: (value) => {
+            defineElementsSelector();
+
+            removeEventListenerEle();
+
+            closeSearchViewBtn.addEventListener('click', closeModalAndResetScroll);
+            searchContent.addEventListener('scroll', onWrapperScroll);
+            openSearchAllRoomsModal(value);
+        }
     };
 });

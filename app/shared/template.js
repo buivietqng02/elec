@@ -382,6 +382,11 @@ define(['shared/icon'], (ICON) => ({
                         <input class="search__input" type="search" data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" placeholder="Search..." />
                         <i class="clearable__clear">&times;</i>
                     </span>
+                    <div class="search-mess-all-rooms hidden">
+                        <button class="search-all-room-link">
+                            <lang data-language="SEARCH_IN_ALL_ROOM_KEYWORD"></lang> <q class="search-all-room-text"></q> ...
+                        </button>
+                    </div>
                 </div>
                 <div class="contacts">
                     <ul class="contact-list js_ul_list_user" id="sidebar_room_list"></ul>
@@ -777,47 +782,6 @@ define(['shared/icon'], (ICON) => ({
 
                         </div>
                     <!-- End View media and files -->
-                    <!-- Start View search -->
-                    <div class="view-search-wraper hidden">
-                        <div class="search-topbar">
-                            <button class="search-close">
-                                <i class="icon-chevron-left"></i>
-                                <lang data-language="BACK"></lang>
-                            </button>
-                            <div class="mess-search-topright">
-                                <div class="mess-search-box">
-                                    <div class="msbg-input-container">
-                                        <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
-                                        <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
-                                            <i class="icon-close"></i>
-                                        </button>
-                                    </div>
-            
-                                    <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
-                                        <i class="xm icon-search"></i>
-                                    </button>
-                                </div>
-
-                                <div class="search-all-rooms-container custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="search-all-rooms">
-                                    <label class="custom-control-label" for="search-all-rooms">Search all rooms</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="search-content"></div>
-
-                        <div class="search-lobby-text text-center">
-                            <lang data-language="PLEASE_ENTER_THREE_LETTERS"></lang>
-                        </div>
-
-                        <div class="pulse-loading hidden">
-                            <div class="files__spiner spinner-grow text-secondary" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End View Search --> 
 
                     <!-- Start View Bookmark -->
                     <div class="view-bookmark-wraper hidden">
@@ -838,6 +802,43 @@ define(['shared/icon'], (ICON) => ({
                     </div>
                     <!-- End View Bookmark --> 
                 </div>
+
+                <!-- Start View search -->
+                <div class="view-search-wraper hidden">
+                    <div class="search-topbar">
+                        <button class="search-close">
+                            <i class="icon-chevron-left"></i>
+                            <lang data-language="BACK"></lang>
+                        </button>
+                        <div class="mess-search-topright">
+                            <div class="mess-search-box">
+                                <div class="msbg-input-container">
+                                    <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
+                                    <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
+                                        <i class="icon-close"></i>
+                                    </button>
+                                </div>
+        
+                                <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
+                                    <i class="xm icon-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-content"></div>
+
+                    <div class="search-lobby-text text-center">
+                        <lang data-language="PLEASE_ENTER_THREE_LETTERS"></lang>
+                    </div>
+
+                    <div class="pulse-loading hidden">
+                        <div class="files__spiner spinner-grow text-secondary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- End View Search --> 
             </div>
         </div>
     `,

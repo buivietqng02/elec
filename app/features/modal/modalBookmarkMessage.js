@@ -590,6 +590,7 @@ define([
             //     console.log(err);
             // });
             flagList = GLOBAL.getLabelsList();
+            console.log(flagList);
             openModalLabelMess(message.get(0))
         },
 

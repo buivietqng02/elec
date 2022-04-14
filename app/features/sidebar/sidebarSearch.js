@@ -2,12 +2,14 @@ define([
     'app/constant',
     'shared/data', 
     'shared/functions',
-    'features/sidebar/sidebarService'
+    'features/sidebar/sidebarService',
+    'features/modal/modalSearchMessage'
 ], (
     constant,
     GLOBAL,
     functions,
-    sidebarService
+    sidebarService,
+    modalSearchMessage
 ) => {
     const { debounce } = functions;
     let currentOptions = 1;
@@ -20,10 +22,47 @@ define([
     let $input;
     let $resetInputBtn;
     let $lCollapse;
+    let $sidebar;
+    let $contacts;
+
+    let $searchAllRoomContainer;
+    let $searchAllRoomInitBtn;
+    let $searchAllRoomsText;
+
+    const onToggleSearchMessAllRooms = (value) => {
+        $searchAllRoomsText.text(value);
+        if (value.length >= 3) {
+            $searchAllRoomContainer.addClass('searching');
+            $searchAllRoomContainer.removeClass('hidden');
+
+            if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+                $contacts.css('height', 'calc(100% - 228px)');
+            }
+
+            $searchAllRoomInitBtn.off().click(() => {
+                if ($sidebar.hasClass('mobile')) {
+                    $searchAllRoomContainer.addClass('hidden');
+                    $frame.removeClass('indent');
+                    $lCollapse.removeClass('indent');
+                }
+               
+                sidebarService.onChangeSearch('');
+                modalSearchMessage.onInitSearchAllRooms(value);
+            });
+        } else {
+            $searchAllRoomContainer.removeClass('searching');
+            $searchAllRoomContainer.addClass('hidden');
+
+            if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+                $contacts.css('height', 'calc(100% - 196px)');
+            }
+        }
+    };
 
     const onSearch = debounce(() => {
         const value = $input.val().trim().toUpperCase();
         sidebarService.onChangeSearch(value);
+        onToggleSearchMessAllRooms($input.val().trim());
     }, 300);
 
     const offEventClickOutside = () => {
@@ -67,6 +106,10 @@ define([
         } else {
             $frame.addClass('indent');
             $lCollapse.addClass('indent');
+
+            if ($searchAllRoomContainer.hasClass('searching')) {
+                $searchAllRoomContainer.removeClass('hidden');
+            }
         }
         
         setTimeout(() => $input.focus(), 100);
@@ -75,11 +118,19 @@ define([
     const resetInput = () => {
         $input.val('');
         sidebarService.onChangeSearch('');
+        $searchAllRoomContainer.addClass('hidden');
+        $searchAllRoomContainer.removeClass('searching');
+
+        if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+            $contacts.css('height', 'calc(100% - 196px)');
+        }
     };
 
     return {
         onInit: () => {
             currentOptions = 1;
+            $sidebar = $('#frame .sidebar');
+            $contacts = $('#frame .contacts');
             $frame = $('#frame');
             $lCollapse = $('.lbog-collapse');
             $wrapper = $('#search');
@@ -89,6 +140,9 @@ define([
             $optionsBtn = $wrapper.find('.search__option');
             $input = $wrapper.find('.search__input');
             $resetInputBtn = $wrapper.find('.clearable__clear');
+            $searchAllRoomContainer = $('.search-mess-all-rooms');
+            $searchAllRoomInitBtn = $('.search-all-room-link');
+            $searchAllRoomsText = $('.search-all-room-text');
 
             $input.val('');
             $options.off().click(onChangeFilter);

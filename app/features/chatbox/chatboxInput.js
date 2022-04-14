@@ -17,7 +17,6 @@ define([
         stripTags,
         decodeStringBase64,
         encodeStringBase64,
-        transformLinkTextToHTML,
         getDataToLocalApplication
     } = functions;
 
@@ -402,7 +401,7 @@ define([
            
             $input.focus();
             $commentWrapper.show();
-            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(commentState.mess)}</span>`);
+            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : commentState.mess}</span>`);
         },
 
         onAddEmoji: (emoji) => {

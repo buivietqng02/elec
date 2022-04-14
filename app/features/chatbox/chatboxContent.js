@@ -45,13 +45,12 @@ define([
         COLOR_NAME_GROUP
     } = constant;
     const {
-        transformLinkTextToHTML,
-        highlightText,
         htmlEncode,
         decodeStringBase64,
         getAvatar,
         downloadImage,
-        downloadFile
+        downloadFile,
+        markDown
     } = functions;
     const {
         getChatById,
@@ -757,8 +756,9 @@ define([
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-            let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message)));
+            let text = htmlEncode(decodeStringBase64(message.message));
             // Render in case edit a tag message
+            text = markDown(text);
             text = renderTag(text, message.taggedUsers, true);
 
             const $pinMessTopbar = $('.pin-message-status-bar');

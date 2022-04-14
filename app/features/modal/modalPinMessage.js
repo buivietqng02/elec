@@ -32,7 +32,6 @@ define([
 
     const { PINNED_MESS_ID, PINNED_SEQUENCE, ATTRIBUTE_MESSAGE_ID } = constant;
     const {
-        transformLinkTextToHTML,
         htmlEncode,
         decodeStringBase64,
         getAvatar
@@ -187,7 +186,7 @@ define([
         } else {
             messId = pinnedObj.id.messageId;
             pinname = pinnedObj.sender.name;
-            message = transformLinkTextToHTML(htmlEncode(decodeStringBase64(pinnedObj.message)));
+            message = htmlEncode(decodeStringBase64(pinnedObj.message));
             pinSequence = pinnedObj.sequence;
             avatar = getAvatar(pinnedObj.sender.id);
             taggedUsers = pinnedObj?.taggedUsers;
