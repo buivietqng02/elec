@@ -3042,7 +3042,13 @@ body.body_fz_18 {
 }
 
 #messageReactionListModal .--reaction-by .mim-member .--reaction{
-  margin: auto 5px auto auto;
+  margin: auto 5px auto 30px;
+}
+
+#messageReactionListModal .--reaction-by .mim-member .--date{
+  margin: auto 0 auto auto;
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
 }
 
 #forwardMessageModal .fmm-room,
