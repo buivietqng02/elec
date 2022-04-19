@@ -389,8 +389,9 @@ define(['shared/icon'], (ICON) => ({
                         </button>
                     </div>
 
-                    <div class="view-label-all-room">
-                        <button class="view-label-all-room-btn">View labeled messages from all rooms</button>
+                    <div class="view-label-all-room hidden">
+                        <i class="icon-bookmarks"></i>
+                        <button class="view-label-all-room-link">Search for labeled messages in all rooms</button>
                     </div>
                 </div>
                 <div class="contacts">

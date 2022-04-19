@@ -64,7 +64,7 @@ define([
     };
 
     const offEventClickOutsideLabelAllRoomBtn = () => {
-        $viewLabelAllRoom.hide();
+        $viewLabelAllRoom.addClass('hidden');
         $(document).off('.hideViewLabelAllRoomBtn');
     };
 
@@ -96,7 +96,7 @@ define([
         e.preventDefault();
         e.stopPropagation();
 
-        $viewLabelAllRoom.show();
+        $viewLabelAllRoom.removeClass('hidden');
         handleClickOutsideLabelAllRoomBtn();
     };
 

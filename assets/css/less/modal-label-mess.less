@@ -343,24 +343,18 @@
 }
 
 .view-label-all-room {
-    display: none;
-    padding: 0.3rem 0;
-    border-radius: 8px;
-    background-color: rgba(255,255,255,0.95);
-    z-index: 10;
-    position: absolute;
-    top: 41px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 1px 2px 2px rgb(119 119 119 / 40%);
-    width: max-content;
-    font-size: 0.875rem;
+    margin-top: 8px;
+    text-align: center;
 
-    .view-label-all-room-btn {
+    .view-label-all-room-link {
+        opacity: 0.8;
         border: none;
-        background-color: transparent;
+        cursor: pointer;
+        font-size: 0.9rem;
+        background: none;
+        color: white;
         &:hover {
-           color: #08c;
+            opacity:1;
         }
     }
 }
