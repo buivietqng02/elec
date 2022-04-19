@@ -266,7 +266,7 @@ define([
         }
         closeViewLabelsBtn.addEventListener('click', closeModalViewLabelMess);
 
-        filterLabelSelect.innerHTML = `<option value="0" selected>View all labled messages</option> ${renderFilterMessWithLabel()}`;
+        filterLabelSelect.innerHTML = `<option value="0" selected>View all labeled messages</option> ${renderFilterMessWithLabel()}`;
         filterLabelSelect.removeEventListener('change', onRenderMessOneLabel);
         filterLabelSelect.addEventListener('change', onRenderMessOneLabel);
     };
