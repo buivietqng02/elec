@@ -1041,7 +1041,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   padding: 0.5rem 0;
   border-radius: 8px;
   background-color: rgba(255,255,255,0.95);
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   top: 0;
   box-shadow: 1px 2px 2px rgba(119,119,119,0.4);
@@ -1134,11 +1134,11 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
     visibility: hidden;
 }
 
-.wrap-messages.group .messages__list:not(.viewingBookmark) .messages__item:not(.you) .user-avatar{
+.wrap-messages.group .messages__list:not(.viewingLabelMess) .messages__item:not(.you) .user-avatar{
     display:inline-block;
 }
 
-.wrap-messages.group .messages__list:not(.viewingBookmark) .messages__item:not(.you):not([data-room-type='1']) .user-avatar .avatar{
+.wrap-messages.group .messages__list:not(.viewingLabelMess) .messages__item:not(.you):not([data-room-type='1']) .user-avatar .avatar{
   cursor: pointer;
 }
 
@@ -1917,7 +1917,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   align-items: center;
   margin-bottom: 0.5rem;
 }
-.messages__list:not(.viewingBookmark) .messages__item.you .--heading {
+.messages__list:not(.viewingLabelMess) .messages__item.you .--heading {
   display: none !important;
 }
 

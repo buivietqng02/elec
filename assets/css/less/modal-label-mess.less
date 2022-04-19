@@ -7,6 +7,7 @@
             top: -2px;
             left: 5px;
             display: none;
+            cursor: pointer;
         }
     }
 
@@ -35,13 +36,13 @@
     }
 }
 
-.messages__item.bookmark {
+.messages__item.label {
     .message-bookmark-icon{
         display: block !important;
     }
 }
 
-.messages__list.viewingBookmark{
+.messages__list.viewingLabelMess{
     .messages__item {
         .user-avatar {
             display: none;
@@ -55,7 +56,7 @@
     }
 }
 
-.--viewBookmark {
+.--viewLabelsMess {
     .pulse {
         width: 20px;
         height: 20px;
@@ -133,13 +134,26 @@
                         padding: 5px;
                         border-radius: 6px;
                     }
+                    
+                    .bm-label-item-icon {
+                        position: relative;
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .icon-check {
+                            font-size: 40px;
+                            visibility: hidden;
+                        }
     
-                    .icon-check {
-                        font-size: 40px;
-                        visibility: hidden;
+                        .pulse {
+                            width: 25px;
+                            height: 25px;
+                            position: absolute;
+                        }
                     }
                 }
-                li.active {
+                .bm-label-item.active {
                     .icon-check {
                         visibility: visible;
                     }
@@ -153,8 +167,8 @@
 #bm-manage-labels-modal {
     .manage-labels-item {
         .manage-label-action {
-            span {
-                font-size: 19px;
+            span, button {
+                font-size: 20px;
                 padding: 3px;
                 margin-left: 10px;
                 border-radius: 100%;
@@ -163,6 +177,20 @@
                     color: rgb(2, 110, 252);
                 }
             }
+
+            .label-remove-btn {
+                border: none;
+                background-color: transparent;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+
+                .pulse {
+                    width: 20px;
+                    height: 20px;
+                    position: absolute;
+                }
+            };
         }
     }
 
@@ -223,17 +251,20 @@
 }
 
 
-.view-bookmark-wraper{
+.view-label-mess-wraper{
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: 99;
     background-color: #f5f5f5;
 
-    .view-bookmark-topbar {
-        .view-bookmark-topbar-close{
+    .view-label-mess-topbar {
+        position: relative;
+        padding-bottom: 20px;
+
+        .view-label-topbar-close{
             border: none;
             background-color: #f5f5f5;
             color: #0093FF;
@@ -244,70 +275,15 @@
             padding: 15px 0px 0px 10px;
         }
 
-        .mess-search-topright {
-            transition: all .2s;
-            margin-top: 5px;
-            margin-right: 10px;
-            float: right;
-            width: 92%;
-
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-
-            .mess-search-box {
-                width: 70%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                .msbg-input-container {
-                    background: rgba(0,0,0,0.5);
-                    width: 100%;
-                    padding: 0 10px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border-radius: 5px 0px 0px 5px;
-    
-                    .cancel-search-btn {
-                        width: 25px;
-                        height: 25px;
-                        right: 15px;
-                        border: 1px solid white;
-    
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 100%;
-                    }
-    
-                    #msbg-input {
-                        background: transparent;
-                        color: #fff;
-                        height: 43px;
-                        width: 100%;
-                        border: 0;
-        
-                        &::placeholder {
-                            color: #f5f5f5;
-                        }
-                    }
-                }     
-    
-                .search-mess-btn {
-                    height: 43px;
-                    border-radius: 0 5px 5px 0;
-                    .icon-search {
-                        font-size: 22px;
-                        color: white;
-                    }
-                }
-            }
+        .view-labels-filter {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     }
 
-    .view-bookmark-content{
+    .view-label-mess-content{
         // border: 2px solid blue;
         height: calc(100vh - 40px);
         overflow-y: auto;
@@ -340,6 +316,14 @@
         }
     }
 
+    .view-label-mess-content.viewAllRoom {
+        .messages__item {
+            .btn-message-settings {
+                display: none;
+            }
+        }
+    }
+
     .pulse-loading {
         position: absolute;
         top: 180px;
@@ -348,14 +332,37 @@
     }
 }
 
-.view-bookmark-wraper.hidden{
+.view-label-mess-wraper.hidden{
     display: none !important;
 }
 
-.view-bookmark-wraper.slideIn{
+.view-label-mess-wraper.slideIn{
     animation-name: slideIn;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
+}
+
+.view-label-all-room {
+    display: none;
+    padding: 0.3rem 0;
+    border-radius: 8px;
+    background-color: rgba(255,255,255,0.95);
+    z-index: 10;
+    position: absolute;
+    top: 41px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 1px 2px 2px rgb(119 119 119 / 40%);
+    width: fit-content;
+    font-size: 0.875rem;
+
+    .view-label-all-room-btn {
+        border: none;
+        background-color: transparent;
+        &:hover {
+           color: #08c;
+        }
+    }
 }
 
 @keyframes slideIn {
@@ -368,7 +375,7 @@
     }
 }
 
-.view-bookmark-wraper.slideOut{
+.view-label-mess-wraper.slideOut{
     animation-name: slideOut;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
@@ -384,7 +391,7 @@
 }
 
 @media screen and (max-width: 768px) {
-    .view-bookmark-wraper{ 
+    .view-label-mess-wraper{ 
         
     }
 }

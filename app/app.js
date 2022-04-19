@@ -179,19 +179,38 @@ define([
         const enterKeyPreference = res?.enter_key_preference || ENTER_KEY_PREFERENCES[0].value;
         const roomInfo = res?.user_chat_info || {};
         const favouritesRooms = res?.favourites_rooms || [];
-        const labelsList = res?.lables_list || [];
+        const manageLabels = res?.manage_labels;
+        const DEFAULT_LABEL_LIST = GLOBAL.getDefaultLabelList();
+        const defaultLabelMapping = GLOBAL.getDefaultLabelMapping();
 
         GLOBAL.setRoomInfoWasEdited(roomInfo);
         GLOBAL.setBodyBgTheme(theme);
         GLOBAL.setBodyFontSize(fontsize);
         GLOBAL.setEnterKeyPreference(enterKeyPreference);
         GLOBAL.setFavouritesRooms(favouritesRooms);
-        GLOBAL.setLabelsList(labelsList);
+
+        if (manageLabels?.flagList && manageLabels?.labelMapping) {
+            GLOBAL.setLabelsList(manageLabels?.flagList);
+            GLOBAL.setDefaultLabelMapping(manageLabels?.labelMapping);
+
+        } else {
+            // If not have labels, set as default
+            const manageLabels = {
+                flagList: [...DEFAULT_LABEL_LIST],
+                labelMapping: {...defaultLabelMapping}
+            }
+
+            API.put('users/preferences', { manage_labels: manageLabels }).then(() => {
+                GLOBAL.setLabelsList(DEFAULT_LABEL_LIST);
+                GLOBAL.setDefaultLabelMapping(defaultLabelMapping);
+            }).catch(err => {
+                console.log(err);
+            });
+        }
 
         setDataToLocalApplication(BODY_BG_THEME, theme);
         setDataToLocalApplication(BODY_FZ, fontsize);
         setDataToLocalApplication(ENTER_KEY_PREFERENCE, enterKeyPreference);
-
         onAssignAdvanceThemeBody();
     };
 

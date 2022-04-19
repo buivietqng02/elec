@@ -6,7 +6,7 @@ define([
     'features/modal/modalForwardMessage',
     'features/modal/modalMessageInfo',
     'features/modal/modalRemoveMessage',
-    'features/modal/modalBookmarkMessage',
+    'features/modal/modalLabelMessage',
     'features/modal/modalPinMessage',
     'features/modal/modalMessageReaction',
     'features/modal/modalMessageReactionList'
@@ -18,7 +18,7 @@ define([
     modalForwardMessageComp,
     modalMessageInfoComp,
     modalRemoveMessage,
-    modalBookmarkMessageComp,
+    modalLabelMessageComp,
     modalPinMessageComp,
     modalMessageReactionComp,
     modalMessageReactionListComp
@@ -33,7 +33,6 @@ define([
     let $editBtn;
     let $removeBtn;
     let $copyTextBtn;
-    let $textBookmarkBtn;
 
     const onComment = () => {
         const { chatId } = $message.data();
@@ -85,9 +84,9 @@ define([
         modalRemoveMessage.onInit($message);
     };
 
-    const onBookmark = () => {
-        modalBookmarkMessageComp.onInit($message);
+    const onLabelMessage = () => {
         offEventClickOutside();
+        modalLabelMessageComp.onInit($message);
     };
 
     const onCopyText = () => {
@@ -154,7 +153,6 @@ define([
         const chatId = GLOBAL.getCurrentRoomId();
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
-        // const isBookmark = $message.hasClass('bookmark');
         const isPinned = $message.hasClass('pinned');
         const haveReactions = $message.hasClass('have-reactions');
         const roomInfo = GLOBAL.getRooms().filter((room) => {
@@ -196,13 +194,6 @@ define([
             $messageReactionListBtn.hide();
         }
 
-        // If bookmark message
-        // if (isBookmark) {
-        //     $textBookmarkBtn.html(GLOBAL.getLangJson().REMOVE_BOOKMARK);
-        // } else {
-        //     $textBookmarkBtn.html(GLOBAL.getLangJson().BOOKMARK);
-        // }
-
         // If pinned message
         if (isPinned) {
             $textPinBtn.html(GLOBAL.getLangJson().UNPIN_MESSAGE);
@@ -233,8 +224,7 @@ define([
             $removeBtn = $('.js-menu-messages-remove');
             $copyTextBtn = $('.js-menu-messages-copytext');
             $messageInfoBtn = $('.js-menu-messages-info');
-            $bookmarkMessBtn = $('.js-menu-messages-bookmark');
-            $textBookmarkBtn = $('.js-menu-messages-bookmark lang');
+            $labelMessBtn = $('.js-menu-messages-label');
             $pinMessBtn = $('.js-menu-messages-pinmess');
             $textPinBtn = $('.js-menu-messages-pinmess lang');
             $messageReactionBtn = $('.js-menu-messages-rcn');
@@ -246,7 +236,7 @@ define([
             $removeBtn.off().click(onRemove);
             $copyTextBtn.off().click(onCopyText);
             $messageInfoBtn.off().click(onInfo);
-            $bookmarkMessBtn.off().click(onBookmark);
+            $labelMessBtn.off().click(onLabelMessage);
             $pinMessBtn.off().click(onPinMessage);
             $messageReactionBtn.off().click(onReaction);
             $messageReactionListBtn.off().click(onReactionList);

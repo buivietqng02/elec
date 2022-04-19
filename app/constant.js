@@ -116,17 +116,26 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         ],
 
         LABELS: {
-           1: '#ff0000',
-           2: '#ff9900',
-           3: '#339933',
-           4: '#3f70ff',
-           5: '#FFD93D',
-           6: '#cc33ff',
-           7: '#0099cc',
-           8: '#00ff00',
-           9: '#666699',
-           10: '#660033'
+           'color-1': '#ff0000',
+           'color-2': '#ff9900',
+           'color-3': '#3f70ff',
+           'color-4': '#339933',
+           'color-5': '#FFD93D',
+           'color-6': '#cc33ff',
+           'color-7': '#0099cc',
+           'color-8': '#00ff00',
+           'color-9': '#666699',
+           'color-10': '#660033',
+           'color-11': '#F55353',
+           'color-12': '#247881',
+           'color-13': '#F1DDBF',
+           'color-14': '#9FC088',
+           'color-15': '#06113C',
+           'color-16': '#F900BF'
         },
+
+
+        BM_CL_CODE: 'bm-cl-code',
 
         SEARCH_ALL_ROOM: 'SEARCH_ALL_ROOM',
     };

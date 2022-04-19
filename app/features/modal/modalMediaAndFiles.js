@@ -173,7 +173,7 @@ define([
             type: typeAPI
         };
         
-        const res = await API.get('messages', params);
+        const res = await API.get(`chats/${params.chatId}/messages?offset=${params.offset}&type=${params.type}`);
 
         lastOffset[type] = res?.messages[res?.messages?.length - 1]?.sequence;
         

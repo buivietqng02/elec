@@ -4,19 +4,17 @@ define([
     'shared/api',
     'shared/functions',
     'shared/alert',
-    'features/chatbox/chatboxContentFunctions',
-    'axios'
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     GLOBAL,
     API,
     functions,
     ALERT,
-    contentFunc,
-    axios
+    contentFunc
    
     ) => {
-    const { API_URL, SEARCH_ALL_ROOM } = constant;
+    const { SEARCH_ALL_ROOM } = constant;
     const { convertMessagetime } = functions;
     let inputSearch;
     let pulseLoading;
@@ -116,9 +114,9 @@ define([
             pulseLoading.classList.remove('hidden');
 
             if (currentRoomId) {
-                res = await axios.get(`${API_URL}/chats/${currentRoomId}/messages/search?keyword=${value}&offset=${offsetTimestamp}`);
+                res = await API.get(`chats/${currentRoomId}/messages/search?keyword=${value}&offset=${offsetTimestamp}`);
             } else {
-                res = await axios.get(`${API_URL}/messages/search?keyword=${value}&timestamp=${offsetTimestamp}`);
+                res = await API.get(`messages/search?keyword=${value}&timestamp=${offsetTimestamp}`);
             }
 
             const listMessWithKeyword = res.filter(response => response.searchIndex === 0);
@@ -170,6 +168,7 @@ define([
         searchContent.innerHTML = '';
         inputSearch.value = '';
         searchBtn.disabled = true;
+        searchWraper.classList.remove('viewingSearchAllRooms');
     };
 
     const onClearSearchInput = () => {
@@ -384,6 +383,7 @@ define([
 
         onInitSearchAllRooms: (value) => {
             defineElementsSelector();
+            searchWraper.classList.add('viewingSearchAllRooms');
 
             removeEventListenerEle();
 

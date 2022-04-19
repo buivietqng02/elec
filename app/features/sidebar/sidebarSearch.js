@@ -3,13 +3,15 @@ define([
     'shared/data', 
     'shared/functions',
     'features/sidebar/sidebarService',
-    'features/modal/modalSearchMessage'
+    'features/modal/modalSearchMessage',
+    'features/modal/modalLabelMessage'
 ], (
     constant,
     GLOBAL,
     functions,
     sidebarService,
-    modalSearchMessage
+    modalSearchMessage,
+    modalLabelMessageComp
 ) => {
     const { debounce } = functions;
     let currentOptions = 1;
@@ -24,14 +26,16 @@ define([
     let $lCollapse;
     let $sidebar;
     let $contacts;
-
+    let $viewAllRoomBtn;
     let $searchAllRoomContainer;
     let $searchAllRoomInitBtn;
     let $searchAllRoomsText;
 
+    let $viewLabelAllRoom;
+
     const onToggleSearchMessAllRooms = (value) => {
         $searchAllRoomsText.text(value);
-        if (value.length >= 3) {
+        if (value.length >= 3 && $viewAllRoomBtn.hasClass('active')) {
             $searchAllRoomContainer.addClass('searching');
             $searchAllRoomContainer.removeClass('hidden');
 
@@ -59,10 +63,16 @@ define([
         }
     };
 
+    const offEventClickOutsideLabelAllRoomBtn = () => {
+        $viewLabelAllRoom.hide();
+        $(document).off('.hideViewLabelAllRoomBtn');
+    };
+
     const onSearch = debounce(() => {
         const value = $input.val().trim().toUpperCase();
         sidebarService.onChangeSearch(value);
         onToggleSearchMessAllRooms($input.val().trim());
+        if (value) offEventClickOutsideLabelAllRoomBtn();
     }, 300);
 
     const offEventClickOutside = () => {
@@ -70,11 +80,25 @@ define([
         $(document).off('.hideSearchFilter');
     };
 
+    const handleClickOutsideLabelAllRoomBtn = () => $(document).on('click.hideViewLabelAllRoomBtn', (e) => {
+        if (!$viewLabelAllRoom.is(e.target) && $viewLabelAllRoom.has(e.target).length === 0) {
+            offEventClickOutsideLabelAllRoomBtn();
+        }
+    });
+
     const handleClickOutside = () => $(document).on('click.hideSearchFilter', (e) => {
         if (!$slide.is(e.target) && $slide.has(e.target).length === 0) {
             offEventClickOutside();
         }
     });
+
+    const showViewLabelAllRoomBtn = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $viewLabelAllRoom.show();
+        handleClickOutsideLabelAllRoomBtn();
+    };
 
     const showSlide = (e) => {
         e.preventDefault();
@@ -126,6 +150,11 @@ define([
         }
     };
 
+    const onViewLabelAllRooms = () => {
+        modalLabelMessageComp.onClickViewLabelsAllRooms();
+        offEventClickOutsideLabelAllRoomBtn();
+    };
+
     return {
         onInit: () => {
             currentOptions = 1;
@@ -143,10 +172,14 @@ define([
             $searchAllRoomContainer = $('.search-mess-all-rooms');
             $searchAllRoomInitBtn = $('.search-all-room-link');
             $searchAllRoomsText = $('.search-all-room-text');
+            $viewAllRoomBtn = $('.menu__item.--s-all');
+            $viewLabelAllRoom = $('.view-label-all-room');
 
             $input.val('');
             $options.off().click(onChangeFilter);
             $optionsBtn.off().click(showSlide);
+            $input.off().click(showViewLabelAllRoomBtn);
+            $viewLabelAllRoom.off().click(onViewLabelAllRooms);
             $resetInputBtn.off().click(resetInput);
             $searchBtnCollapse.off().click(onExpandSidebar);
             $(document).off('.sidebarSearch').on('input.sidebarSearch', '#search .search__input', onSearch);

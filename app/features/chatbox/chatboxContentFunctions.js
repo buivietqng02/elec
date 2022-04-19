@@ -26,7 +26,7 @@ define([
         markDown
     } = functions;
 
-    const { API_URL } = constant;
+    const { API_URL, LABELS } = constant;
 
     const timeConvert = (time) => {
         // Calculate the time left and the total duration
@@ -251,12 +251,24 @@ define([
         return reactionElements;
     };
 
-    ob.renderMessage = (messObject, search, isSearchAllRoom) => {
+    const renderColorLabel = (colorCode) => {
+        const color = GLOBAL.getDefaultLabelMapping()[colorCode];
+        const hexaColor = LABELS[color];
+        return hexaColor;
+    };
+
+    const renderLabelDescript = (colorCode) => {
+        const labelList = GLOBAL.getLabelsList();
+        const filterList = labelList.filter(item => item.color === colorCode);
+        return filterList[0].descript;
+    };
+
+    ob.renderMessage = (messObject, search, isSearchOrViewLabelAllRoom) => {
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
             let roomId = GLOBAL.getCurrentRoomId();
-            if (isSearchAllRoom) roomId = messObject.id.chatId;
+            if (isSearchOrViewLabelAllRoom) roomId = messObject.id.chatId;
             const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomId));
         
             const {
@@ -273,7 +285,7 @@ define([
                 updated,
                 deleted,
                 readByAllPartners,
-                starred,
+                label,
                 sequence,
                 pinned,
                 reactions,
@@ -426,7 +438,6 @@ define([
             data.hide_when_removed = deleted ? 'hidden' : '';
             data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
-            data.bookmark = starred ? 'bookmark' : '';
             data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
             data.confRoom_chat_Id = conferenceLink;
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
@@ -437,7 +448,11 @@ define([
             data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
             data.taggedUsersList = taggedUsers ? JSON.stringify(taggedUsers) : '';
             data.mess = text;
-            data.roomId = isSearchAllRoom ? roomId : '';
+            data.roomId = isSearchOrViewLabelAllRoom ? roomId : '';
+            data.label = label ? 'label' : '';
+            data.labelId = label ? `${label}` : '';
+            data.labelColor = label ? renderColorLabel(label) : '';
+            data.labelDescript = label ? renderLabelDescript(label) : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {

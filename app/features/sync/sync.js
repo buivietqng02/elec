@@ -14,7 +14,8 @@ define([
     'features/modal/modalLogout',
     'features/modal/modalPinMessage',
     'features/modal/modalTagPerson',
-    'features/chatbox/chatboxContentFunctions'
+    'features/chatbox/chatboxContentFunctions',
+    'features/modal/modalLabelMessage'
 ], (
     constant,
     API,
@@ -31,7 +32,8 @@ define([
     modalLogout,
     modalPinMessage,
     modalTagPerson,
-    contentFunc
+    contentFunc,
+    modalLabelMessageComp
 ) => {
     let timeout;
     let isInit = false;
@@ -501,42 +503,27 @@ define([
         });
     };
 
-    /**
-     * Method to reactionEvents (bookmark a chat)
+     /**
+     * Method to reactionEvents (Reaction emoji a chat)
      * @param {*} reactionEvents 
      */
-    const handleReactionMessageEvent = (reactionEvents) => {
+      const handleReactionMessageEvent = (reactionEvents) => {
         reactionEvents.forEach(reactionEvent => {
             const roomId = reactionEvent.chatId;
             const messId = reactionEvent.messageId;
-            const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
 
-            // Bookmark message
             if (roomId === GLOBAL.getCurrentRoomId()) {
                 const currentRoomList = getRoomById(roomId);
-                const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
-                // const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
-
-                if (reactionEvent.starred) {
-                    $message.addClass('bookmark');
-                } else {
-                    $message.removeClass('bookmark');
-                }
-
-                // pulseBookmarkBtn.classList.add('hidden');
 
                 if (reactionEvent.reactions) {
                     renderMessageReaction(reactionEvent.reactions, messId);
                 }
 
-                bookmarkBtn.disabled = false;
-                // messageSettingsSlideComp.offEventClickOutside();
-
                 // update to storeRoomById
                 const updatedRoomList = currentRoomList.map((item) => {
                     if (item.id.messageId === messId) {
                         const tempItem = { ...item };
-                        tempItem.starred = reactionEvent.starred;
+                        tempItem.reactions = reactionEvent.reactions;
                         return tempItem;
                     } 
                     return item;
@@ -544,6 +531,14 @@ define([
                 storeRoomById(roomId, updatedRoomList);
             }
         });
+    };
+
+    /**
+     * Method to labelEvents (label a message)
+     * @param {*} labelEvents 
+     */
+     const handleLabelMessagesEvent = (labelEvents) => {
+        modalLabelMessageComp.labelMessageOnSyncEvent(labelEvents);
     };
 
     const onSync = () => {
@@ -604,6 +599,10 @@ define([
                     handleReactionMessageEvent(res.reactionEvents);
                 }
 
+                if (res?.labelEvents?.length) {
+                    handleLabelMessagesEvent(res.labelEvents);
+                }
+
                 if (res?.pinEvents?.length) {
                     modalPinMessage.handlePinMessageOnSync(res);
                 }
@@ -613,7 +612,6 @@ define([
                     modalTagPerson.onSyncTag(res.tagEvents);
                 }
                 isInit = true;
-    
                 onSync();
             }).catch((err) => {
                 console.log(err);

@@ -10,7 +10,7 @@ define([
     'features/modal/modalRemoveGroup',
     'features/modal/modalLeaveGroup',
     'features/modal/modalMediaAndFiles',
-    'features/modal/modalBookmarkMessage',
+    'features/modal/modalLabelMessage',
     'features/modal/modalSearchMessage',
 ], (
     moment,
@@ -24,7 +24,7 @@ define([
     modalRemoveGroupComp,
     modalLeaveGroupComp,
     modalMediaAndFiles,
-    modalBookmarkMessageComp,
+    modalLabelMessageComp,
     modalSearchMessage
 ) => {
     const { getAvatar, stripTags } = functions;
@@ -45,7 +45,7 @@ define([
     let $typing;
     let $roomInfo;
     let $iconFavorites;
-    let $viewBookmarks;
+    let $viewLabelMessages;
 
     const offEventClickOutside = () => {
         $slide.hide();
@@ -100,9 +100,9 @@ define([
         offEventClickOutside();
     }
  
-    const initViewBookmark = () => {
-        modalBookmarkMessageComp.onClickViewBookmarks();
-        // offEventClickOutside();
+    const initViewLabelMessage = () => {
+        offEventClickOutside();
+        modalLabelMessageComp.onClickViewLabelsWithinRoom();
     };
 
     const updateInternalMessage = () => {
@@ -165,7 +165,7 @@ define([
             $timeActivity = $('.js_info_parnter .toolbar-name .--online');
             $typing = $('.js_info_parnter .toolbar-name .--typing');
             $iconFavorites = $('.js_info_parnter .--avatar-wraper .--favourite')
-            $viewBookmarks = $slide.find('.--viewBookmark');
+            $viewLabelMessages = $slide.find('.--viewLabelsMess');
 
             $groupOptionsBtn.off().click(showSlide);
             $callOptionsBtn.off().click(showCallSlide);
@@ -175,7 +175,7 @@ define([
             $notificationBtn.off().click(updateNotification);
             $internalBtn.off().click(updateInternalMessage);
             $mediaAndFilesBtn.off().click(initMediaAndFiles);
-            $viewBookmarks.off().click(initViewBookmark);
+            $viewLabelMessages.off().click(initViewLabelMessage);
             $searchMessage.off().click(initSearchMessage);
             $image.off().click(modalEditRoomComp.onInit);
         },

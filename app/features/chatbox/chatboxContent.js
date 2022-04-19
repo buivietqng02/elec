@@ -112,7 +112,7 @@ define([
             offset: parseInt(lastOffsetScrollDown) + 21,
         };
         
-        const res = await API.get('messages', params);
+        const res = await API.get(`chats/${params.chatId}/messages?offset=${params.offset}`);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
         // console.log(`last offset scroll down ${lastOffsetScrollDown}`)
         return res;
@@ -196,7 +196,7 @@ define([
             offset: offset
         };
         
-        API.get('messages', params).then(res => {
+        API.get(`chats/${params.chatId}/messages?offset=${params.offset}`).then(res => {
             // Handle when user switch room but the request has not finished yet
             if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
                 return;
@@ -320,7 +320,7 @@ define([
     }
 
     const onWrapperScroll = (event) => {
-        // If is finding media and files or viewing bookmark list
+        // If is finding media and files or viewing label list
         if(isScrollingToOriginMess) return
 
         // Show scroll to bottom button
@@ -396,7 +396,7 @@ define([
         };
         processing = true;
 
-        isLoadedMoreResult = await API.get('messages', params).then(res => {
+        isLoadedMoreResult = await API.get(`chats/${params.chatId}/messages?offset=${params.offset}`).then(res => {
             if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
@@ -524,7 +524,7 @@ define([
         }, timeWait);
     };
 
-    const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
+    const onGetMessage = (roomInfo, positionRoom) => API.get(`chats/${roomInfo.id}/messages?offset=0`).then(res => {
         // Handle when user switch room but the request has not finished yet
         let messages;
         const pinnedMess = res?.pinnedMessage;
@@ -750,7 +750,7 @@ define([
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
             $message.find('.conference-link').hide();
-            $message.removeClass('bookmark');
+            $message.removeClass('label');
         },
 
         onSyncUpdate: (message) => {

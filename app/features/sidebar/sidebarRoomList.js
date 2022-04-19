@@ -10,7 +10,7 @@ define([
     'features/modal/modalSearchMessage',
     'features/modal/modalAcceptInvitation',
     'features/modal/modalMediaAndFiles',
-    'features/modal/modalBookmarkMessage'
+    'features/modal/modalLabelMessage'
 
 ], (
     constant,
@@ -24,7 +24,7 @@ define([
     modalSearchMessage,
     modalAcceptInvitationComp,
     viewMediaAndFilesComp,
-    modalBookmarkMessage
+    modalLabelMessageComp
 
 ) => {
     const { getRooms, initScroll, setCurrentTranslate } = services;
@@ -125,8 +125,8 @@ define([
         chatboxContentComp.onSwitchRoomWhileShowMessMediaAndFiles();
 
         // Close view bookmark message list when click other room
-        if (modalBookmarkMessage.onGetIsViewingBookmark()) {
-            modalBookmarkMessage.closeModalViewBookmark();
+        if (modalLabelMessageComp.onGetIsViewingLabelMess()) {
+            modalLabelMessageComp.closeModalViewLabelMess();
         }
 
         // Remove tag badge on room click

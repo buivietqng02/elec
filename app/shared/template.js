@@ -388,6 +388,10 @@ define(['shared/icon'], (ICON) => ({
                             <lang data-language="SEARCH_IN_ALL_ROOM_KEYWORD"></lang> <q class="search-all-room-text"></q> ...
                         </button>
                     </div>
+
+                    <div class="view-label-all-room">
+                        <button class="view-label-all-room-btn">View labeled messages from all rooms</button>
+                    </div>
                 </div>
                 <div class="contacts">
                     <ul class="contact-list js_ul_list_user" id="sidebar_room_list"></ul>
@@ -498,10 +502,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
-                            <button class="--viewBookmark menu__item">
+                            <button class="--viewLabelsMess menu__item">
                                 <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty" aria-hidden="true"></i>
-                                <lang data-language="VIEW_BOOKMARK"></lang>
+                                <lang data-language="VIEW_LABEL_MESS"></lang>
                             </button>
                             <button class="--internal menu__item">
                                 <i class="xm icon-comments"></i>
@@ -574,10 +578,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-info-circle"></i>
                                 <lang data-language="INFO"></lang>
                             </button>
-                            <button class="--bm menu__item js-menu-messages-bookmark">
+                            <button class="--bm menu__item js-menu-messages-label">
                                 <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty"></i>
-                                <lang data-language="BOOKMARK"></lang>
+                                <lang data-language="LABEL_MESSAGE"></lang>
                             </button>
                             <button class="--pin menu__item js-menu-messages-pinmess">
                                 <div class="pulse hidden"></div>
@@ -783,26 +787,31 @@ define(['shared/icon'], (ICON) => ({
 
                         </div>
                     <!-- End View media and files -->
+                </div>
 
-                    <!-- Start View Bookmark -->
-                    <div class="view-bookmark-wraper hidden">
-                        <div class="view-bookmark-topbar">
-                            <button class="view-bookmark-topbar-close">
-                                <i class="icon-chevron-left"></i>
-                                <lang data-language="BACK"></lang>
-                            </button>
-                        </div>
+                <!-- Start View Bookmark Label Message -->
+                <div class="view-label-mess-wraper hidden">
+                    <div class="view-label-mess-topbar">
+                        <button class="view-label-topbar-close">
+                            <i class="icon-chevron-left"></i>
+                            <lang data-language="BACK"></lang>
+                        </button>
 
-                        <div class="view-bookmark-content"></div>
-
-                        <div class="pulse-loading hidden">
-                            <div class="files__spiner spinner-grow text-secondary" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
+                        <div class="view-labels-filter">
+                            <select class="custom-select custom-select-md">
+                            </select>
                         </div>
                     </div>
-                    <!-- End View Bookmark --> 
+
+                    <div class="view-label-mess-content"></div>
+
+                    <div class="pulse-loading hidden">
+                        <div class="files__spiner spinner-grow text-secondary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                 </div>
+                <!-- End View Bookmark --> 
 
                 <!-- Start View search -->
                 <div class="view-search-wraper hidden">
