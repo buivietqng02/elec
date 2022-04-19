@@ -12,10 +12,10 @@ define([
     'features/chatbox/voiceChat',
     'features/sidebar/sidebarConference',
     'features/sidebar/sidebarLeftBar',
-    'features/modal/modalBookmarkMessage',
     'features/modal/modalPinMessage',
     'features/modal/modalTagPerson',
-    'features/modal/modalMessageReaction'
+    'features/modal/modalMessageReaction',
+    'features/modal/modalUserInfo'
 ], (
     constant,
     API,
@@ -30,10 +30,10 @@ define([
     voiceChatComp,
     sidebarConferenceComp,
     sidebarLeftBarComp,
-    modalBookmarkMessage,
     modalPinMessage,
     modalTagPerson,
-    modalMessageReaction
+    modalMessageReaction,
+    modalUserInfo
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -45,11 +45,12 @@ define([
         COLOR_NAME_GROUP
     } = constant;
     const {
-        transformLinkTextToHTML,
-        highlightText,
         htmlEncode,
         decodeStringBase64,
-        getAvatar
+        getAvatar,
+        downloadImage,
+        downloadFile,
+        markDown
     } = functions;
     const {
         getChatById,
@@ -60,7 +61,8 @@ define([
         renderUnread,
         renderRangeDate,
         onErrNetWork,
-        onHandleRoomWasDeleted
+        onHandleRoomWasDeleted,
+        renderTag
     } = contentFunc;
     const {
         getRoomById,
@@ -110,7 +112,7 @@ define([
             offset: parseInt(lastOffsetScrollDown) + 21,
         };
         
-        const res = await API.get('messages', params);
+        const res = await API.get(`chats/${params.chatId}/messages?offset=${params.offset}`);
         lastOffsetScrollDown = res?.messages[0]?.sequence;
         // console.log(`last offset scroll down ${lastOffsetScrollDown}`)
         return res;
@@ -194,7 +196,7 @@ define([
             offset: offset
         };
         
-        API.get('messages', params).then(res => {
+        API.get(`chats/${params.chatId}/messages?offset=${params.offset}`).then(res => {
             // Handle when user switch room but the request has not finished yet
             if (roomInfo.id !== GLOBAL.getCurrentRoomId()) {
                 return;
@@ -318,8 +320,8 @@ define([
     }
 
     const onWrapperScroll = (event) => {
-        // If is finding media and files or viewing bookmark list
-        if(isScrollingToOriginMess || modalBookmarkMessage.onGetIsViewingBookmark()) return
+        // If is finding media and files or viewing label list
+        if(isScrollingToOriginMess) return
 
         // Show scroll to bottom button
         // if(($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight < 1)
@@ -394,7 +396,7 @@ define([
         };
         processing = true;
 
-        isLoadedMoreResult = await API.get('messages', params).then(res => {
+        isLoadedMoreResult = await API.get(`chats/${params.chatId}/messages?offset=${params.offset}`).then(res => {
             if (params.offset !== lastOffset || params.chatId !== GLOBAL.getCurrentRoomId()) {
                 processing = false;
                 return;
@@ -522,7 +524,7 @@ define([
         }, timeWait);
     };
 
-    const onGetMessage = (roomInfo, positionRoom) => API.get('messages', { chatId: roomInfo.id, offset: 0 }).then(res => {
+    const onGetMessage = (roomInfo, positionRoom) => API.get(`chats/${roomInfo.id}/messages?offset=0`).then(res => {
         // Handle when user switch room but the request has not finished yet
         let messages;
         const pinnedMess = res?.pinnedMessage;
@@ -629,7 +631,7 @@ define([
                 return;
             }
 
-            let messagesHtml = messages.map((mess, i, messArr) => {
+            let messagesHtml = messagesChat.map((mess, i, messArr) => {
                 mess.currentSenderId = messArr[i].sender.id;
                 mess.previousSenderId = messArr[i - 1]?.sender?.id;
                 mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
@@ -677,8 +679,17 @@ define([
             // View tagged profile
             $(document).off('.viewTaggedProfile').on('click.viewTaggedProfile', '.tagged-person-js', (e) => modalTagPerson.handleViewTagProfile(e));
 
+            // Download picture
+            $(document).off('.downloadImg').on('click.downloadImg', '.download-img', downloadImage);
+
+            // Download file
+            $(document).off('.downloadFile').on('click.downloadFile', '.download-file', downloadFile);
+
             // Reaction buttons
             $(document).off('.messageReaction').on('click.messageReaction', '.message-reaction', (e) => modalMessageReaction.onUpdate(e, GLOBAL.getCurrentRoomId()));
+
+            // Open user profile in group chat
+            $(document).off('.openUserInfo').on('click.openUserInfo', '.messages__item:not(.you):not([data-room-type=1]) .user-avatar .avatar', (e) => modalUserInfo.onInit(e));
 
             modalPinMessage.onInit();
         },
@@ -686,7 +697,6 @@ define([
         onLoadMessage: async (roomInfo) => loadMessages(roomInfo),
 
         onSync: (messList = []) => {
-            let isViewBookmarkMode = modalBookmarkMessage.onGetIsViewingBookmark();
             const mess = messList[0];
             let id = GLOBAL.getCurrentRoomId();
             
@@ -697,7 +707,7 @@ define([
             let messages = getRoomById(id);
             // up unread message when scrollbar does not set at bottom 
             if (
-                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 && GLOBAL.getInfomation().id !== mess.sender.id && !isViewBookmarkMode
+                (($wrapper.scrollTop() + $wrapper.height()) / $wrapper[0].scrollHeight) < 1 && GLOBAL.getInfomation().id !== mess.sender.id
             ) {
                 unreadScrollNum += 1;
                 $unreadScroll.text(unreadScrollNum);
@@ -711,7 +721,7 @@ define([
             // Update ultiLastOffSet when send/ receive new message
             ultiLastOffSet = messList[0].sequence;
 
-            if (!isViewBookmarkMode && jumpFastToBottomBtn.classList.contains('hidden')) {
+            if (jumpFastToBottomBtn.classList.contains('hidden')) {
                 const wrapperHtml = $wrapper.get(0);
                 const isBottom = wrapperHtml.scrollHeight - wrapperHtml.scrollTop <= wrapperHtml.clientHeight;
 
@@ -740,13 +750,16 @@ define([
             $message.find('.--edited').addClass('hidden');
             $message.find('.--double-check').addClass('hidden');
             $message.find('.conference-link').hide();
-            $message.removeClass('bookmark');
+            $message.removeClass('label');
         },
 
         onSyncUpdate: (message) => {
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
-            const text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message.message)));
+            let text = htmlEncode(decodeStringBase64(message.message));
+            // Render in case edit a tag message
+            text = markDown(text);
+            text = renderTag(text, message.taggedUsers, true);
 
             const $pinMessTopbar = $('.pin-message-status-bar');
             const $pinText = $pinMessTopbar.find('.pin-text');
@@ -755,6 +768,8 @@ define([
 
             $message.find('.--mess').html(text);
             $message.find('.--edited').removeClass('hidden');
+            // Update attribute if edit a tag message
+            if (message.taggedUsers.length > 0)  $message.find('.--mess').attr('tagged-users', JSON.stringify(message.taggedUsers))
             
             // Update pin topbar when edit message
             pinMessId = $pinDetails?.attr(PINNED_MESS_ID);

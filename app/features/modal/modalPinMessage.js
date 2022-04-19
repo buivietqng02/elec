@@ -32,7 +32,6 @@ define([
 
     const { PINNED_MESS_ID, PINNED_SEQUENCE, ATTRIBUTE_MESSAGE_ID } = constant;
     const {
-        transformLinkTextToHTML,
         htmlEncode,
         decodeStringBase64,
         getAvatar
@@ -187,7 +186,7 @@ define([
         } else {
             messId = pinnedObj.id.messageId;
             pinname = pinnedObj.sender.name;
-            message = transformLinkTextToHTML(htmlEncode(decodeStringBase64(pinnedObj.message)));
+            message = htmlEncode(decodeStringBase64(pinnedObj.message));
             pinSequence = pinnedObj.sequence;
             avatar = getAvatar(pinnedObj.sender.id);
             taggedUsers = pinnedObj?.taggedUsers;
@@ -231,8 +230,6 @@ define([
     };
 
     const pinMess = (pinEventsList, indx, isDifferentRoom) => {
-        const isNotViewingBookmark = document.querySelector('.view-bookmark-status-bar').classList.contains('hidden');
-
         const pinMessObj = pinEventsList[indx]?.message;
         const pinnedObj = {
             messId: pinMessObj.id.messageId,
@@ -242,7 +239,7 @@ define([
             avatar: getAvatar(pinMessObj.sender.id),
             taggedUsers: pinMessObj?.taggedUsers
         };
-        if (!isDifferentRoom && isNotViewingBookmark) renderPinnedMess(pinnedObj, true);
+        if (!isDifferentRoom) renderPinnedMess(pinnedObj, true);
 
         storePinnedMessRoomsById(pinMessObj.id.chatId, pinnedObj);
         updateToStoreRoomById(pinMessObj.id.chatId, pinMessObj);

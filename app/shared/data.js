@@ -17,6 +17,25 @@ define(() => {
     let langJson = {};
     let roomDraft = {};
     let favouritesRooms = [];
+    let labelsList = [];
+    const DEFAULT_LABEL_LIST = [
+        { color: 1, descript: 'Default' },
+        { color: 2, descript: 'Important' },
+        { color: 3, descript: 'To do' }
+    ];
+
+    let defaultLabelMapping = {
+        1: 'color-1',
+        2: 'color-2',
+        3: 'color-3',
+        4: 'color-4',
+        5: 'color-5',
+        6: 'color-6',
+        7: 'color-7',
+        8: 'color-8',
+        9: 'color-9',
+        10: 'color-10'
+    };
 
     const useAdapterForRoom = (room) => ({
         channel: room.channel,
@@ -149,6 +168,19 @@ define(() => {
         getRoomDraft: () => roomDraft,
         setRoomDraft: (value) => {
             roomDraft = value;
+        },
+
+        getLabelsList: () => labelsList,
+        setLabelsList: (value) => {
+            labelsList = value;
+        },
+
+        getDefaultLabelList: () => DEFAULT_LABEL_LIST,
+
+        getDefaultLabelMapping: () => defaultLabelMapping,
+
+        setDefaultLabelMapping: (value) => {
+            defaultLabelMapping = value;
         },
 
         refresh

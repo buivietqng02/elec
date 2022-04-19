@@ -43,10 +43,13 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
             </li>
         `,
 
-        file: `<i class="xm icon-download"></i> <a href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+        // file: `<i class="xm icon-download"></i> <a class="download-file" href="{src}" target="_blank">{fileName}</a> {fileSize}`,
+
+        file: `<i class="xm icon-download"></i> <span class="download-file" href="{src}">{fileName}</span> {fileSize}`,
+
         quotedFile: `<i class="xm icon-download"></i> <b>{fileName}</b> {fileSize}`,
 
-        image: '<div class="image-wraper"><img class="p-cur --click-show-popup-up-img" src="{src}"><a class="download-img" href="{src}" download target="_blank"><i class="icon-download"></i></a></div>',
+        image: '<div class="image-wraper"><img class="p-cur --click-show-popup-up-img" src="{src}"><button class="download-img" src="{src}" target="_blank"><i class="icon-download"></i></button></div>',
         quotedImage: '<img class="p-cur" src="{src}">',
         // audio: `<audio controls autoplay>source src="{src}" type="audio/wav">Your browser does not support the audio element.</audio>`,
 
@@ -113,7 +116,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {bookmark} {pinned} {beginChat} {colorGroupUser} {haveReactions}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {label} {pinned} {beginChat} {colorGroupUser} {haveReactions}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}" data-room-type="{roomType}" ${constant.BM_CL_CODE}="{labelId}">
                 <div class="user-avatar">
                     <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
                 </div>
@@ -125,7 +128,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                     </div>
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
-                    <div class="--mess {forward} {class_removed}">{mess}</div>
+                    <div class="--mess {forward} {class_removed}" tagged-users='{taggedUsersList}'>{mess}</div>
 
                     <div class="conference-link {is_conference_link} {hide_when_removed} text-right" confId="{confRoom_chat_Id}">
                         <small data-language="INVITE_CONFERENCE">{Invite_conference_call}: </small>
@@ -149,7 +152,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                         <i class="icon-pin"></i>
                     </div>
 
-                    <div class="message-bookmark-icon">
+                    <div class="message-bookmark-icon" style="color:{labelColor}" data-toggle="tooltip" data-placement="top" title="{labelDescript}">
                         <i class="icon-bookmarks"></i>
                     </div>
 
@@ -159,7 +162,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                 </div>
 
                 <div class="show_origin_mess hidden">
-                    <button type="button" class="show_origin_btn btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message" sequence_number="{messSequence}">
+                    <button type="button" class="show_origin_btn btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Show message" sequence_number="{messSequence}" room-id="{roomId}">
                         <i class="icon-comment-o"></i>
                     </button>
                 </div>

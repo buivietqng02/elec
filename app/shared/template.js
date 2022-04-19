@@ -382,6 +382,17 @@ define(['shared/icon'], (ICON) => ({
                         <input class="search__input" type="search" data-language="SEARCH_PLACEHOLDER" data-lang-type="placeholder" placeholder="Search..." />
                         <i class="clearable__clear">&times;</i>
                     </span>
+                    <div class="search-mess-all-rooms hidden">
+                        <button class="search-all-room-link">
+                            <i class="xm icon-search"></i>
+                            <lang data-language="SEARCH_IN_ALL_ROOM_KEYWORD"></lang> <q class="search-all-room-text"></q> ...
+                        </button>
+                    </div>
+
+                    <div class="view-label-all-room hidden">
+                        <i class="icon-bookmarks"></i>
+                        <button class="view-label-all-room-link">Search for labeled messages in all rooms</button>
+                    </div>
                 </div>
                 <div class="contacts">
                     <ul class="contact-list js_ul_list_user" id="sidebar_room_list"></ul>
@@ -492,10 +503,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-photo xm-fw" aria-hidden="true"></i>
                                 <lang data-language="VIEW_MEDIA_FILE"></lang>
                             </button>
-                            <button class="--viewBookmark menu__item">
+                            <button class="--viewLabelsMess menu__item">
                                 <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty" aria-hidden="true"></i>
-                                <lang data-language="VIEW_BOOKMARK"></lang>
+                                <lang data-language="VIEW_LABEL_MESS"></lang>
                             </button>
                             <button class="--internal menu__item">
                                 <i class="xm icon-comments"></i>
@@ -514,15 +525,6 @@ define(['shared/icon'], (ICON) => ({
                                 <lang data-language="REMOVE"></lang>
                             </button>
                            
-                        </div>
-                    </div>
-
-                    <div class="view-bookmark-status-bar hidden">
-                        <div>
-                            <lang data-language="IS_VIEWING_BOOKMARK_LIST"></lang>
-                        </div>
-                        <div class="close-bookmark-view-btn">
-                            <i class="icon-close"></i>
                         </div>
                     </div>
 
@@ -577,10 +579,10 @@ define(['shared/icon'], (ICON) => ({
                                 <i class="xm icon-info-circle"></i>
                                 <lang data-language="INFO"></lang>
                             </button>
-                            <button class="--bm menu__item js-menu-messages-bookmark">
+                            <button class="--bm menu__item js-menu-messages-label">
                                 <div class="pulse hidden"></div>
                                 <i class="xm icon-bookmarks-empty"></i>
-                                <lang data-language="BOOKMARK"></lang>
+                                <lang data-language="LABEL_MESSAGE"></lang>
                             </button>
                             <button class="--pin menu__item js-menu-messages-pinmess">
                                 <div class="pulse hidden"></div>
@@ -741,8 +743,13 @@ define(['shared/icon'], (ICON) => ({
 
                                 <ul id="media-files-tab" class="nav nav-pills mb-3" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" id="media-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
+                                        <a class="nav-link active" id="images-tab" data-toggle="pill" href="#media-list" role="tab" aria-controls="media-list" aria-selected="true">
                                             <lang data-language="IMAGES"></lang>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="videos-tab" data-toggle="pill" href="#videos-list" role="tab" aria-controls="videos-list" aria-selected="false">
+                                            <lang data-language="VIDEOS"></lang>
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -754,14 +761,20 @@ define(['shared/icon'], (ICON) => ({
                             </div>
 
                             <div class="media-files-content tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active view-media-list" id="media-list" role="tabpanel" aria-labelledby="media-tab">
-                                 
+                                <div class="tab-pane fade show active view-images-list" id="media-list" role="tabpanel" aria-labelledby="images-tab">    
                                     <div class="text-center">
-                                        <div class="media__spiner spinner-grow text-secondary hidden" role="status">
+                                        <div class="images__spiner spinner-grow text-secondary hidden" role="status">
                                         <span class="sr-only">Loading...</span>
                                         </div>
                                     </div>
-                                
+                                </div>
+
+                                <div class="tab-pane fade view-videos-list" id="videos-list" role="tabpanel" aria-labelledby="videos-tab">
+                                    <div class="text-center">
+                                        <div class="videos__spiner spinner-grow text-secondary hidden" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="tab-pane fade view-files-list" id="files-list" role="tabpanel" aria-labelledby="files-tab">
@@ -775,48 +788,68 @@ define(['shared/icon'], (ICON) => ({
 
                         </div>
                     <!-- End View media and files -->
-                    <!-- Start View search -->
-                    <div class="view-search-wraper hidden">
-                        <div class="search-topbar">
-                            <button class="search-close">
-                                <i class="icon-chevron-left"></i>
-                                <lang data-language="BACK"></lang>
-                            </button>
-                            <div class="mess-search-topright">
-                                <div class="mess-search-box">
-                                    <div class="msbg-input-container">
-                                        <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
-                                        <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
-                                            <i class="icon-close"></i>
-                                        </button>
-                                    </div>
-            
-                                    <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
-                                        <i class="xm icon-search"></i>
+                </div>
+
+                <!-- Start View Bookmark Label Message -->
+                <div class="view-label-mess-wraper hidden">
+                    <div class="view-label-mess-topbar">
+                        <button class="view-label-topbar-close">
+                            <i class="icon-chevron-left"></i>
+                            <lang data-language="BACK"></lang>
+                        </button>
+
+                        <div class="view-labels-filter">
+                            <select class="custom-select custom-select-md">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="view-label-mess-content"></div>
+
+                    <div class="pulse-loading hidden">
+                        <div class="files__spiner spinner-grow text-secondary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- End View Bookmark --> 
+
+                <!-- Start View search -->
+                <div class="view-search-wraper hidden">
+                    <div class="search-topbar">
+                        <button class="search-close">
+                            <i class="icon-chevron-left"></i>
+                            <lang data-language="BACK"></lang>
+                        </button>
+                        <div class="mess-search-topright">
+                            <div class="mess-search-box">
+                                <div class="msbg-input-container">
+                                    <input type="text" id="msbg-input" data-lang-type="placeholder" data-language="PLEASE_ENTER_THREE_LETTERS" />
+                                    <button class="btn btn-secondary cancel-search-btn hidden" data-toggle="tooltip" data-placement="bottom" title="Clear search input">
+                                        <i class="icon-close"></i>
                                     </button>
                                 </div>
-
-                                <div class="search-all-rooms-container custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="search-all-rooms">
-                                    <label class="custom-control-label" for="search-all-rooms">Search all rooms</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="search-content"></div>
-
-                        <div class="search-lobby-text text-center">
-                            <lang data-language="PLEASE_ENTER_THREE_LETTERS"></lang>
-                        </div>
-
-                        <div class="pulse-loading hidden">
-                            <div class="files__spiner spinner-grow text-secondary" role="status">
-                                <span class="sr-only">Loading...</span>
+        
+                                <button class="btn btn-primary search-mess-btn" data-toggle="tooltip" data-placement="bottom" title="Search message" disabled>
+                                    <i class="xm icon-search"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <!-- End View Search --> 
+
+                    <div class="search-content"></div>
+
+                    <div class="search-lobby-text text-center">
+                        <lang data-language="PLEASE_ENTER_THREE_LETTERS"></lang>
+                    </div>
+
+                    <div class="pulse-loading hidden">
+                        <div class="files__spiner spinner-grow text-secondary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                 </div>
+                <!-- End View Search --> 
             </div>
         </div>
     `,

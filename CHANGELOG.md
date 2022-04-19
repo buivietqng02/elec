@@ -4,6 +4,16 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.24] - 2022-04-19
+### Add
+- Enhance search tool: now it shows the search results plus the previous and next message for each one of them.
+- Search in all rooms: now it is possible to search for a word in all the rooms you have access to. Just type the keyword (at least three letters) into the "Search..." box and then click on the "Search all chat rooms" link.
+- New label functionality: allows you to mark the messages with different labels: "Important", "To Do", etc. Also, you can customize your labels and colors.
+- View labeled messages: You can view the messages you have labeled by room or in all chat rooms you have access to.
+- Show the date of the reaction in the "Reaction list" view.
+### Fix
+- Fix a bug that causes the message reaction to disappear when clicking on another chat room.
+
 ### [4.23] - 2022-04-11
 ### Fix
 - Fix an issue with WebRTC.

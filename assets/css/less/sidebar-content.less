@@ -1,4 +1,25 @@
 .sidebar {
+    #search {   
+        .search-mess-all-rooms {
+            margin-top: 8px;
+            text-align: center;
+
+            .search-all-room-link {
+                // transition: all 1s;
+                opacity: 0.8;
+                border: none;
+                cursor: pointer;
+                // border-radius: 15px;
+                // box-shadow: 0 0 5px #ccc;
+                font-size: 0.9rem;
+                background: none;
+                color: white;
+                &:hover {
+                    opacity:1;
+                }
+            }
+        }
+    }
     .contacts {
         height: calc(100% - 196px);
         overflow-y: auto;
@@ -226,7 +247,7 @@
 
         #search {
             margin-top: 13px;
-            margin-bottom: 13px;
+            margin-bottom: 8px;
         }
 
         .contacts {

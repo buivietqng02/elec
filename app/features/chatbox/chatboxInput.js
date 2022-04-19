@@ -17,7 +17,6 @@ define([
         stripTags,
         decodeStringBase64,
         encodeStringBase64,
-        transformLinkTextToHTML,
         getDataToLocalApplication
     } = functions;
 
@@ -189,7 +188,7 @@ define([
         }
 
         if (data?.messageId) {
-            API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params.message).then(() => {
+            API.put(`chats/${data.chatId}/messages/${data.messageId}`, data.params).then(() => {
                 messagesWaitProcessingArr.shift();
                 if (messagesWaitProcessingArr.length) {
                     postMessage(messagesWaitProcessingArr[0]);
@@ -362,9 +361,24 @@ define([
             $input.off('keyup').keyup(onKeyUp);
         },
 
-        onUpdate: (id, value) => {
-            const text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-            $input.get(0).innerText = text;
+        onUpdate: (id, value, taggedUsers) => {
+            let text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
+            
+            let selectedPerson = [];
+            if (taggedUsers.length > 0) {
+                taggedUsers.forEach(item => {
+                    const taggedPerson = {
+                        userId: item.id, 
+                        name: item.name
+                    }
+                    selectedPerson.push(taggedPerson);
+                    text = text.replace(item.name, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
+                })
+            }
+
+            modalTagPerson.setSelectedTagList(selectedPerson);
+
+            $input.get(0).innerHTML = text;
             $input.focus();
             messageId = id;
             handleInputAutoExpand();
@@ -387,11 +401,11 @@ define([
            
             $input.focus();
             $commentWrapper.show();
-            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : transformLinkTextToHTML(commentState.mess)}</span>`);
+            $commentBox.html(`<b>${object.name}</b>: <span class="span-mess-cmt span-mess-cmt-ids">${object.hasFile ? object.mess : commentState.mess}</span>`);
         },
 
         onAddEmoji: (emoji) => {
-            $input.html($input.text() + emoji);
+            $input.get(0).innerText = $input.get(0).innerText + emoji;
             $input.focus();
             handleInputAutoExpand();
         },

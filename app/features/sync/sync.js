@@ -13,7 +13,9 @@ define([
     'shared/alert',
     'features/modal/modalLogout',
     'features/modal/modalPinMessage',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/chatbox/chatboxContentFunctions',
+    'features/modal/modalLabelMessage'
 ], (
     constant,
     API,
@@ -29,7 +31,9 @@ define([
     ALERT,
     modalLogout,
     modalPinMessage,
-    modalTagPerson
+    modalTagPerson,
+    contentFunc,
+    modalLabelMessageComp
 ) => {
     let timeout;
     let isInit = false;
@@ -52,6 +56,10 @@ define([
         htmlEncode,
         decodeStringBase64
     } = functions;
+
+    const {
+        renderTag
+    } = contentFunc;
 
     const isLogin = () => {
         const sessionId = functions.getDataToLocalApplication(SESSION_ID) || '';
@@ -160,13 +168,14 @@ define([
         const renderLastMessSideBar = () => {
             if (message.id.messageId === lastMessage) {
                 const sidebarItem = document.querySelectorAll(`[${ATTRIBUTE_SIDEBAR_ROOM}="${message.id.chatId}"]`);
-                const text = htmlEncode(stripTags(decodeStringBase64(message.message)));
-                sidebarItem[0].querySelector('.preview').textContent = text;
+                let text = htmlEncode(stripTags(decodeStringBase64(message.message)));
+                text = renderTag(text, message.taggedUsers);
+                sidebarItem[0].querySelector('.preview').innerHTML = text;
             } 
         };
 
         // If the "getRoomById()" is undefined (user has not click to the room), init onLoadMessage
-        if (!roomInfo?.owner && !getRoomById(message.id.chatId)) {
+        if (!getRoomById(message.id.chatId)) {
             roomInfo.isUpdateOrRemoveMessBeforeGetRoomById = true;
             chatboxContentComp.onLoadMessage(roomInfo).then((res) => {
                 lastMessage = res[res.length - 1].id.messageId;
@@ -494,41 +503,27 @@ define([
         });
     };
 
-    /**
-     * Method to reactionEvents (bookmark a chat)
+     /**
+     * Method to reactionEvents (Reaction emoji a chat)
      * @param {*} reactionEvents 
      */
-    const handleReactionMessageEvent = (reactionEvents) => {
+      const handleReactionMessageEvent = (reactionEvents) => {
         reactionEvents.forEach(reactionEvent => {
             const roomId = reactionEvent.chatId;
             const messId = reactionEvent.messageId;
-            const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
 
-            // Bookmark message
             if (roomId === GLOBAL.getCurrentRoomId()) {
                 const currentRoomList = getRoomById(roomId);
-                const bookmarkBtn = document.querySelector('.js-menu-messages-bookmark');
-                const pulseBookmarkBtn = bookmarkBtn.querySelector('.pulse');
-
-                if (reactionEvent.starred) {
-                    $message.addClass('bookmark');
-                } else {
-                    $message.removeClass('bookmark');
-                }
 
                 if (reactionEvent.reactions) {
                     renderMessageReaction(reactionEvent.reactions, messId);
                 }
 
-                pulseBookmarkBtn.classList.add('hidden');
-                bookmarkBtn.disabled = false;
-                messageSettingsSlideComp.offEventClickOutside();
-
                 // update to storeRoomById
                 const updatedRoomList = currentRoomList.map((item) => {
                     if (item.id.messageId === messId) {
                         const tempItem = { ...item };
-                        tempItem.starred = reactionEvent.starred;
+                        tempItem.reactions = reactionEvent.reactions;
                         return tempItem;
                     } 
                     return item;
@@ -536,6 +531,14 @@ define([
                 storeRoomById(roomId, updatedRoomList);
             }
         });
+    };
+
+    /**
+     * Method to labelEvents (label a message)
+     * @param {*} labelEvents 
+     */
+     const handleLabelMessagesEvent = (labelEvents) => {
+        modalLabelMessageComp.labelMessageOnSyncEvent(labelEvents);
     };
 
     const onSync = () => {
@@ -596,6 +599,10 @@ define([
                     handleReactionMessageEvent(res.reactionEvents);
                 }
 
+                if (res?.labelEvents?.length) {
+                    handleLabelMessagesEvent(res.labelEvents);
+                }
+
                 if (res?.pinEvents?.length) {
                     modalPinMessage.handlePinMessageOnSync(res);
                 }
@@ -605,7 +612,6 @@ define([
                     modalTagPerson.onSyncTag(res.tagEvents);
                 }
                 isInit = true;
-    
                 onSync();
             }).catch((err) => {
                 console.log(err);

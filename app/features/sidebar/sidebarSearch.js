@@ -2,12 +2,16 @@ define([
     'app/constant',
     'shared/data', 
     'shared/functions',
-    'features/sidebar/sidebarService'
+    'features/sidebar/sidebarService',
+    'features/modal/modalSearchMessage',
+    'features/modal/modalLabelMessage'
 ], (
     constant,
     GLOBAL,
     functions,
-    sidebarService
+    sidebarService,
+    modalSearchMessage,
+    modalLabelMessageComp
 ) => {
     const { debounce } = functions;
     let currentOptions = 1;
@@ -20,10 +24,55 @@ define([
     let $input;
     let $resetInputBtn;
     let $lCollapse;
+    let $sidebar;
+    let $contacts;
+    let $viewAllRoomBtn;
+    let $searchAllRoomContainer;
+    let $searchAllRoomInitBtn;
+    let $searchAllRoomsText;
+
+    let $viewLabelAllRoom;
+
+    const onToggleSearchMessAllRooms = (value) => {
+        $searchAllRoomsText.text(value);
+        if (value.length >= 3 && $viewAllRoomBtn.hasClass('active')) {
+            $searchAllRoomContainer.addClass('searching');
+            $searchAllRoomContainer.removeClass('hidden');
+
+            if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+                $contacts.css('height', 'calc(100% - 228px)');
+            }
+
+            $searchAllRoomInitBtn.off().click(() => {
+                if ($sidebar.hasClass('mobile')) {
+                    $searchAllRoomContainer.addClass('hidden');
+                    $frame.removeClass('indent');
+                    $lCollapse.removeClass('indent');
+                }
+               
+                sidebarService.onChangeSearch('');
+                modalSearchMessage.onInitSearchAllRooms(value);
+            });
+        } else {
+            $searchAllRoomContainer.removeClass('searching');
+            $searchAllRoomContainer.addClass('hidden');
+
+            if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+                $contacts.css('height', 'calc(100% - 196px)');
+            }
+        }
+    };
+
+    const offEventClickOutsideLabelAllRoomBtn = () => {
+        $viewLabelAllRoom.addClass('hidden');
+        $(document).off('.hideViewLabelAllRoomBtn');
+    };
 
     const onSearch = debounce(() => {
         const value = $input.val().trim().toUpperCase();
         sidebarService.onChangeSearch(value);
+        onToggleSearchMessAllRooms($input.val().trim());
+        if (value) offEventClickOutsideLabelAllRoomBtn();
     }, 300);
 
     const offEventClickOutside = () => {
@@ -31,11 +80,25 @@ define([
         $(document).off('.hideSearchFilter');
     };
 
+    const handleClickOutsideLabelAllRoomBtn = () => $(document).on('click.hideViewLabelAllRoomBtn', (e) => {
+        if (!$viewLabelAllRoom.is(e.target) && $viewLabelAllRoom.has(e.target).length === 0) {
+            offEventClickOutsideLabelAllRoomBtn();
+        }
+    });
+
     const handleClickOutside = () => $(document).on('click.hideSearchFilter', (e) => {
         if (!$slide.is(e.target) && $slide.has(e.target).length === 0) {
             offEventClickOutside();
         }
     });
+
+    const showViewLabelAllRoomBtn = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $viewLabelAllRoom.removeClass('hidden');
+        handleClickOutsideLabelAllRoomBtn();
+    };
 
     const showSlide = (e) => {
         e.preventDefault();
@@ -67,6 +130,10 @@ define([
         } else {
             $frame.addClass('indent');
             $lCollapse.addClass('indent');
+
+            if ($searchAllRoomContainer.hasClass('searching')) {
+                $searchAllRoomContainer.removeClass('hidden');
+            }
         }
         
         setTimeout(() => $input.focus(), 100);
@@ -75,11 +142,24 @@ define([
     const resetInput = () => {
         $input.val('');
         sidebarService.onChangeSearch('');
+        $searchAllRoomContainer.addClass('hidden');
+        $searchAllRoomContainer.removeClass('searching');
+
+        if ($sidebar.hasClass('mobile') && $frame.hasClass('indent')) {
+            $contacts.css('height', 'calc(100% - 196px)');
+        }
+    };
+
+    const onViewLabelAllRooms = () => {
+        modalLabelMessageComp.onClickViewLabelsAllRooms();
+        offEventClickOutsideLabelAllRoomBtn();
     };
 
     return {
         onInit: () => {
             currentOptions = 1;
+            $sidebar = $('#frame .sidebar');
+            $contacts = $('#frame .contacts');
             $frame = $('#frame');
             $lCollapse = $('.lbog-collapse');
             $wrapper = $('#search');
@@ -89,10 +169,17 @@ define([
             $optionsBtn = $wrapper.find('.search__option');
             $input = $wrapper.find('.search__input');
             $resetInputBtn = $wrapper.find('.clearable__clear');
+            $searchAllRoomContainer = $('.search-mess-all-rooms');
+            $searchAllRoomInitBtn = $('.search-all-room-link');
+            $searchAllRoomsText = $('.search-all-room-text');
+            $viewAllRoomBtn = $('.menu__item.--s-all');
+            $viewLabelAllRoom = $('.view-label-all-room');
 
             $input.val('');
             $options.off().click(onChangeFilter);
             $optionsBtn.off().click(showSlide);
+            $input.off().click(showViewLabelAllRoomBtn);
+            $viewLabelAllRoom.off().click(onViewLabelAllRooms);
             $resetInputBtn.off().click(resetInput);
             $searchBtnCollapse.off().click(onExpandSidebar);
             $(document).off('.sidebarSearch').on('input.sidebarSearch', '#search .search__input', onSearch);

@@ -18,7 +18,7 @@
   <link rel="apple-touch-icon" sizes="144x144" href="/assets/images/icon/icon-App-144.png">
   <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/icon/icon-App-152.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icon/icon-App-180.png">
-  <link rel="manifest" href="/manifest.json">
+  <link id="manifest" rel="manifest" href="/manifest.json">
   <link id="favicon" rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
   <!-- <link rel="stylesheet" href="/assets/css/xm-icon.min.css"> -->
   <style>
@@ -389,11 +389,11 @@
       animation-delay: .5s
     }
   </style>
-  <link href="/source/index.css" rel="stylesheet">
 
   <!-- <link rel="stylesheet" href="https://sandbox.megapay.vn:2810/pg_was/css/payment/layer/paymentClient.css"
     type="text/css" media="screen"> -->
-</head>
+
+<link href="/source/index.css" rel="stylesheet"></head>
 
 <body>
   <div class="xm-page-loading">
@@ -404,14 +404,21 @@
       <div class="xm-loading-pulse"></div>
     </div>
   </div>
+  <script>
+    let isIOS = /(ipad|iphone|ipod|mac)/g.test(navigator.userAgent.toLowerCase());
+    let manifest = document.getElementById("manifest");
+    if (isIOS)
+      manifest.href = 'manifest-ios.json'
+  </script>
+
   <div id="xm-app" style="width: 100%; height: 100%;"></div>
-  <script src="/assets/js/socket.io.js"></script>
+  <!-- <script src="/assets/js/socket.io.js"></script>
   <script src="/assets/js/easyrtc.js"></script>
-  <script src="/assets/js/wheel-zoom.min.js"></script>
-  <script src="/source/index.bundle.js"></script>
+  <script src="/assets/js/wheel-zoom.min.js"></script> -->
+
   <!-- <script type="text/javascript"
     src="https://sandbox.megapay.vn:2810/pg_was/js/payment/layer/paymentClient.js"></script> -->
 
-</body>
+<script src="/source/index.bundle.js"></script></body>
 
 </html>

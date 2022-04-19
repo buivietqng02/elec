@@ -1,0 +1,391 @@
+.messages__item {
+    position: relative;
+    .--content {
+        position: relative;
+        .message-bookmark-icon{
+            position: absolute;
+            top: -2px;
+            left: 5px;
+            display: none;
+            cursor: pointer;
+        }
+    }
+
+    .show_origin_mess {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        // display: inline;
+        
+        .show_origin_btn{
+            border-radius: 100%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.messages__item.you {
+    .show_origin_mess {
+        right: unset;
+        left: 20px;
+    }
+}
+
+.messages__item.label {
+    .message-bookmark-icon{
+        display: block !important;
+    }
+}
+
+.messages__list.viewingLabelMess{
+    .messages__item {
+        .user-avatar {
+            display: none;
+        }
+        .--heading {
+            display: flex;
+            .--img {
+                display: block;
+            }
+        }
+    }
+}
+
+.--viewLabelsMess {
+    .pulse {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+}
+
+.--menu-item{
+    .--bm {
+        .pulse {
+            width: 20px;
+            height: 20px;
+            margin-right: 1px;
+        }
+    }
+}
+
+#bm-label-mess-modal, #bm-manage-labels-modal {
+    .modal-content {
+        border-radius: 10px;
+        border: none;
+        
+        .modal-header {
+            padding: 0.4rem 0.5rem;
+        }
+    
+        .bm-manage-label {
+            text-align: center;
+            font-size: 17px;
+            color: rgba(20, 151, 250);
+            padding: 10px;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    
+        .mb-search-label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+    
+            .mb-search-label-container {
+                padding: 0px 7px;
+                border-radius: 6px;
+                border: 1px solid black;
+    
+                #mb-search-label-input{
+                    border: none;
+                    padding: 3px;
+                }
+            }
+        }
+    
+        .modal-body {
+            padding: 10px;
+            .bm-label-list {
+                padding-left: 5px;
+        
+                li {
+                    list-style: none;
+                    padding: 10px 5px;
+                    border-radius: 5px;
+                    margin-bottom: 0px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    cursor: pointer;
+                    transition: 0.5s all;
+    
+                    &:hover {
+                        background-color:#e6f6ff;
+                    };
+        
+                    .bm-label-text {
+                        color: white;
+                        padding: 5px;
+                        border-radius: 6px;
+                    }
+                    
+                    .bm-label-item-icon {
+                        position: relative;
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .icon-check {
+                            font-size: 40px;
+                            visibility: hidden;
+                        }
+    
+                        .pulse {
+                            width: 25px;
+                            height: 25px;
+                            position: absolute;
+                        }
+                    }
+                }
+                .bm-label-item.active {
+                    .icon-check {
+                        visibility: visible;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#bm-manage-labels-modal {
+    .manage-labels-item {
+        .manage-label-action {
+            span, button {
+                font-size: 20px;
+                padding: 3px;
+                margin-left: 10px;
+                border-radius: 100%;
+
+                &:hover{
+                    color: rgb(2, 110, 252);
+                }
+            }
+
+            .label-remove-btn {
+                border: none;
+                background-color: transparent;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+
+                .pulse {
+                    width: 20px;
+                    height: 20px;
+                    position: absolute;
+                }
+            };
+        }
+    }
+
+    .label-add-btn {
+        color: rgb(2, 110, 252);
+        padding: 8px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        &:hover {
+            border-color: rgb(2, 110, 252);
+        }
+    }
+
+    .label-edit-add-group {
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+
+        .label-edit-add-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            #label-edit-add-input {
+                padding: 5px;
+                margin: 10px;
+                width: 95%;
+                border: 1px solid rgb(2, 110, 252);
+            }
+
+            .color-label-item {
+                width: 17px;
+                height: 17px;
+                border-radius: 100%;
+                display: inline-block;
+                margin: 4px;
+                opacity: 0.3;
+                cursor: pointer;
+            }
+
+            .color-label-item.active {
+                opacity: 1;
+            }
+        }
+
+        .label-edit-add-confirm {
+            font-size: 50px;
+            &:hover {
+                color: rgb(2, 110, 252);
+            }
+        }
+    }
+
+    .label-edit-add-group.active {
+        display: flex;
+    }
+}
+
+
+.view-label-mess-wraper{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-color: #f5f5f5;
+
+    .view-label-mess-topbar {
+        position: relative;
+        padding-bottom: 20px;
+
+        .view-label-topbar-close{
+            border: none;
+            background-color: #f5f5f5;
+            color: #0093FF;
+            font-size: 16px;
+            display: inline-flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 0px 0px 10px;
+        }
+
+        .view-labels-filter {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+    .view-label-mess-content{
+        // border: 2px solid blue;
+        height: calc(100vh - 40px);
+        overflow-y: auto;
+        padding: 10px;
+        clear: right;
+        overflow-x: hidden;
+
+        li {
+            list-style: none;
+            margin: 10px 0;
+            transition: all .5s;
+            &:hover {
+                background-color: white;
+            }
+            .user-avatar {
+                display: none !important;
+            }
+            .--heading {
+                .--img {
+                    display: block;
+                }
+                display: flex;
+            }
+        }
+
+        .not-found-mess {
+            font-size: 30px;
+            margin-top: 180px;
+            color: gray;
+        }
+    }
+
+    .view-label-mess-content.viewAllRoom {
+        .messages__item {
+            .btn-message-settings {
+                display: none;
+            }
+        }
+    }
+
+    .pulse-loading {
+        position: absolute;
+        top: 180px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+.view-label-mess-wraper.hidden{
+    display: none !important;
+}
+
+.view-label-mess-wraper.slideIn{
+    animation-name: slideIn;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+.view-label-all-room {
+    margin-top: 8px;
+    text-align: center;
+
+    .view-label-all-room-link {
+        opacity: 0.8;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+        background: none;
+        color: white;
+        &:hover {
+            opacity:1;
+        }
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        left: 100vw;
+    }
+
+    100% {
+        left: 0;
+    }
+}
+
+.view-label-mess-wraper.slideOut{
+    animation-name: slideOut;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+@keyframes slideOut {
+    0% {
+        left: 0;
+    }
+
+    100% {
+        left: 100vw;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .view-label-mess-wraper{ 
+        
+    }
+}

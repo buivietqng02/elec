@@ -19,13 +19,14 @@ define([
         getAvatar,
         convertMessagetime,
         humanFileSize,
-        transformLinkTextToHTML,
         highlightText,
         htmlEncode,
         decodeStringBase64,
-        stripTags
+        stripTags,
+        markDown
     } = functions;
-    const { API_URL } = constant;
+
+    const { API_URL, LABELS } = constant;
 
     const timeConvert = (time) => {
         // Calculate the time left and the total duration
@@ -136,7 +137,7 @@ define([
         let shorternText;
         const roomEdited = GLOBAL.getRoomInfoWasEdited();
         const name = htmlEncode(roomEdited[sender?.id]?.user_name || sender?.name);
-        let text = transformLinkTextToHTML(htmlEncode(decodeStringBase64(message)));
+        let text = htmlEncode(decodeStringBase64(message));
         text = ob.renderTag(text, taggedUsers);
 
         if (file) {
@@ -250,10 +251,26 @@ define([
         return reactionElements;
     };
 
-    ob.renderMessage = (messObject, search) => {
+    const renderColorLabel = (colorCode) => {
+        const color = GLOBAL.getDefaultLabelMapping()[colorCode];
+        const hexaColor = LABELS[color];
+        return hexaColor;
+    };
+
+    const renderLabelDescript = (colorCode) => {
+        const labelList = GLOBAL.getLabelsList();
+        const filterList = labelList.filter(item => item.color === colorCode);
+        return filterList[0].descript;
+    };
+
+    ob.renderMessage = (messObject, search, isSearchOrViewLabelAllRoom) => {
         try {
             const info = GLOBAL.getInfomation();
             const roomEdited = GLOBAL.getRoomInfoWasEdited();
+            let roomId = GLOBAL.getCurrentRoomId();
+            if (isSearchOrViewLabelAllRoom) roomId = messObject.id.chatId;
+            const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomId));
+        
             const {
                 sender,
                 id,
@@ -268,7 +285,7 @@ define([
                 updated,
                 deleted,
                 readByAllPartners,
-                starred,
+                label,
                 sequence,
                 pinned,
                 reactions,
@@ -282,11 +299,21 @@ define([
                 chatType: type,
                 idLocal
             };
+            if (roomInfo.group && roomInfo.channel) {
+                data.roomType = 1;
+            } else if (roomInfo.group) {
+                data.roomType = 2;
+            } else {
+                data.roomType = 3;
+            }
             sender.name = stripTags(sender?.name);
 
             let text = htmlEncode(decodeStringBase64(message));
-            // Render in case message includes tag person
+
+            // markdown
+            text = markDown(text);
            
+            // Render in case message includes tag person
             text = ob.renderTag(text, taggedUsers, true);
 
             let isConferenceLink = false;
@@ -355,6 +382,20 @@ define([
             // highlight text if search exist
             if (search) {
                 text = highlightText(text, decodeStringBase64(search));
+                
+                // Fix link error when highlight link in search
+                const rgx1 = /<a href=".*?<span class='highlight-text'>/g;
+                const fullLinkRegex = /<a href=".*?" target="_blank">/g;
+                const rgx3 = /<\/span>.*?" target="_blank">/g;
+
+                if (text.match(fullLinkRegex)?.length > 0) {
+                    text.match(fullLinkRegex).forEach((item) => {
+                    if (!item.includes('highlight-text')) return;  
+                    const firstPart = item.match(rgx1)[0].slice(9, item.match(rgx1)[0].length - 29);
+                    const lastPart = item.match(rgx3)[0].slice(7, item.match(rgx3)[0].length - 18);
+                    text = text.replace(item, `<a href="${firstPart}${search}${lastPart}" target="_blank">`);
+                    });
+                }
             }
 
             // Change text in case send code
@@ -397,7 +438,6 @@ define([
             data.hide_when_removed = deleted ? 'hidden' : '';
             data.hide_for_partner = (data.who !== 'you' || deleted) ? 'hidden' : '';
             data.class_read_by_partners = readByAllPartners ? '--read' : '';
-            data.bookmark = starred ? 'bookmark' : '';
             data.is_conference_link = isConferenceLink && !deleted ? 'is_conference' : 'hidden';
             data.confRoom_chat_Id = conferenceLink;
             data.Invite_conference_call = GLOBAL.getLangJson().INVITE_CONFERENCE;
@@ -406,13 +446,18 @@ define([
             data.pinned = pinned ? 'pinned' : '';
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
             data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
+            data.taggedUsersList = taggedUsers ? JSON.stringify(taggedUsers) : '';
+            data.mess = text;
+            data.roomId = isSearchOrViewLabelAllRoom ? roomId : '';
+            data.label = label ? 'label' : '';
+            data.labelId = label ? `${label}` : '';
+            data.labelColor = label ? renderColorLabel(label) : '';
+            data.labelDescript = label ? renderLabelDescript(label) : '';
 
             // render with case of comment
             if (quotedMessage && !deleted) {
                 data.comment = renderComment(quotedMessage);
             }
-           
-            data.mess = transformLinkTextToHTML(text);
 
             // render with case of file
             if (file && !deleted) {

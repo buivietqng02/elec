@@ -28,6 +28,21 @@ const modalConfirmTemplate = (object) => `
     </div>
 `;
 
+const md = require('markdown-it')({
+    html: false, // Enable HTML tags in source
+    xhtmlOut: false, // Use '/' to close single tags (<br />).
+                                // This is only for full CommonMark compatibility.
+    breaks: false, // Convert '\n' in paragraphs into <br>
+    langPrefix: 'language-', // CSS language prefix for fenced blocks. Can be
+                                // useful for external highlighters.
+    linkify: true, // Autoconvert URL-like text to links
+  
+    // Enable some language-neutral replacement + quotes beautification
+    typographer: false,
+
+    quotes: '“”‘’',
+}).disable(['link', 'image']);
+
 define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     setCookie: (value, days) => {
         let expires = '';
@@ -186,23 +201,46 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         };
     },
 
-    transformLinkTextToHTML: (string) => {
-        if (!string) {
-            return '';
-        }
+    // transformLinkTextToHTML: (string) => {
+    //     if (!string) {
+    //         return '';
+    //     }
 
-        const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
-        const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
-        const content = string.replace(regexp, url => {
-            let html = url;
-            if (!url.match(avatarLink)) {
-                html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+    //     const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
+    //     const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
+    //     const content = string.replace(regexp, url => {
+    //         let html = url;
+    //         if (!url.match(avatarLink)) {
+    //             html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
+    //         }
+
+    //         return html;
+    //     });
+
+    //     return content;
+    // },
+    
+    markDown: (text) => {
+        // Add target=_blank into link
+        const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+            return self.renderToken(tokens, idx, options);
+        };
+
+        md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+            // If you are sure other plugins can't add `target` - drop check below
+            var aIndex = tokens[idx].attrIndex('target');
+        
+            if (aIndex < 0) {
+            tokens[idx].attrPush(['target', '_blank']); // add new attribute
+            } else {
+            tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
             }
+            // pass token to default renderer.
+            return defaultRender(tokens, idx, options, env, self);
+        };
 
-            return html;
-        });
-
-        return content;
+        const result = md.render(text);
+        return result;
     },
 
     truncate: (string, numOfLetter = 1000) => {
@@ -235,7 +273,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
                 tokens.push(before);
             }
             lastIndex = regexp.lastIndex;
-            tokens.push(`<span class="highlight-text">${match[0]}</span>`);
+            tokens.push(`<span class='highlight-text'>${match[0]}</span>`);
         }
 
         const rest = text.slice(lastIndex);
@@ -301,5 +339,53 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         range.collapse(false);  
         selection.addRange(range);  
         el.focus();
+    },
+
+    downloadImage: async (e) => {
+        const ALERT = require('shared/alert');
+
+        try {
+            console.log('download');
+            const imageSrc = e.currentTarget.getAttribute('src');
+            const image = await fetch(imageSrc)
+            const imageBlog = await image.blob()
+            const imageURL = URL.createObjectURL(imageBlog)
+            const link = document.createElement('a')
+            link.href = imageURL
+            link.download = 'XM image'
+            document.body.appendChild(link)
+            link.click()
+            ALERT.show('Download image', 'dark');
+            document.body.removeChild(link)
+        } catch (err) {
+            console.log(err);
+            ALERT.show('Can not download', 'dark');
+        }
+      
+    },
+
+    downloadFile: (e) => {
+        const ALERT = require('shared/alert');
+        const url = e.currentTarget.getAttribute('href');
+        const filename = e.currentTarget.textContent;
+
+        fetch(url)
+        .then(resp => resp.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            // the filename
+            a.download = filename;
+            a.setAttribute('target', '_blank');
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            ALERT.show('Download image', 'dark'); 
+            document.body.removeChild(a);
+        })
+        .catch(() => ALERT.show('Can not download', 'dark'));
     }
 }));
