@@ -248,7 +248,7 @@ define([
 
         listOfLabels.forEach(item => {
             filterHTML += `
-                <option value="${item.color}">Label: ${item.descript}</option>
+                <option value="${item.color}" style="color: ${renderColorLabel(item.color)}">Label: ${item.descript}</option>
             `;
         });
 
@@ -300,12 +300,6 @@ define([
         const valueEachLabel = listLabelMessChat[event.target.value];
         let response;
         currentRoomId = getCurrentRoomId();
-
-        if (currentFilterView === '0'){
-            filterLabelSelect.style.color = 'black';
-        } else {
-            filterLabelSelect.style.color = renderColorLabel(currentFilterView);
-        };
 
         if (!valueEachLabel) {
             if (isViewAllRoom) {
@@ -371,10 +365,10 @@ define([
 
   // ===================== Manage labels ==========================
     const renderColorLabel = (colorCode) => {
-        const color = cloneLabelMapping[colorCode];
         if (!color) {
             cloneLabelMapping = GLOBAL.getDefaultLabelMapping();
         }
+        const color = cloneLabelMapping[colorCode];
         const hexaColor = LABELS[color];
         return hexaColor;
     };
@@ -410,13 +404,13 @@ define([
                 <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" data-language="USER_INTERFACE">Label Message</h5>
+                            <h5 class="modal-title" data-language="LABEL_MESSAGE">${langJson.LABEL_MESSAGE}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
 
-                        <p class="bm-manage-label">Manage</p>
+                        <p class="bm-manage-label">${langJson.MANAGE}</p>
                         <div class="mb-search-label">
                             <span class="mb-search-label-container">
                                 <span><i class="icon-search"></i></span>
@@ -600,8 +594,25 @@ define([
         addEventToEditLabelBtn();
     };
 
+    const onShowHideManageAddLabel = (isDelete) => {
+        const manageLabelItem = document.querySelectorAll('#bm-manage-labels-modal .manage-labels-item');
+        console.log(manageLabelItem.length);
+
+        const maximumLabel = isDelete ? 11 : 10;
+        
+
+        if (manageLabelItem.length >= maximumLabel) {
+            manageAddlabel.classList.add('hidden');
+        } else {
+            manageAddlabel.classList.remove('hidden');
+        }
+    };
+
     const onConfirmAddEditLabel = () => {
-        if (!labelEditAddInput.value.trim()) return;
+        const manageLabelItem = document.querySelectorAll('#bm-manage-labels-modal .manage-labels-item');
+        console.log(manageLabelItem.length);
+        if (!labelEditAddInput.value.trim() || manageLabelItem.length >= 10) return;
+
         const descript = labelEditAddInput.value.trim();
         const activeSelectedColor = document.querySelector('.color-label-item.active');
 
@@ -636,6 +647,8 @@ define([
         labelEditAddGroup.classList.remove('active');
 
         saveManagelabelsBtn.disabled = false;
+
+        onShowHideManageAddLabel();
     };
 
     const addEventToRemoveLabelBtn = () => {
@@ -685,6 +698,8 @@ define([
                 removeLabelManageBtn.disabled = false;
             })
         }
+
+        onShowHideManageAddLabel(true);
     };
 
     const onCloseModalManageLabels = () => {
@@ -766,7 +781,8 @@ define([
         } else {
             onRenderManageLabelsItem();
         }
-
+        
+        onShowHideManageAddLabel();
         addEventlistenerToColorlabelItem();
 
         $modal.modal('show');

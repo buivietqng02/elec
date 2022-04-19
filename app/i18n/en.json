@@ -117,6 +117,7 @@
     "LABEL_MESSAGE": "Label Message",
     "LABEL_IS_BEING_USED": "Label is being in used, can not remove",
     "M": "__________________________________",
+    "MANAGE": "Manage",
     "MEMBER": "member(s)",
     "MESSAGE_INFO": "Message info",
     "MESSAGE_SENT": "Sent",
