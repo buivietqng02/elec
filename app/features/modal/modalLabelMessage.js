@@ -637,9 +637,7 @@ define([
         labelEditAddInput.value = '';
         activeSelectedColor.classList.remove('active');
         document.querySelector('.color-label-item').classList.add('active');
-
         labelEditAddGroup.classList.remove('active');
-
         saveManagelabelsBtn.disabled = false;
 
         onShowHideManageAddLabel();
@@ -668,6 +666,7 @@ define([
             cloneFlagList = [...afterRemoveFlag];
             onRenderManageLabelsItem();
             saveManagelabelsBtn.disabled = false;
+            labelEditAddGroup.classList.remove('active');
         };
         
         const colorCode = removeLabelManageBtn.parentElement.parentElement.getAttribute(BM_CL_CODE);
