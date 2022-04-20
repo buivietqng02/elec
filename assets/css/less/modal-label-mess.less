@@ -92,23 +92,6 @@
             cursor: pointer;
         }
     
-        .mb-search-label {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-    
-            .mb-search-label-container {
-                padding: 0px 7px;
-                border-radius: 6px;
-                border: 1px solid black;
-    
-                #mb-search-label-input{
-                    border: none;
-                    padding: 3px;
-                }
-            }
-        }
-    
         .modal-body {
             padding: 10px;
             .bm-label-list {
@@ -386,6 +369,14 @@
 
 @media screen and (max-width: 768px) {
     .view-label-mess-wraper{ 
-        
+        .view-label-mess-topbar {
+            .custom-select {
+                font-size: 13px;
+            }
+        }
+
+        .view-label-mess-content{
+            height: calc(100vh - 110px);
+        }
     }
 }

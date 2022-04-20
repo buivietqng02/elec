@@ -26,7 +26,7 @@ define([
     let $lCollapse;
     let $sidebar;
     let $contacts;
-    let $viewAllRoomBtn;
+    let $viewSearchAllRoomBtn;
     let $searchAllRoomContainer;
     let $searchAllRoomInitBtn;
     let $searchAllRoomsText;
@@ -35,7 +35,7 @@ define([
 
     const onToggleSearchMessAllRooms = (value) => {
         $searchAllRoomsText.text(value);
-        if (value.length >= 3 && $viewAllRoomBtn.hasClass('active')) {
+        if (value.length >= 3 && $viewSearchAllRoomBtn.hasClass('active')) {
             $searchAllRoomContainer.addClass('searching');
             $searchAllRoomContainer.removeClass('hidden');
 
@@ -46,8 +46,10 @@ define([
             $searchAllRoomInitBtn.off().click(() => {
                 if ($sidebar.hasClass('mobile')) {
                     $searchAllRoomContainer.addClass('hidden');
+                    $searchAllRoomContainer.removeClass('searching');
                     $frame.removeClass('indent');
                     $lCollapse.removeClass('indent');
+                    $contacts.attr('style', '');
                 }
                
                 sidebarService.onChangeSearch('');
@@ -130,11 +132,9 @@ define([
         } else {
             $frame.addClass('indent');
             $lCollapse.addClass('indent');
-
-            if ($searchAllRoomContainer.hasClass('searching')) {
-                $searchAllRoomContainer.removeClass('hidden');
-            }
         }
+        $searchAllRoomContainer.addClass('hidden');
+        $searchAllRoomContainer.remove('searching');
         
         setTimeout(() => $input.focus(), 100);
     };
@@ -153,6 +153,10 @@ define([
     const onViewLabelAllRooms = () => {
         modalLabelMessageComp.onClickViewLabelsAllRooms();
         offEventClickOutsideLabelAllRoomBtn();
+        if ($sidebar.hasClass('mobile')) {
+            $frame.removeClass('indent');
+            $lCollapse.removeClass('indent');
+        }
     };
 
     return {
@@ -172,7 +176,7 @@ define([
             $searchAllRoomContainer = $('.search-mess-all-rooms');
             $searchAllRoomInitBtn = $('.search-all-room-link');
             $searchAllRoomsText = $('.search-all-room-text');
-            $viewAllRoomBtn = $('.menu__item.--s-all');
+            $viewSearchAllRoomBtn = $('.menu__item.--s-all');
             $viewLabelAllRoom = $('.view-label-all-room');
 
             $input.val('');

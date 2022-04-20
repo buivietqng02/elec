@@ -383,7 +383,7 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
             a.click();
             window.URL.revokeObjectURL(url);
 
-            ALERT.show('Download image', 'dark'); 
+            ALERT.show('Download file', 'dark'); 
             document.body.removeChild(a);
         })
         .catch(() => ALERT.show('Can not download', 'dark'));
