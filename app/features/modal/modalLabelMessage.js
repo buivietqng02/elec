@@ -25,14 +25,14 @@ define([
         timestamp: '',
         isTouchLastMess: false,
         isToPosition: false,
-        processing: true
+        processing: false
     };
     const resetListLabelOneRoom = {
         listMess: [],
         lastOffset: 0,
         isTouchLastMess: false,
         isToPosition: false,
-        processing: true
+        processing: false
     };
 
     const { ATTRIBUTE_MESSAGE_ID, LABELS, BM_CL_CODE } = constant;
@@ -42,7 +42,6 @@ define([
         getRoomById, storeRoomById
     } = chatboxContentChatListComp;
 
-    let searchLabelInput;
     let labelListUl;
     let labelItem;
     let manageLabel;
@@ -56,7 +55,6 @@ define([
     let saveManagelabelsBtn;
     let spinnerSaveManage;
     let removeLabelBtn;
-    let closeBtnLabelMess;
     let labelEditAddColorList;
 
     let flagList = [];
@@ -92,11 +90,13 @@ define([
         listLabelMessChat[currentFilterView].listMess = listLabelMessChat[currentFilterView].listMess.concat(res);
         if (res.length < 20) listLabelMessChat[currentFilterView].isTouchLastMess = true;
 
-        if (isViewAllRoom) {
-            const lastMsgDate = res[res.length - 1]?.msgDate;
-            listLabelMessChat[currentFilterView].timestamp = new Date(lastMsgDate).getTime();    
-        } else {
-            listLabelMessChat[currentFilterView].lastOffset = res[res.length - 1]?.sequence;
+        if (res.length > 0) {
+            if (isViewAllRoom) {
+                const lastMsgDate = res[res.length - 1]?.msgDate;
+                listLabelMessChat[currentFilterView].timestamp = new Date(lastMsgDate).getTime();
+            } else {
+                listLabelMessChat[currentFilterView].lastOffset = res[res.length - 1]?.sequence;
+            }
         }
     };
 
@@ -199,12 +199,11 @@ define([
         // All labels
         if (currentFilterView === '0') {
             res = await callAPIViewForAllLabel(currentRoomId, listLabelMessChat[0].lastOffset ?? listLabelMessChat[0].timestamp);
-            renderGetMoreMessWhenScroll(res);
         } else {
         // One label
-            res = await callAPIViewForOneLabel(currentRoomId, currentFilterView, listLabelMessChat[0].lastOffset ?? listLabelMessChat[0].timestamp);
-            renderGetMoreMessWhenScroll(res);
+            res = await callAPIViewForOneLabel(currentRoomId, currentFilterView, listLabelMessChat[currentFilterView].lastOffset ?? listLabelMessChat[currentFilterView].timestamp);
         };
+        renderGetMoreMessWhenScroll(res);
     };
 
     const onWrapperScroll = () => {
@@ -240,6 +239,7 @@ define([
     
         viewLabelMessContent.innerHTML = '';
         listLabelMessChat = {};
+        currentFilterView = 0;
     }
 
     const renderFilterMessWithLabel = () => {
@@ -320,17 +320,16 @@ define([
 
     const onClickViewLabelsWithinRoom = () => {
         openViewLabelMessModal();
-        isViewAllRoom = false;
         const viewLabelsMessBtn = document.querySelector('#chatbox-group-option .--viewLabelsMess');
         pulseViewLabel = viewLabelsWraper.querySelector('.pulse-loading');
         viewLabelMessContent = document.querySelector('.view-label-mess-content');
 
+        listLabelMessChat = {};
+        currentFilterView = 0;
+        listLabelMessChat[currentFilterView] = {...resetListLabelOneRoom};
+        isViewAllRoom = false;
         viewLabelsMessBtn.disabled = true;
-
         currentRoomId = getCurrentRoomId();
-        
-        listLabelMessChat[0] = {...resetListLabelOneRoom};
-        
         callAPIViewForAllLabel(currentRoomId, listLabelMessChat[0].lastOffset).then((res) => {
             isViewingLabelsMess = true;       
             viewLabelsMessBtn.disabled = false;
@@ -345,12 +344,13 @@ define([
 
     const onClickViewLabelsAllRooms = () => {
         openViewLabelMessModal();
-        isViewAllRoom = true;
         viewLabelMessContent = document.querySelector('.view-label-mess-content');
         pulseViewLabel = viewLabelsWraper.querySelector('.pulse-loading');
+        listLabelMessChat = {};
+        currentFilterView = 0;
+        listLabelMessChat[currentFilterView] = {...resetListLabelAllRooms};
+        isViewAllRoom = true;
         viewLabelMessContent.classList.add('viewAllRoom');
-        
-        listLabelMessChat[0] = {...resetListLabelAllRooms};
 
         callAPIViewForAllLabel('', listLabelMessChat[0].timestamp).then((res) => {
             isViewingLabelsMess = true;
@@ -365,7 +365,7 @@ define([
 
   // ===================== Manage labels ==========================
     const renderColorLabel = (colorCode) => {
-        if (!color) {
+        if (!cloneLabelMapping[colorCode]) {
             cloneLabelMapping = GLOBAL.getDefaultLabelMapping();
         }
         const color = cloneLabelMapping[colorCode];
@@ -411,12 +411,6 @@ define([
                         </div>
 
                         <p class="bm-manage-label">${langJson.MANAGE}</p>
-                        <div class="mb-search-label">
-                            <span class="mb-search-label-container">
-                                <span><i class="icon-search"></i></span>
-                                <input id="mb-search-label-input" type="text" placeholder="Search">
-                            </span>
-                        </div>
 
                         <div class="modal-body">
                             <ul class="bm-label-list">
@@ -643,9 +637,7 @@ define([
         labelEditAddInput.value = '';
         activeSelectedColor.classList.remove('active');
         document.querySelector('.color-label-item').classList.add('active');
-
         labelEditAddGroup.classList.remove('active');
-
         saveManagelabelsBtn.disabled = false;
 
         onShowHideManageAddLabel();
@@ -674,6 +666,7 @@ define([
             cloneFlagList = [...afterRemoveFlag];
             onRenderManageLabelsItem();
             saveManagelabelsBtn.disabled = false;
+            labelEditAddGroup.classList.remove('active');
         };
         
         const colorCode = removeLabelManageBtn.parentElement.parentElement.getAttribute(BM_CL_CODE);
@@ -870,21 +863,21 @@ define([
         });
     }
 
-    const onSearchLabel = () => {
-        const searchText = searchLabelInput.value.toLowerCase().trim();
-        const searchList = flagList.filter(item => item.descript.toLowerCase().trim().includes(searchText))
-
-        const listLabel = renderLabelList(searchList);
-        labelListUl.innerHTML = listLabel;
-
-        itemLabelOnClickFunc()
-    };
-
     const renderCurrentActiveLabel = (currLabelCode) => {
         const listLabel = renderLabelList(flagList, currLabelCode);
         labelListUl.innerHTML = listLabel;
         itemLabelOnClickFunc();
     };  
+
+    // const onSearchLabel = () => {
+    //     const searchText = searchLabelInput.value.toLowerCase().trim();
+    //     const searchList = flagList.filter(item => item.descript.toLowerCase().trim().includes(searchText))
+
+    //     const listLabel = renderLabelList(searchList);
+    //     labelListUl.innerHTML = listLabel;
+
+    //     itemLabelOnClickFunc()
+    // };
 
     const openModalLabelMess = (mess) => {
         let $modal = $('#bm-label-mess-modal');
@@ -895,11 +888,8 @@ define([
         if (!$('#bm-label-mess-modal').length) {
             $('body').append(renderLabelMessTemplate(GLOBAL.getLangJson(), currLabelCode));
             $modal = $('#bm-label-mess-modal');
-            closeBtnLabelMess = $modal.find('.close');
-            searchLabelInput = document.querySelector('#mb-search-label-input');
             labelListUl = document.querySelector('#bm-label-mess-modal .bm-label-list');   
             manageLabel = document.querySelector('#bm-label-mess-modal .bm-manage-label');
-            searchLabelInput.addEventListener('keyup', onSearchLabel);
             manageLabel.addEventListener('click', openModalManageLabels);
             itemLabelOnClickFunc();
         } else {

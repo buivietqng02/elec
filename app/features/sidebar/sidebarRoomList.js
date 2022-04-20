@@ -36,6 +36,8 @@ define([
     let $lCollapse;
     let sidebar;
     let $wrapMess;
+    let $searchMessAllRoomsLink;
+    let $contacts;
 
     const onRoomClick = (e) => {
         const lastRoomId = GLOBAL.getCurrentRoomId();
@@ -48,6 +50,11 @@ define([
         } else {
             $wrapMess.removeClass('group');
         }
+
+        // Hide search mess all rooms
+        $searchMessAllRoomsLink.addClass('hidden');
+        $searchMessAllRoomsLink.removeClass('searching');
+        $contacts.attr('style', '');
 
         roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
@@ -141,6 +148,8 @@ define([
         $wrapMess = $('.js_wrap_mess');
         $frame = $('#frame');
         $lCollapse = $('.lbog-collapse');
+        $searchMessAllRoomsLink = $('.search-mess-all-rooms');
+        $contacts = $('#frame .contacts');
 
         getRooms();
         initScroll();

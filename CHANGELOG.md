@@ -4,6 +4,10 @@ All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
 
+### [4.25] - 2022-04-20
+### Fix
+- Fixes bugs with label messages, search messages and view pictures in full size.
+
 ### [4.24] - 2022-04-19
 ### Add
 - Enhance search tool: now it shows the search results plus the previous and next message for each one of them.
