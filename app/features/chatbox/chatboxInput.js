@@ -3,13 +3,15 @@ define([
     'shared/functions',
     'shared/api',
     'shared/data',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/modal/modalMarkdown',
 ], (
     constant,
     functions,
     API,
     GLOBAL,
-    modalTagPerson
+    modalTagPerson,
+    modalMarkdown
 ) => {
     const {
         htmlDecode,
@@ -32,6 +34,7 @@ define([
     let $commentWrapper;
     let $commentBox;
     let $btnCloseCommentBox;
+    let $initVoiceMessageBtn;
     let messagesWaitProcessingArr = [];
     let deleteState = false;
     let commentState = false;
@@ -39,6 +42,7 @@ define([
     let timeOfLastTypingEvent;
     let timeOfLastSentTypingEvent;
     let $tagPersonContainer;
+    let $reviewMarkdownContainer;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -80,6 +84,7 @@ define([
             input.style.cssText = `height: ${height}px`;
 
             $tagPersonContainer.get(0).style.cssText = `bottom: ${height}px`;
+            $reviewMarkdownContainer.get(0).style.cssText = `bottom: ${height + 2}px`;
            
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
             isBottom && wrapperMessages.scrollTo(0, wrapperMessages.scrollHeight);
@@ -255,6 +260,9 @@ define([
             return;
         }
 
+        console.log(document.querySelector('#sendWithMarkdown').checked);
+        modalMarkdown.onHideMDwhenSend();
+
         data = {
             idLocal: new Date().getTime(),
             messageId: messageId,
@@ -329,7 +337,8 @@ define([
 
     const onKeyUp = (e) => {
         hanldeToggleSendBtn();
-        modalTagPerson.onRenderTagModal(e)
+        modalTagPerson.onRenderTagModal(e);
+        modalMarkdown.onToggleReviewMarkdownBox($input.get(0).innerText);
     };
 
     return {
@@ -341,9 +350,10 @@ define([
             $commentWrapper = $('.mess-comment-box');
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
-            $initVoiceMessageBtn = $('#init-voiceChat')
-
+            $initVoiceMessageBtn = $('#init-voiceChat');
             $tagPersonContainer = $('.js-tag-person');
+            $reviewMarkdownContainer = $('.js-view-markdown');
+
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;
@@ -357,13 +367,14 @@ define([
             $input.off('focusout').focusout(fakePlacehoder);
 
             modalTagPerson.onInit();
+            modalMarkdown.onInit();
 
             $input.off('keyup').keyup(onKeyUp);
         },
 
         onUpdate: (id, value, taggedUsers) => {
             let text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-            
+            console.log(text);
             let selectedPerson = [];
             if (taggedUsers.length > 0) {
                 taggedUsers.forEach(item => {
@@ -374,11 +385,13 @@ define([
                     selectedPerson.push(taggedPerson);
                     text = text.replace(item.name, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
                 })
-            }
 
+                $input.get(0).innerHTML = text;
+            } else {
+                $input.get(0).innerText = text;
+            }
             modalTagPerson.setSelectedTagList(selectedPerson);
 
-            $input.get(0).innerHTML = text;
             $input.focus();
             messageId = id;
             handleInputAutoExpand();

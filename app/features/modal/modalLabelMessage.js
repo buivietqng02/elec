@@ -70,6 +70,8 @@ define([
     let viewLabelMessContent;
     let pulseViewLabel;
     let filterLabelSelect;
+    let wrapMessages;
+    let isHidenWrapMess = false;
 
     let currRoomId = '';
     let currMessageId = '';
@@ -229,6 +231,11 @@ define([
         viewLabelMessContent.classList.remove('viewingLabelMess');
         viewLabelMessContent.classList.remove('viewAllRoom');
         viewLabelMessContent.removeEventListener('scroll', onWrapperScroll);
+
+        if (isHidenWrapMess) {
+            wrapMessages.style.display = 'none';
+            isHidenWrapMess = false;
+        };
         
         if (!viewLabelsWraper.classList.contains('hidden')) {
             viewLabelsWraper.classList.remove('slideIn');
@@ -300,18 +307,24 @@ define([
         const valueEachLabel = listLabelMessChat[event.target.value];
         let response;
         currentRoomId = getCurrentRoomId();
-
-        if (!valueEachLabel) {
-            if (isViewAllRoom) {
-                listLabelMessChat[currentFilterView] = {...resetListLabelAllRooms};
-            } else {
-                listLabelMessChat[currentFilterView] = {...resetListLabelOneRoom};
-            }
-        }
-
-        if (valueEachLabel || currentFilterView === '0') {
+    
+        if (valueEachLabel) {
             response = listLabelMessChat[event.target.value].listMess;
         } else {
+            if (isViewAllRoom) {
+                listLabelMessChat[currentFilterView] = {...resetListLabelAllRooms};
+                if (currentFilterView === '0') {
+                    onClickViewLabelsAllRooms();
+                    return;
+                }
+            } else {
+                listLabelMessChat[currentFilterView] = {...resetListLabelOneRoom};
+                if (currentFilterView === '0') {
+                    onClickViewLabelsWithinRoom();
+                    return;
+                }
+            }
+
             const offsetOrTimestamp = listLabelMessChat[currentFilterView].lastOffset ?? listLabelMessChat[currentFilterView].timestamp;
             response = await callAPIViewForOneLabel(currentRoomId, event.target.value, offsetOrTimestamp);
         }
@@ -346,6 +359,15 @@ define([
         openViewLabelMessModal();
         viewLabelMessContent = document.querySelector('.view-label-mess-content');
         pulseViewLabel = viewLabelsWraper.querySelector('.pulse-loading');
+
+        // For show menu item
+        wrapMessages = document.querySelector('.js_wrap_mess');
+        const displayStyleWrapMess = wrapMessages.getAttribute('style');
+        if (displayStyleWrapMess === 'display: none;') {
+            isHidenWrapMess = true;
+            wrapMessages.style.display = 'block';
+        }
+        // ============== 
         listLabelMessChat = {};
         currentFilterView = 0;
         listLabelMessChat[currentFilterView] = {...resetListLabelAllRooms};
@@ -590,10 +612,7 @@ define([
 
     const onShowHideManageAddLabel = (isDelete) => {
         const manageLabelItem = document.querySelectorAll('#bm-manage-labels-modal .manage-labels-item');
-        console.log(manageLabelItem.length);
-
         const maximumLabel = isDelete ? 11 : 10;
-        
 
         if (manageLabelItem.length >= maximumLabel) {
             manageAddlabel.classList.add('hidden');
@@ -604,7 +623,6 @@ define([
 
     const onConfirmAddEditLabel = () => {
         const manageLabelItem = document.querySelectorAll('#bm-manage-labels-modal .manage-labels-item');
-        console.log(manageLabelItem.length);
         if (!labelEditAddInput.value.trim() || manageLabelItem.length >= 10) return;
 
         const descript = labelEditAddInput.value.trim();
@@ -700,6 +718,7 @@ define([
         cloneFlagList = [...flagList];
         cloneLabelMapping = {...labelMapping};
         saveManagelabelsBtn.disabled = true;
+        labelEditAddGroup.classList.remove('active');
     }
 
     const onSaveManageLabels = () => {
@@ -801,7 +820,7 @@ define([
             const $message = $(`[${constant.ATTRIBUTE_MESSAGE_ID}="${messId}"]`);
 
             // Label message
-            if (roomId === getCurrentRoomId()) {
+            if (roomId === getCurrentRoomId() || isViewAllRoom) {
                 const currentRoomList = getRoomById(roomId);
                 const labelIcon = $message.find('.message-bookmark-icon');
              
@@ -816,7 +835,7 @@ define([
                 }
     
                 // update to storeRoomById
-                const updatedRoomList = currentRoomList.map((item) => {
+                const updatedRoomList = currentRoomList?.map((item) => {
                     if (item.id.messageId === messId) {
                         const tempItem = { ...item };
                         tempItem.label = labelColorId;
@@ -854,6 +873,8 @@ define([
                 currentTargetLabel.querySelector('.pulse').classList.add('hidden');
             });
         }
+
+        listLabelMessChat = {};
     };
 
     const itemLabelOnClickFunc = () => {
@@ -881,9 +902,13 @@ define([
 
     const openModalLabelMess = (mess) => {
         let $modal = $('#bm-label-mess-modal');
-        currRoomId = getCurrentRoomId();
         currMessageId = mess.getAttribute(ATTRIBUTE_MESSAGE_ID);
         currLabelCode = mess.getAttribute(BM_CL_CODE);
+        if (isViewAllRoom) {
+            currRoomId = mess.querySelector('.show_origin_btn').getAttribute('room-id');
+        } else {
+            currRoomId = getCurrentRoomId();
+        }
 
         if (!$('#bm-label-mess-modal').length) {
             $('body').append(renderLabelMessTemplate(GLOBAL.getLangJson(), currLabelCode));

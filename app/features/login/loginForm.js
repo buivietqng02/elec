@@ -109,6 +109,7 @@ define([
         $loginForm.find('.erp').prop('disabled', true);
 
         axios.get(`${BASE_URL}/erp/token`).then(token => {
+            console.log(token);
             loading = false;
             $loginForm.hide();
             $loaderErp.hide();

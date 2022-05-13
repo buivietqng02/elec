@@ -150,7 +150,30 @@ define([
     };
 
     const handleOptionsByUser = () => {
-        const chatId = GLOBAL.getCurrentRoomId();
+        // If view label messages list
+        const isViewLabelMess = modalLabelMessageComp.onGetIsViewingLabelMess();
+        let chatId;
+        if (isViewLabelMess) {
+            chatId = $message.find('.show_origin_btn').attr('room-id');
+            $editBtn.hide();
+            $removeBtn.hide();
+            $messageReactionListBtn.hide();
+            $pinMessBtn.hide();
+            $cmtBtn.hide();
+            $messageReactionBtn.hide();
+            $forwardBtn.hide();
+            return;
+        } else {
+            chatId = GLOBAL.getCurrentRoomId();
+            $editBtn.show();
+            $removeBtn.show();
+            $messageReactionListBtn.show();
+            $pinMessBtn.show();
+            $cmtBtn.show();
+            $messageReactionBtn.show();
+            $forwardBtn.show();
+        }
+
         const isActiveUser = $message.hasClass('you');
         const haveFile = $message.hasClass('have-file');
         const isPinned = $message.hasClass('pinned');

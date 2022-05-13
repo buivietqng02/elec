@@ -802,6 +802,13 @@ video {
   position: relative;
   border: 0.5px solid rgba(128, 128, 128, 0.192);
   display: inline-block;
+  height: 200px;
+}
+
+.image-wraper img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
 }
 
 .download-img {
@@ -1772,6 +1779,9 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
 .cl-cyan .--name{
   color: #04A5A5;
 }
+.cl-yellow .--name{
+  color: #F8B400;
+}
 
 .messages__item.activeScrollTo {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -1825,7 +1835,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   padding-right: 50px;
 }
 
-.--mess > p{
+.--mess {
   white-space: pre-wrap;
 }
 
@@ -1869,6 +1879,10 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   cursor:pointer;
   transition: box-shadow 0.5s;
   background-color: #fff;
+}
+
+.comment-box-inline .image-wraper {
+    height: unset;
 }
 
 .comment-box-inline.comment-text-shortern {
@@ -2723,6 +2737,10 @@ body.body_fz_18 {
   max-height: 200px;
   overflow: auto;
   white-space: pre-wrap;
+}
+
+.mess-comment-box .mess-fw-box .image-wraper {
+    height: unset;
 }
 
 .mess-comment-box .mess-fw-box img {

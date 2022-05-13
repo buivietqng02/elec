@@ -33,10 +33,9 @@ define([
     jsrender($);
 
     // if (process.env.NODE_ENV === 'production') {
-        if (window.location.hostname !== 'localhost') {
-            registerSW.onInit();
-        }
-      
+    if (window.location.hostname !== 'localhost') {
+        registerSW.onInit();
+    }
     // }
 
     const {
@@ -44,7 +43,10 @@ define([
         REFRESH_TOKEN,
         SESSION_ID,
         USER_ID,
-        ROUTE
+        ROUTE,
+        TIMEZONE_LOCATION_VN,
+        TIMEZONE_LOCATION_VN2,
+        BASE_URL_VN
     } = constant;
     const {
         getDataToLocalApplication,
@@ -69,6 +71,14 @@ define([
     };
 
     getRouter().on(ROUTE.index, () => {
+        const currentLocation = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        console.log(currentLocation);
+        if (process.env.NODE_ENV === 'production' 
+        && (currentLocation === TIMEZONE_LOCATION_VN || currentLocation === TIMEZONE_LOCATION_VN2)
+        && window.location.href !== BASE_URL_VN) {
+            window.location.replace(BASE_URL_VN);
+        }
+
         if (!isLogin()) {
             navigate(ROUTE.login);
         } else {

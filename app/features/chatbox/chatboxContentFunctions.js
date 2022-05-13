@@ -23,7 +23,9 @@ define([
         htmlEncode,
         decodeStringBase64,
         stripTags,
-        markDown
+        markDown,
+        transformLinkTextToHTML,
+        markDownCodeBlock
     } = functions;
 
     const { API_URL, LABELS } = constant;
@@ -309,10 +311,16 @@ define([
             sender.name = stripTags(sender?.name);
 
             let text = htmlEncode(decodeStringBase64(message));
-
-            // markdown
-            text = markDown(text);
            
+            // markdown
+            const markdown = false;
+            if (markdown) {
+                text = markDown(text);
+                text = markDownCodeBlock(text);
+            } 
+            // TranformTextToLink
+            text = transformLinkTextToHTML(text);
+
             // Render in case message includes tag person
             text = ob.renderTag(text, taggedUsers, true);
 
@@ -382,6 +390,8 @@ define([
             // highlight text if search exist
             if (search) {
                 text = highlightText(text, decodeStringBase64(search));
+                const pTag = /<p>/g;
+                text = text.replace(pTag, '').trim();
                 
                 // Fix link error when highlight link in search
                 const rgx1 = /<a href=".*?<span class='highlight-text'>/g;
@@ -453,6 +463,9 @@ define([
             data.labelId = label ? `${label}` : '';
             data.labelColor = label ? renderColorLabel(label) : '';
             data.labelDescript = label ? renderLabelDescript(label) : '';
+            data.markdown = markdown ? 'markdown' : '';
+            data.show_markdown = markdown && !file && !deleted && !isSearchOrViewLabelAllRoom ? '' : 'hidden';
+            data.show_md_origin_lang = GLOBAL.getLangJson().SHOW_ORIGIN;
 
             // render with case of comment
             if (quotedMessage && !deleted) {

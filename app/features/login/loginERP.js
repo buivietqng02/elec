@@ -42,6 +42,8 @@ define([
         const loginData = getFormData($loginForm);
         loginData.token = token;
 
+        console.log(loginData);
+
         axios.post(`${BASE_URL}/auth/login-erp`, loginData, {
             headers: {
                 'Content-Type': 'application/json',

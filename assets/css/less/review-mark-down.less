@@ -1,0 +1,122 @@
+.view-markdown-content {
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+    background-color: white;
+    z-index: 11;
+    overflow-y: auto;
+    box-shadow: 1px 2px 3px #00000029;
+    transition: all 0.5s;
+    overflow-x: hidden;
+    // padding: 0.5rem 2rem;
+    max-height: 0;
+    opacity: 0;
+
+    .close-markdown {
+        position: absolute;
+        right: 0;
+        top: 0;
+        border: none;
+        font-size: 25px;
+        background-color: transparent;
+    }
+
+    .view-markdown-switch-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        margin-right: 2rem;
+
+        .how-use-md {
+            color: #0093FF;
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+
+        .custom-control-label {
+            font-size: 14px;
+        }
+    }
+
+    .review-markdown {
+        border: 1px solid gray;
+        background-color: rgba(241, 241, 241, 0.903);
+        padding: 0.5rem;
+
+        lang {
+            color: #0093FF;
+            font-size: 13px;
+            font-style: italic;
+        }
+        .js-view-markdown-text {
+            p {
+                white-space: pre-wrap;
+            }
+        }
+    }
+}
+
+.view-markdown-content.show {
+    opacity: 1;
+    max-height: 250px;
+}
+
+#md-how-to-modal {
+    .modal-content {
+        .modal-header {
+            padding: 0.2rem 0.2rem
+        };
+        .modal-body {
+            padding: 0.5rem;
+        }
+    }
+}
+
+// Chat content
+.messages__item {
+    .messages--markdown {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        small {
+            font-size: 10px;
+            color: gray;
+        }
+
+        .show-origin-mess-markdown {
+            cursor: pointer;
+            font-size: 11px;
+        }
+    }
+}
+
+.messages__item.markdown {
+    .--mess {
+        white-space: unset;
+    };
+
+    .--mess > p {
+        white-space: pre-wrap;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .view-markdown-content {
+        .view-markdown-switch-group {
+            small {
+                font-size: 9px;
+
+                .how-use-md {
+                    display: block;
+                }
+            }
+
+            .custom-control-label {
+                font-size: 9px;
+            }
+        }
+    }
+}

@@ -116,16 +116,21 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
 
         video: `<video width="400" controls><source src="{src}" type="video/mp4">Your browser does not support HTML video.</video>`,
         mess: `
-            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {label} {pinned} {beginChat} {colorGroupUser} {haveReactions}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}" data-room-type="{roomType}" ${constant.BM_CL_CODE}="{labelId}">
+            <li class="js_li_list_mess {who} {classLocal} messages__item {isFile} {label} {pinned} {beginChat} {colorGroupUser} {haveReactions} {markdown}" data-id-local="{idLocal}" ${constant.ATTRIBUTE_MESSAGE_ID}="{id}" data-chat-type="{chatType}" data-room-type="{roomType}" ${constant.BM_CL_CODE}="{labelId}">
                 <div class="user-avatar">
                     <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
                 </div>
+
                 <div class="--content">
+                    <div class="messages--markdown {show_markdown}">
+                        <small>Markdown</small>
+                        <a class="show-origin-mess-markdown"><lang data-language="SHOW_ORIGIN">{show_md_origin_lang}</lang></a>
+                    </div>
                     <div class="--heading">
                         <img ${constant.ATTRIBUTE_CHANGE_IMAGE}="{userId}" class="--img avatar" src="{src}" onerror="this.src='/assets/images/user.jpg'">
                         <div class="--name" ${constant.ATTRIBUTE_CHANGE_NAME}="{userId}" data-user-officially-name="{officially_name}">{name}</div>
-                        <div class="messages--internal {show_internal}">Internal</div>
                     </div>
+                    <div class="messages--internal {show_internal}">Internal</div>
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
                     <div class="--mess {forward} {class_removed}" tagged-users='{taggedUsersList}'>{mess}</div>

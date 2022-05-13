@@ -2,6 +2,7 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
     const obj = {
         BASE_URL: `${enviroment}`,
         API_URL: `${enviroment}/api`,
+        BASE_URL_VN: 'https://xm.iptp.vn/',
         LAGBLASTER_API_BASE: 'https://lagblaster.org/wp-admin/admin-ajax.php?',
         IS_REGISTERED_LB: 'is_registered_lagblaster',
         SESSION_ID: 'sessionId',
@@ -138,6 +139,9 @@ define(['app/enviroment', 'app/webrtc'], (enviroment, webrtc) => {
         BM_CL_CODE: 'bm-cl-code',
 
         SEARCH_ALL_ROOM: 'SEARCH_ALL_ROOM',
+
+        TIMEZONE_LOCATION_VN: 'Asia/Saigon',
+        TIMEZONE_LOCATION_VN2: 'Asia/Ho_Chi_Minh'
     };
 
     return Object.freeze(obj);
