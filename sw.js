@@ -62,7 +62,8 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
     var request = event.request;
     if (request.method != 'GET' ||
-        (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2")))) {
+        (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2")
+            || request.url.includes("xm/erp/token")))) {
         return;
     }
 
