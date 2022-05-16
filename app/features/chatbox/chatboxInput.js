@@ -5,13 +5,15 @@ define([
     'shared/data',
     'features/modal/modalTagPerson',
     'features/modal/modalMarkdown',
+    'features/chatbox/chatboxContentChatList'
 ], (
     constant,
     functions,
     API,
     GLOBAL,
     modalTagPerson,
-    modalMarkdown
+    modalMarkdown,
+    chatboxContentChatListComp
 ) => {
     const {
         htmlDecode,
@@ -19,12 +21,17 @@ define([
         stripTags,
         decodeStringBase64,
         encodeStringBase64,
-        getDataToLocalApplication
+        getDataToLocalApplication,
+        markDownCodeBlock
     } = functions;
 
     const {
         ENTER_KEY_PREFERENCES
     } = constant;
+
+    const {
+        getRoomById
+    } = chatboxContentChatListComp;
 
     let $input;
     let $wrapperMessages;
@@ -43,6 +50,7 @@ define([
     let timeOfLastSentTypingEvent;
     let $tagPersonContainer;
     let $reviewMarkdownContainer;
+    let sendWithMDSwitch;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -67,6 +75,7 @@ define([
             $btnSend.hide();
             // $btnAttach.show();
             $initVoiceMessageBtn.show();
+            messageId = 0;
         }
     };
 
@@ -246,6 +255,7 @@ define([
         const tagList = $input.get(0).querySelectorAll('.tagged');
         const userIdTagList = [];
         let taggedUsers = [];
+        const isMarkdown = sendWithMDSwitch.checked
 
         tagList.forEach(item => {
             // text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
@@ -260,7 +270,6 @@ define([
             return;
         }
 
-        console.log(document.querySelector('#sendWithMarkdown').checked);
         modalMarkdown.onHideMDwhenSend();
 
         data = {
@@ -273,7 +282,8 @@ define([
                 message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId,
-                taggedUserIds: userIdTagList
+                taggedUserIds: userIdTagList,
+                markdown: isMarkdown
             }
         };
 
@@ -369,13 +379,19 @@ define([
             modalTagPerson.onInit();
             modalMarkdown.onInit();
 
+            sendWithMDSwitch = document.querySelector('#sendWithMarkdown');
+
             $input.off('keyup').keyup(onKeyUp);
         },
 
-        onUpdate: (id, value, taggedUsers) => {
-            let text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-            console.log(text);
+        onUpdate: (id) => {
+            const roomId = GLOBAL.getCurrentRoomId();
+            const chatListByRoom = getRoomById(roomId);
+            const editedMessObj = chatListByRoom.filter(item => item.id.messageId === id);
+            let text =  htmlEncode(decodeStringBase64(editedMessObj[0].message));
             let selectedPerson = [];
+            const taggedUsers = editedMessObj[0].taggedUsers;
+            const isMarkdown = editedMessObj[0].markdown;
             if (taggedUsers.length > 0) {
                 taggedUsers.forEach(item => {
                     const taggedPerson = {
@@ -383,14 +399,18 @@ define([
                         name: item.name
                     }
                     selectedPerson.push(taggedPerson);
-                    text = text.replace(item.name, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
+                    text = text.replace(`@[user:${item.id}]`, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
                 })
-
-                $input.get(0).innerHTML = text;
-            } else {
-                $input.get(0).innerText = text;
             }
+          
+            $input.get(0).innerHTML = text;
+
             modalTagPerson.setSelectedTagList(selectedPerson);
+
+            if (isMarkdown) {
+                modalMarkdown.onToggleReviewMarkdownBox(text);
+                sendWithMDSwitch.checked = true;
+            }
 
             $input.focus();
             messageId = id;

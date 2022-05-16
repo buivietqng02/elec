@@ -133,7 +133,7 @@ define(['app/constant', 'shared/data'], (constant, GLOBAL) => {
                     <div class="messages--internal {show_internal}">Internal</div>
                     {comment}
                     <div class="above-of-mess {forward}">Forwarded message:</div>
-                    <div class="--mess {forward} {class_removed}" tagged-users='{taggedUsersList}'>{mess}</div>
+                    <div class="--mess {forward} {class_removed}">{mess}</div>
 
                     <div class="conference-link {is_conference_link} {hide_when_removed} text-right" confId="{confRoom_chat_Id}">
                         <small data-language="INVITE_CONFERENCE">{Invite_conference_call}: </small>

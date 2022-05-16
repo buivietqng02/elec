@@ -3,13 +3,15 @@ define([
     'shared/api',
     'shared/data',
     'shared/functions',
-    'features/chatbox/chatboxContentChatList'
+    'features/chatbox/chatboxContentChatList',
+    'features/chatbox/chatboxContentFunctions'
 ], (
     constant,
     API,
     GLOBAL,
     functions,
-    chatboxContentChatListComp
+    chatboxContentChatListComp,
+    contentFunc
 ) => {
     let reviewMarkdownContainer;
     let reviewMDText;
@@ -20,13 +22,19 @@ define([
     let isChooseHideMD = false;
 
     const {
+        renderTag
+    } = contentFunc;
+
+    const {
         getRoomById
     } = chatboxContentChatListComp;
 
     const {
         markDown,
+        transformLinkTextToHTML,
         htmlEncode,
-        decodeStringBase64
+        decodeStringBase64,
+        markDownCodeBlock
         // stripTags
     } = functions;
 
@@ -141,6 +149,7 @@ define([
         } 
 
         textMarkdown = markDown(value);
+        textMarkdown = markDownCodeBlock(textMarkdown);
         const removedPTag = textMarkdown.replace(/<(\/|)p>/g, '');
         const tagRegex = /(<([^>]+)>)/gi;
         if (removedPTag.match(tagRegex) && !isChooseHideMD) {
@@ -160,21 +169,25 @@ define([
         const chatListByRoom = getRoomById(roomId);
         let textMessage = '';
 
-        chatListByRoom.filter(item => {
-            if (item.id.messageId === chatId) {
-                textMessage = htmlEncode(decodeStringBase64(item.message));
-                return true;
-            }
-            return textMessage;
-        });
+        const selectedMessObj = chatListByRoom.filter(item => item.id.messageId === chatId);
+        if (!selectedMessObj[0].markdown) return;
+        
+        textMessage = htmlEncode(decodeStringBase64(selectedMessObj[0].message));
 
-       if (message.classList.contains('markdown')) {
+        if (message.classList.contains('markdown')) {
             linkMarkdownBtn.textContent = GLOBAL.getLangJson().SHOW_MARKDOWN;
-            message.querySelector('.--mess').innerHTML = textMessage;
-       } else {
+        } else {
             linkMarkdownBtn.textContent = GLOBAL.getLangJson().SHOW_ORIGIN;
-            message.querySelector('.--mess').innerHTML = markDown(textMessage);
-       }   
+            textMessage = markDown(textMessage);
+        }
+
+        // TranformTextToLink
+        textMessage = transformLinkTextToHTML(textMessage);
+
+        // Render in case message includes tag person
+        textMessage = renderTag(textMessage, selectedMessObj[0].taggedUsers, true);
+
+        message.querySelector('.--mess').innerHTML = textMessage;
         message.classList.toggle('markdown');
     };
 

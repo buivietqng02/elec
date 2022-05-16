@@ -9,7 +9,7 @@ define([
     'features/modal/modalLabelMessage',
     'features/modal/modalPinMessage',
     'features/modal/modalMessageReaction',
-    'features/modal/modalMessageReactionList'
+    'features/modal/modalMessageReactionList',
 ], (
     GLOBAL,
     ALERT,
@@ -21,7 +21,7 @@ define([
     modalLabelMessageComp,
     modalPinMessageComp,
     modalMessageReactionComp,
-    modalMessageReactionListComp
+    modalMessageReactionListComp,
 ) => {
     const message = {};
     let $message;
@@ -70,13 +70,8 @@ define([
 
     const onEdit = () => {
         const { chatId } = $message.data();
-        const value = $message.find('.--mess').html();
-        const taggedUsersAttribute = $message.find('.--mess').attr('tagged-users')
-        let taggedUsers = [];
-        if(taggedUsersAttribute) taggedUsers = JSON.parse(taggedUsersAttribute);
-
         offEventClickOutside();
-        chatboxInputComp.onUpdate(chatId, value, taggedUsers);
+        chatboxInputComp.onUpdate(chatId);
     };
 
     const onRemove = () => {

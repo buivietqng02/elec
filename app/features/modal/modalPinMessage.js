@@ -34,7 +34,9 @@ define([
     const {
         htmlEncode,
         decodeStringBase64,
-        getAvatar
+        getAvatar,
+        markDown,
+        markDownCodeBlock
     } = functions;
 
     const {
@@ -171,6 +173,7 @@ define([
         let pinSequence;
         let avatar;
         let taggedUsers;
+        let markdown;
         removePinBar();
         if (!pinnedObj) return;
 
@@ -181,7 +184,8 @@ define([
                 message, 
                 pinSequence,
                 avatar,
-                taggedUsers
+                taggedUsers,
+                markdown
             } = pinnedObj);
         } else {
             messId = pinnedObj.id.messageId;
@@ -190,11 +194,17 @@ define([
             pinSequence = pinnedObj.sequence;
             avatar = getAvatar(pinnedObj.sender.id);
             taggedUsers = pinnedObj?.taggedUsers;
+            markdown = pinnedObj.markdown;
         }
 
         // Render if tagged message
-       
         message = chatboxContentFunctions.renderTag(message, taggedUsers);
+
+        // Render if use markdown
+        if (markdown) {
+            message = markDown(message);
+            message = markDownCodeBlock(message);
+        }
 
         pinMessBar.classList.remove('hidden');
 
@@ -237,7 +247,8 @@ define([
             message: htmlEncode(decodeStringBase64(pinMessObj.message)),
             pinSequence: pinMessObj.sequence,
             avatar: getAvatar(pinMessObj.sender.id),
-            taggedUsers: pinMessObj?.taggedUsers
+            taggedUsers: pinMessObj?.taggedUsers,
+            markdown: pinMessObj.markdown
         };
         if (!isDifferentRoom) renderPinnedMess(pinnedObj, true);
 

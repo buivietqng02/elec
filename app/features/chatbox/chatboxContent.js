@@ -52,7 +52,8 @@ define([
         getAvatar,
         downloadImage,
         downloadFile,
-        markDown
+        markDown,
+        markDownCodeBlock
     } = functions;
     const {
         getChatById,
@@ -543,7 +544,8 @@ define([
                         message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
                         pinSequence: pinnedMess?.sequence,
                         avatar: getAvatar(pinnedMess.sender.id),
-                        taggedUsers: pinnedMess?.taggedUsers
+                        taggedUsers: pinnedMess?.taggedUsers,
+                        markdown: pinnedMess.markdown
                     } : null
 
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
@@ -612,7 +614,6 @@ define([
             const pinnedObj = getPinnedMessRoomsById(roomInfo.id);
 
             ultiLastOffSet = messList[messList?.length - 1]?.sequence;
-            // console.log(ultiLastOffSet);
 
             onGetMessageFromCache(roomInfo);
             modalPinMessage.renderPinnedMess(pinnedObj, true);
@@ -771,6 +772,12 @@ define([
             console.log(message);
             if (message?.markdown) {
                 text = markDown(text);
+                text = markDownCodeBlock(text);
+                $message.addClass('markdown');
+                $message.find('.messages--markdown').removeClass('hidden');
+            } else {
+                $message.removeClass('markdown');
+                $message.find('.messages--markdown').addClass('hidden');
             }
             // Render in case edit a tag message
             text = renderTag(text, message.taggedUsers, true);
@@ -782,8 +789,6 @@ define([
 
             $message.find('.--mess').html(text);
             $message.find('.--edited').removeClass('hidden');
-            // Update attribute if edit a tag message
-            if (message.taggedUsers.length > 0)  $message.find('.--mess').attr('tagged-users', JSON.stringify(message.taggedUsers))
             
             // Update pin topbar when edit message
             pinMessId = $pinDetails?.attr(PINNED_MESS_ID);
@@ -865,7 +870,8 @@ define([
                     id: info.id,
                     name: info.name
                 },
-                taggedUsers: data?.taggedUsers
+                taggedUsers: data?.taggedUsers,
+                markdown: data.params?.markdown
             };
 
             if (!isInit) {

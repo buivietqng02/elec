@@ -294,7 +294,8 @@ define([
                 taggedUsers,
                 colorGroupUser,
                 currentSenderId,
-                previousSenderId
+                previousSenderId,
+                markdown
             } = messObject;
             const data = {
                 id: id?.messageId,
@@ -313,7 +314,6 @@ define([
             let text = htmlEncode(decodeStringBase64(message));
            
             // markdown
-            const markdown = false;
             if (markdown) {
                 text = markDown(text);
                 text = markDownCodeBlock(text);
@@ -409,9 +409,9 @@ define([
             }
 
             // Change text in case send code
-            if (text.includes('::code::')) {
-                text = text.replace(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
-            } 
+// if (text.includes('::code::')) {
+//     text = text.replace(/(::code::\n|::code::)(.+)(\n::code::|::code::)/gs, '<code>$2</code>');
+// } 
             
             // render reactions
             if (reactions) {
@@ -456,7 +456,6 @@ define([
             data.pinned = pinned ? 'pinned' : '';
             data.beginChat = currentSenderId !== previousSenderId ? 'beginChat' : '';
             data.colorGroupUser = colorGroupUser ? `${colorGroupUser}` : '';
-            data.taggedUsersList = taggedUsers ? JSON.stringify(taggedUsers) : '';
             data.mess = text;
             data.roomId = isSearchOrViewLabelAllRoom ? roomId : '';
             data.label = label ? 'label' : '';

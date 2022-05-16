@@ -2061,6 +2061,7 @@ input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-sea
   overflow-x: hidden;
 
   caret-color: #08c;
+  white-space: pre-wrap;
 }
 
 .messages__input[placeholder]:empty:before {

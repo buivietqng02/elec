@@ -233,12 +233,14 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
     markDownCodeBlock: (text) => {
         const spaceRegex = /&amp;nbsp;/g;
         const Andregex = /&amp;amp;/g;
-        const moreThanRegex = /&amp;gt;/g;
+        const moreThanRegex1 = /&amp;gt;/g;
         const lessThanRegex = /&amp;lt;/g;
+        const moreThanRegex2 = /&gt;/g;
         text = text.replace(spaceRegex, '');
         text = text.replace(Andregex, '&');
-        text = text.replace(moreThanRegex, '>');
+        text = text.replace(moreThanRegex1, '>');
         text = text.replace(lessThanRegex, '<');
+        text = text.replace(moreThanRegex2, '>')
         return text;
     },
 

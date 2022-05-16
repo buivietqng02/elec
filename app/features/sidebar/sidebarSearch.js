@@ -95,6 +95,8 @@ define([
     });
 
     const showViewLabelAllRoomBtn = (e) => {
+        if ($input.val().trim()) return;
+
         e.preventDefault();
         e.stopPropagation();
 
