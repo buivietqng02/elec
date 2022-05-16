@@ -803,6 +803,8 @@ video {
   border: 0.5px solid rgba(128, 128, 128, 0.192);
   display: inline-block;
   height: 200px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .image-wraper img {

@@ -433,10 +433,13 @@ define([
           
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+            $messageList.css('visibility', 'hidden');
 
             setTimeout(() => {
                 processing = false;
-            }, 50);
+                $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+                $messageList.css('visibility', 'visible');
+            }, 20);
 
             return { isLoadedMore: true, loadedResult: [...moreMessages] };
         });

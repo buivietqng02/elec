@@ -3,6 +3,15 @@
 All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
+### [4.26] - 2022-05-16
+### Fix
+- Fix bug edit messages causing lost format
+- Improve loading messages smoother when scroll top
+- Improve scroll to origin messages correcly
+- Fix bug Internal message badge not show
+- Improve label message when viewing list of all message
+- Donwload images with full size
+- Sending message with markdown (user can choose to send text with format)
 
 ### [4.25] - 2022-04-20
 ### Fix
