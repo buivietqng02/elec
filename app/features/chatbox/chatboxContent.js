@@ -769,7 +769,6 @@ define([
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             let text = htmlEncode(decodeStringBase64(message.message));
            
-            console.log(message);
             if (message?.markdown) {
                 text = markDown(text);
                 text = markDownCodeBlock(text);

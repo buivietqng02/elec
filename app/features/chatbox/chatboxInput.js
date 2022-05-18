@@ -407,9 +407,11 @@ define([
 
             modalTagPerson.setSelectedTagList(selectedPerson);
 
+            modalMarkdown.onToggleReviewMarkdownBox(text);
             if (isMarkdown) {
-                modalMarkdown.onToggleReviewMarkdownBox(text);
                 sendWithMDSwitch.checked = true;
+            } else {
+                sendWithMDSwitch.checked = false;
             }
 
             $input.focus();

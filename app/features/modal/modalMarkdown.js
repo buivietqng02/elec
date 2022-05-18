@@ -110,7 +110,11 @@ define([
                                 </tr>
                                 <tr>
                                     <th scope="row">6</th>
-                                    <td>&#96;&#96;&#96;<br>Block <br> Code</td>
+                                    <td>
+                                        &#96;&#96;&#96; <br>Block <br> Code <br>&#96;&#96;&#96;
+                                        <br>
+                                        <small>Note: you need a line break after and before the &#96;&#96;&#96;</small>
+                                    </td>
                                     <td>
                                         <pre style="border: 1px dotted gray; background: lightgray; width: max-content;"><code>Block<br>Code</code></pre>
                                     </td>
@@ -179,6 +183,7 @@ define([
         } else {
             linkMarkdownBtn.textContent = GLOBAL.getLangJson().SHOW_ORIGIN;
             textMessage = markDown(textMessage);
+            textMessage = markDownCodeBlock(textMessage);
         }
 
         // TranformTextToLink
