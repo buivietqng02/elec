@@ -35,7 +35,7 @@ const md = require('markdown-it')({
     breaks: false, // Convert '\n' in paragraphs into <br>
     langPrefix: 'language-', // CSS language prefix for fenced blocks. Can be
                                 // useful for external highlighters.
-    linkify: true, // Autoconvert URL-like text to links
+    linkify: false, // Autoconvert URL-like text to links
   
     // Enable some language-neutral replacement + quotes beautification
     typographer: false,
@@ -201,46 +201,47 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         };
     },
 
-    // transformLinkTextToHTML: (string) => {
-    //     if (!string) {
-    //         return '';
-    //     }
+    transformLinkTextToHTML: (string) => {
+        if (!string) {
+            return '';
+        }
 
-    //     const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
-    //     const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
-    //     const content = string.replace(regexp, url => {
-    //         let html = url;
-    //         if (!url.match(avatarLink)) {
-    //             html = `<a href='${url}' target='_blank' rel='noopener noreferrer'>${url}</a>`;
-    //         }
+        const regexp = /(www|ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/g;
+        // const regexp = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+        const avatarLink = /https:\/\/xm.iptp.dev\/xm\/api\/users\/[a-z0-9]{12}\/avatar/g;
 
-    //         return html;
-    //     });
+        const pTag = /<(\/|)p>/g;
 
-    //     return content;
-    // },
+        const content = string.replace(regexp, url => {
+            let html = url;
+            if (!url.match(avatarLink)) {
+                url = url.replace(pTag, '');
+                html = `<a href="${url}" target="_blank">${url}</a>`;
+            }
+
+            return html;
+        });
+
+        return content;
+    },
     
     markDown: (text) => {
-        // Add target=_blank into link
-        const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
-            return self.renderToken(tokens, idx, options);
-        };
-
-        md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-            // If you are sure other plugins can't add `target` - drop check below
-            var aIndex = tokens[idx].attrIndex('target');
-        
-            if (aIndex < 0) {
-            tokens[idx].attrPush(['target', '_blank']); // add new attribute
-            } else {
-            tokens[idx].attrs[aIndex][1] = '_blank';    // replace value of existing attr
-            }
-            // pass token to default renderer.
-            return defaultRender(tokens, idx, options, env, self);
-        };
-
         const result = md.render(text);
         return result;
+    },
+
+    markDownCodeBlock: (text) => {
+        const spaceRegex = /&amp;nbsp;/g;
+        const Andregex = /&amp;amp;/g;
+        const moreThanRegex1 = /&amp;gt;/g;
+        const lessThanRegex = /&amp;lt;/g;
+        const moreThanRegex2 = /&gt;/g;
+        text = text.replace(spaceRegex, '');
+        text = text.replace(Andregex, '&');
+        text = text.replace(moreThanRegex1, '>');
+        text = text.replace(lessThanRegex, '<');
+        text = text.replace(moreThanRegex2, '>')
+        return text;
     },
 
     truncate: (string, numOfLetter = 1000) => {
@@ -343,25 +344,34 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
 
     downloadImage: async (e) => {
         const ALERT = require('shared/alert');
+        const imageSrc = e.currentTarget.getAttribute('src');
+        const fullImgSrc = `${imageSrc.slice(0, imageSrc.length - 1)}0`
+        console.log(fullImgSrc);
+        // try {
+        //     console.log('download');
+        //     const image = await fetch(imageSrc)
+        //     const imageBlog = await image.blob()
+        //     const imageURL = URL.createObjectURL(imageBlog)
+        //     const link = document.createElement('a')
+        //     link.href = imageURL
+        //     link.download = 'XM image'
+        //     document.body.appendChild(link)
+        //     link.click()
+        //     ALERT.show('Download image', 'dark');
+        //     document.body.removeChild(link)
+        // } catch (err) {
+        //     console.log(err);
+        //     ALERT.show('Can not download', 'dark');
+        // }
 
-        try {
-            console.log('download');
-            const imageSrc = e.currentTarget.getAttribute('src');
-            const image = await fetch(imageSrc)
-            const imageBlog = await image.blob()
-            const imageURL = URL.createObjectURL(imageBlog)
-            const link = document.createElement('a')
-            link.href = imageURL
-            link.download = 'XM image'
-            document.body.appendChild(link)
-            link.click()
-            ALERT.show('Download image', 'dark');
-            document.body.removeChild(link)
-        } catch (err) {
-            console.log(err);
-            ALERT.show('Can not download', 'dark');
-        }
-      
+        const el = document.createElement("a");
+        el.setAttribute("href", imageSrc);
+        el.setAttribute("download", 'XM image');
+        el.setAttribute("target", '_blank');
+        document.body.appendChild(el);
+        el.click();
+        el.remove();
+        ALERT.show('Download image', 'dark');
     },
 
     downloadFile: (e) => {
@@ -369,23 +379,32 @@ define(['moment', 'app/constant', 'navigo'], (moment, constant, Navigo) => ({
         const url = e.currentTarget.getAttribute('href');
         const filename = e.currentTarget.textContent;
 
-        fetch(url)
-        .then(resp => resp.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            // the filename
-            a.download = filename;
-            a.setAttribute('target', '_blank');
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
+        // fetch(url)
+        // .then(resp => resp.blob())
+        // .then(blob => {
+        //     const url = window.URL.createObjectURL(blob);
+        //     const a = document.createElement('a');
+        //     a.style.display = 'none';
+        //     a.href = url;
+        //     // the filename
+        //     a.download = filename;
+        //     a.setAttribute('target', '_blank');
+        //     document.body.appendChild(a);
+        //     a.click();
+        //     window.URL.revokeObjectURL(url);
 
-            ALERT.show('Download file', 'dark'); 
-            document.body.removeChild(a);
-        })
-        .catch(() => ALERT.show('Can not download', 'dark'));
+        //     ALERT.show('Download file', 'dark'); 
+        //     document.body.removeChild(a);
+        // })
+        // .catch(() => ALERT.show('Can not download', 'dark'));
+
+        const el = document.createElement("a");
+        el.setAttribute("href", url);
+        el.setAttribute("download", filename);
+        el.setAttribute("target", '_blank');
+        document.body.appendChild(el);
+        el.click();
+        el.remove();
+        ALERT.show('Download file', 'dark'); 
     }
 }));

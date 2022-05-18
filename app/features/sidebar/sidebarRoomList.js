@@ -56,6 +56,14 @@ define([
         $searchMessAllRoomsLink.removeClass('searching');
         $contacts.attr('style', '');
 
+        // Close view bookmark message list when click other room
+        if (modalLabelMessageComp.onGetIsViewingLabelMess()) {
+            modalLabelMessageComp.closeModalViewLabelMess();
+        }
+
+        // Close search view when click on sidebar
+        modalSearchMessage.closeViewSearch();
+
         roomInfo = GLOBAL.getRooms().filter((room) => {
             if (String(room.id) === String(roomId)) {
                 return true;
@@ -124,17 +132,9 @@ define([
         // Close view media and files comp when click on sidebar
         if (!mediaFilesWraper.classList.contains('hidden')) {
             viewMediaAndFilesComp.closeMediaAndFilesModal();
-        } 
-
-        // Close search view when click on sidebar
-        modalSearchMessage.closeViewSearch();
+        }
 
         chatboxContentComp.onSwitchRoomWhileShowMessMediaAndFiles();
-
-        // Close view bookmark message list when click other room
-        if (modalLabelMessageComp.onGetIsViewingLabelMess()) {
-            modalLabelMessageComp.closeModalViewLabelMess();
-        }
 
         // Remove tag badge on room click
         const badgeTag = e.currentTarget.querySelector('.badge-tag');

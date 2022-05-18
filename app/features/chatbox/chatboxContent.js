@@ -15,7 +15,8 @@ define([
     'features/modal/modalPinMessage',
     'features/modal/modalTagPerson',
     'features/modal/modalMessageReaction',
-    'features/modal/modalUserInfo'
+    'features/modal/modalUserInfo',
+    'features/modal/modalMarkdown'
 ], (
     constant,
     API,
@@ -33,7 +34,8 @@ define([
     modalPinMessage,
     modalTagPerson,
     modalMessageReaction,
-    modalUserInfo
+    modalUserInfo,
+    modalMarkdown
 ) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const IMAGE_CLASS = '.--click-show-popup-up-img';
@@ -50,7 +52,8 @@ define([
         getAvatar,
         downloadImage,
         downloadFile,
-        markDown
+        markDown,
+        markDownCodeBlock
     } = functions;
     const {
         getChatById,
@@ -190,6 +193,15 @@ define([
         }  
     }
 
+    const scrollToFunc = (originMessageEle) => {
+        originMessageEle.classList.add('activeScrollTo');
+        originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+        setTimeout(() => {
+            originMessageEle.classList.remove('activeScrollTo');
+        }, 3000);
+    };
+
     const getOffsetListMessages = (roomInfo, offset, messageId) => {
         const params = {
             chatId: roomInfo.id,
@@ -211,20 +223,23 @@ define([
 
             const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${messageId}"]`);
 
-            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            originMessageEle.classList.add('activeScrollTo');
-
+            // Scrolling to origin, wait until image finish loading 
+            let imagesLoaded = 0;
+            const totalImages = $messageList.find(IMAGE_CLASS).length;
+            if (totalImages === 0) {
+                scrollToFunc(originMessageEle);
+            } else {
+                setTimeout(() => scrollToFunc(originMessageEle), 1500);
+                $messageList.find(IMAGE_CLASS).on('load', () => {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        scrollToFunc(originMessageEle);
+                    }
+                })
+            }
+            
             setTimeout(() => {
-                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }, 2000)
-
-            setTimeout(() => {
-                originMessageEle.classList.remove('activeScrollTo');
-            }, 5000);
-
-            setTimeout(() => {
-                document.querySelector('.js_con_list_mess').addEventListener('scroll',handleLoadNewMessOnScrollDown)
-
+                document.querySelector('.js_con_list_mess').addEventListener('scroll',handleLoadNewMessOnScrollDown);
                 isScrollingToOriginMess = false;
             },200)
             
@@ -277,16 +292,7 @@ define([
     const showExactOriginMessage = (id, sequence) => {
         const originMessageEle = document.querySelector(`[${ATTRIBUTE_MESSAGE_ID}="${id}"]`);
         if (originMessageEle) {
-            originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            originMessageEle.classList.add('activeScrollTo');
-
-            setTimeout(() => {
-                originMessageEle.scrollIntoView({ block: 'center', behavior: 'smooth' });
-            }, 2000)
-
-            setTimeout(() => {
-                originMessageEle.classList.remove('activeScrollTo');
-            }, 5000);
+            scrollToFunc(originMessageEle);
         } else {
             let roomInfo = GLOBAL.getRooms().filter((room) => {
                 if (String(room.id) === String(GLOBAL.getCurrentRoomId())) {
@@ -403,7 +409,7 @@ define([
             }
 
             const wrapperHtml = $wrapper.get(0);
-            const pos = wrapperHtml.scrollHeight + $wrapper.scrollTop();
+            const pos = wrapperHtml.scrollHeight - $wrapper.scrollTop();   
             let messagesHtml = '';
             let moreMessages = [];
 
@@ -414,11 +420,10 @@ define([
             moreMessages = moreMessages.concat(res?.messages || []).reverse();
 
             messagesHtml = moreMessages.map((mess, i, messArr) => {
-            mess.currentSenderId = messArr[i].sender.id;
-            mess.previousSenderId = messArr[i - 1]?.sender?.id;
-            mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
-
-            return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))
+                mess.currentSenderId = messArr[i].sender.id;
+                mess.previousSenderId = messArr[i - 1]?.sender?.id;
+                mess.colorGroupUser = insertColorHeader(mess.currentSenderId, yourId, isGroup);
+                return (renderRangeDate(mess, i, messArr, 'down') + renderMessage(mess))
             }).join('');
 
             lastOffset = moreMessages[0]?.sequence;
@@ -429,10 +434,13 @@ define([
           
             $messageList.prepend(messagesHtml);
             $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+            $messageList.css('visibility', 'hidden');
 
             setTimeout(() => {
                 processing = false;
-            }, 50);
+                $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+                $messageList.css('visibility', 'visible');
+            }, 20);
 
             return { isLoadedMore: true, loadedResult: [...moreMessages] };
         });
@@ -536,7 +544,8 @@ define([
                         message: htmlEncode(decodeStringBase64(pinnedMess?.message)),
                         pinSequence: pinnedMess?.sequence,
                         avatar: getAvatar(pinnedMess.sender.id),
-                        taggedUsers: pinnedMess?.taggedUsers
+                        taggedUsers: pinnedMess?.taggedUsers,
+                        markdown: pinnedMess.markdown
                     } : null
 
         if (roomInfo.id !== GLOBAL.getCurrentRoomId() && !roomInfo.isUpdateOrRemoveMessBeforeGetRoomById) {
@@ -605,7 +614,6 @@ define([
             const pinnedObj = getPinnedMessRoomsById(roomInfo.id);
 
             ultiLastOffSet = messList[messList?.length - 1]?.sequence;
-            // console.log(ultiLastOffSet);
 
             onGetMessageFromCache(roomInfo);
             modalPinMessage.renderPinnedMess(pinnedObj, true);
@@ -691,6 +699,9 @@ define([
             // Open user profile in group chat
             $(document).off('.openUserInfo').on('click.openUserInfo', '.messages__item:not(.you):not([data-room-type=1]) .user-avatar .avatar', (e) => modalUserInfo.onInit(e));
 
+            // show hide markdown
+            $(document).off('.showHideMarkdown').on('click.showHideMarkdown', '.show-origin-mess-markdown', (e) => modalMarkdown.onToggleMarkdown(e));
+
             modalPinMessage.onInit();
         },
 
@@ -757,8 +768,17 @@ define([
             const id = message.id.messageId;
             const $message = $(`[${ATTRIBUTE_MESSAGE_ID} = "${id}"]`);
             let text = htmlEncode(decodeStringBase64(message.message));
+           
+            if (message?.markdown) {
+                text = markDown(text);
+                text = markDownCodeBlock(text);
+                $message.addClass('markdown');
+                $message.find('.messages--markdown').removeClass('hidden');
+            } else {
+                $message.removeClass('markdown');
+                $message.find('.messages--markdown').addClass('hidden');
+            }
             // Render in case edit a tag message
-            text = markDown(text);
             text = renderTag(text, message.taggedUsers, true);
 
             const $pinMessTopbar = $('.pin-message-status-bar');
@@ -768,8 +788,6 @@ define([
 
             $message.find('.--mess').html(text);
             $message.find('.--edited').removeClass('hidden');
-            // Update attribute if edit a tag message
-            if (message.taggedUsers.length > 0)  $message.find('.--mess').attr('tagged-users', JSON.stringify(message.taggedUsers))
             
             // Update pin topbar when edit message
             pinMessId = $pinDetails?.attr(PINNED_MESS_ID);
@@ -851,7 +869,8 @@ define([
                     id: info.id,
                     name: info.name
                 },
-                taggedUsers: data?.taggedUsers
+                taggedUsers: data?.taggedUsers,
+                markdown: data.params?.markdown
             };
 
             if (!isInit) {

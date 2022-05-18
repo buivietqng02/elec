@@ -252,6 +252,12 @@ define([
                         }
                     });
                 }
+            }).catch(err => {
+                isProcessing[curenType] = false;
+                imagesSpiner.classList.add('hidden');
+                filesSpiner.classList.add('hidden');
+                videosSpiner.classList.add('hidden');
+                console.log(err);
             });
         }
     };
@@ -315,6 +321,9 @@ define([
                 }));
 
                 document.querySelectorAll('.ite__img__download').forEach(item => item.addEventListener('click', downloadImage));
+            }).catch(err => {
+                console.log(err);
+                imagesSpiner.classList.add('hidden');
             }); 
 
             // fetch videos
@@ -328,7 +337,10 @@ define([
                     const sequence = item.parentNode.parentNode.getAttribute('data-mess-sequence');
                     showMessagesPosition(dataMessageId, sequence);
                 }));
-            }); 
+            }).catch(err => {
+                console.log(err);
+                videosSpiner.classList.add('hidden');
+            });
 
             // fetch files
             getMediaFilesListAPI(TYPE_FILES).then(file => {
@@ -343,7 +355,10 @@ define([
                 }));
 
                 document.querySelectorAll('.ite__file__download').forEach(item => item.addEventListener('click', downloadFile));
-            }); 
+            }).catch(err => {
+                console.log(err);
+                filesSpiner.classList.add('hidden');
+            });
 
             mediaFileScrollWrap.addEventListener('scroll', loadMoreOnScroll);
 

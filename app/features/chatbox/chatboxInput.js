@@ -3,13 +3,17 @@ define([
     'shared/functions',
     'shared/api',
     'shared/data',
-    'features/modal/modalTagPerson'
+    'features/modal/modalTagPerson',
+    'features/modal/modalMarkdown',
+    'features/chatbox/chatboxContentChatList'
 ], (
     constant,
     functions,
     API,
     GLOBAL,
-    modalTagPerson
+    modalTagPerson,
+    modalMarkdown,
+    chatboxContentChatListComp
 ) => {
     const {
         htmlDecode,
@@ -17,12 +21,17 @@ define([
         stripTags,
         decodeStringBase64,
         encodeStringBase64,
-        getDataToLocalApplication
+        getDataToLocalApplication,
+        markDownCodeBlock
     } = functions;
 
     const {
         ENTER_KEY_PREFERENCES
     } = constant;
+
+    const {
+        getRoomById
+    } = chatboxContentChatListComp;
 
     let $input;
     let $wrapperMessages;
@@ -32,6 +41,7 @@ define([
     let $commentWrapper;
     let $commentBox;
     let $btnCloseCommentBox;
+    let $initVoiceMessageBtn;
     let messagesWaitProcessingArr = [];
     let deleteState = false;
     let commentState = false;
@@ -39,6 +49,8 @@ define([
     let timeOfLastTypingEvent;
     let timeOfLastSentTypingEvent;
     let $tagPersonContainer;
+    let $reviewMarkdownContainer;
+    let sendWithMDSwitch;
 
     const removeDraft = () => {
         const roomDraft = GLOBAL.getRoomDraft() || {};
@@ -63,6 +75,7 @@ define([
             $btnSend.hide();
             // $btnAttach.show();
             $initVoiceMessageBtn.show();
+            messageId = 0;
         }
     };
 
@@ -80,6 +93,7 @@ define([
             input.style.cssText = `height: ${height}px`;
 
             $tagPersonContainer.get(0).style.cssText = `bottom: ${height}px`;
+            $reviewMarkdownContainer.get(0).style.cssText = `bottom: ${height + 2}px`;
            
             wrapperMessages.style.cssText = `height: calc(100% - ${68 + height}px)`;
             isBottom && wrapperMessages.scrollTo(0, wrapperMessages.scrollHeight);
@@ -241,6 +255,7 @@ define([
         const tagList = $input.get(0).querySelectorAll('.tagged');
         const userIdTagList = [];
         let taggedUsers = [];
+        const isMarkdown = sendWithMDSwitch.checked
 
         tagList.forEach(item => {
             // text = text.replace(`@${item.innerText}`, `@{[user:${item.getAttribute('userid')}, ${item.innerText}]}`)
@@ -255,6 +270,8 @@ define([
             return;
         }
 
+        modalMarkdown.onHideMDwhenSend();
+
         data = {
             idLocal: new Date().getTime(),
             messageId: messageId,
@@ -265,7 +282,8 @@ define([
                 message: encodeStringBase64(text),
                 internal: !!obRoomEdited[roomId]?.hide_mess,
                 quotedMessageId: commentState.chatId,
-                taggedUserIds: userIdTagList
+                taggedUserIds: userIdTagList,
+                markdown: isMarkdown
             }
         };
 
@@ -329,7 +347,8 @@ define([
 
     const onKeyUp = (e) => {
         hanldeToggleSendBtn();
-        modalTagPerson.onRenderTagModal(e)
+        modalTagPerson.onRenderTagModal(e);
+        modalMarkdown.onToggleReviewMarkdownBox($input.get(0).innerText);
     };
 
     return {
@@ -341,9 +360,10 @@ define([
             $commentWrapper = $('.mess-comment-box');
             $commentBox = $commentWrapper.find('.mess-fw-box');
             $btnCloseCommentBox = $commentWrapper.find('.mess-fw-box-close');
-            $initVoiceMessageBtn = $('#init-voiceChat')
-
+            $initVoiceMessageBtn = $('#init-voiceChat');
             $tagPersonContainer = $('.js-tag-person');
+            $reviewMarkdownContainer = $('.js-view-markdown');
+
             messagesWaitProcessingArr = [];
             deleteState = false;
             commentState = false;
@@ -357,14 +377,21 @@ define([
             $input.off('focusout').focusout(fakePlacehoder);
 
             modalTagPerson.onInit();
+            modalMarkdown.onInit();
+
+            sendWithMDSwitch = document.querySelector('#sendWithMarkdown');
 
             $input.off('keyup').keyup(onKeyUp);
         },
 
-        onUpdate: (id, value, taggedUsers) => {
-            let text = htmlDecode(stripTags(value.replace(/<br>/g, '\n')));
-            
+        onUpdate: (id) => {
+            const roomId = GLOBAL.getCurrentRoomId();
+            const chatListByRoom = getRoomById(roomId);
+            const editedMessObj = chatListByRoom.filter(item => item.id.messageId === id);
+            let text =  htmlEncode(decodeStringBase64(editedMessObj[0].message));
             let selectedPerson = [];
+            const taggedUsers = editedMessObj[0].taggedUsers;
+            const isMarkdown = editedMessObj[0].markdown;
             if (taggedUsers.length > 0) {
                 taggedUsers.forEach(item => {
                     const taggedPerson = {
@@ -372,13 +399,21 @@ define([
                         name: item.name
                     }
                     selectedPerson.push(taggedPerson);
-                    text = text.replace(item.name, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
+                    text = text.replace(`@[user:${item.id}]`, `@<span class="tagged" userid=${item.id}>${item.name}</span><span class="text"></span>`)
                 })
             }
+          
+            $input.get(0).innerHTML = text;
 
             modalTagPerson.setSelectedTagList(selectedPerson);
 
-            $input.get(0).innerHTML = text;
+            modalMarkdown.onToggleReviewMarkdownBox(text);
+            if (isMarkdown) {
+                sendWithMDSwitch.checked = true;
+            } else {
+                sendWithMDSwitch.checked = false;
+            }
+
             $input.focus();
             messageId = id;
             handleInputAutoExpand();

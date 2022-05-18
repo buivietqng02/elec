@@ -606,6 +606,30 @@ define(['shared/icon'], (ICON) => ({
                         </div>
                     </div>
                     <div>
+                        <div class="js-view-markdown view-markdown-content">
+                            <button class="close-markdown" disabled>
+                                <i class="icon-close"></i>
+                            </button>
+                            <div class="view-markdown-switch-group">
+                                <small>
+                                    <lang data-language="MARKDOWN_DETECTED">Markdown detected</lang>! 
+                                    <span class="how-use-md">
+                                        (<lang data-language="HOW_TO_USE"></lang>)
+                                    </span>
+                                </small>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="sendWithMarkdown" disabled>
+
+                                    <label class="custom-control-label" for="sendWithMarkdown">
+                                        <lang data-language="SEND_WITH_MD">Send with Markdown</lang>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="review-markdown">
+                                <lang data-language="HOW_YOUR_MESS_LOOK">How your message look like:</lang>
+                                <div class="js-view-markdown-text"></div>
+                            </div>
+                        </div>
                         <div class="js-tag-person tag-person-content"></div>
                         <div class="js-cmt-mess messages__item comment message-input-calc" style="display: none;">
                             <div class="--heading">
@@ -900,7 +924,7 @@ define(['shared/icon'], (ICON) => ({
             </form>
 
             <form class="erp-login-form" style="display: none">
-                <img src="/assets/images/qrcode.png">
+                <!-- <img src="/assets/images/qrcode.png"> -->
                 <input placeholder="ERP username" required="Please enter a username" type="text" name="login" class="form-control" />
                 <input placeholder="ERP Password" required="Please enter the password" type="password" name="password" class="form-control" />
                 <div class="clearfix neccessary-wrapper">

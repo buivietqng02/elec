@@ -7,7 +7,7 @@ const urls = [
     '/manifest.json',
     // '/assets/js/socket.io.js',
     // '/assets/js/easyrtc.js',
-    // '/assets/js/wheel-zoom.min.js',
+    '/assets/js/wheel-zoom.min.js',
     '/source/index.bundle.js',
     '/source/232.bundle.js',
     '/source/styles.bundle.js',
@@ -62,8 +62,7 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
     var request = event.request;
     if (request.method != 'GET' ||
-        (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2")
-            || request.url.includes("xm/erp/token")))) {
+        (request.method == 'GET' && (request.url.includes("xm/api/sync") || request.url.includes("xm/oauth2") || request.url.includes("xm/erp/token")))) {
         return;
     }
 
