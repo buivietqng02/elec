@@ -5,6 +5,11 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ## Version 4
 ### [4.26] - 2022-05-16
 ### Fix
+- Fix download images with full size
+- Fix mardown is true by defalt when detected
+
+### [4.26] - 2022-05-16
+### Fix
 - Fix bug edit messages causing lost format
 - Improve loading messages smoother when scroll top
 - Improve scroll to origin messages correcly

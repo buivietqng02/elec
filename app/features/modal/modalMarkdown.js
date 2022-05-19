@@ -42,6 +42,7 @@ define([
         reviewMarkdownContainer.classList.add('show');
         closeMarkDown.disabled = false;
         switchSendWithMDbtn.disabled = false;
+        switchSendWithMDbtn.checked = true;
     };
 
     const onCloseMD = () => {
