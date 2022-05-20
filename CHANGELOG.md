@@ -3,6 +3,14 @@
 All changes to XM WEB CLIENT project will be documented in this file.
 
 ## Version 4
+### [4.27] - 2022-05-20
+### Update
+- Now "Send with Markdown" is set to true when markdown format is detected.
+### Fix
+- Fixes issue with downloading full-size images.
+- Fixes issue with displaying conference links in chats.
+- Fixes issue that was causing loop redirect in some devices.
+
 ### [4.26] - 2022-05-16
 ### Fix
 - Fix bug edit messages causing lost format

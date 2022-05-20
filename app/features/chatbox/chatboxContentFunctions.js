@@ -420,15 +420,14 @@ define([
             }
 
             // Render in case share conference link
-            const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            // const enviroment = process.env.NODE_ENV === 'production' ? `https://${window.location.hostname}` : 'https://xm.iptp.dev';
+            // const confLink = `${enviroment}${constant.ROUTE.meeting}`;
 
-            const confLink = `${enviroment}${constant.ROUTE.meeting}`;
-
-            if (text.includes(`${enviroment}${constant.ROUTE.meeting}`) && text.length > 30) {
+            if (text.includes(`${constant.ROUTE.meeting}/`) && text.length > 30) {
                 isConferenceLink = true;
-                const positionOfLinkConf = text.search(`${enviroment}${constant.ROUTE.meeting}`);
-                const startIndexRoomId = positionOfLinkConf + confLink.length + 1;
-                const endIndexRoomId = positionOfLinkConf + confLink.length + 12;
+                const positionOfLinkConf = text.search(`${constant.ROUTE.meeting}/`);
+                const startIndexRoomId = positionOfLinkConf + 9;
+                const endIndexRoomId = positionOfLinkConf + 20;
                 conferenceLink = text.substring(startIndexRoomId, endIndexRoomId);
             } else {
                 isConferenceLink = false;
