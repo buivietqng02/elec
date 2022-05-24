@@ -7,6 +7,7 @@ All changes to XM WEB CLIENT project will be documented in this file.
 ### Fix
 - Fix bug can not scroll to origin mess when view search/ label in all rooms when the room in sidebar is not rendered yet
 - Fix bug can not add tag person in begin of new line break
+- Fix bug tag broken when add emoji 
 
 ### [4.27] - 2022-05-20
 ### Update
