@@ -266,7 +266,7 @@ define([
                 $callOptionsBtn.show();
 
                 offlineData.getChatById(roomInfo.id).then(chat => {
-                    if (chat) {
+                    if (chat && !roomInfo.channel) {
                         API.get(`users/${roomInfo.partner?.id}/last-seen`).then(lastSeen => {
                             onRenderTimeActivity(lastSeen);
                         }).catch(err => { console.log(err); });
@@ -276,6 +276,7 @@ define([
 
             // This is added because there are channels that are not a group
             if (roomInfo.channel) {
+                $timeActivity.hide();
                 $callOptionsBtn.hide();
             }
         },
