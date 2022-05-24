@@ -153,28 +153,28 @@ define([
          }
      };
        
-     const touchEnd = () => {
-         window.cancelAnimationFrame(animationID);
-        
-         if (!isDrag || !isTouched) return;
+    const touchEnd = () => {
+        window.cancelAnimationFrame(animationID);
+    
+        if (!isDrag || !isTouched) return;
 
-         const sidebarWidth = document.querySelector('.sidebar').offsetWidth
-         const contactWidth = document.querySelector('.js_li_list_user-container').offsetWidth
-        
-         if (currentTranslate < -50) {
-             currentTranslate = -(Math.abs(contactWidth - sidebarWidth));
-             isShowMenu = true;
-         } else {
+        const sidebarWidth = document.querySelector('.sidebar').offsetWidth
+        const contactWidth = document.querySelector('.js_li_list_user-container').offsetWidth
+    
+        if (currentTranslate < -50) {
+            currentTranslate = -(Math.abs(contactWidth - sidebarWidth));
+            isShowMenu = true;
+        } else {
             currentTranslate = 0;
             isShowMenu = false;
-         }
- 
-         setSliderPosition();
+        }
+
+        setSliderPosition();
 
         isTouched = false;
         isDrag = false;
         startPos = 0;
-     };    
+    };    
      
     const sliderChatMenu = (roomID) => {
         if(!roomID) return;

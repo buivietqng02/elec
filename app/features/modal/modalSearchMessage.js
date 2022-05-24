@@ -4,14 +4,16 @@ define([
     'shared/api',
     'shared/functions',
     'shared/alert',
-    'features/chatbox/chatboxContentFunctions'
+    'features/chatbox/chatboxContentFunctions',
+    'features/sidebar/sidebarService'
 ], (
     constant,
     GLOBAL,
     API,
     functions,
     ALERT,
-    contentFunc
+    contentFunc,
+    sidebarService
    
     ) => {
     const { SEARCH_ALL_ROOM } = constant;
@@ -189,6 +191,9 @@ define([
         closeModal();
         if (roomid) {
             // Scroll to origin for search all room, load the room first
+            const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomid));
+            sidebarService.moveRoomUp(roomInfo);
+            
             $(`.js_li_list_user[data-room-id="${roomid}"]`).click();
         }
         
