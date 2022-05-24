@@ -440,7 +440,7 @@ define([
         },
 
         onAddEmoji: (emoji) => {
-            $input.get(0).innerText = $input.get(0).innerText + emoji;
+            $input.get(0).innerHTML = $input.get(0).innerHTML + emoji;
             $input.focus();
             handleInputAutoExpand();
         },

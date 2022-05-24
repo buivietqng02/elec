@@ -53,7 +53,8 @@ define([
         downloadImage,
         downloadFile,
         markDown,
-        markDownCodeBlock
+        markDownCodeBlock,
+        getMobileOS
     } = functions;
     const {
         getChatById,
@@ -409,7 +410,13 @@ define([
             }
 
             const wrapperHtml = $wrapper.get(0);
-            const pos = wrapperHtml.scrollHeight - $wrapper.scrollTop();   
+            let pos;
+            if (isMobile) {
+                pos = wrapperHtml.scrollHeight
+            } else {
+                pos = wrapperHtml.scrollHeight - $wrapper.scrollTop();   
+            }
+            
             let messagesHtml = '';
             let moreMessages = [];
 
@@ -431,16 +438,21 @@ define([
             if(jumpFastToBottomBtn.classList.contains('hidden')) {
                 storeRoomById(params.chatId, [...moreMessages, ...getRoomById(params.chatId)]);
             }
-          
+ 
             $messageList.prepend(messagesHtml);
-            $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
-            $messageList.css('visibility', 'hidden');
+            if (getMobileOS() === 'iOS') {
+                // $messageList.css('visibility', 'hidden');
+                setTimeout(() => {
+                    $wrapper.scrollTop(wrapperHtml.scrollHeight - pos)
+                    // $messageList.css('visibility', 'visible');
+                }, 100)
+            } else {
+                $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
+            }
 
             setTimeout(() => {
                 processing = false;
-                $wrapper.scrollTop(wrapperHtml.scrollHeight - pos);
-                $messageList.css('visibility', 'visible');
-            }, 20);
+            }, 200);
 
             return { isLoadedMore: true, loadedResult: [...moreMessages] };
         });

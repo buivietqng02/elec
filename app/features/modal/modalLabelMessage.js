@@ -5,14 +5,16 @@ define([
     'shared/api',
     'shared/alert',
     'features/chatbox/chatboxContentFunctions',
-    'features/chatbox/chatboxContentChatList'
+    'features/chatbox/chatboxContentChatList',
+    'features/sidebar/sidebarService'
 ], (
     constant,
     GLOBAL,
     API,  
     ALERT,
     contentFunc,
-    chatboxContentChatListComp
+    chatboxContentChatListComp,
+    sidebarService
 ) => {
     let currentRoomId;
     let isViewingLabelsMess = false;
@@ -154,6 +156,10 @@ define([
         closeModalViewLabelMess();
         
         if (roomid) {
+            const roomInfo = GLOBAL.getRooms().find(room => (room.id === roomid));
+            sidebarService.moveRoomUp(roomInfo);
+            console.log(sidebarService);
+
             $(`.js_li_list_user[data-room-id="${roomid}"]`).click();
         }
 

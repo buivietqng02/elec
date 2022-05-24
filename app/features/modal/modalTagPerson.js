@@ -104,7 +104,13 @@ define([
         const findSpan = input.querySelector('.tagged');
         if (!findSpan) {
             const startPo = inputText.lastIndexOf(' @');
-            input.innerText = input.innerText.substring(0, startPo + 2);
+    
+            if (startPo === -1 && input.innerText.length > 1) {
+                // In case add tags in begin of new line (after line break)
+                input.innerText = input.innerText.substring(0, input.innerText.length);
+            } else {
+                input.innerText = input.innerText.substring(0, startPo + 2);
+            }
         } else {
             const textArr = input.querySelectorAll('.text');
             // console.log(textArr);
